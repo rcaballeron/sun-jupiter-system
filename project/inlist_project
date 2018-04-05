@@ -5,9 +5,9 @@
 ! all of the other controls that simply have their default values.
 
 &star_job
-	history_columns_file = 'my_history_columns.list'
-	profile_columns_file = 'my_profile_columns.list'
-	pause_before_terminate = .true.
+  history_columns_file = 'my_history_columns.list'
+  profile_columns_file = 'my_profile_columns.list'
+  pause_before_terminate = .true.
 
   ! begin with a pre-main sequence model
   create_pre_main_sequence_model = .true.
@@ -18,7 +18,7 @@
 
   ! Solar composition, check the following file:
   ! $MESA_DIR/star/test_suite/example_solar_model/inlist_solar_model
-	set_uniform_initial_composition = .true.
+  set_uniform_initial_composition = .true.
   initial_h1 = 7.0001067228923031D-01
   initial_h2 = 0
   initial_he3 = 2.7955281905284692D-05
@@ -37,36 +37,49 @@
   ! If enable_adaptive_network is true, then at each step, 
   ! the system calculates a new set of isos. This can cause
   ! significant slowdowns
-	enable_adaptive_network = .true.
-	show_net_reactions_info = .true.
-	show_net_species_info = .true.
+  ! enable_adaptive_network = .true. <--TFM option
+  enable_adaptive_network = .false.
+  show_net_reactions_info = .true.
+  show_net_species_info = .true.
 
   ! display on-screen plots
   pgstar_flag = .true.
 
   ! Activate surface rotation and set velocity
-	change_v_flag = .true.
-	new_v_flag = .true.
-	set_initial_surface_rotation_v = .true.
-	new_surface_rotation_v = 20 ! km/sec 
+  ! change_v_flag = .true.
+  ! new_v_flag = .true.
+  ! set_initial_surface_rotation_v = .true.
+  ! new_surface_rotation_v = 20 ! km/sec
+  ! 
+  ! Rotation off until near ZAMS
+  ! change_rotation_flag = .false.
+  ! new_rotation_flag = .true.
 
   ! Rotation off until near ZAMS
-	change_rotation_flag = .false.
-	new_rotation_flag = .true.
-	
-	
+  new_rotation_flag = .true.
+  change_rotation_flag = .false.
+  change_initial_rotation_flag = .true.
+  set_initial_surface_rotation_v = .true.
+  new_surface_rotation_v = 20 ! km/sec
+
+  
+  
 
 / !end of star_job namelist
 
 
 &controls
+  ! history interval, maximum detail
+  history_interval = 1
+
   ! toggle element diffusion
   do_element_diffusion = .true.
   ! If true, don't lump elements into classes for diffusion. 
   ! Instead, each isotope in the network is treated as its 
   ! own separate class. This can cause significant slowdowns 
   ! for large nets, so it is off by default.
-  diffusion_use_full_net = .true.
+  ! diffusion_use_full_net = .true.  <--TFM option
+  diffusion_use_full_net = .false.
   diffusion_use_cgs_solver = .false.
 
   ! starting specifications
@@ -78,8 +91,8 @@
   xa_central_lower_limit(1) = 1d-9
 
   ! make use of 'hooks'
-	use_other_mlt = .false.
-	use_other_cgrav = .true.
+  use_other_mlt = .false.
+  use_other_cgrav = .true.
 
   ! The following parameters only affect to use_other_cgrav
   ! planet influence in gravity only when
@@ -95,10 +108,13 @@
   ! x_ctrl(2) = 0.000001d0 ! Enough for Jupiter because is far away
   ! x_ctrl(2) = 0.03d0 ! HAT-P-27 b
   ! x_ctrl(2) = 0.05d0 ! KELT-2 A b
-   x_ctrl(2) = 0.3 ! HAT-P-2 b
+  ! x_ctrl(2) = 0.20d0 ! HAT-P-2 b a 10 mill km
+  ! x_ctrl(2) = 0.20d0 ! HAT-P-2 b a 20 mill km
+  ! x_ctrl(2) = 0.20d0 ! HAT-P-2 b a 30 mill km
+  ! x_ctrl(2) = 0.15d0 ! HAT-P-2 b a 40 mill km
+  ! x_ctrl(2) = 0.10d0 ! HAT-P-2 b a 50 mill km
+  x_ctrl(2) = 0.07d0 ! HAT-P-2 b a 60 mill km
    
-
-  ! mlt params
   ! distance to planet in km 
   ! Jupiter analog planets
   ! x_ctrl(3) = 780000000.0 ! Jupiter
@@ -107,12 +123,12 @@
   ! Hot Jupiters
   ! x_ctrl(3) = 5976435.0 ! HAT-P-27 b
   ! x_ctrl(3) = 8223393.0 ! KELT-2 A b
-   x_ctrl(3) = 10157695.4 ! HAT-P-2 b
+  ! x_ctrl(3) = 10157695.4 ! HAT-P-2 b a 10 mill km
   ! x_ctrl(3) = 20157695.4 ! HAT-P-2 b a 20 mill km
   ! x_ctrl(3) = 30157695.4 ! HAT-P-2 b a 30 mill km
   ! x_ctrl(3) = 40157695.4 ! HAT-P-2 b a 40 mill km
   ! x_ctrl(3) = 50157695.4 ! HAT-P-2 b a 50 mill km
-  ! x_ctrl(3) = 60157695.4 ! HAT-P-2 b a 60 mill km
+  x_ctrl(3) = 60157695.4 ! HAT-P-2 b a 60 mill km
 
   ! mass of the planet in Mjupiter units
   ! Jupiter analog planets
@@ -122,68 +138,68 @@
   ! x_ctrl(4) = 7.0d0  ! Ficticious big Jupiter 3
   ! x_ctrl(4) = 10.0d0 ! Ficticious big Jupiter 4
   ! x_ctrl(4) = 3.17d0 ! HD_72659_b
-  !	x_ctrl(4) = 0.68d0 ! GJ 832 b
+  ! x_ctrl(4) = 0.68d0 ! GJ 832 b
   ! Hot Jupiters
   ! x_ctrl(4) = 0.615d0 ! HAT-P-27 b
   ! x_ctrl(4) = 1.52d0  ! KELT-2 A b
-   x_ctrl(4) = 8.86d0  ! HAT-P-2 b
+  x_ctrl(4) = 8.86d0  ! HAT-P-2 b
 
   !
 
 / ! end of controls namelist
 
 &pgstar
-	! show temperature/density profile
-	! this plots the internal structure at single timestep
-	  TRho_Profile_win_flag = .true.
+  ! show temperature/density profile
+  ! this plots the internal structure at single timestep
+  TRho_Profile_win_flag = .true.
 
-	! add legend explaining colors
-	  show_TRho_Profile_legend = .true.
+  ! add legend explaining colors
+  show_TRho_Profile_legend = .true.
 
-	! display numerical info about the star
-	  show_TRho_Profile_text_info = .true.
-
-
-	  Abundance_win_flag = .true.
-	  Abundance_show_photosphere_location = .true.
-	  num_abundance_line_labels = 1
-
-	!Abundance_num_isos_to_show = 5
-	!Abundance_which_isos_to_show(1) = 'h1'
-	!Abundance_which_isos_to_show(2) = 'he4'
-	!Abundance_which_isos_to_show(3) = 'li7'
-    !Abundance_which_isos_to_show(4) = 'be7'
-    !Abundance_which_isos_to_show(5) = 'fe56'
-	!Abundance_file_flag = .true.
-	  Abundance_num_isos_to_show = 3
-	  Abundance_which_isos_to_show(1) = 'li7'
-	  Abundance_which_isos_to_show(2) = 'be7'
-	  Abundance_which_isos_to_show(3) = 'h1'
-	  Abundance_file_flag = .true.
+  ! display numerical info about the star
+  show_TRho_Profile_text_info = .true.
 
 
-	!Abundance_log_mass_frac_min = -20
-	!Abundance_log_mass_frac_max = 0.3
-	  Abundance_log_mass_frac_min = -30
-	  Abundance_log_mass_frac_max = 10
-	  Abundance_file_interval = 1
+  Abundance_win_flag = .true.
+  Abundance_show_photosphere_location = .true.
+  num_abundance_line_labels = 1
+
+  !Abundance_num_isos_to_show = 5
+  !Abundance_which_isos_to_show(1) = 'h1'
+  !Abundance_which_isos_to_show(2) = 'he4'
+  !Abundance_which_isos_to_show(3) = 'li7'
+  !Abundance_which_isos_to_show(4) = 'be7'
+  !Abundance_which_isos_to_show(5) = 'fe56'
+  !Abundance_file_flag = .true.
+  Abundance_num_isos_to_show = 3
+  Abundance_which_isos_to_show(1) = 'li7'
+  Abundance_which_isos_to_show(2) = 'be7'
+  Abundance_which_isos_to_show(3) = 'h1'
+  Abundance_file_flag = .true.
 
 
-	! show HR diagram
- 	! this plots the history of L,Teff over many timesteps
-	  HR_win_flag = .true.
-	  HR_file_flag = .true.
-	  HR_file_interval = 1
+  !Abundance_log_mass_frac_min = -20
+  !Abundance_log_mass_frac_max = 0.3
+  Abundance_log_mass_frac_min = -30
+  Abundance_log_mass_frac_max = 10
+  Abundance_file_interval = 1
 
-	! Mixing Window
-	  Mixing_win_flag = .false.
 
-    Kipp_win_flag = .true.
-    Kipp_xaxis_name = 'star_age'
+  ! show HR diagram
+  ! this plots the history of L,Teff over many timesteps
+  HR_win_flag = .true.
+  HR_file_flag = .true.
+  HR_file_interval = 1
 
-	! Mirar para mostrar como varía las abundancias a lo largo de los modelos
-	! junto con temperatura
-	  Summary_History_win_flag = .false.
+  ! Mixing Window
+  Mixing_win_flag = .false.
+
+  Kipp_win_flag = .false.
+  Kipp_xaxis_name = 'star_age'
+
+  ! Mirar para mostrar como varía las abundancias a lo largo de los modelos
+  ! junto con temperatura
+  Summary_History_win_flag = .false.
 
   Summary_Profile_win_flag = .false.
 
