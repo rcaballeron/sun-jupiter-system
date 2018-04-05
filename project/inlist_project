@@ -79,7 +79,7 @@
 
   ! make use of 'hooks'
 	use_other_mlt = .false.
-	use_other_cgrav = .false.
+	use_other_cgrav = .true.
 
   ! The following parameters only affect to use_other_cgrav
   ! planet influence in gravity only when
