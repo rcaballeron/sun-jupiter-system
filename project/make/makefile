@@ -11,6 +11,6 @@ include $(MESA_DIR)/star/work_standard_makefile
 
 # add our MLT module
 #Use simply expanded variables '::='
-LOAD_STAR_MODS ::= $(LOAD_STAR_MODS) -ltfm_mlt 
+#LOAD_STAR_MODS ::= $(LOAD_STAR_MODS) -ltfm_mlt 
 
 STAR = star

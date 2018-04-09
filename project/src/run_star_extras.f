@@ -94,79 +94,6 @@
 
       end subroutine tfm_other_cgrav
 
-      subroutine tfm_other_mlt(  &
-            id, k, cgrav, m, r, T, rho, L, P, &
-            chiRho, chiT, Cp, Cv, csound, X, opacity, grada,  &
-            gradr_factor, gradL_composition_term, &
-            alpha_semiconvection, semiconvection_option, &
-            thermohaline_coeff, thermohaline_option, &
-            dominant_iso_for_thermohaline, &
-            mixing_length_alpha, alt_scale_height, remove_small_D_limit, &
-            MLT_option, Henyey_y_param, Henyey_nu_param, &
-            gradT_smooth_low, gradT_smooth_mid, gradT_smooth_high, gradT_smooth_factor, &
-            smooth_gradT, use_grada_for_smooth_gradT, &
-            prev_conv_vel, max_conv_vel, g_theta, dt, tau, MLT_dbg, &
-            mixing_type, mlt_basics, mlt_partials1, ierr)
-         ! Probablemente no podemos utilizarlo
-         use tfm_mlt_lib, only: mlt_eval 
-         use tfm_mlt_def
-         integer, intent(in) :: id ! id for star         
-         integer, intent(in) :: k ! cell number or 0 if not for a particular cell         
-         real(dp), intent(in) :: cgrav, m, r, T, Rho, L, P
-         real(dp), intent(in) :: chiRho, chiT, Cp, Cv, csound, X, opacity, grada, gradr_factor
-         real(dp), intent(in) :: gradL_composition_term
-         real(dp), intent(in) :: alpha_semiconvection, thermohaline_coeff
-         real(dp), intent(in) :: mixing_length_alpha, remove_small_D_limit
-         logical, intent(in) :: alt_scale_height
-         character (len=*), intent(in) :: &
-            semiconvection_option, thermohaline_option, MLT_option
-         integer, intent(in) :: dominant_iso_for_thermohaline
-         real(dp), intent(in) :: Henyey_y_param, Henyey_nu_param, &
-            prev_conv_vel, max_conv_vel, g_theta, dt, tau
-         real(dp), intent(in) :: gradT_smooth_low, gradT_smooth_mid, gradT_smooth_high, &
-            gradT_smooth_factor
-         logical, intent(in) :: smooth_gradT, use_grada_for_smooth_gradT
-         logical, intent(in) :: MLT_dbg
-         integer, intent(out) :: mixing_type
-         real(dp), intent(out) :: mlt_basics(:) 
-         real(dp), intent(out), pointer :: mlt_partials1(:)
-         integer, intent(out) :: ierr
-
-         real(dp) :: tfm_mp, tfm_dp
-         logical :: tfm_start_planet_influence
-         type (star_info), pointer :: s
-
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return   
-
-         !my_cgrav = 1.5 * cgrav
-         !write(*,*) "number of cell=", k,  "num cells=", s% nz, "r(k)=", s% m(k)
-         !if(k /= 0) then
-         !   write(*,*) "number of cell=", k,  "num cells=", s% nz, "array size", size(s% r), "r(k)=", s% r(k)
-         !end if
-
-         tfm_mp = m_jupiter*s% x_ctrl(2) ! convert from Jupiter mass to gradT_smooth_mid
-         tfm_dp = s% x_ctrl(1)*100000 ! convert from km to cm
-         tfm_start_planet_influence = s% x_logical_ctrl(1)
-
-
-         call mlt_eval(  &
-            tfm_mp, tfm_dp, tfm_start_planet_influence, s, &
-            cgrav, m, r, T, rho, L, P, &
-            chiRho, chiT, Cp, Cv, csound, X, opacity, grada,  &
-            gradr_factor, gradL_composition_term, &
-            alpha_semiconvection, semiconvection_option, &
-            thermohaline_coeff, thermohaline_option, &
-            dominant_iso_for_thermohaline, &
-            mixing_length_alpha, alt_scale_height, remove_small_D_limit, &
-            MLT_option, Henyey_y_param, Henyey_nu_param, &
-            gradT_smooth_low, gradT_smooth_mid, gradT_smooth_high, &
-            gradT_smooth_factor, smooth_gradT, use_grada_for_smooth_gradT, &
-            prev_conv_vel, max_conv_vel, g_theta, dt, tau, MLT_dbg, &
-            mixing_type, mlt_basics, mlt_partials1, ierr)
-      end subroutine tfm_other_mlt
-
       
       subroutine extras_controls(id, ierr)
          integer, intent(in) :: id
@@ -178,7 +105,6 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-		   s% other_mlt => tfm_other_mlt
          s% other_cgrav => tfm_other_cgrav
          
          ! this is the place to set any procedure pointers you want to change

@@ -56,11 +56,21 @@
   ! new_rotation_flag = .true.
 
   ! Rotation off until near ZAMS
-  new_rotation_flag = .true.
+  !new_rotation_flag = .true.
+  !change_rotation_flag = .false.
+  !change_initial_rotation_flag = .true.
+  !set_initial_surface_rotation_v = .true.
+  !new_surface_rotation_v = 20 ! km/sec
+
+  ! Rotation off until near ZAMS
   change_rotation_flag = .false.
-  change_initial_rotation_flag = .true.
-  set_initial_surface_rotation_v = .true.
-  new_surface_rotation_v = 20 ! km/sec
+  new_rotation_flag = .true.
+  new_surface_rotation_v = 20 ! solar (km sec^1)
+  set_near_zams_surface_rotation_v_steps = 10 ! to turn on rotation when near zams
+         ! if rotation_flag is false and L_nuc_burn_total >= L_phot and this control > 0
+         ! then turn on rotation and set set_surf_rotation_v_step_limit to
+         ! the current model_number plus this control
+
 
   
   
@@ -92,7 +102,7 @@
 
   ! make use of 'hooks'
   use_other_mlt = .false.
-  use_other_cgrav = .true.
+  use_other_cgrav = .false.
 
   ! The following parameters only affect to use_other_cgrav
   ! planet influence in gravity only when
@@ -160,7 +170,7 @@
   show_TRho_Profile_text_info = .true.
 
 
-  Abundance_win_flag = .true.
+  Abundance_win_flag = .false.
   Abundance_show_photosphere_location = .true.
   num_abundance_line_labels = 1
 
@@ -231,5 +241,15 @@
 
   Summary_Profile_name(7) = 'temperature'
   Summary_Profile_legend(7) = 'T rel'    
+
+History_Track2_win_flag = .true.
+History_Track2_xname = 'star_age'
+History_Track2_yname = 'surf_avg_v_rot'
+History_Track2_xaxis_label = 'star_age'
+History_Track2_yaxis_label = 'surf_avg_v_rot'
+History_Track2_reverse_xaxis = .false.
+History_Track2_reverse_yaxis = .false.
+History_Track2_log_xaxis = .true.
+History_Track2_log_yaxis = .false.  
 
 / ! end of pgstar namelist
