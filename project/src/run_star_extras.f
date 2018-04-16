@@ -28,43 +28,83 @@
       use crlibm_lib
       
       implicit none
+
+
       
       ! these routines are called by the standard run_star check_model
       contains
 
       subroutine tfm_other_torque(id, ierr)
+         use const_def
          integer, intent(in) :: id
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
+         real(dp) :: r_sol, m_sol, r_st, m_st
+         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
          ierr = 0
+
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
+
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
 
          !Magnetic braking according to MESA school 2012 assignment by Cantiello
          !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
-         !j_dot = angular momentum lost
-         !omega = surface angular velocity
-         !m_dot = mass lost rate
-         !alfven_r = Alfven radius
+         ! j_dot = angular momentum lost
+         ! omega_surf = surface angular velocity (rad/s)
+         ! m_dot = mass lost rate (Msun/year)
+         ! alfven_r = Alfven radius
 
-         !Wind-confinmenet parameter eta_r
-         !eta_surf = ((r*r)/(B*B)) / (m_dot*v_inf)
-         !r = stellar surface radius
-         !B =
-         !v_inf = terminal velocity of the stellar wind
+         !Wind-confinmenet parameter eta_surf
+         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
+         ! r_st = stellar surface radius (cm)
+         ! B = magnetic field torque (G)
+         ! v_inf = terminal velocity of the stellar wind (cm/s)
 
          !v_inf = 1.92*v_esc
-         !v_esc = photospheric escape velocity
-         !v = 
+         ! v_esc = photospheric escape velocity (cm/s)
 
-         !j_dot = 2/3*m_dot*omega*r*r*eta_surf
+         !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
+
+         !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
+
+         if (s% use_other_torque) then
+            !Constants (cgs)
+            r_sol = Rsun
+            m_sol = Msun
 
 
+            !Star data
+            r_st = s% r(1)
+            m_st = s% m(1)
+            omega_surf = s% omega_avg_surf
+
+            v_esc = 618 * (((r_sol/r_st)*(m_st/m_sol)))**0.5
+            !v_esc = vesc / 100000 ! convert from cm/s to km/s.
+
+            v_inf = 1.92 * v_esc
+
+            B = s% x_ctrl(6)
+            m_dot = s% star_mdot
+            eta_surf = (r_st**2/B**2)/(m_dot * v_inf)
+
+            j_dot = (2/3) * m_dot * omega_surf * r_st**2 * eta_surf
+
+            write(*,*) "r_sol=", r_sol, "m_sol=", m_sol, "r_st=", r_st, "m_st=", m_st, &
+               "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
+               "omega_surf", omega_surf, "j_dot", j_dot
+
+            !s% x_ctrl(6) = B
+            s% x_ctrl(7) = v_esc
+            s% x_ctrl(8) = v_inf
+            s% x_ctrl(9) = eta_surf
+            s% x_ctrl(10) = j_dot
+               
 
 
+         end if
 
       end subroutine tfm_other_torque
 
@@ -83,7 +123,9 @@
          if (ierr /= 0) return
 
 
-         tfm_s_age = s% x_ctrl(1) ! star age, time in years
+         ! star age, time in years
+         tfm_s_age = s% x_ctrl(1)
+
          ! min distance, relative to tfm_dp, at which the planet must
          ! situated before activating its influence
          tfm_perc_dp = s% x_ctrl(2)  
@@ -231,7 +273,7 @@
          end if
 
          if (s% use_other_torque .eqv. .true.) then 
-            how_many_extra_history_columns = how_many_extra_history_columns + 2;
+            how_many_extra_history_columns = 11;
          end if
 
       end function how_many_extra_history_columns
@@ -242,7 +284,6 @@
          character (len=maxlen_history_column_name) :: names(n)
          real(dp) :: vals(n)
          integer, intent(out) :: ierr
-         integer :: num_extra_params
          type (star_info), pointer :: s
          ierr = 0
          call star_ptr(id, s, ierr)
@@ -253,7 +294,6 @@
          ! it must not include the new column names you are adding here.
 
          if (s% use_other_cgrav .eqv. .true.) then
-            num_extra_params = 5
 
             !column 1, age threshold 
             names(1) = 'tfm_s_age'
@@ -275,24 +315,55 @@
             names(5) = 'tfm_s_p_d'
             vals(5) = s% x_ctrl(3)*100000 - s% r(1)
 
-            ierr = 0
-         else
-            num_extra_params = 0;
          end if
 
          if (s% use_other_torque .eqv. .true.) then
-            !angular momentum loss
-            names(num_extra_params + 1) = 'tfm_j_dot'
-            vals(num_extra_params + 1) = 0d0 !A calcular
+            !column 1, age threshold 
+            names(1) = 'tfm_s_age'
+            vals(1) = 0.0
 
-            !wind-confinement parameter
-            names(num_extra_params + 2) = 'tfm_n_surface'
-            vals(num_extra_params + 2) = 0d0 !A calcular
-         endif
-         
+            !column 2, distance percentage to planet threshold
+            names(2) = 'tfm_perc_dp'
+            vals(2) = 0.0
+
+            !column 3, distance to planet
+            names(3) = 'tfm_dp'
+            vals(3) = 0.0
+
+            !column 4, mass of planet
+            names(4) = 'tfm_mp'
+            vals(4) = 0.0
+
+            !column 5, distance from the outtest zone of the star to the planet 
+            names(5) = 'tfm_s_p_d'
+            vals(5) = 0.0
 
 
-         
+            !magnetic field torque
+            names(6) = 'B'
+            vals(6) = s% x_ctrl(6) 
+
+            !photospheric escape velocity
+            names(7) = 'v_esc'
+            vals(7) = s% x_ctrl(7)
+            
+            !terminal velocity
+            names(8) = 'v_inf'
+            vals(8) = s% x_ctrl(8)
+            
+            !Wind-confinmenet parameter
+            names(9) = 'eta_surf'
+            vals(9) = s% x_ctrl(9)
+            
+            !angular momentum lost
+            names(10) = 'j_dot'
+            vals(10) = s% x_ctrl(10)
+
+            names(11) = 'm_dot'
+            vals(11) = s% star_mdot
+         end if
+         ierr = 0         
+  
       end subroutine data_for_extra_history_columns
 
       
