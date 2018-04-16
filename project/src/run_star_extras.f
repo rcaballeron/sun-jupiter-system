@@ -32,6 +32,20 @@
       ! these routines are called by the standard run_star check_model
       contains
 
+      subroutine tfm_other_torque(id, ierr)
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         integer :: k
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+         s% extra_jdot(:) = 0
+         s% extra_omegadot(:) = 0
+
+
+      end subroutine tfm_other_torque
+
       subroutine tfm_other_cgrav(id, ierr)
          use const_def, only: standard_cgrav
          integer, intent(in) :: id
@@ -106,6 +120,7 @@
          if (ierr /= 0) return
 
          s% other_cgrav => tfm_other_cgrav
+         s% other_torque => tfm_other_torque
          
          ! this is the place to set any procedure pointers you want to change
          ! e.g., other_wind, other_mixing, other_energy  (see star_data.inc)
@@ -192,6 +207,11 @@
          else
             how_many_extra_history_columns = 0
          end if
+
+         if (s% use_other_torque .eqv. .true.) then 
+            how_many_extra_history_columns = how_many_extra_history_columns + 2;
+         end if
+
       end function how_many_extra_history_columns
       
       
@@ -200,6 +220,7 @@
          character (len=maxlen_history_column_name) :: names(n)
          real(dp) :: vals(n)
          integer, intent(out) :: ierr
+         integer :: num_extra_params
          type (star_info), pointer :: s
          ierr = 0
          call star_ptr(id, s, ierr)
@@ -210,6 +231,8 @@
          ! it must not include the new column names you are adding here.
 
          if (s% use_other_cgrav .eqv. .true.) then
+            num_extra_params = 5
+
             !column 1, age threshold 
             names(1) = 'tfm_s_age'
             vals(1) = s% x_ctrl(1)
@@ -231,7 +254,21 @@
             vals(5) = s% x_ctrl(3)*100000 - s% r(1)
 
             ierr = 0
+         else
+            num_extra_params = 0;
          end if
+
+         if (s% use_other_torque .eqv. .true.) then
+            !angular momentum loss
+            names(num_extra_params + 1) = 'tfm_j_dot'
+            vals(num_extra_params + 1) = 0d0 !A calcular
+
+            !wind-confinement parameter
+            names(num_extra_params + 2) = 'tfm_n_surface'
+            vals(num_extra_params + 2) = 0d0 !A calcular
+         endif
+         
+
 
          
       end subroutine data_for_extra_history_columns
