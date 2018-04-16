@@ -43,6 +43,28 @@
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
 
+         !Magnetic braking according to MESA school 2012 assignment by Cantiello
+         !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
+         !j_dot = angular momentum lost
+         !omega = surface angular velocity
+         !m_dot = mass lost rate
+         !alfven_r = Alfven radius
+
+         !Wind-confinmenet parameter eta_r
+         !eta_surf = ((r*r)/(B*B)) / (m_dot*v_inf)
+         !r = stellar surface radius
+         !B =
+         !v_inf = terminal velocity of the stellar wind
+
+         !v_inf = 1.92*v_esc
+         !v_esc = photospheric escape velocity
+         !v = 
+
+         !j_dot = 2/3*m_dot*omega*r*r*eta_surf
+
+
+
+
 
       end subroutine tfm_other_torque
 
