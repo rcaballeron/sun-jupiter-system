@@ -106,6 +106,13 @@
   RGB_to_AGB_wind_switch = -1
   Reimers_scaling_factor = 0.5d0
 
+  ! mass loss configuration proposed by Francis
+  !cool_wind_RGB_scheme   = 'Reimers'
+  !cool_wind_AGB_scheme   = 'Blocker'
+  !RGB_to_AGB_wind_switch = 1d-4
+  !Reimers_scaling_factor = 0.1   
+  !Blocker_scaling_factor = 0.5     
+
 
   ! make use of 'hooks'
   use_other_cgrav = .false.
