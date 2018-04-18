@@ -100,6 +100,13 @@
   xa_central_lower_limit_species(1) = 'h1'
   xa_central_lower_limit(1) = 1d-9
 
+  ! mass loss       
+  cool_wind_full_on_T = 4.3d3
+  cool_wind_RGB_scheme = 'Reimers'
+  RGB_to_AGB_wind_switch = -1
+  Reimers_scaling_factor = 0.5d0
+
+
   ! make use of 'hooks'
   use_other_cgrav = .false.
   use_other_torque = .true.
