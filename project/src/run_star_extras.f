@@ -40,7 +40,7 @@
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
-         real(dp) :: r_sol, m_sol, r_st, m_st
+         real(dp) :: r_st, m_st
          real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
          ierr = 0
 
@@ -71,40 +71,35 @@
          !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
 
          if (s% use_other_torque) then
-            !Constants (cgs)
-            r_sol = Rsun
-            m_sol = Msun
-
 
             !Star data
             r_st = s% r(1)
             m_st = s% m(1)
             omega_surf = s% omega_avg_surf
 
-            v_esc = 618 * (((r_sol/r_st)*(m_st/m_sol)))**0.5
-            !v_esc = vesc / 100000 ! convert from cm/s to km/s.
+            v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
 
             v_inf = 1.92 * v_esc
 
             B = s% x_ctrl(6)
+
             m_dot = s% star_mdot
-            !m_dot = 0.0000000000001*Msun
-            eta_surf = (r_st**2/B**2)/(m_dot * v_inf)
 
-            j_dot = (2.0/3.0) * m_dot * omega_surf * r_st**2 * eta_surf
+            eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
 
-            write(*,*) "r_sol=", r_sol, "m_sol=", m_sol, "r_st=", r_st, "m_st=", m_st, &
-               "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
-               "omega_surf", omega_surf, "j_dot", j_dot
+            j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
 
-            !s% x_ctrl(6) = B
+            if (debug_use_other_torque) then
+               write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
+                  "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
+                  "omega_surf", omega_surf, "j_dot", j_dot
+            end if
+
             s% x_ctrl(7) = v_esc
             s% x_ctrl(8) = v_inf
             s% x_ctrl(9) = eta_surf
             s% x_ctrl(10) = j_dot
             s% x_ctrl(11) = m_dot
-               
-
 
          end if
 
