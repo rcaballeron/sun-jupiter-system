@@ -88,9 +88,10 @@
 
             B = s% x_ctrl(6)
             m_dot = s% star_mdot
+            !m_dot = 0.0000000000001*Msun
             eta_surf = (r_st**2/B**2)/(m_dot * v_inf)
 
-            j_dot = (2/3) * m_dot * omega_surf * r_st**2 * eta_surf
+            j_dot = (2.0/3.0) * m_dot * omega_surf * r_st**2 * eta_surf
 
             write(*,*) "r_sol=", r_sol, "m_sol=", m_sol, "r_st=", r_st, "m_st=", m_st, &
                "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
@@ -101,6 +102,7 @@
             s% x_ctrl(8) = v_inf
             s% x_ctrl(9) = eta_surf
             s% x_ctrl(10) = j_dot
+            s% x_ctrl(11) = m_dot
                
 
 
@@ -360,7 +362,8 @@
             vals(10) = s% x_ctrl(10)
 
             names(11) = 'm_dot'
-            vals(11) = s% star_mdot
+            !vals(11) = s% star_mdot
+            vals(11) = s% x_ctrl(11)
          end if
          ierr = 0         
   
