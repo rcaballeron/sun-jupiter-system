@@ -29,7 +29,7 @@
       
       implicit none
 
-
+      logical :: debug_use_other_torque = .false.
       
       ! these routines are called by the standard run_star check_model
       contains
@@ -88,6 +88,8 @@
             eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
 
             j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
+
+            s% extra_jdot(1) = j_dot
 
             if (debug_use_other_torque) then
                write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
@@ -182,6 +184,7 @@
 
          s% other_cgrav => tfm_other_cgrav
          s% other_torque => tfm_other_torque
+         debug_use_other_torque = s% x_logical_ctrl(1)
          
          ! this is the place to set any procedure pointers you want to change
          ! e.g., other_wind, other_mixing, other_energy  (see star_data.inc)

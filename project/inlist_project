@@ -116,7 +116,8 @@
 
   ! make use of 'hooks'
   use_other_cgrav = .false.
-  use_other_torque = .true.
+  use_other_torque = .false.
+  x_logical_ctrl(1) = .true. !debug flag for use_other_torque routine
 
   ! The following parameters only affect to use_other_cgrav
   ! planet influence in gravity only when
