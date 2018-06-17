@@ -1,0 +1,77 @@
+! 00001_54.net      54 species
+
+add_isos_and_reactions(
+!       iso    log10 max x
+       neut   ! newly added
+
+         h1   !   -0.15490
+         h2   ! -199.00000
+         h3   ! newly added
+
+        he3   !   -4.55354
+        he4   !   -0.55358
+
+        li7   !   -7.90201
+
+        be7   ! -199.00000
+        be8   ! newly added
+        be9   ! newly added
+
+         b9   ! newly added
+        b10   ! newly added
+        b11   ! newly added
+        b12   ! newly added
+
+        c11   ! newly added
+        c12   !   -2.45386
+        c13   ! newly added
+        c14   ! newly added
+
+        n12   ! newly added
+        n13   ! newly added
+        n14   !   -2.98709
+        n15   ! newly added
+        n16   ! newly added
+
+        o14   ! newly added
+        o15   ! newly added
+        o16   !   -2.01933
+        o17   ! newly added
+
+        f16   ! newly added
+        f17   ! newly added
+        f18   ! newly added
+        f19   ! newly added
+        f20   ! newly added
+
+       ne19   ! newly added
+       ne20   !   -2.66852
+       ne21   ! newly added
+       ne22   ! newly added
+
+       na20   ! newly added
+       na21   ! newly added
+       na22   ! newly added
+       na23   ! newly added
+       na24   ! newly added
+
+       mg23   ! newly added
+       mg24   !   -2.37887
+       mg25   ! newly added
+       mg26   ! newly added
+
+       al24   ! newly added
+       al25   ! newly added
+       al26   ! newly added
+       al27   ! newly added
+
+       si27   ! newly added
+       si28   ! newly added
+
+        p31   ! newly added
+
+        s32   ! newly added
+
+       fe56   ! newly added
+)
+
