@@ -45,12 +45,22 @@
   ! display on-screen plots
   pgstar_flag = .true.
 
-  ! Activate surface rotation since the beginning
-  !change_rotation_flag = .true.
-  !new_rotation_flag = .true.
-  !set_surface_rotation_v = .true.
-  !new_surface_rotation_v = 20 ! km/sec
+  ! Activate surface rotation and set velocity
+  ! change_v_flag = .true.
+  ! new_v_flag = .true.
+  ! set_initial_surface_rotation_v = .true.
+  ! new_surface_rotation_v = 20 ! km/sec
+  ! 
+  ! Rotation off until near ZAMS
+  ! change_rotation_flag = .false.
+  ! new_rotation_flag = .true.
 
+  ! Rotation off until near ZAMS
+  !new_rotation_flag = .true.
+  !change_rotation_flag = .false.
+  !change_initial_rotation_flag = .true.
+  !set_initial_surface_rotation_v = .true.
+  !new_surface_rotation_v = 20 ! km/sec
 
   ! Rotation off until near ZAMS
   change_rotation_flag = .false.
@@ -106,7 +116,7 @@
 
   ! make use of 'hooks'
   use_other_cgrav = .false.
-  use_other_torque = .true.
+  use_other_torque = .false.
   x_logical_ctrl(1) = .true. !debug flag for use_other_torque routine
 
   ! The following parameters only affect to use_other_cgrav
@@ -163,14 +173,14 @@
   ! Magnetic braking input parameters
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! B - magnetic field torque (G)
-  x_ctrl(6) = 1.0d0
+  x_ctrl(6) = 10.0d0
 
   !
 
 / ! end of controls namelist
 
 &pgstar
-Profile_Panels1_win_flag=.false.
+Profile_Panels1_win_flag=.true.
 Profile_Panels3_xaxis_name = 'logP'
 Profile_Panels3_xaxis_reversed = .true.
 Profile_Panels3_num_panels = 3
@@ -220,7 +230,7 @@ Profile_Panels3_yaxis_name(3) = 'Mixing'
 
   ! show HR diagram
   ! this plots the history of L,Teff over many timesteps
-  HR_win_flag = .true.
+  HR_win_flag = .false.
   HR_file_flag = .true.
   HR_file_interval = 1
 

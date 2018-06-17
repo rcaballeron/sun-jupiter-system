@@ -30,8 +30,6 @@
       implicit none
 
       logical :: debug_use_other_torque = .false.
-      real(dp) :: infinity = HUGE(Msun)
-
       
       ! these routines are called by the standard run_star check_model
       contains
@@ -41,10 +39,9 @@
          integer, intent(in) :: id
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
-         integer :: k, size_nz
+         integer :: k
          real(dp) :: r_st, m_st
          real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
-
          ierr = 0
 
          call star_ptr(id, s, ierr)
@@ -61,7 +58,7 @@
          ! alfven_r = Alfven radius
 
          !Wind-confinmenet parameter eta_surf
-         !eta_surf = (r_st*r_st)*(B*B)/(m_dot*v_inf)
+         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
          ! r_st = stellar surface radius (cm)
          ! B = magnetic field torque (G)
          ! v_inf = terminal velocity of the stellar wind (cm/s)
@@ -77,56 +74,27 @@
 
             !Star data
             r_st = s% r(1)
-            !r_st = s% r(1) - s% r(2)
-            !m_st = s% m(1)
             m_st = s% m(1)
             omega_surf = s% omega_avg_surf
 
-            !v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
-            v_esc = 100000 * 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5 !cm/s
+            v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
 
             v_inf = 1.92 * v_esc
 
             B = s% x_ctrl(6)
 
-            !m_dot = s% star_mdot !(Msun/year)
-            !m_dot = s% star_mdot * Msun !(g/year)
-            m_dot = s% mstar_dot
+            m_dot = s% star_mdot
 
-            eta_surf = abs(((r_st * B)**2) / (m_dot * v_inf))
-            !eta_surf = abs((r_st**2 * B**2) / (m_dot * v_inf))
+            eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
 
-            if (eta_surf > infinity) then
-               write(*,*) "eta infinito", eta_surf
-               return
-            end if
-
-            !j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
-            j_dot = two_thirds * m_dot * omega_surf * r_st**2 * eta_surf
+            j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
 
             s% extra_jdot(1) = j_dot
 
-            !s% extra_jdot(1) = j_dot / s% dm(1)
-
-            !size_nz = s% nz
-            !do k = 1, size_nz
-            !   s% extra_jdot(k) = j_dot / s% m(k)
-
-            !   if (debug_use_other_torque) then
-            !      write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
-            !         "v_esc=", v_esc, "v_inf=", v_inf, "B=", B, "m_dot=", m_dot, "eta_surf=", eta_surf, &
-            !         "omega_surf", omega_surf, "j_dot", j_dot, "s% m(",k,")=", s% m(k), &
-            !         "s% extra_jdot(",k,")=", s% extra_jdot(k), "s% i_rot(",k,")=", s% i_rot(k), "s% omega(",k,")=", s% omega(k)
-            !   end if
-
-            !end do
-
-
             if (debug_use_other_torque) then
                write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
-                  "v_esc=", v_esc, "v_inf=", v_inf, "B=", B, "m_dot=", m_dot, "eta_surf=", eta_surf, &
-                  "omega_surf", omega_surf, "j_dot", j_dot, "s% dm(1)=", s% dm(1), &
-                  "s% extra_jdot(1)=", s% extra_jdot(1), "s% i_rot(1)", s% i_rot(1), "s% omega(1)", s% omega(1)
+                  "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
+                  "omega_surf", omega_surf, "j_dot", j_dot
             end if
 
             s% x_ctrl(7) = v_esc
