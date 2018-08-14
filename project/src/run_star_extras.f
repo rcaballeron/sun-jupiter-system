@@ -21,558 +21,501 @@
 ! ***********************************************************************
  
       module run_star_extras
-
+      
       use star_lib
       use star_def
       use const_def
       use crlibm_lib
+      use rates_def
+      use net_def
       
       implicit none
-
-      logical :: debug_use_other_torque = .false.
       
-      ! these routines are called by the standard run_star check_model
+      real(dp) :: original_diffusion_dt_limit
+      real(dp) :: burn_check = 0.0
+      
+!     these routines are called by the standard run_star check_model
       contains
-
-      subroutine tfm_other_torque(id, ierr)
-         use const_def
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         integer :: k
-         real(dp) :: r_st, m_st
-         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
-         ierr = 0
-
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-         s% extra_jdot(:) = 0
-         s% extra_omegadot(:) = 0
-
-         !Magnetic braking according to MESA school 2012 assignment by Cantiello
-         !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
-         ! j_dot = angular momentum lost
-         ! omega_surf = surface angular velocity (rad/s)
-         ! m_dot = mass lost rate (Msun/year)
-         ! alfven_r = Alfven radius
-
-         !Wind-confinmenet parameter eta_surf
-         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
-         ! r_st = stellar surface radius (cm)
-         ! B = magnetic field torque (G)
-         ! v_inf = terminal velocity of the stellar wind (cm/s)
-
-         !v_inf = 1.92*v_esc
-         ! v_esc = photospheric escape velocity (cm/s)
-
-         !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
-
-         !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
-
-         if (s% use_other_torque) then
-
-            !Star data
-            r_st = s% r(1)
-            m_st = s% m(1)
-            omega_surf = s% omega_avg_surf
-
-            v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
-
-            v_inf = 1.92 * v_esc
-
-            B = s% x_ctrl(6)
-
-            m_dot = s% star_mdot
-
-            eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
-
-            j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
-
-            s% extra_jdot(1) = j_dot
-
-            if (debug_use_other_torque) then
-               write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
-                  "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
-                  "omega_surf", omega_surf, "j_dot", j_dot
-            end if
-
-            s% x_ctrl(7) = v_esc
-            s% x_ctrl(8) = v_inf
-            s% x_ctrl(9) = eta_surf
-            s% x_ctrl(10) = j_dot
-            s% x_ctrl(11) = m_dot
-
-         end if
-
-      end subroutine tfm_other_torque
-
-      subroutine tfm_other_cgrav(id, ierr)
-         use const_def, only: standard_cgrav
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         integer :: k, size_cgrav, size_nz
-         real(dp) :: tfm_mp, tfm_dp, tfm_s_age, tfm_perc_dp, tfm_min_dp
-         real(dp) :: tfm_lz_d, tfm_new_cgrav
-
-         ierr = 0
-
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-
-         ! star age, time in years
-         tfm_s_age = s% x_ctrl(1)
-
-         ! min distance, relative to tfm_dp, at which the planet must
-         ! situated before activating its influence
-         tfm_perc_dp = s% x_ctrl(2)  
-         tfm_dp = s% x_ctrl(3)*100000 ! convert from km to cm
-         tfm_mp = m_jupiter * s% x_ctrl(4) ! convert from Jupiter mass to grams
-         tfm_min_dp = tfm_perc_dp * tfm_dp
-
-
-
-         ! Get the size of the outtest star zone.
-         tfm_lz_d = s% r(1)
-         !write(*,*) "dist min=", tfm_min_dp, "dist lz", tfm_lz_d, "current dist=", tfm_dp - tfm_lz_d
-         ! Activate planet influence only when star age reaches tfm_s_age
-         ! and the planet is at least at tfm_min_dp distance
-         if (s% use_other_cgrav .and. &
-            (s% star_age  > tfm_s_age) .and. &
-            ((tfm_dp - tfm_lz_d) >= tfm_min_dp)) then
-            ! geff = g - G * Mp / (D-r)²
-            ! geff = G' * m / r²
-            ! G' * m / r² = g - G * Mp / (D-r)²
-            ! g = G * m / r²
-            !
-            ! G' =  G (1 - ((Mp/m)*r²/(D-r)²))
-            !PDTE de comprobar si utilzamos m(k) o dm(k)
-            !masa contenida desde el centro de la estrella hasta el borde
-            !de celda k o sólo la masa contenida en celda k.
-            !Utilizamos la primera opción de las comentadas
-            !size_cgrav = size(s% cgrav)
-            
-            !write(*,*) "num cells=", s% nz, "cgrav size", size_cgrav
-            !write(*,*) "modified gravity constant"
-            ! Get the number of star zones in the current model
-            size_nz = s% nz
-            do k = 1, size_nz 
-               tfm_new_cgrav = standard_cgrav * (1 - ( (tfm_mp / s% m(k)) * s% r(k)**2 / (tfm_dp - s% r(k))**2 ) )
-               s% cgrav(k) = tfm_new_cgrav
-               !write(*,*) k,"m=", s% m(k), "r=",s% r(k),"G=", s% cgrav(k),  &
-               !   "Mp/m=",(tfm_mp / s% m(k)),"r²/(D-r)²=",s% r(k)**2 / (tfm_dp - s% r(k))**2 
-            end do
-         else
-            s% cgrav(:) = standard_cgrav
-            !write(*,*) "standard gravity constant"
-         end if
-
-      end subroutine tfm_other_cgrav
-
       
       subroutine extras_controls(id, ierr)
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-
-          ! before we can use controls associated with the star we need to get access
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-         s% other_cgrav => tfm_other_cgrav
-         s% other_torque => tfm_other_torque
-         debug_use_other_torque = s% x_logical_ctrl(1)
-         
-         ! this is the place to set any procedure pointers you want to change
-         ! e.g., other_wind, other_mixing, other_energy  (see star_data.inc)
-         
-         ! Uncomment these lines if you wish to use the functions in this file,
-         ! otherwise we use a null_ version which does nothing.
-         s% extras_startup => extras_startup
-         s% extras_check_model => extras_check_model
-         s% extras_finish_step => extras_finish_step
-         s% extras_after_evolve => extras_after_evolve
-         s% how_many_extra_history_columns => how_many_extra_history_columns
-         s% data_for_extra_history_columns => data_for_extra_history_columns
-         s% how_many_extra_profile_columns => how_many_extra_profile_columns
-         s% data_for_extra_profile_columns => data_for_extra_profile_columns  
-
-         ! Once you have set the function pointers you want,
-         ! then uncomment this (or set it in your star_job inlist)
-         ! to disable the printed warning message,
-          s% job% warn_run_star_extras =.false.       
-            
+      integer, intent(in) :: id
+      integer, intent(out) :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      
+      original_diffusion_dt_limit = s% diffusion_dt_limit
+      !s% other_wind => Reimers_then_VW
+      s% other_wind => Reimers_then_Blocker
+      
       end subroutine extras_controls
       
-      ! None of the following functions are called unless you set their
-      ! function point in extras_control.
-      
-      
       integer function extras_startup(id, restart, ierr)
-         integer, intent(in) :: id
-         logical, intent(in) :: restart
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-         extras_startup = 0
-         if (.not. restart) then
-            call alloc_extra_info(s)
-         else ! it is a restart
-            call unpack_extra_info(s)
+      integer, intent(in) :: id
+      logical, intent(in) :: restart
+      integer, intent(out) :: ierr
+      type (star_info), pointer :: s
+      real(dp) :: core_ov_full_on, core_ov_full_off, frac, rot_full_off, rot_full_on, frac2, vct30, vct100
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      extras_startup = 0
+      if (.not. restart) then
+         call alloc_extra_info(s)
+      else                      ! it is a restart
+         call unpack_extra_info(s)
+      end if
+      
+!     set OPACITIES: Zbase for Type 2 Opacities automatically to the Z for the star
+      s% Zbase = 1.0 - (s% job% initial_h1 + s% job% initial_h2 + &
+      s% job% initial_he3 + s% job% initial_he4)
+      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      write(*,*) 'Zbase for Type 2 Opacities: ', s% Zbase
+      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      
+!     set ROTATION: extra param are set in inlist: star_job
+      rot_full_off = s% job% extras_rpar(1) !1.2
+      rot_full_on = s% job% extras_rpar(2) !1.8
+      
+      if (s% job% extras_rpar(3) > 0.0) then
+         if (s% star_mass < rot_full_off) then
+            frac2 = 0
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            write(*,*) 'no rotation'
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         else if (s% star_mass >= rot_full_off .and. s% star_mass <= rot_full_on) then
+            frac2 = (s% star_mass - rot_full_off) / &
+            (rot_full_on - rot_full_off)
+            frac2 = 0.5d0*(1 - cos(pi*frac2))
+            s% job% set_near_zams_omega_div_omega_crit_steps = 10
+            s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         else
+            frac2 = 1.0
+            s% job% set_near_zams_omega_div_omega_crit_steps = 10
+            s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2 !nominally 0.4
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
          end if
+      else
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         write(*,*) 'no rotation'
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      end if
+      
+      
+!     set VARCONTROL: for massive stars, turn up varcontrol gradually to help them evolve
+      vct30 = 1e-4
+      vct100 = 3e-3
+      
+      if (s% initial_mass > 30.0) then
+         frac = (s% initial_mass-30.0)/(100.0-30.0)
+         frac = 0.5d0*(1 - cos(pi*frac))
+         s% varcontrol_target = vct30 + (vct100-vct30)*frac
+         
+         if (s% initial_mass > 100.0) then
+            s% varcontrol_target = vct100
+         end if
+         
+         !CONVERGENCE TEST CHANGING C
+         s% varcontrol_target = s% varcontrol_target * 1.0 
+
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         write(*,*) 'varcontrol_target is set to ', s% varcontrol_target
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      end if
+      
       end function extras_startup
       
-
-      ! returns either keep_going, retry, backup, or terminate.
+!     returns either keep_going, retry, backup, or terminate.
       integer function extras_check_model(id, id_extra)
-         integer, intent(in) :: id, id_extra
-         integer :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-         extras_check_model = keep_going         
-         if (.false. .and. s% star_mass_h1 < 0.35d0) then
-            ! stop when star hydrogen mass drops to specified level
-            extras_check_model = terminate
-            write(*, *) 'have reached desired hydrogen mass'
-            return
-         end if
-
-
-         ! if you want to check multiple conditions, it can be useful
-         ! to set a different termination code depending on which
-         ! condition was triggered.  MESA provides 9 customizeable
-         ! termination codes, named t_xtra1 .. t_xtra9.  You can
-         ! customize the messages that will be printed upon exit by
-         ! setting the corresponding termination_code_str value.
-         ! termination_code_str(t_xtra1) = 'my termination condition'
-
-         ! by default, indicate where (in the code) MESA terminated
-         if (extras_check_model == terminate) s% termination_code = t_extras_check_model
-      end function extras_check_model
-
-
-      integer function how_many_extra_history_columns(id, id_extra)
-         integer, intent(in) :: id, id_extra
-         integer :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-         if (s% use_other_cgrav .eqv. .true.) then 
-            how_many_extra_history_columns = 5
+      integer, intent(in) :: id, id_extra
+      integer :: ierr, r, burn_category
+      real(dp) :: envelope_mass_fraction, L_He, L_tot, orig_eta, target_eta, min_center_h1_for_diff, critmass, feh
+      real(dp) :: category_factors(num_categories)
+      real(dp), parameter :: huge_dt_limit = 3.15d16 ! ~1 Gyr
+      real(dp), parameter :: new_varcontrol_target = 1d-3
+      real(dp), parameter :: Zsol = 0.0142
+      type (star_info), pointer :: s
+      type (Net_General_Info), pointer :: g
+      character (len=strlen) :: photoname
+      
+      ierr = 0	 
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      extras_check_model = keep_going
+      
+      ierr = 0
+      call get_net_ptr(s% net_handle, g, ierr)
+      if (ierr /= 0) stop 'bad handle'	  
+      
+!     increase VARCONTROL and MDOT: increase varcontrol and Mdot when the model hits the TPAGB phase
+      if ((s% initial_mass < 10) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
+         !try turning up Mdot
+         feh = log10_cr((1.0 - (s% job% initial_h1 + s% job% initial_h2 + s% job% initial_he3 + s% job% initial_he4))/Zsol)
+         if (feh < -0.3) then
+            critmass = pow_cr(feh,2d0)*0.3618377 + feh*1.47045658 + 5.69083898
+            if (feh < -2.15) then
+               critmass = pow_cr(-2.15d0,2d0)*0.3618377 -2.15*1.47045658 + 5.69083898
+            end if
+         else if ((feh >= -0.3) .and. (feh <= -0.22)) then
+            critmass = feh*18.75 + 10.925
          else
-            how_many_extra_history_columns = 0
+            critmass = feh*1.09595794 + 7.0660861
+         end if 
+         if ((s% initial_mass > critmass) .and. (s% have_done_TP)) then
+            if (s% Blocker_wind_eta < 1.0) then
+               write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+               write(*,*) 'turning up Blocker'
+               write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            end if
+            s% Blocker_wind_eta = 3.0
          end if
 
-         if (s% use_other_torque .eqv. .true.) then 
-            how_many_extra_history_columns = 11;
+         if ((s% have_done_TP) .and. (s% varcontrol_target < new_varcontrol_target)) then !only print the first time
+            s% varcontrol_target = new_varcontrol_target
+            
+!     CONVERGENCE TEST CHANGING C
+     s% varcontrol_target = s% varcontrol_target * 1.0
+            
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+            write(*,*) 'increasing varcontrol to ', s% varcontrol_target
+            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
          end if
-
+      end if
+      
+!     treat postAGB: suppress late burning by turn off burning post-AGB and also save a model and photo
+      envelope_mass_fraction = 1d0 - max(s% he_core_mass, s% c_core_mass, s% o_core_mass)/s% star_mass
+      category_factors(:) = 1.0 !turn off burning except for H
+      category_factors(3:) = 0.0
+      if ((s% initial_mass < 10) .and. (envelope_mass_fraction < 0.1) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4) &
+      .and. (s% L_phot > 3.0) .and. (s% Teff > 7000.0)) then
+		  if (burn_check == 0.0) then !only print the first time
+			  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+			  write(*,*) 'now at post AGB phase, turning off all burning except for H & saving a model + photo'
+			  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+			  
+			  !save a model and photo
+			  call star_write_model(id, s% job% save_model_filename, ierr)
+			  photoname = 'photos/pAGB_photo'
+			  call star_save_for_restart(id, photoname, ierr)
+			  
+			  !turn off burning
+			  do r=1,g% num_reactions
+				  burn_category = reaction_categories(g% reaction_id(r))
+				  s% rate_factors(r) = category_factors(burn_category)
+			  end do
+			  burn_check = 1.0
+		  end if		  
+      end if
+      
+!     define STOPPING CRITERION: stopping criterion for C burning, massive stars.
+      if ((s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
+         if ((s% center_c12 < 1d-4) .and. (s% initial_mass >= 10.0)) then
+            termination_code_str(t_xtra1) = 'central C12 mass fraction below 1e-4'
+            s% termination_code = t_xtra1
+            extras_check_model = terminate
+         else if ((s% center_c12 < 1d-2) .and. (s% initial_mass < 10.0)) then
+            termination_code_str(t_xtra2) = 'central C12 mass fraction below 1e-2'
+            s% termination_code = t_xtra2
+            extras_check_model = terminate
+         end if
+      end if
+      
+!     define STOPPING CRITERION: stopping criterion for TAMS, low mass stars.
+      if ((s% center_h1 < 1d-4) .and. (s% initial_mass < 0.71)) then
+         termination_code_str(t_xtra2) = 'central H1 mass fraction below 1e-4'
+         s% termination_code = t_xtra2
+         extras_check_model = terminate
+      end if
+      
+!     check DIFFUSION: to determine whether or not diffusion should happen
+!     no diffusion for fully convective, post-MS, and mega-old models 
+	  s% diffusion_dt_limit = 3.15d7
+      if(abs(s% mass_conv_core - s% star_mass) < 1d-2) then ! => fully convective
+         s% diffusion_dt_limit = huge_dt_limit
+      end if
+      if (s% star_age > 5d10) then !50 Gyr is really old
+         s% diffusion_dt_limit = huge_dt_limit
+      end if
+      min_center_h1_for_diff = 1d-10
+      if (s% center_h1 < min_center_h1_for_diff) then
+         s% diffusion_dt_limit = huge_dt_limit
+      end if
+      
+	  end function extras_check_model
+      
+      
+      integer function how_many_extra_history_columns(id, id_extra)
+      integer, intent(in) :: id, id_extra
+      integer :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      how_many_extra_history_columns = 0
       end function how_many_extra_history_columns
       
       
       subroutine data_for_extra_history_columns(id, id_extra, n, names, vals, ierr)
-         integer, intent(in) :: id, id_extra, n
-         character (len=maxlen_history_column_name) :: names(n)
-         real(dp) :: vals(n)
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-         
-         !note: do NOT add the extras names to history_columns.list
-         ! the history_columns.list is only for the built-in log column options.
-         ! it must not include the new column names you are adding here.
-
-         if (s% use_other_cgrav .eqv. .true.) then
-
-            !column 1, age threshold 
-            names(1) = 'tfm_s_age'
-            vals(1) = s% x_ctrl(1)
-
-            !column 2, distance percentage to planet threshold
-            names(2) = 'tfm_perc_dp'
-            vals(2) = s% x_ctrl(2)
-
-            !column 3, distance to planet
-            names(3) = 'tfm_dp'
-            vals(3) = s% x_ctrl(3)
-
-            !column 4, mass of planet
-            names(4) = 'tfm_mp'
-            vals(4) = s% x_ctrl(4)
-
-            !column 5, distance from the outtest zone of the star to the planet 
-            names(5) = 'tfm_s_p_d'
-            vals(5) = s% x_ctrl(3)*100000 - s% r(1)
-
-         end if
-
-         if (s% use_other_torque .eqv. .true.) then
-            !column 1, age threshold 
-            names(1) = 'tfm_s_age'
-            vals(1) = 0.0
-
-            !column 2, distance percentage to planet threshold
-            names(2) = 'tfm_perc_dp'
-            vals(2) = 0.0
-
-            !column 3, distance to planet
-            names(3) = 'tfm_dp'
-            vals(3) = 0.0
-
-            !column 4, mass of planet
-            names(4) = 'tfm_mp'
-            vals(4) = 0.0
-
-            !column 5, distance from the outtest zone of the star to the planet 
-            names(5) = 'tfm_s_p_d'
-            vals(5) = 0.0
-
-
-            !magnetic field torque
-            names(6) = 'B'
-            vals(6) = s% x_ctrl(6) 
-
-            !photospheric escape velocity
-            names(7) = 'v_esc'
-            vals(7) = s% x_ctrl(7)
-            
-            !terminal velocity
-            names(8) = 'v_inf'
-            vals(8) = s% x_ctrl(8)
-            
-            !Wind-confinmenet parameter
-            names(9) = 'eta_surf'
-            vals(9) = s% x_ctrl(9)
-            
-            !angular momentum lost
-            names(10) = 'j_dot'
-            vals(10) = s% x_ctrl(10)
-
-            names(11) = 'm_dot'
-            !vals(11) = s% star_mdot
-            vals(11) = s% x_ctrl(11)
-         end if
-         ierr = 0         
-  
+      integer, intent(in) :: id, id_extra, n
+      character (len=maxlen_history_column_name) :: names(n)
+      real(dp) :: vals(n)
+      integer, intent(out) :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
       end subroutine data_for_extra_history_columns
-
+      
       
       integer function how_many_extra_profile_columns(id, id_extra)
-         use star_def, only: star_info
-         integer, intent(in) :: id, id_extra
-         integer :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-         if (s% use_other_cgrav .eqv. .true.) then
-            how_many_extra_profile_columns = 1
-         else
-            how_many_extra_profile_columns = 0
-         endif
+      use star_def, only: star_info
+      integer, intent(in) :: id, id_extra
+      integer :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      how_many_extra_profile_columns = 0
       end function how_many_extra_profile_columns
       
       
       subroutine data_for_extra_profile_columns(id, id_extra, n, nz, names, vals, ierr)
-         use star_def, only: star_info, maxlen_profile_column_name
-         use const_def, only: dp
-         integer, intent(in) :: id, id_extra, n, nz
-         character (len=maxlen_profile_column_name) :: names(n)
-         real(dp) :: vals(nz,n)
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         integer :: k
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-         
-         !note: do NOT add the extra names to profile_columns.list
-         ! the profile_columns.list is only for the built-in profile column options.
-         ! it must not include the new column names you are adding here.
-
-         ! here is an example for adding a profile column
-         !if (n /= 1) stop 'data_for_extra_profile_columns'
-         !names(1) = 'beta'
-         !do k = 1, nz
-         !   vals(k,1) = s% Pgas(k)/s% P(k)
-         !end do
-
-         if (s% use_other_cgrav .eqv. .true.) then
-            !column 1
-            names(1) = 'tfm_other_cgrav'
-            do k = 1, nz
-               vals(k,1) = s% cgrav(k)
-            end do
-            
-            ierr = 0
-         end if
-
-         
+      use star_def, only: star_info, maxlen_profile_column_name
+      use const_def, only: dp
+      integer, intent(in) :: id, id_extra, n, nz
+      character (len=maxlen_profile_column_name) :: names(n)
+      real(dp) :: vals(nz,n)
+      integer, intent(out) :: ierr
+      type (star_info), pointer :: s
+      integer :: k
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
       end subroutine data_for_extra_profile_columns
       
-
-      ! returns either keep_going or terminate.
-      ! note: cannot request retry or backup; extras_check_model can do that.
+      
+!     returns either keep_going or terminate.
+!     note: cannot request retry or backup; extras_check_model can do that.
       integer function extras_finish_step(id, id_extra)
-         integer, intent(in) :: id, id_extra
-         integer :: ierr
-         type (star_info), pointer :: s
-         logical :: tfm_start_planet_influence = .false.
-         real :: tfm_Lnuc_div_L
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-         extras_finish_step = keep_going
-         call store_extra_info(s)
-
-         !TFM
-         !Put here the activation condition, for example, when
-         !the star reaches a particular parameter
-         ! activate other_energy after central hydrogen depletion
-         !if (s% center_h1 < 0.01 ) s% use_other_mlt = .true.
-         !if (s% center_h1 < 0.01 ) s% use_other_difussion = .true.
-
-         !tfm_start_planet_influence = s% x_logical_ctrl(1)
-
-         !if (tfm_start_planet_influence .and. (s% L_phot > 0d0)) then
-         !   tfm_Lnuc_div_L = s% L_nuc_burn_total / s% L_phot
-         !   if (tfm_Lnuc_div_L >= s% Lnuc_div_L_zams_limit) then
-         !      s% use_other_mlt = .true.
-         !   end if
-         !end if
-
-         ! to save a profile, 
-            ! s% need_to_save_profiles_now = .true.
-         ! to update the star log,
-            ! s% need_to_update_history_now = .true.
-
-         ! see extras_check_model for information about custom termination codes
-         ! by default, indicate where (in the code) MESA terminated
-         if (extras_finish_step == terminate) s% termination_code = t_extras_finish_step
+      integer, intent(in) :: id, id_extra
+      integer :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+      extras_finish_step = keep_going
+      call store_extra_info(s)
+      
+!     set BC: change to tables after running on simple photosphere
+      if (s% model_number == 100) then
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         write(*,*) 'switching from simple photosphere to ', s% job% extras_cpar(1)
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         s% which_atm_option = s% job% extras_cpar(1)
+      endif
       end function extras_finish_step
       
+      subroutine Reimers_then_VW(id, Lsurf, Msurf, Rsurf, Tsurf, w, ierr)
+      use star_def
+	  use chem_def, only: ih1, ihe4
+      integer, intent(in) :: id
+      real(dp), intent(in) :: Lsurf, Msurf, Rsurf, Tsurf ! surface values (cgs)
+!     NOTE: surface is outermost cell. not necessarily at photosphere.
+!     NOTE: don't assume that vars are set at this point.
+!     so if you want values other than those given as args,
+!     you should use values from s% xh(:,:) and s% xa(:,:) only.
+!     rather than things like s% Teff or s% lnT(:) which have not been set yet.
+      real(dp), intent(out) :: w ! wind in units of Msun/year (value is >= 0)
+      integer, intent(out) :: ierr
+      real(dp) :: logP, P, reimers_w, pre_superwind_w, superwind_w, vexp, agb_w, center_h1, center_he4
+	  integer :: h1, he4
+	  type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+	  
+!     first Reimers for the MS+RGB
+      reimers_w = 4d-13*(Lsurf*Rsurf/Msurf)/(Lsun*Rsun/Msun)
+      reimers_w = reimers_w * s% Reimers_wind_eta
+      
+!     Vassiliadis and Wood 1993	 
+!     compute pulsation period assuming the fundamental mode
+      logP = -2.07 + 1.94*log10_cr(Rsurf/Rsun)-0.9*log10_cr(Msurf/Msun) !in days
+      P = pow_cr(10d0, logP)    !in days
+
+!     for periods below ~500-800 days, exponentially increasing mdot
+      if (Msurf/Msun < 2.5) then
+         pre_superwind_w = pow_cr(10d0, -11.4+0.0123*P)
+      else
+         pre_superwind_w = pow_cr(10d0, -11.4+0.0125*(P - 100.0*(Msurf/Msun - 2.5)))
+      end if
+      
+!     for periods above ~500-800 days, radiation pressure driven superwind
+!     ensure that vexp is not a negative value
+      vexp = min(15.0, max(3.0, -13.5+0.056*P))*1e5 !orig formula in km/s
+      superwind_w = (Lsurf/(clight*vexp))*(secyer/Msun)
+      
+!     want the exponential increase in Mdot with P then ~const superwind
+      agb_w = min(pre_superwind_w, superwind_w)
+      
+!     use Reimers for RGB then switch to VW during AGB
+      h1 = s% net_iso(ih1)
+      he4 = s% net_iso(ihe4)
+      center_h1 = s% xa(h1,s% nz)
+      center_he4 = s% xa(he4,s% nz)
+      if (center_h1 < 0.01d0 .and. center_he4 < s% RGB_to_AGB_wind_switch) then
+         w = agb_w
+      else
+         w = reimers_w
+      end if
+      end subroutine Reimers_then_VW
+	  
+	  subroutine Reimers_then_Blocker(id, Lsurf, Msurf, Rsurf, Tsurf, w, ierr)
+      use star_def
+      use chem_def, only: ih1, ihe4
+      integer, intent(in) :: id
+      real(dp), intent(in) :: Lsurf, Msurf, Rsurf, Tsurf ! surface values (cgs)
+!     NOTE: surface is outermost cell. not necessarily at photosphere.
+!     NOTE: don't assume that vars are set at this point.
+!     so if you want values other than those given as args,
+!     you should use values from s% xh(:,:) and s% xa(:,:) only.
+!     rather than things like s% Teff or s% lnT(:) which have not been set yet.
+      real(dp), intent(out) :: w ! wind in units of Msun/year (value is >= 0)
+      integer, intent(out) :: ierr
+      integer :: h1, he4
+      real(dp) :: plain_reimers, reimers_w, blocker_w, center_h1, center_he4
+	  type (star_info), pointer :: s
+	  ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
+	  
+	  plain_reimers = 4d-13*(Lsurf*Rsurf/Msurf)/(Lsun*Rsun/Msun)
+	  
+	  reimers_w = plain_reimers * s% Reimers_wind_eta
+	  blocker_w = plain_reimers * s% Blocker_wind_eta * &
+               4.83d-9 * pow_cr(Msurf/Msun,-2.1d0) * pow_cr(Lsurf/Lsun,2.7d0)
+
+          h1 = s% net_iso(ih1)
+          he4 = s% net_iso(ihe4)
+          center_h1 = s% xa(h1,s% nz)
+          center_he4 = s% xa(he4,s% nz)
+
+          !prevent the low mass RGBs from using Blocker
+          if (center_h1 < 0.01d0 .and. center_he4 > 0.1d0) then
+             w = reimers_w
+          else 
+             w = max(reimers_w, blocker_w)
+          end if
+	  
+	  end subroutine Reimers_then_Blocker
       
       subroutine extras_after_evolve(id, id_extra, ierr)
-         integer, intent(in) :: id, id_extra
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
+      integer, intent(in) :: id, id_extra
+      integer, intent(out) :: ierr
+      type (star_info), pointer :: s
+      ierr = 0
+      call star_ptr(id, s, ierr)
+      if (ierr /= 0) return
       end subroutine extras_after_evolve
       
       
-      ! routines for saving and restoring extra data so can do restarts
-         
-         ! put these defs at the top and delete from the following routines
-         !integer, parameter :: extra_info_alloc = 1
-         !integer, parameter :: extra_info_get = 2
-         !integer, parameter :: extra_info_put = 3
-      
-      
       subroutine alloc_extra_info(s)
-         integer, parameter :: extra_info_alloc = 1
-         type (star_info), pointer :: s
-         call move_extra_info(s,extra_info_alloc)
+      integer, parameter :: extra_info_alloc = 1
+      type (star_info), pointer :: s
+      call move_extra_info(s,extra_info_alloc)
       end subroutine alloc_extra_info
       
       
       subroutine unpack_extra_info(s)
-         integer, parameter :: extra_info_get = 2
-         type (star_info), pointer :: s
-         call move_extra_info(s,extra_info_get)
+      integer, parameter :: extra_info_get = 2
+      type (star_info), pointer :: s
+      call move_extra_info(s,extra_info_get)
       end subroutine unpack_extra_info
       
       
       subroutine store_extra_info(s)
-         integer, parameter :: extra_info_put = 3
-         type (star_info), pointer :: s
-         call move_extra_info(s,extra_info_put)
+      integer, parameter :: extra_info_put = 3
+      type (star_info), pointer :: s
+      call move_extra_info(s,extra_info_put)
       end subroutine store_extra_info
       
       
       subroutine move_extra_info(s,op)
-         integer, parameter :: extra_info_alloc = 1
-         integer, parameter :: extra_info_get = 2
-         integer, parameter :: extra_info_put = 3
-         type (star_info), pointer :: s
-         integer, intent(in) :: op
-         
-         integer :: i, j, num_ints, num_dbls, ierr
-         
-         i = 0
-         ! call move_int or move_flg    
-         num_ints = i
-         
-         i = 0
-         ! call move_dbl       
-         
-         num_dbls = i
-         
-         if (op /= extra_info_alloc) return
-         if (num_ints == 0 .and. num_dbls == 0) return
-         
-         ierr = 0
-         call star_alloc_extras(s% id, num_ints, num_dbls, ierr)
-         if (ierr /= 0) then
-            write(*,*) 'failed in star_alloc_extras'
-            write(*,*) 'alloc_extras num_ints', num_ints
-            write(*,*) 'alloc_extras num_dbls', num_dbls
-            stop 1
+      integer, parameter :: extra_info_alloc = 1
+      integer, parameter :: extra_info_get = 2
+      integer, parameter :: extra_info_put = 3
+      type (star_info), pointer :: s
+      integer, intent(in) :: op
+      
+      integer :: i, j, num_ints, num_dbls, ierr
+      
+      i = 0
+!     call move_int or move_flg    
+      num_ints = i
+      
+      i = 0
+!     call move_dbl       
+      
+      num_dbls = i
+      
+      if (op /= extra_info_alloc) return
+      if (num_ints == 0 .and. num_dbls == 0) return
+      
+      ierr = 0
+      call star_alloc_extras(s% id, num_ints, num_dbls, ierr)
+      if (ierr /= 0) then
+         write(*,*) 'failed in star_alloc_extras'
+         write(*,*) 'alloc_extras num_ints', num_ints
+         write(*,*) 'alloc_extras num_dbls', num_dbls
+         stop 1
+      end if
+      
+      contains
+      
+      subroutine move_dbl(dbl)
+      real(dp) :: dbl
+      i = i+1
+      select case (op)
+      case (extra_info_get)
+         dbl = s% extra_work(i)
+      case (extra_info_put)
+         s% extra_work(i) = dbl
+      end select
+      end subroutine move_dbl
+      
+      subroutine move_int(int)
+      integer :: int
+      i = i+1
+      select case (op)
+      case (extra_info_get)
+         int = s% extra_iwork(i)
+      case (extra_info_put)
+         s% extra_iwork(i) = int
+      end select
+      end subroutine move_int
+      
+      subroutine move_flg(flg)
+      logical :: flg
+      i = i+1
+      select case (op)
+      case (extra_info_get)
+         flg = (s% extra_iwork(i) /= 0)
+      case (extra_info_put)
+         if (flg) then
+            s% extra_iwork(i) = 1
+         else
+            s% extra_iwork(i) = 0
          end if
-         
-         contains
-         
-         subroutine move_dbl(dbl)
-            real(dp) :: dbl
-            i = i+1
-            select case (op)
-            case (extra_info_get)
-               dbl = s% extra_work(i)
-            case (extra_info_put)
-               s% extra_work(i) = dbl
-            end select
-         end subroutine move_dbl
-         
-         subroutine move_int(int)
-            integer :: int
-            i = i+1
-            select case (op)
-            case (extra_info_get)
-               int = s% extra_iwork(i)
-            case (extra_info_put)
-               s% extra_iwork(i) = int
-            end select
-         end subroutine move_int
-         
-         subroutine move_flg(flg)
-            logical :: flg
-            i = i+1
-            select case (op)
-            case (extra_info_get)
-               flg = (s% extra_iwork(i) /= 0)
-            case (extra_info_put)
-               if (flg) then
-                  s% extra_iwork(i) = 1
-               else
-                  s% extra_iwork(i) = 0
-               end if
-            end select
-         end subroutine move_flg
+      end select
+      end subroutine move_flg
       
       end subroutine move_extra_info
-
-      end module run_star_extras
       
+      
+      end module run_star_extras
