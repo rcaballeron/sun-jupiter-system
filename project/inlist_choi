@@ -2,25 +2,26 @@
 
 &star_job
 
-  	  history_columns_file = 'my_history_columns.list'
-  	  profile_columns_file = 'my_profile_columns.list'
-  	  pause_before_terminate = .true.
-  	  ! display on-screen plots
-  	  pgstar_flag = .true.
+      history_columns_file = 'my_history_columns.list'
+      profile_columns_file = 'my_profile_columns.list'
+      pause_before_terminate = .true.
+      ! display on-screen plots
+      pgstar_flag = .true.
 
 
       
 !PMS
-	! begin with a pre-main sequence model	
+  ! begin with a pre-main sequence model  
       create_pre_main_sequence_model = .true.
     ! Initial center temperature (must be below 1d6)  
       pre_ms_T_c = 5d5
 
 !MISC. SETUP
-	  
+    
       history_columns_file = 'my_history_columns.list'
       save_model_filename = '1M<<BC_LABEL>>_pAGB.mod'
-	  
+      save_model_when_terminate = .true.
+    
       !parameters to be used for mass on/off for rotation
       extras_lrpar = 3
       extras_rpar(1) = 1.2 !full off
@@ -32,11 +33,11 @@
       !network 
       change_net = .true.
       new_net_name = 'mesa_49.net'
-	  
+    
       !first 100 models are run with simple_photosphere then switched to the following
       extras_lcpar = 1
       extras_cpar(1) = '<<BC_TABLE>>'
-	  
+    
       !opacities with AGSS09 abundances
       kappa_file_prefix = 'a09'
       kappa_lowT_prefix = 'lowT_fa05_a09p'
@@ -49,19 +50,21 @@
 !CHANGE SOLAR ABUNDANCES
 
       set_uniform_initial_composition = .true.
-      initial_h1 = 7.154D-01
-      initial_h2 = 0
-      initial_he3 = 0
-      initial_he4 = 2.703D-01
-	  !initial_h1 = 0.715399992
-      !initial_h2 = 1.430799984e-05
-      !initial_he3 = 4.48623528494e-05
-      !initial_he4 = 0.270255137647
+      !initial_h1 = 7.154D-01
+      !initial_h2 = 0
+      !initial_he3 = 0
+      !initial_he4 = 2.703D-01
+      
+      !According to Choi's feedback
+      initial_h1 = 0.715399992
+      initial_h2 = 1.430799984e-05
+      initial_he3 = 4.48623528494e-05
+      initial_he4 = 0.270255137647
       !!for initial Z = 0.0142857
       !for initial Z = <<Z>>
 
       initial_zfracs = 6 ! AGSS09_zfracs
-	          
+            
 / ! end of star_job namelist
 
 &controls
@@ -74,7 +77,7 @@
       history_interval = 1
       terminal_interval = 10
       write_header_frequency = 10
-	  photo_digits = 5
+      photo_digits = 5
       !photostep = 250 replaced by photo_interval
       photo_interval = 250
 
@@ -84,7 +87,9 @@
 
       star_history_name = '<<HISTORY_NAME>>_history.data'
       write_controls_info_with_profile = .false.
-      write_profiles_flag = .false.
+      !write_profiles_flag = .false.
+      !This option is changed to true
+      write_profiles_flag = .true.
 
 !WHEN TO STOP
 
@@ -102,7 +107,7 @@
 
       mixing_length_alpha = 1.82
       mlt_option = 'Henyey'
-	  
+    
       !to help with convergence
       okay_to_reduce_gradT_excess = .true.
       Pextra_factor = 2.0
@@ -143,7 +148,7 @@
       kap_Type2_full_off_X = 1d-3
       kap_Type2_full_on_X = 1d-6
       Zbase = 0.00 ! this is set to Z of the star in run_star_extras.f
-	  
+    
       !rotational mixing if applicable
       D_SH_factor =  1.0
       D_SSI_factor = 1.0
@@ -171,7 +176,7 @@
       diffusion_min_T_at_surface = 1d3
 
       radiation_turbulence_coeff = 1.0
-	  
+    
       !to help with breathing pulses
       include_dmu_dt_in_eps_grav = .true.
 
@@ -180,13 +185,13 @@
       he_core_boundary_h1_fraction = 1d-4
       c_core_boundary_he4_fraction = 1d-4
       o_core_boundary_c12_fraction = 1d-4
-	  	  
+        
 !MESH AND TIMESTEP PARAMETERS
 
       mesh_delta_coeff = 1.0
       varcontrol_target = 1d-4
       max_allowed_nz = 50000
-	  
+    
       !better resolution of the Henyey hook
       delta_lg_XH_cntr_max = -1
 
@@ -195,7 +200,7 @@
       delta_lgTeff_hard_limit = 0.01
       delta_lgL_limit = 0.02 
       delta_lgL_hard_limit = 0.05
-	  
+    
       !multiply mesh_delta_coeff in overshooting regions by this factor
       xtra_coef_os_above_nonburn = 0.5
       xtra_coef_os_below_nonburn = 0.5
@@ -209,24 +214,27 @@
 / ! end of controls namelist
 
 &pgstar
-	TRho_Profile_win_flag = .true.
-	show_TRho_Profile_legend = .true.
+  TRho_Profile_win_flag = .true.
+  show_TRho_Profile_legend = .true.
+  show_TRho_Profile_text_info = .true.
+  TRho_Profile_file_flag = .true.
+  TRho_Profile_file_prefix = 'trho_'
+  TRho_Profile_file_interval = 5  
 
   Abundance_win_flag = .true.
   Abundance_show_photosphere_location = .true.
   num_abundance_line_labels = 1
-
-  !Abundance_num_isos_to_show = 5
-  !Abundance_which_isos_to_show(1) = 'h1'
-  !Abundance_which_isos_to_show(2) = 'he4'
-  !Abundance_which_isos_to_show(3) = 'li7'
-  !Abundance_which_isos_to_show(4) = 'be7'
-  !Abundance_which_isos_to_show(5) = 'fe56'
+  Abundance_num_isos_to_show = 5
+  Abundance_which_isos_to_show(1) = 'h1'
+  Abundance_which_isos_to_show(2) = 'he4'
+  Abundance_which_isos_to_show(3) = 'li7'
+  Abundance_which_isos_to_show(4) = 'be7'
+  Abundance_which_isos_to_show(5) = 'fe56'
   !Abundance_file_flag = .true.
-  Abundance_num_isos_to_show = 3
-  Abundance_which_isos_to_show(1) = 'li7'
-  Abundance_which_isos_to_show(2) = 'be7'
-  Abundance_which_isos_to_show(3) = 'h1'
+  !Abundance_num_isos_to_show = 3
+  !Abundance_which_isos_to_show(1) = 'li7'
+  !Abundance_which_isos_to_show(2) = 'be7'
+  !Abundance_which_isos_to_show(3) = 'h1'
   Abundance_file_flag = .true.
 
 
