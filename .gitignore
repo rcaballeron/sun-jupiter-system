@@ -14,5 +14,3 @@ project/nets/
 project/\.temp_net
 
 *.data
-
-*.zip
