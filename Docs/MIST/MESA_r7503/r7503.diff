@@ -1,0 +1,135 @@
+!Diff files overview
+
+!Choi version vs r7503
+!Removed lines (-) come from Choi's modified version
+!Added lines (+) come from release r7503
+!----------------------------------------------------
+
+!--------------------------------
+!mesa/atm/public/atm_def.f90
+!--------------------------------
+@@ -118,7 +118,7 @@
+       
+       
+       ! tables
+-      integer, parameter :: table_atm_version = 6
++      integer, parameter :: table_atm_version = 5
+       
+       type Atm_Info
+          integer :: which_atm_option, nZ, ng, nT, ilinT, iling
+
+!--------------------------------
+!mesa/atm/private/table_atm.f90
+!--------------------------------
+@@ -190,7 +190,7 @@
+             newPgas, dPgas_dTeff, dPgas_dlogg, &
+             newT, dT_dTeff, dT_dlogg, &
+             ierr)
+-         use chem_def,only:GN93_Zsol,AGSS09_Zsol
++         use chem_def,only:GN93_Zsol
+@@ -233,8 +233,7 @@
+             return
+          endif
+ 
+-         !newlogZ(1) = log10_cr(newZ/GN93_Zsol)
+-		 !newlogZ(1) = log10_cr(newZ/AGSS09_Zsol)
++         newlogZ(1) = log10_cr(newZ/GN93_Zsol)
+          
+@@ -282,8 +281,7 @@
+ 
+          allocate(result_2D(6,nZ))
+ 
+-!         newlogZ(1) = safe_log10_cr(newZ/GN93_Zsol)
+-		 newlogZ(1) = safe_log10_cr(newZ/AGSS09_Zsol)
++         newlogZ(1) = safe_log10_cr(newZ/GN93_Zsol)
+
+!--------------------------------
+!mesa/const/public/const_def.f90
+!--------------------------------
+@@ -114,10 +114,10 @@
+ 
+ 
+ ! astronomical constants
+-      ! solar age, L, and R values from 2015 IAU
+-      real(dp) :: msol !1.988547d33 ! solar mass (g)
+-      real(dp) :: rsol !6.9566d10   ! solar radius (cm)
+-      real(dp) :: lsol !3.828d33    ! solar luminosity (erg s^-1)
++      ! solar age, L, and R values from Bahcall et al, ApJ 618 (2005) 1049-1056.
++      real(dp) :: msol ! = 1.9892d33  ! solar mass (g)
++      real(dp) :: rsol ! = 6.9598d10 ! solar radius (cm)
++      real(dp) :: lsol ! = 3.8418d33  ! solar luminosity (erg s^-1)
+
+@@ -211,11 +211,11 @@
+          weinfre = 2.821439372d0*kerg/planck_h
+          rhonuc = 2.342d14 ! density of nucleus (g cm^3)
+ 
+-         ! solar age, L, and R values from 2015 IAU.
+-         msol = 1.988547d33  ! solar mass (g)  <<< gravitational mass, not baryonic
+-         rsol = 6.9566d10 ! solar radius (cm)
+-         lsol = 3.828d33  ! solar luminosity (erg s^-1)
+-         agesol = 4.57d9  ! solar age (years) from Bahcahll 2006
++         ! solar age, L, and R values from Bahcall et al, ApJ 618 (2005) 1049-1056.
++         msol = 1.9892d33  ! solar mass (g)  <<< gravitational mass, not baryonic
++         rsol = 6.9598d10 ! solar radius (cm)
++         lsol = 3.8418d33  ! solar luminosity (erg s^-1)
++         agesol = 4.57d9  ! solar age (years)
+
+!--------------------------------
+!mesa/data/net_data/nets/mesa_49.net
+!--------------------------------
+@@ -19,15 +19,6 @@
+     s 31 34 ! sulfur
+    )
+ 
+-add_isos(
+-        ca40 ! calcium
+-        ti48 ! titanium
+-        fe56 ! iron
+-        )
+-		
+- remove_reaction(r_h1_li7_to_he4_he4)
+- add_reaction(r_li7_pa_he4)
+- 
+
+
+!--------------------------------
+!mesa/star/private/init.f90
+!--------------------------------
+@@ -263,9 +263,7 @@
+          allocate(s% ode_var(init_alloc_nvar),stat=ierr)
+          if (ierr /= 0) return
+ 
+-         allocate(s% category_factors(num_categories),stat=ierr)
+-         if (ierr /= 0) return
+-         s% category_factors(:)=1.0
++         allocate(s% category_factors(num_categories))
+
+
+!--------------------------------
+!mesa/star/public/star_lib.f90
+!--------------------------------
+@@ -2645,26 +2645,5 @@
+          end if
+       end function star_get_history_output
+       
+-      subroutine set_rate_factors_from_categories(id, ierr)
+-         use net_def, only: Net_General_Info, get_net_ptr
+-			use star_def, only: star_info,get_star_ptr
+-			integer, intent(in) :: id
+-         integer, intent(out) :: ierr
+-         type (star_info), pointer :: s
+-			integer :: j,ind
+-         type (Net_General_Info), pointer :: g
+-         ierr = 0
+-         call get_star_ptr(id, s, ierr)
+-         if (ierr /= 0) return
+-      
+-			ierr = 0
+-         call get_net_ptr(s%net_handle, g, ierr)
+-
+-			do j=1,s%num_reactions
+-				ind=g% reaction_kind(j)
+-				s% rate_factors(j)=s% category_factors(ind)
+-			end do
+-
+-      end subroutine set_rate_factors_from_categories
