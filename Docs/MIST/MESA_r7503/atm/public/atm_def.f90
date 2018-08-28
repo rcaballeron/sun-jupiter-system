@@ -118,7 +118,7 @@
       
       
       ! tables
-      integer, parameter :: table_atm_version = 5
+      integer, parameter :: table_atm_version = 6
       
       type Atm_Info
          integer :: which_atm_option, nZ, ng, nT, ilinT, iling

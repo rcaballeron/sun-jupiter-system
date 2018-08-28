@@ -114,10 +114,10 @@
 
 
 ! astronomical constants
-      ! solar age, L, and R values from Bahcall et al, ApJ 618 (2005) 1049-1056.
-      real(dp) :: msol ! = 1.9892d33  ! solar mass (g)
-      real(dp) :: rsol ! = 6.9598d10 ! solar radius (cm)
-      real(dp) :: lsol ! = 3.8418d33  ! solar luminosity (erg s^-1)
+      ! solar age, L, and R values from 2015 IAU
+      real(dp) :: msol !1.988547d33 ! solar mass (g)
+      real(dp) :: rsol !6.9566d10   ! solar radius (cm)
+      real(dp) :: lsol !3.828d33    ! solar luminosity (erg s^-1)
       real(dp) :: agesol ! = 4.57d9  ! solar age (years)
       real(dp) :: Msun ! = msol
       real(dp) :: Rsun ! = rsol
@@ -211,11 +211,11 @@
          weinfre = 2.821439372d0*kerg/planck_h
          rhonuc = 2.342d14 ! density of nucleus (g cm^3)
 
-         ! solar age, L, and R values from Bahcall et al, ApJ 618 (2005) 1049-1056.
-         msol = 1.9892d33  ! solar mass (g)  <<< gravitational mass, not baryonic
-         rsol = 6.9598d10 ! solar radius (cm)
-         lsol = 3.8418d33  ! solar luminosity (erg s^-1)
-         agesol = 4.57d9  ! solar age (years)
+         ! solar age, L, and R values from 2015 IAU.
+         msol = 1.988547d33  ! solar mass (g)  <<< gravitational mass, not baryonic
+         rsol = 6.9566d10 ! solar radius (cm)
+         lsol = 3.828d33  ! solar luminosity (erg s^-1)
+         agesol = 4.57d9  ! solar age (years) from Bahcahll 2006
          Msun = msol
          Rsun = rsol
          Lsun = lsol

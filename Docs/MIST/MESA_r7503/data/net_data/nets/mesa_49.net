@@ -19,6 +19,15 @@ add_isos_and_reactions(
     s 31 34 ! sulfur
    )
 
+add_isos(
+        ca40 ! calcium
+        ti48 ! titanium
+        fe56 ! iron
+        )
+		
+ remove_reaction(r_h1_li7_to_he4_he4)
+ add_reaction(r_li7_pa_he4)
+ 
 ! for NeNa cycle, must have ne20-22, na21-23
 ! for MgAl cycle, must have mg24-26, al25-27
 ! for c12+c12 reactions, must have ne20 na23, mg23

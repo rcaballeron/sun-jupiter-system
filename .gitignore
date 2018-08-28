@@ -14,3 +14,7 @@ project/nets/
 project/\.temp_net
 
 *.data
+
+Docs/runs/run2/history\.data\.zip
+
+project/1M_photosphere_tables_pAGB\.mod
