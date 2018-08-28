@@ -263,7 +263,9 @@
          allocate(s% ode_var(init_alloc_nvar),stat=ierr)
          if (ierr /= 0) return
 
-         allocate(s% category_factors(num_categories))
+         allocate(s% category_factors(num_categories),stat=ierr)
+         if (ierr /= 0) return
+         s% category_factors(:)=1.0
          
          do i = 1, max_num_profile_extras
             if (i < 10) then

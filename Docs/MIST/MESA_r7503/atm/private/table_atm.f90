@@ -190,7 +190,7 @@
             newPgas, dPgas_dTeff, dPgas_dlogg, &
             newT, dT_dTeff, dT_dlogg, &
             ierr)
-         use chem_def,only:GN93_Zsol
+         use chem_def,only:GN93_Zsol,AGSS09_Zsol
          use interp_1d_lib, only: interp_pm, interp_values
          use interp_1d_def
          use interp_2d_lib_db, only: interp_evbicub_db
@@ -233,7 +233,8 @@
             return
          endif
 
-         newlogZ(1) = log10_cr(newZ/GN93_Zsol)
+         !newlogZ(1) = log10_cr(newZ/GN93_Zsol)
+		 !newlogZ(1) = log10_cr(newZ/AGSS09_Zsol)
          
          if (which_atm_option == atm_photosphere_tables) then
             ai => ai_two_thirds
@@ -281,7 +282,8 @@
 
          allocate(result_2D(6,nZ))
 
-         newlogZ(1) = safe_log10_cr(newZ/GN93_Zsol)
+!         newlogZ(1) = safe_log10_cr(newZ/GN93_Zsol)
+		 newlogZ(1) = safe_log10_cr(newZ/AGSS09_Zsol)
 
          if (gtv_dbg) write(*,*) 'loaded tables: ', ai% have_atm_table(:)
 
@@ -323,7 +325,7 @@
                  !  P(g,T) dP_dg, dP_dT, d2P_dg2, d2P_dT2, d2P_dg_dT
                  !    1      2      3       4        5         6
          ict(:) = (/  1,     1,     1,      0,       0,        0  /)
-
+		 
          if (gtv_dbg) write(*,*) 'do_interp for Pgas', which_atm_option
          call do_interp(ai% Pgas_interp1, newPgas, dPgas_dlogg, dPgas_dTeff, ierr)
          if (ierr /= 0) then
@@ -333,6 +335,12 @@
          if (clip_logg) dPgas_dlogg = 0
          if (clip_Teff) dPgas_dTeff = 0
          
+		 !write(*,*) 'logZ', newlogZ(1)
+         !write(*,1) 'newPgas, newTeff', newPgas, newTeff
+         !write(*,1) 'dPgas_dTeff', dPgas_dTeff
+         !write(*,1) 'dPgas_dlogg', dPgas_dlogg
+         !write(*,*) 
+		 		 
          if (which_atm_option == atm_photosphere_tables) then
             newT = newTeff
             if (clip_Teff) then
@@ -343,7 +351,7 @@
             dT_dlogg = 0
             return 
          end if
-
+		 
          if (gtv_dbg) write(*,*) 'do_interp for Temp', which_atm_option
          call do_interp(ai% T_interp1, newT, dT_dlogg, dT_dTeff, ierr)
          if (ierr /= 0) then
@@ -352,8 +360,8 @@
          end if
          if (clip_logg) dT_dlogg = 0
          if (clip_Teff) dT_dTeff = 0
-         
-         if (dbg .or. is_bad_num(newPgas) .or. is_bad_num(newT)) then
+         		 
+		 if (dbg .or. is_bad_num(newPgas) .or. is_bad_num(newT)) then
             write(*,1) 'newPgas', newPgas
             write(*,1) 'dPgas_dTeff', dPgas_dTeff
             write(*,1) 'dPgas_dlogg', dPgas_dlogg

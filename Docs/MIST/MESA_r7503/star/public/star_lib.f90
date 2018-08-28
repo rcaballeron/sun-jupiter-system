@@ -2645,5 +2645,26 @@
          end if
       end function star_get_history_output
       
+      subroutine set_rate_factors_from_categories(id, ierr)
+         use net_def, only: Net_General_Info, get_net_ptr
+			use star_def, only: star_info,get_star_ptr
+			integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+			integer :: j,ind
+         type (Net_General_Info), pointer :: g
+         ierr = 0
+         call get_star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+      
+			ierr = 0
+         call get_net_ptr(s%net_handle, g, ierr)
+
+			do j=1,s%num_reactions
+				ind=g% reaction_kind(j)
+				s% rate_factors(j)=s% category_factors(ind)
+			end do
+
+      end subroutine set_rate_factors_from_categories
 
       end module star_lib
