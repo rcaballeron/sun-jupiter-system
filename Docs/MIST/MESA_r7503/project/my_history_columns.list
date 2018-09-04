@@ -506,12 +506,12 @@
       
    ! the following add all of the isos that are in the current net
 
-   ! add_center_abundances
-   ! add_surface_abundances
-   ! add_average_abundances
-   ! add_log_center_abundances
-   ! add_log_surface_abundances
-   ! add_log_average_abundances
+    add_center_abundances
+    add_surface_abundances
+    add_average_abundances
+    add_log_center_abundances
+    add_log_surface_abundances
+    add_log_average_abundances
 
 
    ! log10 total luminosity for reaction categories (Lsun units)
