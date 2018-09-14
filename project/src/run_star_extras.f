@@ -126,26 +126,26 @@
       end if
       
       
-!     set VARCONTROL: for massive stars, turn up varcontrol gradually to help them evolve
-      vct30 = 1e-4
-      vct100 = 3e-3
+!     !set VARCONTROL: for massive stars, turn up varcontrol gradually to help them evolve
+      !vct30 = 1e-4
+      !vct100 = 3e-3
       
-      if (s% initial_mass > 30.0) then
-         frac = (s% initial_mass-30.0)/(100.0-30.0)
-         frac = 0.5d0*(1 - cos(pi*frac))
-         s% varcontrol_target = vct30 + (vct100-vct30)*frac
-         
-         if (s% initial_mass > 100.0) then
-            s% varcontrol_target = vct100
-         end if
-         
-         !CONVERGENCE TEST CHANGING C
-         s% varcontrol_target = s% varcontrol_target * 1.0 
+      !if (s% initial_mass > 30.0) then
+      !   frac = (s% initial_mass-30.0)/(100.0-30.0)
+      !   frac = 0.5d0*(1 - cos(pi*frac))
+      !   s% varcontrol_target = vct30 + (vct100-vct30)*frac
+      !   
+      !   if (s% initial_mass > 100.0) then
+      !      s% varcontrol_target = vct100
+      !   end if
+      !   
+      !   !CONVERGENCE TEST CHANGING C
+      !   s% varcontrol_target = s% varcontrol_target * 1.0 
 
-         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         write(*,*) 'varcontrol_target is set to ', s% varcontrol_target
-         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      end if
+      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   write(*,*) 'varcontrol_target is set to ', s% varcontrol_target
+      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !end if
       
       end function extras_startup
       
@@ -172,84 +172,84 @@
       if (ierr /= 0) stop 'bad handle'	  
       
 !     increase VARCONTROL and MDOT: increase varcontrol and Mdot when the model hits the TPAGB phase
-      if ((s% initial_mass < 10) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
-         !try turning up Mdot
-         feh = log10_cr((1.0 - (s% job% initial_h1 + s% job% initial_h2 + s% job% initial_he3 + s% job% initial_he4))/Zsol)
-         if (feh < -0.3) then
-            critmass = pow_cr(feh,2d0)*0.3618377 + feh*1.47045658 + 5.69083898
-            if (feh < -2.15) then
-               critmass = pow_cr(-2.15d0,2d0)*0.3618377 -2.15*1.47045658 + 5.69083898
-            end if
-         else if ((feh >= -0.3) .and. (feh <= -0.22)) then
-            critmass = feh*18.75 + 10.925
-         else
-            critmass = feh*1.09595794 + 7.0660861
-         end if 
-         if ((s% initial_mass > critmass) .and. (s% have_done_TP)) then
-            if (s% Blocker_scaling_factor < 1.0) then
-               write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-               write(*,*) 'turning up Blocker'
-               write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            end if
-            s% Blocker_scaling_factor = 3.0
-         end if
+      !if ((s% initial_mass < 10) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
+      !   !try turning up Mdot
+      !   feh = log10_cr((1.0 - (s% job% initial_h1 + s% job% initial_h2 + s% job% initial_he3 + s% job% initial_he4))/Zsol)
+      !   if (feh < -0.3) then
+      !      critmass = pow_cr(feh,2d0)*0.3618377 + feh*1.47045658 + 5.69083898
+      !      if (feh < -2.15) then
+      !         critmass = pow_cr(-2.15d0,2d0)*0.3618377 -2.15*1.47045658 + 5.69083898
+      !      end if
+      !   else if ((feh >= -0.3) .and. (feh <= -0.22)) then
+      !      critmass = feh*18.75 + 10.925
+      !   else
+      !      critmass = feh*1.09595794 + 7.0660861
+      !   end if 
+      !   if ((s% initial_mass > critmass) .and. (s% have_done_TP)) then
+      !      if (s% Blocker_scaling_factor < 1.0) then
+      !         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !         write(*,*) 'turning up Blocker'
+      !         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !      end if
+      !      s% Blocker_scaling_factor = 3.0
+      !   end if
 
-         if ((s% have_done_TP) .and. (s% varcontrol_target < new_varcontrol_target)) then !only print the first time
-            s% varcontrol_target = new_varcontrol_target
+      !   if ((s% have_done_TP) .and. (s% varcontrol_target < new_varcontrol_target)) then !only print the first time
+      !      s% varcontrol_target = new_varcontrol_target
             
 !     CONVERGENCE TEST CHANGING C
-     s% varcontrol_target = s% varcontrol_target * 1.0
+     !s% varcontrol_target = s% varcontrol_target * 1.0
             
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            write(*,*) 'increasing varcontrol to ', s% varcontrol_target
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         end if
-      end if
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !      write(*,*) 'increasing varcontrol to ', s% varcontrol_target
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   end if
+      !end if
       
 !     treat postAGB: suppress late burning by turn off burning post-AGB and also save a model and photo
-      envelope_mass_fraction = 1d0 - max(s% he_core_mass, s% c_core_mass, s% o_core_mass)/s% star_mass
-      category_factors(:) = 1.0 !turn off burning except for H
-      category_factors(3:) = 0.0
-      if ((s% initial_mass < 10) .and. (envelope_mass_fraction < 0.1) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4) &
-      .and. (s% L_phot > 3.0) .and. (s% Teff > 7000.0)) then
-		  if (burn_check == 0.0) then !only print the first time
-			  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-			  write(*,*) 'now at post AGB phase, turning off all burning except for H & saving a model + photo'
-			  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !envelope_mass_fraction = 1d0 - max(s% he_core_mass, s% c_core_mass, s% o_core_mass)/s% star_mass
+      !category_factors(:) = 1.0 !turn off burning except for H
+      !category_factors(3:) = 0.0
+      !if ((s% initial_mass < 10) .and. (envelope_mass_fraction < 0.1) .and. (s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4) &
+      !.and. (s% L_phot > 3.0) .and. (s% Teff > 7000.0)) then
+		!  if (burn_check == 0.0) then !only print the first time
+		!	  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+		!	  write(*,*) 'now at post AGB phase, turning off all burning except for H & saving a model + photo'
+		!	  write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 			  
 			  !save a model and photo
-			  call star_write_model(id, s% job% save_model_filename, ierr)
-			  photoname = 'photos/pAGB_photo'
-			  call star_save_for_restart(id, photoname, ierr)
+		!	  call star_write_model(id, s% job% save_model_filename, ierr)
+		!	  photoname = 'photos/pAGB_photo'
+		!	  call star_save_for_restart(id, photoname, ierr)
 			  
 			  !turn off burning
-			  do r=1,g% num_reactions
-				  burn_category = reaction_categories(g% reaction_id(r))
-				  s% rate_factors(r) = category_factors(burn_category)
-			  end do
-			  burn_check = 1.0
-		  end if		  
-      end if
+		!	  do r=1,g% num_reactions
+		!		  burn_category = reaction_categories(g% reaction_id(r))
+		!		  s% rate_factors(r) = category_factors(burn_category)
+		!	  end do
+		!	  burn_check = 1.0
+		 ! end if		  
+      !end if
       
 !     define STOPPING CRITERION: stopping criterion for C burning, massive stars.
-      if ((s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
-         if ((s% center_c12 < 1d-4) .and. (s% initial_mass >= 10.0)) then
-            termination_code_str(t_xtra1) = 'central C12 mass fraction below 1e-4'
-            s% termination_code = t_xtra1
-            extras_check_model = terminate
-         else if ((s% center_c12 < 1d-2) .and. (s% initial_mass < 10.0)) then
-            termination_code_str(t_xtra2) = 'central C12 mass fraction below 1e-2'
-            s% termination_code = t_xtra2
-            extras_check_model = terminate
-         end if
-      end if
+!      if ((s% center_h1 < 1d-4) .and. (s% center_he4 < 1d-4)) then
+!         if ((s% center_c12 < 1d-4) .and. (s% initial_mass >= 10.0)) then
+!            termination_code_str(t_xtra1) = 'central C12 mass fraction below 1e-4'
+!            s% termination_code = t_xtra1
+!            extras_check_model = terminate
+!         else if ((s% center_c12 < 1d-2) .and. (s% initial_mass < 10.0)) then
+!            termination_code_str(t_xtra2) = 'central C12 mass fraction below 1e-2'
+!            s% termination_code = t_xtra2
+!            extras_check_model = terminate
+!         end if
+!      end if
       
 !     define STOPPING CRITERION: stopping criterion for TAMS, low mass stars.
-      if ((s% center_h1 < 1d-4) .and. (s% initial_mass < 0.71)) then
-         termination_code_str(t_xtra2) = 'central H1 mass fraction below 1e-4'
-         s% termination_code = t_xtra2
-         extras_check_model = terminate
-      end if
+!      if ((s% center_h1 < 1d-4) .and. (s% initial_mass < 0.71)) then
+!         termination_code_str(t_xtra2) = 'central H1 mass fraction below 1e-4'
+!         s% termination_code = t_xtra2
+!         extras_check_model = terminate
+!      end if
       
 !     check DIFFUSION: to determine whether or not diffusion should happen
 !     no diffusion for fully convective, post-MS, and mega-old models 
@@ -339,60 +339,60 @@
       endif
       end function extras_finish_step
       
-      subroutine Reimers_then_VW(id, Lsurf, Msurf, Rsurf, Tsurf, w, ierr)
-      use star_def
-	  use chem_def, only: ih1, ihe4
-      integer, intent(in) :: id
-      real(dp), intent(in) :: Lsurf, Msurf, Rsurf, Tsurf ! surface values (cgs)
+!      subroutine Reimers_then_VW(id, Lsurf, Msurf, Rsurf, Tsurf, w, ierr)
+!      use star_def
+!	  use chem_def, only: ih1, ihe4
+!      integer, intent(in) :: id
+!      real(dp), intent(in) :: Lsurf, Msurf, Rsurf, Tsurf ! surface values (cgs)
 !     NOTE: surface is outermost cell. not necessarily at photosphere.
 !     NOTE: don't assume that vars are set at this point.
 !     so if you want values other than those given as args,
 !     you should use values from s% xh(:,:) and s% xa(:,:) only.
 !     rather than things like s% Teff or s% lnT(:) which have not been set yet.
-      real(dp), intent(out) :: w ! wind in units of Msun/year (value is >= 0)
-      integer, intent(out) :: ierr
-      real(dp) :: logP, P, reimers_w, pre_superwind_w, superwind_w, vexp, agb_w, center_h1, center_he4
-	  integer :: h1, he4
-	  type (star_info), pointer :: s
-      ierr = 0
-      call star_ptr(id, s, ierr)
-      if (ierr /= 0) return
+!      real(dp), intent(out) :: w ! wind in units of Msun/year (value is >= 0)
+!      integer, intent(out) :: ierr
+!      real(dp) :: logP, P, reimers_w, pre_superwind_w, superwind_w, vexp, agb_w, center_h1, center_he4
+!	  integer :: h1, he4
+!	  type (star_info), pointer :: s
+!      ierr = 0
+!      call star_ptr(id, s, ierr)
+!      if (ierr /= 0) return
 	  
 !     first Reimers for the MS+RGB
-      reimers_w = 4d-13*(Lsurf*Rsurf/Msurf)/(Lsun*Rsun/Msun)
-      reimers_w = reimers_w * s% Reimers_scaling_factor
+!      reimers_w = 4d-13*(Lsurf*Rsurf/Msurf)/(Lsun*Rsun/Msun)
+!      reimers_w = reimers_w * s% Reimers_scaling_factor
       
 !     Vassiliadis and Wood 1993	 
 !     compute pulsation period assuming the fundamental mode
-      logP = -2.07 + 1.94*log10_cr(Rsurf/Rsun)-0.9*log10_cr(Msurf/Msun) !in days
-      P = pow_cr(10d0, logP)    !in days
+!      logP = -2.07 + 1.94*log10_cr(Rsurf/Rsun)-0.9*log10_cr(Msurf/Msun) !in days
+!      P = pow_cr(10d0, logP)    !in days
 
 !     for periods below ~500-800 days, exponentially increasing mdot
-      if (Msurf/Msun < 2.5) then
-         pre_superwind_w = pow_cr(10d0, -11.4+0.0123*P)
-      else
-         pre_superwind_w = pow_cr(10d0, -11.4+0.0125*(P - 100.0*(Msurf/Msun - 2.5)))
-      end if
+!      if (Msurf/Msun < 2.5) then
+!         pre_superwind_w = pow_cr(10d0, -11.4+0.0123*P)
+!      else
+!         pre_superwind_w = pow_cr(10d0, -11.4+0.0125*(P - 100.0*(Msurf/Msun - 2.5)))
+!      end if
       
 !     for periods above ~500-800 days, radiation pressure driven superwind
 !     ensure that vexp is not a negative value
-      vexp = min(15.0, max(3.0, -13.5+0.056*P))*1e5 !orig formula in km/s
-      superwind_w = (Lsurf/(clight*vexp))*(secyer/Msun)
+!      vexp = min(15.0, max(3.0, -13.5+0.056*P))*1e5 !orig formula in km/s
+!      superwind_w = (Lsurf/(clight*vexp))*(secyer/Msun)
       
 !     want the exponential increase in Mdot with P then ~const superwind
-      agb_w = min(pre_superwind_w, superwind_w)
+!      agb_w = min(pre_superwind_w, superwind_w)
       
 !     use Reimers for RGB then switch to VW during AGB
-      h1 = s% net_iso(ih1)
-      he4 = s% net_iso(ihe4)
-      center_h1 = s% xa(h1,s% nz)
-      center_he4 = s% xa(he4,s% nz)
-      if (center_h1 < 0.01d0 .and. center_he4 < s% RGB_to_AGB_wind_switch) then
-         w = agb_w
-      else
-         w = reimers_w
-      end if
-      end subroutine Reimers_then_VW
+!      h1 = s% net_iso(ih1)
+!      he4 = s% net_iso(ihe4)
+!      center_h1 = s% xa(h1,s% nz)
+!      center_he4 = s% xa(he4,s% nz)
+!      if (center_h1 < 0.01d0 .and. center_he4 < s% RGB_to_AGB_wind_switch) then
+!         w = agb_w
+!      else
+!         w = reimers_w
+!      end if
+!      end subroutine Reimers_then_VW
 	  
 	  subroutine Reimers_then_Blocker(id, Lsurf, Msurf, Rsurf, Tsurf, w, ierr)
       use star_def
