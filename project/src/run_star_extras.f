@@ -93,37 +93,37 @@
       write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
       
 !     set ROTATION: extra param are set in inlist: star_job
-      rot_full_off = s% job% extras_rpar(1) !1.2
-      rot_full_on = s% job% extras_rpar(2) !1.8
+      !rot_full_off = s% job% extras_rpar(1) !1.2
+      !rot_full_on = s% job% extras_rpar(2) !1.8
       
-      if (s% job% extras_rpar(3) > 0.0) then
-         if (s% star_mass < rot_full_off) then
-            frac2 = 0
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            write(*,*) 'no rotation'
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         else if (s% star_mass >= rot_full_off .and. s% star_mass <= rot_full_on) then
-            frac2 = (s% star_mass - rot_full_off) / &
-            (rot_full_on - rot_full_off)
-            frac2 = 0.5d0*(1 - cos(pi*frac2))
-            s% job% set_near_zams_omega_div_omega_crit_steps = 10
-            s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         else
-            frac2 = 1.0
-            s% job% set_near_zams_omega_div_omega_crit_steps = 10
-            s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2 !nominally 0.4
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-            write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
-            write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         end if
-      else
-         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-         write(*,*) 'no rotation'
-         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      end if
+      !if (s% job% extras_rpar(3) > 0.0) then
+      !   if (s% star_mass < rot_full_off) then
+      !      frac2 = 0
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !      write(*,*) 'no rotation'
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   else if (s% star_mass >= rot_full_off .and. s% star_mass <= rot_full_on) then
+      !      frac2 = (s% star_mass - rot_full_off) / &
+      !      (rot_full_on - rot_full_off)
+      !      frac2 = 0.5d0*(1 - cos(pi*frac2))
+      !      s% job% set_near_zams_omega_div_omega_crit_steps = 10
+      !      s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !      write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   else
+      !      frac2 = 1.0
+      !      s% job% set_near_zams_omega_div_omega_crit_steps = 10
+      !      s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2 !nominally 0.4
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !      write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
+      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   end if
+      !else
+      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !   write(*,*) 'no rotation'
+      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      !end if
       
       
       end function extras_startup

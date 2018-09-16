@@ -27,7 +27,7 @@
       new_rotation_flag = .true.
       change_rotation_flag = .true.
       !change_initial_rotation_flag = .true.
-      new_omega_div_omega_crit = 0.057
+      new_omega_div_omega_crit = 0.014
       set_omega_div_omega_crit = .true.
 
       !new_surface_rotation_v = 20.0 ! km/s     
@@ -118,7 +118,10 @@
 !WHEN TO STOP
 
       !in run_star_extras, it's set to H1 depletion in the core for low mass stars
-      gamma_center_limit = 20.0
+      !gamma_center_limit = 20.0
+      ! stop when the center mass fraction of h1 drops below this limit
+      xa_central_lower_limit_species(1) = 'h1'
+      xa_central_lower_limit(1) = 1d-9      
             
 !PHYSICS
 
