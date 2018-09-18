@@ -27,7 +27,9 @@
       new_rotation_flag = .true.
       change_rotation_flag = .true.
       !change_initial_rotation_flag = .true.
-      new_omega_div_omega_crit = 0.014
+      !new_omega_div_omega_crit = 0.0084 !3km/s
+      !new_omega_div_omega_crit = 0.014 !5km/s
+      new_omega_div_omega_crit = 0.028 !10km/s
       set_omega_div_omega_crit = .true.
 
       !new_surface_rotation_v = 20.0 ! km/s     
@@ -43,7 +45,7 @@
 !MISC. SETUP
     
       history_columns_file = 'my_history_columns.list'
-      save_model_filename = '1M_photosphere_tables_pAGB.mod'
+      save_model_filename = '1M_photosphere_tables_TAMS.mod'
       save_model_when_terminate = .true.
     
       !parameters to be used for mass on/off for rotation
