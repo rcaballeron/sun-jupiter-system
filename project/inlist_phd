@@ -119,9 +119,11 @@
 
       !in run_star_extras, it's set to H1 depletion in the core for low mass stars
       !gamma_center_limit = 20.0
+
       ! stop when the center mass fraction of h1 drops below this limit
       xa_central_lower_limit_species(1) = 'h1'
-      xa_central_lower_limit(1) = 1d-9      
+      xa_central_lower_limit(1) = 1d-9
+
             
 !PHYSICS
 
@@ -245,99 +247,3 @@
       xtra_coef_os_below_burn_z = 0.5
       
 / ! end of controls namelist
-
-&pgstar
-
-  History_Panels1_win_flag = .true.
-  History_Panels1_num_panels = 3
-  !History_Panels1_xaxis_name = 'star_age'
-  History_Panels1_yaxis_name(3) = 'surf_avg_v_rot'
-
-  TRho_Profile_win_flag = .true.
-  show_TRho_Profile_legend = .true.
-  show_TRho_Profile_text_info = .true.
-  TRho_Profile_file_flag = .true.
-  TRho_Profile_file_prefix = 'trho_'
-  TRho_Profile_file_interval = 5  
-
-  Abundance_win_flag = .true.
-  Abundance_show_photosphere_location = .true.
-  num_abundance_line_labels = 1
-  Abundance_num_isos_to_show = 4
-  Abundance_which_isos_to_show(1) = 'h1'
-  Abundance_which_isos_to_show(2) = 'he4'
-  Abundance_which_isos_to_show(3) = 'li7'
-  Abundance_which_isos_to_show(4) = 'be7'
-  Abundance_file_flag = .true.
-
-
-  !Abundance_log_mass_frac_min = -20
-  !Abundance_log_mass_frac_max = 0.3
-  Abundance_log_mass_frac_min = -30
-  Abundance_log_mass_frac_max = 10
-  Abundance_file_interval = 5
-
-
-  ! show HR diagram
-  ! this plots the history of L,Teff over many timesteps
-  HR_win_flag = .true.
-  HR_file_flag = .true.
-  HR_file_interval = 5
-
-  
-  ! Mirar para mostrar como varía las abundancias a lo largo de los modelos
-  ! junto con temperatura
-  Summary_History_win_flag = .false.
-
-  Summary_Profile_win_flag = .false.
-  Summary_Profile_num_lines = 7
-
-  Summary_Profile_name(1) = 'x'
-  Summary_Profile_legend(1) = 'X'
-  Summary_Profile_scaled_value(1) = .false.
-
-  Summary_Profile_name(2) = 'y'
-  Summary_Profile_legend(2) = 'Y'
-  Summary_Profile_scaled_value(2) = .false.
-
-  Summary_Profile_name(3) = 'h1'
-  Summary_Profile_legend(3) = 'h1'
-  Summary_Profile_scaled_value(3) = .false.
-
-  Summary_Profile_name(4) = 'li7'
-  Summary_Profile_legend(4) = 'li7'
-  Summary_Profile_scaled_value(4) = .false.
-
-  Summary_Profile_name(5) = 'be7'
-  Summary_Profile_legend(5) = 'be7'
-  Summary_Profile_scaled_value(5) = .false.
-  Summary_Profile_legend(5) = 'be7'
-
-  Summary_Profile_name(6) = 'radius'
-  Summary_Profile_legend(6) = 'r rel'
-
-  Summary_Profile_name(7) = 'temperature'
-  Summary_Profile_legend(7) = 'T rel'    
-
-  History_Track2_win_flag = .true.
-  History_Track2_xname = 'star_age'
-  History_Track2_yname = 'surf_avg_omega_div_omega_crit'
-  History_Track2_xaxis_label = 'star_age'
-  History_Track2_yaxis_label = 'surf_avg_omega_div_omega_crit'
-  History_Track2_reverse_xaxis = .false.
-  History_Track2_reverse_yaxis = .false.
-  History_Track2_log_xaxis = .true.
-  History_Track2_log_yaxis = .false.  
-
-  History_Track3_win_flag = .true.
-  History_Track3_xname = 'star_age'
-  History_Track3_yname = 'surf_avg_v_rot'
-  History_Track3_xaxis_label = 'star_age'
-  History_Track3_yaxis_label = 'surf_avg_v_rot'
-  History_Track3_reverse_xaxis = .false.
-  History_Track3_reverse_yaxis = .false.
-  History_Track3_log_xaxis = .true.
-  History_Track3_log_yaxis = .false.  
-
-
-/ !end pgstart
