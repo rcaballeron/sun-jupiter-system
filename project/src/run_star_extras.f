@@ -33,23 +33,49 @@
       
       real(dp) :: original_diffusion_dt_limit
       real(dp) :: burn_check = 0.0
+      logical :: debug_use_other_torque = .false.
+      logical :: debug_get_cz_info = .false.
+
+      type conv_zone_info
+       real(dp) :: &
+         top_radius, &
+         bot_radius, &
+         top_mass, &
+         bot_mass
+       integer :: &
+         top_zone, &
+         bot_zone
+         !mixing_length_at_bcz, &
+            !dr, ocz_turnover_time_g, ocz_turnover_time_l_b, ocz_turnover_time_l_t, &
+            !env_binding_E, total_env_binding_E
+      end type conv_zone_info
+
+      !conv_zone_info, dimension(:) :: conv_zone_list
+
       
 !     these routines are called by the standard run_star check_model
       contains
       
       subroutine extras_controls(id, ierr)
-      integer, intent(in) :: id
-      integer, intent(out) :: ierr
-      type (star_info), pointer :: s
-      ierr = 0
-      call star_ptr(id, s, ierr)
-      if (ierr /= 0) return
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
 
-      write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++ROQUE++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      
-      original_diffusion_dt_limit = s% diffusion_dt_limit
-      !s% other_wind => Reimers_then_VW
-      s% other_wind => Reimers_then_Blocker
+         write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++ROQUE++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         
+         original_diffusion_dt_limit = s% diffusion_dt_limit
+         !s% other_wind => Reimers_then_VW
+         s% other_wind => Reimers_then_Blocker
+
+         s% other_torque => tfm_other_torque
+
+         !debug flags
+         debug_use_other_torque = s% x_logical_ctrl(1)
+         debug_get_cz_info = s% x_logical_ctrl(2)
+
       
       ! Once you have set the function pointers you want,
       ! then uncomment this (or set it in your star_job inlist)
@@ -68,6 +94,175 @@
 
       s% job% warn_run_star_extras =.false.             
       end subroutine extras_controls
+
+      subroutine tfm_other_torque(id, ierr)
+         use const_def
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         integer :: k
+         real(dp) :: r_st, m_st
+         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
+         ierr = 0
+
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+
+         s% extra_jdot(:) = 0
+         s% extra_omegadot(:) = 0
+
+         !Magnetic braking according to MESA school 2012 assignment by Cantiello
+         !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
+         ! j_dot = angular momentum lost
+         ! omega_surf = surface angular velocity (rad/s)
+         ! m_dot = mass lost rate (Msun/year)
+         ! alfven_r = Alfven radius
+
+         !Wind-confinmenet parameter eta_surf
+         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
+         ! r_st = stellar surface radius (cm)
+         ! B = magnetic field torque (G)
+         ! v_inf = terminal velocity of the stellar wind (cm/s)
+
+         !v_inf = 1.92*v_esc
+         ! v_esc = photospheric escape velocity (cm/s)
+
+         !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
+
+         !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
+
+         if (s% use_other_torque) then
+
+            !Star data
+            r_st = s% r(1)
+            m_st = s% m(1)
+            omega_surf = s% omega_avg_surf
+
+            v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
+
+            v_inf = 1.92 * v_esc
+
+            B = s% x_ctrl(6)
+
+            m_dot = s% star_mdot
+
+            eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
+
+            j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
+
+            s% extra_jdot(1) = j_dot
+
+            if (debug_use_other_torque) then
+               write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
+                  "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
+                  "omega_surf", omega_surf, "j_dot", j_dot
+            end if
+
+            s% x_ctrl(7) = v_esc
+            s% x_ctrl(8) = v_inf
+            s% x_ctrl(9) = eta_surf
+            s% x_ctrl(10) = j_dot
+            s% x_ctrl(11) = m_dot
+
+         end if
+
+      end subroutine tfm_other_torque
+
+      ! Collect information about the outermost convection zone
+      subroutine get_convective_info(id, ierr, cz_info)
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         integer :: i, k, nz, n_conv_bdy
+         type (conv_zone_info), pointer, intent(out) :: cz_info
+
+
+         type (star_info), pointer :: s
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+
+         nz = s% nz
+         ! boundaries of regions with mixing_type = convective_mixing
+         n_conv_bdy = s% num_conv_boundaries
+
+         ! convection regions
+         i = s% n_conv_regions
+
+
+         ! Reset bottom and top zone, mass and radius values
+         cz_info% top_zone = 0
+         cz_info% bot_zone = 0         
+
+         cz_info% top_mass = 0.0
+         cz_info% bot_mass = 0.0
+
+         cz_info% top_radius = 0.0
+         cz_info% bot_radius = 0.0
+         
+         ! mixing regions (from surface inward)
+         ! check the outermost convection zone
+         ! if dM_convenv/M < 1d-8, there's no conv env.
+         if (s% n_conv_regions > 0) then
+             if ((s% cz_top_mass(i) / s% mstar > 0.99d0) .and. &
+             ((s% cz_top_mass(i) - s% cz_bot_mass(i)) / s% mstar > 1d-11)) then 
+             
+                 cz_info% bot_mass = s% cz_bot_mass(i)
+                 cz_info% top_mass = s% cz_top_mass(i)
+
+                 !get top radius information
+                 !start from k=2 (second most outer zone) in order to access k-1
+                 !iterate till the mass of zone k is smaller than the mass of
+                 !outermost cz limit
+                 do k=2,nz
+                     if (s% m(k) < cz_info% top_mass) then 
+                         cz_info% top_radius = s% r(k-1)
+                         cz_info% top_zone = k-1
+                         exit
+                     end if
+                 end do
+
+                 !get top radius information
+                 do k=2,nz 
+                     if (s% m(k) < cz_info% bot_mass) then 
+                         cz_info% bot_radius = s% r(k-1)
+                         cz_info% bot_zone = k-1
+                         exit
+                     end if
+                 end do 
+
+                 
+                 !if the star is fully convective, then the bottom boundary is the center
+                 if ((cz_info% bot_zone == 0) .and. (cz_info% top_zone > 0)) then
+                     cz_info% bot_zone = nz
+                 end if
+             end if
+         endif
+
+         if (debug_get_cz_info) then
+            write(*,*) "Outter cz info - ", &
+               "bot_zone", cz_info% bot_zone, "top_zone", cz_info% top_zone, &
+               "bot_mass", cz_info% bot_mass, "top_mass", cz_info% top_mass, &
+               "bot_radius", cz_info% bot_radius, "top_radius", cz_info% top_radius
+         end if
+
+         
+         !names(1) = 'conv_env_top_mass'
+         !vals(1) = ocz_top_mass/msun
+         !names(2) = 'conv_env_bot_mass'
+         !vals(2) = ocz_bot_mass/msun
+         !names(3) = 'conv_env_top_radius'
+         !vals(3) = ocz_top_radius/rsun
+         !names(4) = 'conv_env_bot_radius'
+         !vals(4) = ocz_bot_radius/rsun
+         !names(5) = 'conv_env_turnover_time_g'
+         !vals(5) = ocz_turnover_time_g
+         !names(6) = 'conv_env_turnover_time_l_b'
+         !vals(6) = ocz_turnover_time_l_b
+         !names(7) = 'conv_env_turnover_time_l_t'
+         !vals(7) = ocz_turnover_time_l_t
+
+      end subroutine get_convective_info
+
       
       integer function extras_startup(id, restart, ierr)
       integer, intent(in) :: id

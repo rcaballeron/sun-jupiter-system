@@ -247,5 +247,12 @@
       xtra_coef_os_below_burn_he = 0.5
       xtra_coef_os_above_burn_z = 0.5
       xtra_coef_os_below_burn_z = 0.5
+
+!HOOKs
+      ! make use of 'hooks'
+      use_other_torque = .false.
+      x_logical_ctrl(1) = .true. !debug flag for use_other_torque routine
+      x_logical_ctrl(2) = .true. !debug flag for get_convective_info
+
       
 / ! end of controls namelist
