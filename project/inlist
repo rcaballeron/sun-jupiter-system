@@ -8,7 +8,8 @@
 
     read_extra_star_job_inlist1 = .true.
     !extra_star_job_inlist1_name = 'inlist_tfm'
-    extra_star_job_inlist1_name = 'inlist_choi'
+    !extra_star_job_inlist1_name = 'inlist_choi'
+    extra_star_job_inlist1_name = 'inlist_phd'
 / ! end of star_job namelist
 
 
@@ -16,7 +17,8 @@
 
     read_extra_controls_inlist1 = .true.
     !extra_controls_inlist1_name = 'inlist_tfm'
-    extra_controls_inlist1_name = 'inlist_choi'
+    !extra_controls_inlist1_name = 'inlist_choi'
+    extra_controls_inlist1_name = 'inlist_phd'
 
 / ! end of controls namelist
 
@@ -25,6 +27,7 @@
 
     read_extra_pgstar_inlist1 = .true.
     !extra_pgstar_inlist1_name = 'inlist_tfm'
-    extra_pgstar_inlist1_name = 'inlist_choi'
+    !extra_pgstar_inlist1_name = 'inlist_choi'
+    extra_pgstar_inlist1_name = 'inlist_pgstar'
 
 / ! end of pgstar namelist
