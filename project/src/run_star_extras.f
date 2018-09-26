@@ -40,17 +40,17 @@
        real(dp) :: &
          top_radius, &
          bot_radius, &
+         d_radius, &
          top_mass, &
-         bot_mass
+         bot_mass, &
+         d_mass
        integer :: &
          top_zone, &
-         bot_zone
-         !mixing_length_at_bcz, &
-            !dr, ocz_turnover_time_g, ocz_turnover_time_l_b, ocz_turnover_time_l_t, &
-            !env_binding_E, total_env_binding_E
+         bot_zone, &
+         d_zone
       end type conv_zone_info
 
-      !conv_zone_info, dimension(:) :: conv_zone_list
+      type (conv_zone_info), dimension(:), allocatable :: conv_zone_list
 
       
 !     these routines are called by the standard run_star check_model
@@ -103,11 +103,19 @@
          integer :: k
          real(dp) :: r_st, m_st
          real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
-         ierr = 0
+         type (conv_zone_info), target :: cz_info
+         type (conv_zone_info), pointer :: cz_info_ptr
+         !real(dp), dimension(:), allocatable, target :: mag_brk_jdot;
+         real(dp), dimension(:), pointer :: mag_brk_jdot_ptr;
+         
+         cz_info_ptr => cz_info
 
+         ierr = 0
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
+
+         allocate(mag_brk_jdot_ptr(s% nz))
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
 
@@ -131,7 +139,9 @@
 
          !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
 
-         if (s% use_other_torque) then
+         if ((s% use_other_torque) .and. (s% star_mdot < 0.0)) then
+
+            call get_convective_info(id, ierr, cz_info_ptr)
 
             !Star data
             r_st = s% r(1)
@@ -146,11 +156,12 @@
 
             m_dot = s% star_mdot
 
+
             eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
 
             j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
 
-            s% extra_jdot(1) = j_dot
+            !s% extra_jdot(1) = j_dot
 
             if (debug_use_other_torque) then
                write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
@@ -158,13 +169,17 @@
                   "omega_surf", omega_surf, "j_dot", j_dot
             end if
 
-            s% x_ctrl(7) = v_esc
-            s% x_ctrl(8) = v_inf
-            s% x_ctrl(9) = eta_surf
-            s% x_ctrl(10) = j_dot
-            s% x_ctrl(11) = m_dot
+            call distribute_j_dot(j_dot, cz_info_ptr, mag_brk_jdot_ptr, id, ierr)
+
+!            s% x_ctrl(7) = v_esc
+!            s% x_ctrl(8) = v_inf
+!            s% x_ctrl(9) = eta_surf
+!            s% x_ctrl(10) = j_dot
+!            s% x_ctrl(11) = m_dot
 
          end if
+
+         deallocate(mag_brk_jdot_ptr)
 
       end subroutine tfm_other_torque
 
@@ -191,7 +206,7 @@
 
          ! Reset bottom and top zone, mass and radius values
          cz_info% top_zone = 0
-         cz_info% bot_zone = 0         
+         cz_info% bot_zone = 0
 
          cz_info% top_mass = 0.0
          cz_info% bot_mass = 0.0
@@ -207,12 +222,11 @@
              ((s% cz_top_mass(i) - s% cz_bot_mass(i)) / s% mstar > 1d-11)) then 
              
                  cz_info% bot_mass = s% cz_bot_mass(i)
-                 cz_info% top_mass = s% cz_top_mass(i)
+                 cz_info% top_mass = s% cz_top_mass(i)                 
 
                  !get top radius information
                  !start from k=2 (second most outer zone) in order to access k-1
-                 !iterate till the mass of zone k is smaller than the mass of
-                 !outermost cz limit
+                 !iterate till the mass of zone k is smaller than the mass of cz limit
                  do k=2,nz
                      if (s% m(k) < cz_info% top_mass) then 
                          cz_info% top_radius = s% r(k-1)
@@ -221,28 +235,33 @@
                      end if
                  end do
 
-                 !get top radius information
+                 !get bottom radius information
                  do k=2,nz 
                      if (s% m(k) < cz_info% bot_mass) then 
                          cz_info% bot_radius = s% r(k-1)
                          cz_info% bot_zone = k-1
                          exit
                      end if
-                 end do 
+                 end do
 
                  
                  !if the star is fully convective, then the bottom boundary is the center
                  if ((cz_info% bot_zone == 0) .and. (cz_info% top_zone > 0)) then
                      cz_info% bot_zone = nz
                  end if
+
+                 !calculate deltas
+                 cz_info% d_mass = cz_info% top_mass - cz_info% bot_mass
+                 cz_info% d_radius = cz_info% top_radius - cz_info% bot_radius
+                 cz_info% d_zone = cz_info% bot_zone - cz_info% top_zone
              end if
          endif
 
          if (debug_get_cz_info) then
-            write(*,*) "Outter cz info - ", &
-               "bot_zone", cz_info% bot_zone, "top_zone", cz_info% top_zone, &
-               "bot_mass", cz_info% bot_mass, "top_mass", cz_info% top_mass, &
-               "bot_radius", cz_info% bot_radius, "top_radius", cz_info% top_radius
+            write(*,*) "nz", nz, "num_cz=", s% n_conv_regions, &
+               "bot_zone=", cz_info% bot_zone, "top_zone=", cz_info% top_zone, "d_zone=", cz_info% d_zone, &
+               "bot_mass=", cz_info% bot_mass/msun, "top_mass=", cz_info% top_mass/msun, "d_mass=", cz_info% d_mass/msun, &
+               "bot_radius=", cz_info% bot_radius/rsun, "top_radius=", cz_info% top_radius/rsun, "d_radius=", cz_info% d_radius/rsun
          end if
 
          
@@ -262,6 +281,24 @@
          !vals(7) = ocz_turnover_time_l_t
 
       end subroutine get_convective_info
+
+      subroutine distribute_j_dot(total_j_dot,cz_info, mb_jdot_list, id, ierr)      
+         real(dp), intent(in) :: total_j_dot
+         type (conv_zone_info), pointer, intent(in) :: cz_info
+         integer, intent(in) :: id
+         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+         integer, intent(out) :: ierr
+         integer :: i
+
+         mb_jdot_list(:) = 0
+
+         write(*,*) "bot_zone", cz_info% bot_zone, "top_zone", cz_info% top_zone
+         do i = cz_info% top_zone, cz_info% bot_zone, 1
+            mb_jdot_list(i) = total_j_dot
+            write(*,*) "mb_jdot_list", mb_jdot_list(i)
+         end do
+      end subroutine distribute_j_dot
+
 
       
       integer function extras_startup(id, restart, ierr)

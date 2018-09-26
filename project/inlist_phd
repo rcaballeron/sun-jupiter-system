@@ -250,9 +250,16 @@
 
 !HOOKs
       ! make use of 'hooks'
-      use_other_torque = .false.
+      use_other_torque = .true.
       x_logical_ctrl(1) = .true. !debug flag for use_other_torque routine
       x_logical_ctrl(2) = .true. !debug flag for get_convective_info
+      
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! Magnetic braking input parameters
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! B - magnetic field torque (G)
+      x_ctrl(6) = 10.0d0
+
 
       
 / ! end of controls namelist
