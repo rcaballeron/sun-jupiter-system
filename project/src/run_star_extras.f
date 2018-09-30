@@ -101,12 +101,11 @@
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
-         real(dp) :: r_st, m_st
+         real(dp) :: r_st, m_st, i_st
          real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
          type (conv_zone_info), target :: cz_info
          type (conv_zone_info), pointer :: cz_info_ptr
-         !real(dp), dimension(:), allocatable, target :: mag_brk_jdot;
-         real(dp), dimension(:), pointer :: mag_brk_jdot_ptr;
+         real(dp), dimension(:), pointer :: mag_brk_jdot;
          
          cz_info_ptr => cz_info
 
@@ -115,9 +114,9 @@
          if (ierr /= 0) return
 
 
-         allocate(mag_brk_jdot_ptr(s% nz))
+         allocate(mag_brk_jdot(s% nz))
          s% extra_jdot(:) = 0
-         s% extra_omegadot(:) = 0
+         !s% extra_omegadot(:) = 0
 
          !Magnetic braking according to MESA school 2012 assignment by Cantiello
          !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
@@ -141,35 +140,58 @@
 
          if ((s% use_other_torque) .and. (s% star_mdot < 0.0)) then
 
-            call get_convective_info(id, ierr, cz_info_ptr)
+            call get_convective_info(s, cz_info_ptr)
 
             !Star data
             r_st = s% r(1)
             m_st = s% m(1)
-            omega_surf = s% omega_avg_surf
+            !r_st = Rsun
+            !m_st = Msun
+            i_st = s% i_rot(1)
+            !omega_surf = s% omega_avg_surf
+            omega_surf = s% omega(1)
 
-            v_esc = 618 * (((Rsun/r_st)*(m_st/Msun)))**0.5
+            v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
 
             v_inf = 1.92 * v_esc
 
             B = s% x_ctrl(6)
 
-            m_dot = s% star_mdot
+            !m_dot = s% star_mdot
+            m_dot = s% mstar_dot
 
 
-            eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf))
+            !eta = ( s% photosphere_r * rsun * bfield )**2.0 / (abs( s% mstar_dot ) * vinf) 
+            !with vinf in cm/s (the wind terminal velocity) rsun in cm, bfield in Gauss 
+            !rest are MESA vars accessible through the star structure in run_star_extras.f
+            !eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf)) !100000 pass from km/s to cm/s
+            eta_surf = ((r_st * B)**2)/(abs(m_dot) * v_inf)
+                        
 
-            j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
+            !j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
+            j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
 
-            !s% extra_jdot(1) = j_dot
+            !call distribute_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
+            call distribute_simple_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
+            !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot is just defined
+            !for s% nz elements
+            s% extra_jdot(1:s% nz) = mag_brk_jdot
 
             if (debug_use_other_torque) then
                write(*,*) "Rsun=", Rsun, "Msun=", Msun, "r_st=", r_st, "m_st=", m_st, &
                   "v_esc=", v_esc, "v_inf", v_inf, "B", B, "m_dot", m_dot, "eta_surf", eta_surf, &
-                  "omega_surf", omega_surf, "j_dot", j_dot
+                  "omega_surf", omega_surf, "j_dot", j_dot, "i_st=", i_st
+                  do k=1, size(mag_brk_jdot)
+                  !      k=30 !sacamos solo el valor de la zona 30 para acortar la salida
+                        write(*,*) "jdot(k)=", s% extra_jdot(k), "omega(k)*i_rot(k)=", s% omega(k) * s% i_rot(k), &
+                        "omega(k)=", s% omega(k), "i_rot(k)=", s% i_rot(k)
+                  end do
+                  !s% extra_jdot(:) = 0.0
+                  !write(*,*) "Size s% extra_jdot = ", size(s% extra_jdot), "Size s% nz=", s% nz, &
+                  !"Size mag_brk_jdot=", size(mag_brk_jdot)
             end if
 
-            call distribute_j_dot(j_dot, cz_info_ptr, mag_brk_jdot_ptr, id, ierr)
+
 
 !            s% x_ctrl(7) = v_esc
 !            s% x_ctrl(8) = v_inf
@@ -179,22 +201,15 @@
 
          end if
 
-         deallocate(mag_brk_jdot_ptr)
+         deallocate(mag_brk_jdot)
 
       end subroutine tfm_other_torque
 
       ! Collect information about the outermost convection zone
-      subroutine get_convective_info(id, ierr, cz_info)
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
+      subroutine get_convective_info(s, cz_info)
+         type (star_info), pointer, intent(in) :: s
          integer :: i, k, nz, n_conv_bdy
          type (conv_zone_info), pointer, intent(out) :: cz_info
-
-
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
 
          nz = s% nz
          ! boundaries of regions with mixing_type = convective_mixing
@@ -282,23 +297,48 @@
 
       end subroutine get_convective_info
 
-      subroutine distribute_j_dot(total_j_dot,cz_info, mb_jdot_list, id, ierr)      
+      subroutine distribute_j_dot(s, total_j_dot,cz_info, mb_jdot_list)
+         type (star_info), pointer, intent(in) :: s
          real(dp), intent(in) :: total_j_dot
          type (conv_zone_info), pointer, intent(in) :: cz_info
-         integer, intent(in) :: id
          real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
-         integer, intent(out) :: ierr
          integer :: i
+         real(dp) :: sum_jdot
 
-         mb_jdot_list(:) = 0
-
-         write(*,*) "bot_zone", cz_info% bot_zone, "top_zone", cz_info% top_zone
+         !By default, no lost of angular moment
+         mb_jdot_list(:) = 0.0
+         sum_jdot = 0.0
+      
+         !write(*,*) "bot_zone=", cz_info% bot_zone, "top_zone=", cz_info% top_zone
+         !write(*,*) "sum_jdot=", sum_jdot
          do i = cz_info% top_zone, cz_info% bot_zone, 1
-            mb_jdot_list(i) = total_j_dot
-            write(*,*) "mb_jdot_list", mb_jdot_list(i)
+            !Here the jdot distribution strategy is defined
+            !TODO externalize to a method, this will isolate the strategy implementation
+            !Simple rule of three distribution based on the mass of the zone vs total cz mass
+            mb_jdot_list(i) = (s% dm(i) * total_j_dot) / cz_info% d_mass
+            sum_jdot = sum_jdot + mb_jdot_list(i)
+            !write(*,*) "mb_jdot_list=", mb_jdot_list(i)
          end do
+         !write(*,*) "sum_jdot=", sum_jdot
       end subroutine distribute_j_dot
 
+
+      subroutine distribute_simple_j_dot(s, total_j_dot,cz_info, mb_jdot_list)
+         type (star_info), pointer, intent(in) :: s
+         real(dp), intent(in) :: total_j_dot
+         type (conv_zone_info), pointer, intent(in) :: cz_info
+         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+         integer :: i
+
+         !By default, no lost of angular moment
+         mb_jdot_list(:) = 0.0
+      
+         !Just reduce a 1% for current angular moment
+         do i = cz_info% top_zone, cz_info% bot_zone, 1
+            mb_jdot_list(i) = -1.0 *s% omega(i) * s% i_rot(i) * 0.000000000000001
+         end do
+
+      end subroutine distribute_simple_j_dot
 
       
       integer function extras_startup(id, restart, ierr)
@@ -454,7 +494,7 @@
 !     note: cannot request retry or backup; extras_check_model can do that.
       integer function extras_finish_step(id, id_extra)
       integer, intent(in) :: id, id_extra
-      integer :: ierr
+      integer :: ierr, k
       type (star_info), pointer :: s
       ierr = 0
       call star_ptr(id, s, ierr)
@@ -469,6 +509,14 @@
          write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
          s% which_atm_option = s% job% extras_cpar(1)
       endif
+
+!         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+!         write(*,*) 'check extra_jdot '
+!         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+!            do k=1, s% nz
+!                  write(*,*) s% extra_jdot(k)
+!            end do
+
       end function extras_finish_step
       
 	  
