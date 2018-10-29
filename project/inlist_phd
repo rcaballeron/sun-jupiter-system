@@ -11,7 +11,7 @@
       ! Rotation off until near ZAMS
       !change_rotation_flag = .false.
       !new_rotation_flag = .true.
-      !new_surface_rotation_v = 20 ! solar (km sec^1) or new_omega_div_omega_crit = 0.057 (adimensional)
+      !new_surface_rotation_v = 5 ! solar (km sec^1) or new_omega_div_omega_crit = 0.057 (adimensional)
       ! to turn on rotation when near zams
       ! if rotation_flag is false and L_nuc_burn_total >= L_phot and this control > 0
       ! then turn on rotation and set set_surf_rotation_v_step_limit to
@@ -21,7 +21,7 @@
       ! turn on rotation near zams
       !near_zams_relax_omega_div_omega_crit = .true.  ! turn on rotation at zams
       !num_steps_to_relax_rotation = 100              ! this number steps in the relaxation to the desired value   
-      !new_omega_div_omega_crit = 0.50d0              ! desired zams value of rotation
+      !new_omega_div_omega_crit = 0.03d0              ! desired zams value of rotation
 
       ! turn on PMS
       new_rotation_flag = .true.
@@ -105,7 +105,7 @@
       write_header_frequency = 10
       photo_digits = 5
       !photostep = 250 replaced by photo_interval
-      photo_interval = 250
+      photo_interval = 50
 
       star_history_dbl_format = '(1pes32.16e3, 1x)'
       star_history_int_format = '(i32, 1x)'
@@ -191,7 +191,6 @@
       am_gradmu_factor = 0.05
 
       ! mass loss       
-      use_other_wind = .true.
       cool_wind_RGB_scheme = 'Reimers'
       cool_wind_AGB_scheme = 'Blocker'
       RGB_to_AGB_wind_switch = 1d-4
@@ -225,18 +224,26 @@
         
 !MESH AND TIMESTEP PARAMETERS
 
-      mesh_delta_coeff = 1.0
-      varcontrol_target = 1d-4
-      max_allowed_nz = 50000
+      !A larger value increases the max allowed deltas and decreases the number of grid points.
+      mesh_delta_coeff = 1.0 !Default value 1.0
+      !This is the target value for relative variation in the structure from one model to the next.
+      varcontrol_target = 1d-4 !Default value 1d-4
+      !Maximum number of grid points allowed.
+      max_allowed_nz = 50000 !Default value 8000
     
       !better resolution of the Henyey hook
-      delta_lg_XH_cntr_max = -1
+      !lg_XH_cntr is log10(h1 mass fraction at center). 
+      !Small timesteps as the center hydrogen is exhausted.
+      !Ignore changes in lg_XH_cntr if value is more than this.
+      delta_lg_XH_cntr_max = -1 !Default value -3
 
       ! limit for magnitude of max change
-      delta_lgTeff_limit = 0.005
-      delta_lgTeff_hard_limit = 0.01
-      delta_lgL_limit = 0.02 
-      delta_lgL_hard_limit = 0.05
+      !Limit for magnitude of max change in log10 temperature at photosphere
+      !delta_lgTeff_limit = 0.005
+      !delta_lgTeff_hard_limit = 0.01
+      !Limit for magnitude of change in log10(L/Lsun)
+      !delta_lgL_limit = 0.02 
+      !delta_lgL_hard_limit = 0.05
     
       !multiply mesh_delta_coeff in overshooting regions by this factor
       xtra_coef_os_above_nonburn = 0.5
@@ -251,14 +258,16 @@
 !HOOKs
       ! make use of 'hooks'
       use_other_torque = .true.
+      use_other_wind = .true.
       x_logical_ctrl(1) = .true. !debug flag for use_other_torque routine
-      x_logical_ctrl(2) = .true. !debug flag for get_convective_info
+      x_logical_ctrl(2) = .false. !debug flag for reset_other_torque, if true, jdot is discarded
+      x_logical_ctrl(3) = .true. !debug flag for get_convective_info
       
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! Magnetic braking input parameters
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! B - magnetic field torque (G)
-      x_ctrl(6) = 10.0d0
+      x_ctrl(6) = 4.0d0
 
 
       

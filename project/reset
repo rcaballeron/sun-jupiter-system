@@ -1,0 +1,6 @@
+cd make
+make clean
+cd ..
+rm -f png/*
+rm -f photos/*
+rm -f LOGS/*

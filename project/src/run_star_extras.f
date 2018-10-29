@@ -34,6 +34,7 @@
       real(dp) :: original_diffusion_dt_limit
       real(dp) :: burn_check = 0.0
       logical :: debug_use_other_torque = .false.
+      logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
 
       type conv_zone_info
@@ -64,22 +65,24 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-         write(*,*) '++++++++++++++++++++++++++++++++++++++++++++++++ROQUE++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         write(*,*) '*******  Version: 2.0.1'
+         write(*,*) '*******  Oct. 18: Magnetic braking routine'
+         write(*,*) '*******  Roque Caballero'
          
          original_diffusion_dt_limit = s% diffusion_dt_limit
          !s% other_wind => Reimers_then_VW
          s% other_wind => Reimers_then_Blocker
-
-         s% other_torque => tfm_other_torque
+         s% other_torque => other_torque_mag_brk
 
          !debug flags
          debug_use_other_torque = s% x_logical_ctrl(1)
-         debug_get_cz_info = s% x_logical_ctrl(2)
+         debug_reset_other_torque = s% x_logical_ctrl(2)
+         debug_get_cz_info = s% x_logical_ctrl(3)
 
       
-      ! Once you have set the function pointers you want,
-      ! then uncomment this (or set it in your star_job inlist)
-      ! to disable the printed warning message,
+         ! Once you have set the function pointers you want,
+         ! then uncomment this (or set it in your star_job inlist)
+         ! to disable the printed warning message,
          ! Uncomment these lines if you wish to use the functions in this file,
          ! otherwise we use a null_ version which does nothing.
          s% extras_startup => extras_startup
@@ -90,12 +93,15 @@
          s% data_for_extra_history_columns => data_for_extra_history_columns
          s% how_many_extra_profile_columns => how_many_extra_profile_columns
          s% data_for_extra_profile_columns => data_for_extra_profile_columns  
-
-
-      s% job% warn_run_star_extras =.false.             
+         
+         s% job% warn_run_star_extras =.false.             
       end subroutine extras_controls
 
-      subroutine tfm_other_torque(id, ierr)
+      ! This routine implements a magnetic braking effect based on
+      ! Matteos MESA star summer school. Additionally, this implementation
+      ! distribute among the zones which conforms the convective shell the
+      ! loss of angular momentum
+      subroutine other_torque_mag_brk(id, ierr)
          use const_def
          integer, intent(in) :: id
          integer, intent(out) :: ierr
@@ -107,6 +113,7 @@
          type (conv_zone_info), pointer :: cz_info_ptr
          real(dp), dimension(:), pointer :: mag_brk_jdot;
          
+         !Pointer to structure which conveys information about the convectice zone
          cz_info_ptr => cz_info
 
          ierr = 0
@@ -132,50 +139,47 @@
          ! v_inf = terminal velocity of the stellar wind (cm/s)
 
          !v_inf = 1.92*v_esc
-         ! v_esc = photospheric escape velocity (cm/s)
-
+         !v_esc = photospheric escape velocity (cm/s)
          !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
-
+         !loss of angular momentum
          !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
 
-         if ((s% use_other_torque) .and. (s% star_mdot < 0.0)) then
+         if ((s% use_other_torque) .and. (s% mstar_dot < 0.0)) then
 
+            !Get information about the outter convective zone
             call get_convective_info(s, cz_info_ptr)
 
             !Star data
             r_st = s% r(1)
             m_st = s% m(1)
+            omega_surf = s% omega(1)
             !r_st = Rsun
             !m_st = Msun
-            i_st = s% i_rot(1)
             !omega_surf = s% omega_avg_surf
-            omega_surf = s% omega(1)
 
+            ! escape and infinite velocities
             v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
-
             v_inf = 1.92 * v_esc
 
+            !Magentic field intensity
             B = s% x_ctrl(6)
 
-            !m_dot = s% star_mdot
-            m_dot = s% mstar_dot
-            !m_dot = s% mstar_dot/s% dt
+            !m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
+            m_dot = s% mstar_dot !This in g/s
 
 
             !eta = ( s% photosphere_r * rsun * bfield )**2.0 / (abs( s% mstar_dot ) * vinf) 
             !with vinf in cm/s (the wind terminal velocity) rsun in cm, bfield in Gauss 
             !rest are MESA vars accessible through the star structure in run_star_extras.f
-            !eta_surf = abs(((r_st/Rsun)**2/B**2)/(m_dot * v_inf)) !100000 pass from km/s to cm/s
-            !eta_surf = ((r_st * B)**2)/(abs(m_dot) * v_inf)
-            eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
+            eta_surf = ((r_st * B)**2)/(abs(m_dot) * v_inf)
+            !eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
                         
-
-            !j_dot = two_thirds * m_dot * omega_surf * (r_st/Rsun)**2 * eta_surf
             j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
 
-            !call distribute_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
-            call distribute_simple_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
+            !Distribute the loss of angular momentum
+            call distribute_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
             !call distribute_all_zones_j_dot(s, j_dot, mag_brk_jdot)
+
             !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot is just defined
             !for s% nz elements
             s% extra_jdot(1:s% nz) = mag_brk_jdot
@@ -184,24 +188,18 @@
                   !write(*,*) "photosphere_r", s% photosphere_r*rsun, "r(1)", s% r(1), "r(nz)", s% r(s% nz), &
                   !"j_dot", j_dot, "j_dot(nz)", mag_brk_jdot(s% nz), "j_dot(1)", mag_brk_jdot(1)
 
-                  !write(*,*) "dt(yr)", s% dt/secyer, "m_dot(msol/s)", m_dot/msol, "m_dot(msol/yr)", m_dot/msol*secyer, &
-                  !      "star_mdot", s% star_mdot
-                        !"m_dot(msol)/dt(yr)", (m_dot/msol)/(s% dt/secyer), "m_dot(msol)/s", ((m_dot/msol)/(s% dt/secyer))/secyer
-               !write(*,*) "r_st=", r_st, "m_st=", m_st, &
-               write(*,*) "v_esc=", v_esc, "v_inf", v_inf, "m_dot", m_dot, &
-                  "eta_surf", eta_surf, "omega_surf", omega_surf, "j_dot", j_dot, "i_st=", i_st
-                  !do k=1, size(mag_brk_jdot)
-               !         k=30 !sacamos solo el valor de la zona 30 para acortar la salida
-               !         write(*,*) "jdot(k)=", s% extra_jdot(k), "omega(k)*i_rot(k)=", s% omega(k) * s% i_rot(k), &
-               !         "omega(k)=", s% omega(k), "i_rot(k)=", s% i_rot(k)
-                  !end do
-                  !s% extra_jdot(:) = 0.0
-                  !write(*,*) "Size s% extra_jdot = ", size(s% extra_jdot), "Size s% nz=", s% nz, &
-                  !"Size mag_brk_jdot=", size(mag_brk_jdot)
+                  do k=1, size(mag_brk_jdot)
+                        if (s% extra_jdot(k) < 0.0) then
+                              write(*,*) "jdot(k)=", s% extra_jdot(k), "omega(k)*i_rot(k)=", s% omega(k) * s% i_rot(k), &
+                        "omega(k)=", s% omega(k), "i_rot(k)=", s% i_rot(k)
+                        end if
+                  end do
+
+                  if (debug_reset_other_torque) then
+                        !Just only who the values, don't pass them back to MESA
+                        s% extra_jdot(:) = 0.0
+                  end if
             end if
-
-
-
 !            s% x_ctrl(7) = v_esc
 !            s% x_ctrl(8) = v_inf
 !            s% x_ctrl(9) = eta_surf
@@ -212,7 +210,7 @@
 
          deallocate(mag_brk_jdot)
 
-      end subroutine tfm_other_torque
+      end subroutine other_torque_mag_brk
 
       ! Collect information about the outermost convection zone
       subroutine get_convective_info(s, cz_info)
@@ -312,53 +310,23 @@
          type (conv_zone_info), pointer, intent(in) :: cz_info
          real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
          integer :: k
-         real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot
+         real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
 
          !By default, no lost of angular moment
          mb_jdot_list(:) = 0.0
-         sum_jdot = 0.0
       
-         !write(*,*) "bot_zone=", cz_info% bot_zone, "top_zone=", cz_info% top_zone
-         !write(*,*) "sum_jdot=", sum_jdot
          do k = cz_info% top_zone, cz_info% bot_zone, 1
             !Here the jdot distribution strategy is defined
             !TODO externalize to a method, this will isolate the strategy implementation
-            !Simple rule of three distribution based on the mass of the zone vs total cz mass
+            !Simple rule of three distribution loss of angular momentum based on the 
+            !angular momentum of the zone vs total angular momentum of the convective zone
 
-            !mb_jdot_list(k) = (s% dm(k) * total_j_dot) / cz_info% d_mass
+            !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
+            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+                  (cz_info% d_mass * cz_info% d_radius**2)) / s% dm(k)
 
-            mb_jdot_list(k) = ((s% dm(k) * s% r(k) * s% r(k) * total_j_dot) / &
-                  (cz_info% d_mass * cz_info% d_radius * cz_info% d_radius)) / s% dm(k)
-
-
-
-            !dm_jdot = (s% dm(k) * total_j_dot) / cz_info% d_mass
-            !dm_bar_jdot = (s% dm_bar(k) * total_j_dot) / cz_info% d_mass
-            !mb_jdot_list(k) = (s% dm_bar(k) * total_j_dot) / cz_info% d_mass
-            !mb_jdot_list(k) = ((s% dm_bar(k) * total_j_dot) / cz_info% d_mass) / s% dt
-            !sum_jdot = sum_jdot + mb_jdot_list(k)
-            !write(*,*) "mb_jdot_list=", mb_jdot_list(k), dm_jdot, dm_bar_jdot
          end do
-         !write(*,*) "sum_jdot=", sum_jdot
       end subroutine distribute_j_dot
-
-
-      subroutine distribute_simple_j_dot(s, total_j_dot,cz_info, mb_jdot_list)
-         type (star_info), pointer, intent(in) :: s
-         real(dp), intent(in) :: total_j_dot
-         type (conv_zone_info), pointer, intent(in) :: cz_info
-         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
-         integer :: i
-
-         !By default, no lost of angular moment
-         mb_jdot_list(:) = 0.0
-      
-         !Just reduce a 1% for current angular moment
-         do i = cz_info% top_zone, cz_info% bot_zone, 1
-            mb_jdot_list(i) = -1.0 *s% omega(i) * s% i_rot(i) * 0.000000000000001
-         end do
-
-      end subroutine distribute_simple_j_dot
 
       subroutine distribute_all_zones_j_dot(s, total_j_dot, mb_jdot_list)
          type (star_info), pointer, intent(in) :: s
@@ -369,19 +337,11 @@
          !By default, no lost of angular moment
          mb_jdot_list(:) = 0.0
       
-         !Just reduce a 1% for current angular moment
          do k = 1, s% nz, 1
-            !mb_jdot_list(i) = ((s% dm_bar(k) * total_j_dot) / s% m(1)) / s% dt
-
-            !mb_jdot_list(k) = (s% dm(k) * total_j_dot) / s% m(1)
-            !mb_jdot_list(k) = (s% dm(k) * s% r(k) * s% r(k) * total_j_dot) / (s% m(1) * s% r(1) * s% r(1))
-            mb_jdot_list(k) = ((s% dm(k) * s% r(k) * s% r(k) * total_j_dot) / (s% m(1) * s% r(1) * s% r(1))) / s% dm(k)
-            !Teniendo en cuenta la fotoesfera
+            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / (s% m(1) * s% r(1)**2)) / s% dm(k)
+            !Using the photsosphere radius
             !mb_jdot_list(k) = (s% dm(k) * s% r(k)**2 * total_j_dot) / (s% m(1) * (s% photosphere_r * rsun)**2)
-
-
          end do
-
       end subroutine distribute_all_zones_j_dot
 
 
