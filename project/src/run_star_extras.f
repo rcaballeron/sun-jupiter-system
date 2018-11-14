@@ -37,21 +37,24 @@
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
 
-      type conv_zone_info
+      type star_zone_info
        real(dp) :: &
          top_radius, &
          bot_radius, &
          d_radius, &
          top_mass, &
          bot_mass, &
-         d_mass
+         d_mass, &
+         top_vrot, &
+         bot_vrot, &
+         half_core_to_bot_vrot !vel rot at half distance from core to bottom of cz
        integer :: &
          top_zone, &
          bot_zone, &
          d_zone
-      end type conv_zone_info
+      end type star_zone_info
 
-      type (conv_zone_info), dimension(:), allocatable :: conv_zone_list
+      type (star_zone_info), dimension(:), allocatable :: conv_zone_list
 
       
 !     these routines are called by the standard run_star check_model
@@ -108,13 +111,16 @@
          type (star_info), pointer :: s
          integer :: k
          real(dp) :: r_st, m_st, i_st
-         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B
-         type (conv_zone_info), target :: cz_info
-         type (conv_zone_info), pointer :: cz_info_ptr
-         real(dp), dimension(:), pointer :: mag_brk_jdot;
+         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B, jdot_routine
+         type (star_zone_info), target :: sz_info
+         type (star_zone_info), pointer :: sz_info_ptr
+         real(dp), dimension(:), pointer :: mag_brk_jdot
+         logical :: only_cz !controls if jdot distribution must only affect the convective zone
+         logical :: rad_core_dev, wait_rad_core !controls if jdot distribution must wait till a radiative core is develop
+         integer :: activated !signals when the jdot routine is activated
          
          !Pointer to structure which conveys information about the convectice zone
-         cz_info_ptr => cz_info
+         sz_info_ptr => sz_info
 
          ierr = 0
          call star_ptr(id, s, ierr)
@@ -124,6 +130,8 @@
          allocate(mag_brk_jdot(s% nz))
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
+         activated = 0
+         call reset_x_ctrl(s)
 
          !Magnetic braking according to MESA school 2012 assignment by Cantiello
          !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
@@ -144,25 +152,47 @@
          !loss of angular momentum
          !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
 
-         if ((s% use_other_torque) .and. (s% mstar_dot < 0.0)) then
+         !Wait till radiative core is develop
+         wait_rad_core = s% x_logical_ctrl(4)
+!         if (wait_rad_core) then
+!            rad_core_dev = check_rad_core(s)
+!         end if
+
+         if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. &
+            (.not. wait_rad_core .or. is_core_rad(s))) then
+            activated = 1
+            
+            !TODO move out the reading of inlist parameters
+            !Magentic field intensity
+            B = s% x_ctrl(1)
+            !B_new = B * (Rsun/r_st)**3 !q=3 para un dipolo simple
+
+
+            !Loss of angular momentum distribution method
+            jdot_routine = s% x_integer_ctrl(1)
+            only_cz = .true.
+            if (jdot_routine /= 0) then
+                  only_cz = .false.
+            end if
+
 
             !Get information about the outter convective zone
-            call get_convective_info(s, cz_info_ptr)
+            if (only_cz) then
+                  call get_convective_info(s, sz_info_ptr)
+            else 
+                  call get_convective_to_surf_info(s, sz_info_ptr)
+            end if
 
             !Star data
             r_st = s% r(1)
             m_st = s% m(1)
             omega_surf = s% omega(1)
-            !r_st = Rsun
-            !m_st = Msun
             !omega_surf = s% omega_avg_surf
 
             ! escape and infinite velocities
             v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
             v_inf = 1.92 * v_esc
 
-            !Magentic field intensity
-            B = s% x_ctrl(6)
 
             !m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
             m_dot = s% mstar_dot !This in g/s
@@ -177,7 +207,7 @@
             j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
 
             !Distribute the loss of angular momentum
-            call distribute_j_dot(s, j_dot, cz_info_ptr, mag_brk_jdot)
+            call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
             !call distribute_all_zones_j_dot(s, j_dot, mag_brk_jdot)
 
             !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot is just defined
@@ -200,23 +230,68 @@
                         s% extra_jdot(:) = 0.0
                   end if
             end if
-!            s% x_ctrl(7) = v_esc
-!            s% x_ctrl(8) = v_inf
-!            s% x_ctrl(9) = eta_surf
-!            s% x_ctrl(10) = j_dot
-!            s% x_ctrl(11) = m_dot
+            
+            !We abuse the x_ctrl array for storing temporary the values to be reported in history file
+            s% x_ctrl(20) = v_esc
+            s% x_ctrl(21) = v_inf
+            s% x_ctrl(22) = eta_surf
+            s% x_ctrl(23) = j_dot
+            s% x_ctrl(24) = m_dot            
+            s% x_ctrl(26) = sz_info_ptr% top_radius / r_st
+            s% x_ctrl(27) = sz_info_ptr% bot_radius / r_st
+            s% x_ctrl(28) = sz_info_ptr% top_mass / m_st
+            s% x_ctrl(29) = sz_info_ptr% bot_mass/ m_st
+            s% x_ctrl(30) = sz_info_ptr% top_zone
+            s% x_ctrl(31) = sz_info_ptr% bot_zone
+            s% x_ctrl(32) = sz_info_ptr% top_vrot
+            s% x_ctrl(33) = sz_info_ptr% bot_vrot
+            s% x_ctrl(34) = sz_info_ptr% half_core_to_bot_vrot
 
          end if
+
+         s% x_ctrl(25) = activated
+         write(*,*) "activated", activated, "is_rad_core", is_core_rad(s), "mass_conv_core", s% mass_conv_core         
 
          deallocate(mag_brk_jdot)
 
       end subroutine other_torque_mag_brk
 
-      ! Collect information about the outermost convection zone
-      subroutine get_convective_info(s, cz_info)
+      subroutine reset_x_ctrl(s)
          type (star_info), pointer, intent(in) :: s
-         integer :: i, k, nz, n_conv_bdy
-         type (conv_zone_info), pointer, intent(out) :: cz_info
+
+         s% x_ctrl(20) = 0
+         s% x_ctrl(21) = 0
+         s% x_ctrl(22) = 0
+         s% x_ctrl(23) = 0
+         s% x_ctrl(24) = 0
+         s% x_ctrl(26) = 0
+         s% x_ctrl(27) = 0
+         s% x_ctrl(28) = 0
+         s% x_ctrl(29) = 0
+         s% x_ctrl(30) = 0
+         s% x_ctrl(31) = 0
+         s% x_ctrl(32) = 0
+         s% x_ctrl(33) = 0
+         s% x_ctrl(34) = 0
+      end subroutine reset_x_ctrl
+
+      function is_core_rad(s) result(flag)
+         type (star_info), pointer, intent(in) :: s
+         logical :: flag
+
+         if (s% mass_conv_core > 0.0) then
+            flag = .false.
+         else 
+            flag = .true.
+         end if
+      end function
+
+      subroutine get_zone_info(s, sz_info, only_cz)
+         type (star_info), pointer, intent(in) :: s
+         logical, intent(in) :: only_cz
+         integer :: i, j, k, nz, n_conv_bdy
+         type (star_zone_info), pointer, intent(out) :: sz_info
+         real(dp) zone_top_mass
 
          nz = s% nz
          ! boundaries of regions with mixing_type = convective_mixing
@@ -227,87 +302,115 @@
 
 
          ! Reset bottom and top zone, mass and radius values
-         cz_info% top_zone = 0
-         cz_info% bot_zone = 0
+         sz_info% top_zone = 0
+         sz_info% bot_zone = 0
 
-         cz_info% top_mass = 0.0
-         cz_info% bot_mass = 0.0
+         sz_info% top_mass = 0.0
+         sz_info% bot_mass = 0.0
 
-         cz_info% top_radius = 0.0
-         cz_info% bot_radius = 0.0
-         
+         sz_info% top_radius = 0.0
+         sz_info% bot_radius = 0.0
+
          ! mixing regions (from surface inward)
          ! check the outermost convection zone
          ! if dM_convenv/M < 1d-8, there's no conv env.
          if (s% n_conv_regions > 0) then
-             if ((s% cz_top_mass(i) / s% mstar > 0.99d0) .and. &
-             ((s% cz_top_mass(i) - s% cz_bot_mass(i)) / s% mstar > 1d-11)) then 
+
+            ! Check if only calculate for the convective zone or get till the surface
+            if (only_cz) then
+                  zone_top_mass = s% cz_top_mass(i)
+            else 
+                  zone_top_mass = s% m(1)
+            end if
+         
+
+             ! with 'i', we peek the outermost convection zone and check if most of the
+             ! star's mass is below it
+             if ((zone_top_mass / s% mstar > 0.99d0) .and. &
+             ! additionally, the convection zone must have a minimum amount of mass
+             ((zone_top_mass - s% cz_bot_mass(i)) / s% mstar > 1d-11)) then 
              
-                 cz_info% bot_mass = s% cz_bot_mass(i)
-                 cz_info% top_mass = s% cz_top_mass(i)                 
+                 sz_info% bot_mass = s% cz_bot_mass(i)
+                 sz_info% top_mass = zone_top_mass
 
                  !get top radius information
                  !start from k=2 (second most outer zone) in order to access k-1
                  !iterate till the mass of zone k is smaller than the mass of cz limit
-                 do k=2,nz
-                     if (s% m(k) < cz_info% top_mass) then 
-                         cz_info% top_radius = s% r(k-1)
-                         cz_info% top_zone = k-1
-                         exit
-                     end if
-                 end do
+                 if (only_cz) then
+                        do k=2,nz
+                              if (s% m(k) < sz_info% top_mass) then 
+                                    sz_info% top_radius = s% r(k-1)
+                                    sz_info% top_zone = k-1
+                                    exit
+                              end if
+                        end do
+                  else 
+                        sz_info% top_radius = s% r(1)
+                        sz_info% top_zone = 1
+                  end if
+
 
                  !get bottom radius information
                  do k=2,nz 
-                     if (s% m(k) < cz_info% bot_mass) then 
-                         cz_info% bot_radius = s% r(k-1)
-                         cz_info% bot_zone = k-1
+                     if (s% m(k) < sz_info% bot_mass) then 
+                         sz_info% bot_radius = s% r(k-1)
+                         sz_info% bot_zone = k-1
                          exit
                      end if
                  end do
 
                  
                  !if the star is fully convective, then the bottom boundary is the center
-                 if ((cz_info% bot_zone == 0) .and. (cz_info% top_zone > 0)) then
-                     cz_info% bot_zone = nz
+                 if ((sz_info% bot_zone == 0) .and. (sz_info% top_zone > 0)) then
+                     sz_info% bot_zone = nz
                  end if
 
+                 !retrieve rotational velocities
+                 sz_info% top_vrot = s% omega(sz_info% top_zone)*s% r(sz_info% top_zone)*1d-5 ! km/sec
+                 sz_info% bot_vrot = s% omega(sz_info% bot_zone)*s% r(sz_info% bot_zone)*1d-5 ! km/sec
+                 j = sz_info% bot_zone + (sz_info% bot_zone / 2) ! zone at half distance from core and bottom of cz
+                 if (j > nz) then
+                      j = nz
+                 end if
+                 sz_info% half_core_to_bot_vrot = s% omega(j)*s% r(j)*1d-5 ! km/sec
+
                  !calculate deltas
-                 cz_info% d_mass = cz_info% top_mass - cz_info% bot_mass
-                 cz_info% d_radius = cz_info% top_radius - cz_info% bot_radius
-                 cz_info% d_zone = cz_info% bot_zone - cz_info% top_zone
+                 sz_info% d_mass = sz_info% top_mass - sz_info% bot_mass
+                 sz_info% d_radius = sz_info% top_radius - sz_info% bot_radius
+                 sz_info% d_zone = sz_info% bot_zone - sz_info% top_zone
              end if
          endif
 
          if (debug_get_cz_info) then
             write(*,*) "nz", nz, "num_cz=", s% n_conv_regions, &
-               "bot_zone=", cz_info% bot_zone, "top_zone=", cz_info% top_zone, "d_zone=", cz_info% d_zone, &
-               "bot_mass=", cz_info% bot_mass/msun, "top_mass=", cz_info% top_mass/msun, "d_mass=", cz_info% d_mass/msun, &
-               "bot_radius=", cz_info% bot_radius/rsun, "top_radius=", cz_info% top_radius/rsun, "d_radius=", cz_info% d_radius/rsun
+               "bot_zone=", sz_info% bot_zone, "top_zone=", sz_info% top_zone, "d_zone=", sz_info% d_zone, &
+               "bot_mass=", sz_info% bot_mass/msun, "top_mass=", sz_info% top_mass/msun, "d_mass=", sz_info% d_mass/msun, &
+               "bot_radius=", sz_info% bot_radius/rsun, "top_radius=", sz_info% top_radius/rsun, "d_radius=", sz_info% d_radius/rsun
          end if
+      end subroutine get_zone_info
+       
 
-         
-         !names(1) = 'conv_env_top_mass'
-         !vals(1) = ocz_top_mass/msun
-         !names(2) = 'conv_env_bot_mass'
-         !vals(2) = ocz_bot_mass/msun
-         !names(3) = 'conv_env_top_radius'
-         !vals(3) = ocz_top_radius/rsun
-         !names(4) = 'conv_env_bot_radius'
-         !vals(4) = ocz_bot_radius/rsun
-         !names(5) = 'conv_env_turnover_time_g'
-         !vals(5) = ocz_turnover_time_g
-         !names(6) = 'conv_env_turnover_time_l_b'
-         !vals(6) = ocz_turnover_time_l_b
-         !names(7) = 'conv_env_turnover_time_l_t'
-         !vals(7) = ocz_turnover_time_l_t
+      ! Collect information about the outermost convection zone
+      subroutine get_convective_info(s, sz_info)
+         type (star_info), pointer, intent(in) :: s
+         type (star_zone_info), pointer, intent(out) :: sz_info
 
+            call get_zone_info(s, sz_info, .true.)
       end subroutine get_convective_info
 
-      subroutine distribute_j_dot(s, total_j_dot,cz_info, mb_jdot_list)
+      ! Collect information from the botton of the outermost convection zone till surface
+      subroutine get_convective_to_surf_info(s, sz_info)
+         type (star_info), pointer, intent(in) :: s
+         type (star_zone_info), pointer, intent(out) :: sz_info
+
+            call get_zone_info(s, sz_info, .false.)
+      end subroutine get_convective_to_surf_info
+
+
+      subroutine distribute_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
          type (star_info), pointer, intent(in) :: s
          real(dp), intent(in) :: total_j_dot
-         type (conv_zone_info), pointer, intent(in) :: cz_info
+         type (star_zone_info), pointer, intent(in) :: sz_info
          real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
          integer :: k
          real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
@@ -315,7 +418,7 @@
          !By default, no lost of angular moment
          mb_jdot_list(:) = 0.0
       
-         do k = cz_info% top_zone, cz_info% bot_zone, 1
+         do k = sz_info% top_zone, sz_info% bot_zone, 1
             !Here the jdot distribution strategy is defined
             !TODO externalize to a method, this will isolate the strategy implementation
             !Simple rule of three distribution loss of angular momentum based on the 
@@ -323,7 +426,7 @@
 
             !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
             mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
-                  (cz_info% d_mass * cz_info% d_radius**2)) / s% dm(k)
+                  (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
 
          end do
       end subroutine distribute_j_dot
@@ -446,13 +549,17 @@
       
       
       integer function how_many_extra_history_columns(id, id_extra)
-      integer, intent(in) :: id, id_extra
-      integer :: ierr
-      type (star_info), pointer :: s
-      ierr = 0
-      call star_ptr(id, s, ierr)
-      if (ierr /= 0) return
-      how_many_extra_history_columns = 0
+            integer, intent(in) :: id, id_extra
+            integer :: ierr
+            type (star_info), pointer :: s
+            ierr = 0
+            call star_ptr(id, s, ierr)
+            if (ierr /= 0) return
+            how_many_extra_history_columns = 0
+
+            if (s% use_other_torque .eqv. .true.) then 
+                  how_many_extra_history_columns = 16
+            end if
       end function how_many_extra_history_columns
       
       
@@ -461,10 +568,79 @@
       character (len=maxlen_history_column_name) :: names(n)
       real(dp) :: vals(n)
       integer, intent(out) :: ierr
+      integer :: i
       type (star_info), pointer :: s
+
       ierr = 0
+      i = 0
       call star_ptr(id, s, ierr)
       if (ierr /= 0) return
+      if (s% use_other_torque .eqv. .true.) then
+        !routine activated
+        names(1) = 'activated'
+        vals(1) = s% x_ctrl(25) 
+
+        !magnetic field torque
+        names(2) = 'B'
+        vals(2) = s% x_ctrl(1) 
+
+        !photospheric escape velocity
+        names(3) = 'v_esc'
+        vals(3) = s% x_ctrl(20)
+                  
+        !terminal velocity
+        names(4) = 'v_inf'
+        vals(4) = s% x_ctrl(21)
+                  
+        !Wind-confinmenet parameter
+        names(5) = 'eta_surf'
+        vals(5) = s% x_ctrl(22)
+                  
+        !lost fo angular momentum
+        names(6) = 'j_dot'
+        vals(6) = s% x_ctrl(23)
+
+        !mass lost
+        names(7) = 'm_dot'                  
+        vals(7) = s% x_ctrl(24)
+
+        !sz_top_radius
+        names(8) = 'sz_top_radius'
+        vals(8) = s% x_ctrl(26)
+
+        !sz_bottom_radius
+        names(9) = 'sz_bot_radius'
+        vals(9) = s% x_ctrl(27)
+
+        !sz_top_mass
+        names(10) = 'sz_top_mass'
+        vals(10) = s% x_ctrl(28)
+
+        !sz_bottom_mass
+        names(11) = 'sz_bot_mass'                  
+        vals(11) = s% x_ctrl(29)
+
+        !sz_top_zone
+        names(12) = 'top_zone'                  
+        vals(12) = s% x_ctrl(30)
+
+        !sz_bottom_zone
+        names(13) = 'sz_bot_zone'                  
+        vals(13) = s% x_ctrl(31)
+
+        !sz_top_vrot
+        names(14) = 'sz_top_vrot'                  
+        vals(14) = s% x_ctrl(32)
+
+        !sz_bot_vrot
+        names(15) = 'sz_bot_vrot'                  
+        vals(15) = s% x_ctrl(33)
+
+        !sz_half_core_to_bot_vrot
+        names(16) = 'sz_h_c_b_vrot'
+        vals(16) = s% x_ctrl(34)
+      end if
+
       end subroutine data_for_extra_history_columns
       
       
@@ -477,6 +653,11 @@
       call star_ptr(id, s, ierr)
       if (ierr /= 0) return
       how_many_extra_profile_columns = 0
+
+      if (s% use_other_torque .eqv. .true.) then 
+            how_many_extra_profile_columns = 1
+      end if
+
       end function how_many_extra_profile_columns
       
       
@@ -492,6 +673,13 @@
       ierr = 0
       call star_ptr(id, s, ierr)
       if (ierr /= 0) return
+
+      names(1) = 'extra_jdot'
+      do k = 1, nz
+            vals(k,1) = s% extra_jdot(k)
+      end do
+
+
       end subroutine data_for_extra_profile_columns
       
       
@@ -514,14 +702,6 @@
          write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
          s% which_atm_option = s% job% extras_cpar(1)
       endif
-
-!         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-!         write(*,*) 'check extra_jdot '
-!         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-!            do k=1, s% nz
-!                  write(*,*) s% extra_jdot(k)
-!            end do
-
       end function extras_finish_step
       
 	  
