@@ -28,6 +28,7 @@
       use crlibm_lib
       use rates_def
       use net_def
+      use chem_def, only: ipp, icno
       
       implicit none
       
@@ -36,6 +37,7 @@
       logical :: debug_use_other_torque = .false.
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
+      logical :: debug_get_core_info = .false.
 
       type star_zone_info
        real(dp) :: &
@@ -81,6 +83,7 @@
          debug_use_other_torque = s% x_logical_ctrl(1)
          debug_reset_other_torque = s% x_logical_ctrl(2)
          debug_get_cz_info = s% x_logical_ctrl(3)
+         debug_get_core_info = s% x_logical_ctrl(4)
 
       
          ! Once you have set the function pointers you want,
@@ -110,17 +113,18 @@
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
-         real(dp) :: r_st, m_st, i_st
+         real(dp) :: r_st, m_st, i_st, alfven_r
          real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B, jdot_routine
-         type (star_zone_info), target :: sz_info
-         type (star_zone_info), pointer :: sz_info_ptr
+         type (star_zone_info), target :: sz_info, core_info
+         type (star_zone_info), pointer :: sz_info_ptr, core_info_ptr
          real(dp), dimension(:), pointer :: mag_brk_jdot
          logical :: only_cz !controls if jdot distribution must only affect the convective zone
          logical :: rad_core_dev, wait_rad_core !controls if jdot distribution must wait till a radiative core is develop
          integer :: activated !signals when the jdot routine is activated
          
-         !Pointer to structure which conveys information about the convectice zone
+         !Pointer to structure which conveys information about the convectice and core zones
          sz_info_ptr => sz_info
+         core_info_ptr => core_info
 
          ierr = 0
          call star_ptr(id, s, ierr)
@@ -157,6 +161,8 @@
 !         if (wait_rad_core) then
 !            rad_core_dev = check_rad_core(s)
 !         end if
+
+         call get_core_info(s, core_info_ptr)
 
          if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. &
             (.not. wait_rad_core .or. is_core_rad(s))) then
@@ -204,7 +210,9 @@
             eta_surf = ((r_st * B)**2)/(abs(m_dot) * v_inf)
             !eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
                         
-            j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
+            j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf !Formula 2.3 Cantiello's MESA assigment
+            !alfven_r = 50.0 * Rsun
+            !j_dot = two_thirds * m_dot * omega_surf * (alfven_r**2) * eta_surf !Formula 2.1 Cantiello's MESA assigment
 
             !Distribute the loss of angular momentum
             call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
@@ -246,11 +254,22 @@
             s% x_ctrl(32) = sz_info_ptr% top_vrot
             s% x_ctrl(33) = sz_info_ptr% bot_vrot
             s% x_ctrl(34) = sz_info_ptr% half_core_to_bot_vrot
-
+            
          end if
-
+         !Routine activated
          s% x_ctrl(25) = activated
-         write(*,*) "activated", activated, "is_rad_core", is_core_rad(s), "mass_conv_core", s% mass_conv_core         
+
+         !Core info
+         s% x_ctrl(35) = core_info_ptr% top_radius / r_st
+         s% x_ctrl(36) = core_info_ptr% bot_radius / r_st
+         s% x_ctrl(37) = core_info_ptr% top_mass / m_st
+         s% x_ctrl(38) = core_info_ptr% bot_mass/ m_st
+         s% x_ctrl(39) = core_info_ptr% top_zone
+         s% x_ctrl(40) = core_info_ptr% bot_zone
+         s% x_ctrl(41) = core_info_ptr% top_vrot
+         s% x_ctrl(42) = core_info_ptr% bot_vrot
+
+         
 
          deallocate(mag_brk_jdot)
 
@@ -273,6 +292,14 @@
          s% x_ctrl(32) = 0
          s% x_ctrl(33) = 0
          s% x_ctrl(34) = 0
+         s% x_ctrl(35) = 0
+         s% x_ctrl(36) = 0
+         s% x_ctrl(37) = 0
+         s% x_ctrl(38) = 0
+         s% x_ctrl(39) = 0
+         s% x_ctrl(40) = 0
+         s% x_ctrl(41) = 0
+         s% x_ctrl(42) = 0
       end subroutine reset_x_ctrl
 
       function is_core_rad(s) result(flag)
@@ -448,6 +475,66 @@
       end subroutine distribute_all_zones_j_dot
 
 
+      ! all the zones in my star in which H fusion occurs.
+      subroutine get_core_info(s, core_info)
+         type (star_info), pointer, intent(in) :: s
+               integer :: i, j, k, nz
+         type (star_zone_info), pointer, intent(out) :: core_info
+         real(dp) zone_top_mass
+         logical fusion_h
+
+         nz = s% nz
+
+         ! Reset bottom and top zone, mass and radius values
+         core_info% top_zone = 0
+         core_info% bot_zone = 0
+
+         core_info% top_mass = 0.0
+         core_info% bot_mass = 0.0
+
+         core_info% top_radius = 0.0
+         core_info% bot_radius = 0.0
+
+         core_info% d_mass = 0.0
+         core_info% d_radius = 0.0
+         core_info% d_zone = 0
+
+
+         fusion_h = .false.
+         do k=nz, 1, -1
+            if (s% eps_nuc_categories(ipp, k) + s% eps_nuc_categories(icno, k) < 0.01) then !TODO: externalizar el valor 0.01
+               if (k /= nz) then
+                  core_info% top_radius = s% r(k+1)
+                  core_info% bot_radius = s% r(nz)
+                  core_info% top_zone = k+1
+                  core_info% bot_zone = nz
+                  core_info% top_mass = s% m(k+1)
+                  core_info% bot_mass = s% m(nz)
+
+                  !retrieve rotational velocities
+                  core_info% top_vrot = s% omega(core_info% top_zone)*s% r(core_info% top_zone)*1d-5 ! km/sec
+                  core_info% bot_vrot = s% omega(core_info% bot_zone)*s% r(core_info% bot_zone)*1d-5 ! km/sec
+
+                  !calculate deltas
+                  core_info% d_mass = core_info% top_mass - core_info% bot_mass
+                  core_info% d_radius = core_info% top_radius - core_info% bot_radius
+                  core_info% d_zone = core_info% bot_zone - core_info% top_zone
+
+                  fusion_h = .true.
+               end if
+               ! When the relese nuclear energi is below than the value in the if comparison, it means that there is not H fusion
+               exit
+            end if
+         end do
+
+         if (debug_get_core_info) then
+            write(*,*) "nz", nz, "fusion_h=", fusion_h, &
+               "bot_zone=", core_info% bot_zone, "top_zone=", core_info% top_zone, "d_zone=", core_info% d_zone, &
+               "bot_mass=", core_info% bot_mass/Msun, "top_mass=", core_info% top_mass/Msun, "d_mass=", core_info% d_mass/Msun, &
+               "bot_radius=", core_info% bot_radius/Rsun, "top_radius=", core_info% top_radius/Rsun, & 
+               "d_radius=", core_info% d_radius/Rsun
+         end if
+   end subroutine get_core_info
       
       integer function extras_startup(id, restart, ierr)
       integer, intent(in) :: id
@@ -558,7 +645,7 @@
             how_many_extra_history_columns = 0
 
             if (s% use_other_torque .eqv. .true.) then 
-                  how_many_extra_history_columns = 16
+                  how_many_extra_history_columns = 24
             end if
       end function how_many_extra_history_columns
       
@@ -621,7 +708,7 @@
         vals(11) = s% x_ctrl(29)
 
         !sz_top_zone
-        names(12) = 'top_zone'                  
+        names(12) = 'sz_top_zone'                  
         vals(12) = s% x_ctrl(30)
 
         !sz_bottom_zone
@@ -639,6 +726,38 @@
         !sz_half_core_to_bot_vrot
         names(16) = 'sz_h_c_b_vrot'
         vals(16) = s% x_ctrl(34)
+
+        !core_top_radius
+        names(17) = 'core_top_radius'
+        vals(17) = s% x_ctrl(35)
+
+        !core_bottom_radius
+        names(18) = 'core_bot_radius'
+        vals(18) = s% x_ctrl(36)
+
+        !core_top_mass
+        names(19) = 'core_top_mass'
+        vals(19) = s% x_ctrl(37)
+
+        !core_bottom_mass
+        names(20) = 'core_bot_mass'                  
+        vals(20) = s% x_ctrl(38)
+
+        !core_top_zone
+        names(21) = 'core_top_zone'                  
+        vals(21) = s% x_ctrl(39)
+
+        !core_bottom_zone
+        names(22) = 'core_bot_zone'                  
+        vals(22) = s% x_ctrl(40)
+
+        !core_top_vrot
+        names(23) = 'core_top_vrot'                  
+        vals(23) = s% x_ctrl(41)
+
+        !core_bot_vrot
+        names(24) = 'core_bot_vrot'                  
+        vals(24) = s% x_ctrl(42)
       end if
 
       end subroutine data_for_extra_history_columns

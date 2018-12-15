@@ -226,7 +226,7 @@
       ! where val = net nuclear energy plus eps_grav minus all neutrino losses.
    !eps_nuc_plus_nuc_neu
 
-   !eps_nuc ! ergs/g/sec from nuclear reactions (reaction neutrinos subtracted)
+   eps_nuc ! ergs/g/sec from nuclear reactions (reaction neutrinos subtracted)
    !log_abs_eps_nuc
    !d_lnepsnuc_dlnd
    !d_epsnuc_dlnd
@@ -250,8 +250,8 @@
       ! NOTE: you can list specific categories by giving their names (from net_def)
       ! This will generate columns labeled burn_ELEMENT
       ! i.e. burn_ar, burn_c, burn_fe etc and also c12_c12, c12_o16 etc
-   !pp
-   !cno
+   pp
+   cno
    !tri_alfa
 
 
@@ -374,7 +374,7 @@
 
 !# Convection
    !mlt_mixing_length ! mixing length for mlt (cm)
-   !mlt_mixing_type ! value returned by mlt
+   mlt_mixing_type ! value returned by mlt
    !conv_dP_term ! P is increased by factor (1 + conv_dP_term) by inclusion of convective turbulence
 
    !conv_vel ! convection velocity (cm/sec)

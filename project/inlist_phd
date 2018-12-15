@@ -264,18 +264,19 @@
       x_logical_ctrl(1) = .false. !debug flag for use_other_torque routine
       x_logical_ctrl(2) = .false. !debug flag for reset_other_torque, if true, jdot is discarded
       x_logical_ctrl(3) = .false. !debug flag for get_convective_info
+      x_logical_ctrl(4) = .true. !debug flag for get_core_info
       
       
       ! **********************************
       ! Magnetic braking input parameters
       ! **********************************
       ! B - magnetic field torque (G)
-      x_ctrl(1) = 3.2d0
+      x_ctrl(1) = 5.0d0
       ! How to redistribute the loss of angular momentum
       x_integer_ctrl(1) = 0 !Only among the zones of outmost convective zone or...
       !x_integer_ctrl(1) = 1 ! till the outmost zone r(1)
       ! Controls if the mb routine is executed only when a radiative core is develop
-      x_logical_ctrl(4) = .false. !FALSE=don't wait, TRUE=wait
+      x_logical_ctrl(4) = .true. !FALSE=don't wait, TRUE=wait
 
 
       
