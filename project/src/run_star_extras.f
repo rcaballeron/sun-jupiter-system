@@ -39,6 +39,8 @@
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
       logical :: debug_get_core_info = .false.
+      logical :: keep_on_rad_core = .false.
+      logical :: rad_core_developed = .false.
 
       type star_zone_info
        real(dp) :: &
@@ -88,6 +90,10 @@
          debug_reset_other_torque = s% x_logical_ctrl(2)
          debug_get_cz_info = s% x_logical_ctrl(3)
          debug_get_core_info = s% x_logical_ctrl(4)
+
+         !If true, once the radiative core is developed, report always true
+         !in is_radiative_core function
+         keep_on_rad_core = s% x_logical_ctrl(6)
 
          !eps thershold
          eps_threshold = s% x_ctrl(2)
@@ -226,12 +232,14 @@
          ! AND
          ! - the star is losing mass
          ! AND
+         ! - the magnetic field intensitive is bigger than 0.0 (allow to execute the routine if use_other_torque=.true.)
+         ! AND
          ! (
          !   - a radiative core developed isn't required (configured in inlist)
          !   OR
          !   - a radiative core is required AND this was developed
          !)
-         if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. &
+         if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. (B > 0.0) .and. &
             (.not. wait_rad_core .or. (wait_rad_core .and. is_core_rad(s)))) then
             activated = 1
 
@@ -354,10 +362,23 @@
          type (star_info), pointer, intent(in) :: s
          logical :: flag
 
-         if (s% mass_conv_core > 0.0) then
-            flag = .false.
-         else 
+         ! Once developed, return always true
+         if (rad_core_developed) then
             flag = .true.
+         ! Don't check if the star is too young
+         else
+            if (s% star_age > 1.0e5) then
+                if (s% mass_conv_core > 0.0) then
+                    flag = .false.
+                else
+                    if (keep_on_rad_core) then
+                        rad_core_developed = .true.
+                    end if
+                    flag = .true.
+                end if
+            else
+                flag = .false.
+            end if
          end if
       end function
 

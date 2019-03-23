@@ -625,7 +625,7 @@
       !add_log_center_abundances
 
       ! individual central mass fractions (as many as desired)
-      !center h1
+      center h1
       !center he4
       !center c12
       !center o16
@@ -640,7 +640,7 @@
    !## mass fractions near surface
 
       ! the following controls automatically add columns for all of the isos that are in the current net
-      add_surface_abundances
+      !add_surface_abundances
       !add_average_abundances
 
       ! individual surface mass fractions (as many as desired)
@@ -649,6 +649,11 @@
       !surface c12
       !surface o16
       ! etc.
+      surface h1
+      surface h2
+      surface he3
+      surface he4
+      surface li7
 
       ! individual log10 surface mass fractions (as many as desired)
 
@@ -734,13 +739,13 @@
 
 
    !## info about location where have max rate of hydrogen burning (PP and CNO)
-      !max_eps_h ! erg/g/s
+      max_eps_h ! erg/g/s
       !max_eps_h_lgT ! log10 temperature at location of max burn
       !max_eps_h_lgRho ! log10 density at location of max burn
-      !max_eps_h_m ! mass coordinate at location of max burn (Msun units)
+      max_eps_h_m ! mass coordinate at location of max burn (Msun units)
       !max_eps_h_xm ! mass exterior to location of max burn (Msun units)
-      !max_eps_h_lgP ! log10 pressure at location of max burn
-      !max_eps_h_lgR ! log10 radius at location of max burn
+      max_eps_h_lgP ! log10 pressure at location of max burn
+      max_eps_h_lgR ! log10 radius at location of max burn
       !max_eps_h_opacity ! opacity at location of max burn
 
    !## info about location where have max rate of helium burning
