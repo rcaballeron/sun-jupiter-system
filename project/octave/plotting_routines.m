@@ -1,20 +1,22 @@
 format longEng;
 
-global header_lines       = 6;
 global star_age_col       = 3;
+global header_lines       = 6;
+global mass_conv_core_col = 8;
+global log_LH_col         = 17;
 global log_Teff_col       = 33;
 global log_L_col          = 34;
+global surf_avg_v_rot_col = 42;
+global center_h1_col      = 54;
 global surface_h1_col     = 55;
 global surface_li_col     = 59;
-global surf_avg_v_rot_col = 42;
+global mb_activated_col   = 72;
 global sz_top_radius_col  = 79;
 global sz_bot_radius_col  = 80;
 global sz_top_zone_col    = 83;
 global sz_bot_zone_col    = 84;
 global sz_top_vrot_col    = 85;
 global sz_bot_vrot_col    = 86;
-global mass_conv_core_col = 8;
-global mb_activated_col   = 72;
 
 global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper';
 global filename = '1M_photosphere_history.data';
@@ -27,6 +29,10 @@ global sun_gauss_field = 1.0; %G
 global sun_age = 4.57e9; %years
 global sun_A_Li7 = 1.1;
 global sun_vel_rot = 2.0; %km/s
+
+%ZAMS
+global delta_h1_center = 0.0015;
+global ratio_log_LH_vs_log_L = 0.99;
 
 
 
@@ -89,6 +95,83 @@ function result = read_matrix_from_file(filename, line_fmt, header_lines, num_co
 
 end
 
+% Calculate ZAMS age position according to the following criterium:
+% 1) Stop once the central H mass fraction has been reduced by delta_h1_center 
+% from its initial value.  
+% 2) Move backward from this point until you find the timestep for which 
+% the model first L_H/L_tot crosses ratio_log_LH_vs_log_L
+%
+% return age at which ZAMS is reached
+function result = calculate_ZAMS(full_path)
+  global star_age_col;
+  global header_lines;
+  global log_LH_col;
+  global log_L_col;
+  global center_h1_col;
+  global delta_h1_center;
+  global ratio_log_LH_vs_log_L;
+  
+  fmt = get_parsing_fmt([star_age_col, log_LH_col, log_L_col, center_h1_col]);
+  A = read_matrix_from_file(full_path, fmt, header_lines, 4);
+  
+  %add to new columns to A initialized to 0
+  %A(:,5) = diff h1_center
+  %A(:,6) = log_LH div log_L
+  A = [A zeros(size(A), 2)];
+  
+  for i=1:rows(A)
+    %Calculate delta_h1
+    if (i == 1)
+      %For the first iteration there's no change
+      A(i,5) = 0;      
+    else
+      %The amount of H in center decreses as time goes by
+      A(i,5) = A(i-1,4) - A(i,4);
+    end
+    
+    %Calculate ratio_log_LH_vs_log_L
+    A(i,6) = power(10,A(i,2)) / power(10,A(i,3));
+  end
+  
+  %Find those row in which diff h1 > delta_h1_center
+  B = find(A(:,5) > delta_h1_center);
+  %Select the first one and get rows from A till that row
+  C = A(1:B(1),:);
+  % Now find those row in which LH div L > ratio_log_LH_vs_log_L
+  D = find(C(:,6) > ratio_log_LH_vs_log_L);
+  % Select the first one
+  %B(1)
+  %D(1)
+  %A(D(1),5)
+  %A(D(1),6)
+  
+  %Age at which ZAMS is reached
+  result = A(D(1),1);
+   
+end
+
+function plot_ZAMS(A, color, width, ytick, axis_limits)
+  %Plot values
+  plot(A(:,1), A(:,2) .- A(:,3), color, 'linewidth', width);
+  
+  %Axis scales
+  set(gca, 'XScale', 'log');  
+  
+  %Axis limits
+  set(gca,'YTick',0:ytick:1.0);
+  
+  %Axis ticks
+  axis(axis_limits);
+  xticks = get (gca, "xtick"); 
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  set (gca, "xticklabel", xlabels) ;
+  yticks = get (gca, "ytick"); 
+  ylabels = arrayfun (@(x) sprintf ("%1.2f", x), yticks, "uniformoutput", false); 
+  set (gca, "yticklabel", ylabels);
+
+end
+
+
 % Calculate the Li abundancies. The format of the matrix must be:
 % A(1) = star age
 % A(2) = hydrogen abundance in surface
@@ -96,8 +179,8 @@ end
 %
 % return ALi7
 function result = calculate_A_Li7(A)
-  ma_li7=7.016005;
-  ma_h1=1.00794;
+  ma_li7 = 7.016005;
+  ma_h1 = 1.00794;
 
   %Function for calculating Li abundancies
   fA_Li7 = @(h1,li7) log10((li7./ma_li7)./(h1./ma_h1)) + 12;
@@ -239,7 +322,7 @@ end
 
 
   
-function age_vs_li_plots(gauss_fields, rotational_vels, atitle)
+function age_vs_li_plots(gauss_fields, rotational_vels, atitle, axis_limits)
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -266,14 +349,20 @@ function age_vs_li_plots(gauss_fields, rotational_vels, atitle)
       
       B = calculate_A_Li7(A);      
       
-      plot_A_Li7(A, B, colors(i*j,:), line_width, [1.0e5,1.0e10,0,4.5]);
+      plot_A_Li7(A, B, colors(i*j,:), line_width, axis_limits);
       
+      % Plot ZAMS reference
+      zams = calculate_ZAMS(full_path);
+      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))
+    
       %Generate serie labels
       labels = {labels{:}, ['A(Li)=', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS=', gauss_fields(i,:), ',', rotational_vels(j,:)]};
     end
   end
   % Plot sun reference
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  
 
   grid on;
   legend(labels, "location", "southeastoutside");
@@ -312,8 +401,13 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, ytick, atitle, axis
      
       plot_size_cz(A, colors(i*j,:), line_width, ytick, axis_limits);
       
+      % Plot ZAMS reference
+      zams = calculate_ZAMS(full_path);
+      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))    
+      
       %Generate serie labels
       labels = {labels{:}, ['Conv. Zone - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS=', gauss_fields(i,:), ',', rotational_vels(j,:)]};
     end
   end
 
@@ -362,10 +456,19 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, atitle)
            
       plot_vel_rot(A, colors(i*j,:), line_width, [1.0e5, 1.0e10, ymin, ymax]);
       
+      % Plot ZAMS reference
+      zams = calculate_ZAMS(full_path);
+      % Here we can properly assing the ymin and ymax values for all the plots
+      % Each of them will potentially have a different one. We opt for fixing
+      % the limits by hand.
+      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))    
+      
+      
       %Generate serie labels
       labels = {labels{:}, ['At surface - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
       labels = {labels{:}, ['Sup Lim CZ - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
       labels = {labels{:}, ['Inf Lim CZ - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};      
     end
   end
   % Plot sun reference
@@ -509,7 +612,7 @@ function plot_0G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:5,:), 'A(Li7) - 0G & variable rotational velocity');
+  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:5,:), 'A(Li7) - 0G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
 end
 
 
@@ -517,21 +620,28 @@ function plot_3_5G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(2,:), rotational_vels(3:4,:), 'A(Li7) - 3.5G & variable rotational velocity');
+  age_vs_li_plots(gauss_fields(2,:), rotational_vels(1:5,:), 'A(Li7) - 3.5G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
 end
 
 function plot_4_0G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(3,:), rotational_vels(1:5,:), 'A(Li7)- 4.0G & variable rotational velocity');
+  age_vs_li_plots(gauss_fields(3,:), rotational_vels(1:5,:), 'A(Li7)- 4.0G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
+end
+
+function plot_3kms_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(1,:), 'A(Li7)- 3km/s & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
 end
 
 function plot_vel_rot_3_5G_var_vel()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_vel_plots(gauss_fields(2,:), rotational_vels(3:4,:), 'Rotational vel - 3.5G');
+  age_vs_vel_plots(gauss_fields(2,:), rotational_vels(1:5,:), 'Rotational vel - 3.5G');
 end
 
 function plot_vel_rot_4G_var_vel()
@@ -539,6 +649,13 @@ function plot_vel_rot_4G_var_vel()
   global rotational_vels;
   
   age_vs_vel_plots(gauss_fields(3,:), rotational_vels(1:5,:), 'Rotational vel - 4G');
+end
+
+function plot_vel_rot_3kms_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_vel_plots(gauss_fields(1:5,:), rotational_vels(1,:), 'Rotational vel - 3 km/s');
 end
 
 
@@ -608,16 +725,19 @@ function main()
   %plot_age_vs_mb_activation_3_5G();
   %plot_0G_var_vel();  
   %plot_3_5G_var_vel();  
-  %plot_4_0G_var_vel();  
-  %plot_vel_rot_3_5G_var_vel();
+  %plot_4_0G_var_vel(); 
+  %plot_3kms_var_g();  
+  plot_vel_rot_3_5G_var_vel();
   %plot_vel_rot_4G_var_vel();
   %plot_vel_rot_0G_var_vel();
   %plot_cz_size_3_5G_var_vel();
   %plot_cz_size_0G_var_vel();
-  plot_cz_size_4G_var_vel();
+  %plot_cz_size_4G_var_vel();
   %plot_cz_size_3_5G_var_vel_z_1();
   %plot_hr_3_5G_var_vel();
   %plot_hr_3_5G_var_vel_z_1();
+  %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
+  %calculate_ZAMS(filename);
 end
 
 
