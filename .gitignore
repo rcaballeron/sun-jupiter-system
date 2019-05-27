@@ -72,3 +72,5 @@ Docs/runs/run_paper_keep_on_false/
 Stellar Evolution/
 
 project/core
+
+*.mod
