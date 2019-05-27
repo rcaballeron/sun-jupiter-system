@@ -29,9 +29,9 @@
       !change_initial_rotation_flag = .true.
       !new_omega_div_omega_crit = 0.0084 !3km/s
       !new_omega_div_omega_crit = 0.014 !5km/s
-      !new_omega_div_omega_crit = 0.0196 !7km/s
+      new_omega_div_omega_crit = 0.0196 !7km/s
       !new_omega_div_omega_crit = 0.028 !10km/s
-      new_omega_div_omega_crit = 0.0336 !12km/s
+      !new_omega_div_omega_crit = 0.0336 !12km/s
       set_omega_div_omega_crit = .true.
 
       !new_surface_rotation_v = 20.0 ! km/s     
@@ -266,8 +266,7 @@
       ! Magnetic braking input parameters
       ! **********************************
       
-      !x_ctrl(1) = 3.5d0 ! B - magnetic field torque (G)
-      x_ctrl(1) = 0.0d0 ! B - magnetic field torque (G)
+      x_ctrl(1) = 5.0d0 ! B - magnetic field torque (G)
       x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
 
       ! How to redistribute the loss of angular momentum
@@ -278,12 +277,12 @@
       x_logical_ctrl(1) = .false. ! debug flag for use_other_torque routine
       x_logical_ctrl(2) = .false. ! debug flag for reset_other_torque, if true, jdot is discarded
       x_logical_ctrl(3) = .false. ! debug flag for get_convective_info
-      x_logical_ctrl(4) = .true.  ! debug flag for get_core_info
+      x_logical_ctrl(4) = .false.  ! debug flag for get_core_info
       ! Controls if the mb routine is executed only when a radiative core is develop
       ! .false. = don't wait, 
       ! .true. = wait
       x_logical_ctrl(5) = .true. 
-      x_logical_ctrl(6) = .false.  !keep_on_rad_core
+      x_logical_ctrl(6) = .true.  !keep_on_rad_core
       
       
       
