@@ -1,17 +1,22 @@
 format longEng;
 clear global;
 
-global star_age_col       = 3;
 global header_lines       = 6;
+
+%cols position in output files
+global star_age_col       = 3;
+global log_abs_m_dot_col  = 7;
 global mass_conv_core_col = 8;
 global log_LH_col         = 17;
 global log_Teff_col       = 33;
 global log_L_col          = 34;
+global log_R_col          = 35;
 global surf_avg_v_rot_col = 42;
 global center_h1_col      = 54;
 global surface_h1_col     = 55;
 global surface_li_col     = 59;
 global mb_activated_col   = 72;
+global j_dot_col          = 77;
 global sz_top_radius_col  = 79;
 global sz_bot_radius_col  = 80;
 global sz_top_zone_col    = 83;
@@ -22,7 +27,7 @@ global sz_bot_vrot_col    = 86;
 global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper';
 global filename = '1M_photosphere_history.data';
 global gauss_fields = ['0g'; '3.5g'; '4g'; '4.5g'; '5g'; '5.5g'];
-global rotational_vels = ['0kms'; '3kms'; '5kms'; '7kms'; '10kms'; '12kms'];
+global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
 
 %Sun constants
@@ -204,7 +209,7 @@ function result = calculate_A_Li7(A)
 end 
 
 
-function plot_A_Li7(A, B, color, width, axis_limits)
+function plot_A_Li7(A, B, color, width, ytick, axis_limits)
   %Plot values
   plot(A(:,1), B(:,1), color, 'linewidth', width);
 
@@ -215,7 +220,7 @@ function plot_A_Li7(A, B, color, width, axis_limits)
   axis(axis_limits);
   
   %Axis ticks
-  set(gca,'YTick',1.0:0.5:4.5);
+  set(gca,'YTick',1.0:ytick:4.5);
   xticks = get (gca, "xtick"); 
   xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
   set (gca, "xticklabel", xlabels) ;
@@ -246,7 +251,7 @@ end
 
 
 
-function plot_vel_rot(A, color, width, axis_limits)
+function plot_vel_rot(A, color, width, ytick, axis_limits)
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
   plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
@@ -256,7 +261,7 @@ function plot_vel_rot(A, color, width, axis_limits)
   set(gca, 'XScale', 'log');  
   
   %Axis limits
-  set(gca,'YTick',axis_limits(3):10:axis_limits(4));
+  set(gca,'YTick',axis_limits(3):ytick:axis_limits(4));
   
   %Axis ticks
   axis(axis_limits);
@@ -271,7 +276,8 @@ end
 
 function plot_size_cz(A, color, width, ytick, axis_limits)
   %Plot values
-  plot(A(:,1), A(:,2) .- A(:,3), color, 'linewidth', width);
+  plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
+  %plot(A(:,1), 10 .** A(:,2), color, 'linewidth', width, 'linestyle', '--');
   
   %Axis scales
   set(gca, 'XScale', 'log');  
@@ -290,6 +296,28 @@ function plot_size_cz(A, color, width, ytick, axis_limits)
 
 end
 
+function plot_m_dot(A, color, width, ytick, axis_limits)
+  %Plot values
+  plot(A(:,1), A(:,2), color, 'linewidth', width);
+  
+  %Axis scales
+  set(gca, 'XScale', 'log');  
+  
+  %Axis limits
+  set(gca,'YTick',axis_limits(3):ytick:axis_limits(4));
+  
+  %Axis ticks
+  axis(axis_limits);
+  xticks = get (gca, "xtick"); 
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  set (gca, "xticklabel", xlabels) ;
+  yticks = get (gca, "ytick"); 
+  ylabels = arrayfun (@(x) sprintf ("%1.2f", x), yticks, "uniformoutput", false); 
+  set (gca, "yticklabel", ylabels);
+
+end
+
+
 
 function hr_plots(gauss_fields, rotational_vels, ytick, atitle, axis_limits)
   global data_parent_folder;
@@ -303,6 +331,8 @@ function hr_plots(gauss_fields, rotational_vels, ytick, atitle, axis_limits)
   
   hold('on');
   labels = {};
+  
+  f = format_figure();
   
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
@@ -324,16 +354,19 @@ function hr_plots(gauss_fields, rotational_vels, ytick, atitle, axis_limits)
   legend(labels, "location", "southeastoutside");
   legend boxoff
   xlabel('log Teff');
-  ylabel('log L/log sun');
+  ylabel('log (L/L_{sun})');
+  %ylabel('{\bf \omega} = a {\bf V}');
   title(atitle);
 
   hold('off');
+  
+  save_figure(f, atitle);
   
 end
 
 
   
-function age_vs_li_plots(gauss_fields, rotational_vels, atitle, axis_limits)
+function age_vs_li_plots(gauss_fields, rotational_vels, atitle, ytick, axis_limits)
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -364,15 +397,15 @@ function age_vs_li_plots(gauss_fields, rotational_vels, atitle, axis_limits)
       
       B = calculate_A_Li7(A);      
       
-      plot_A_Li7(A, B, colors(i*j,:), line_width, axis_limits);
+      plot_A_Li7(A, B, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
       zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))
+      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))
     
       %Generate serie labels
-      labels = {labels{:}, ['A(Li)=', gauss_fields(i,:), 'v=', rotational_vels(j,:)]};
-      labels = {labels{:}, ['ZAMS=', gauss_fields(i,:), 'v=', rotational_vels(j,:)]};
+      labels = {labels{:}, ['A(Li)-', gauss_fields(i,:), 'v=', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS-', gauss_fields(i,:), 'v=', rotational_vels(j,:)]};
     end
   end
   % Plot sun reference
@@ -396,6 +429,7 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, ytick, atitle, axis
   global data_parent_folder;
   global filename;
   global star_age_col;
+  global log_R_col;
   global sz_top_radius_col;
   global sz_bot_radius_col;
   global header_lines;
@@ -407,24 +441,27 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, ytick, atitle, axis
   hold('on');
   labels = {};
   
+  f = format_figure();
+  
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
       sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
       full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
       
-      fmt = get_parsing_fmt([star_age_col, sz_top_radius_col, sz_bot_radius_col]);
+      fmt = get_parsing_fmt([star_age_col, log_R_col, sz_top_radius_col, sz_bot_radius_col]);
       
-      A = read_matrix_from_file(full_path, fmt, header_lines, 3);
+      A = read_matrix_from_file(full_path, fmt, header_lines, 4);
      
       plot_size_cz(A, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
       zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))    
+      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       %Generate serie labels
-      labels = {labels{:}, ['Conv. Zone - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
-      labels = {labels{:}, ['ZAMS=', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['Star radius - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['CZ radius - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS -', gauss_fields(i,:), ',', rotational_vels(j,:)]};
     end
   end
 
@@ -432,15 +469,67 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, ytick, atitle, axis
   legend(labels, "location", "southeastoutside");
   legend boxoff
   xlabel('star age (yrs)');
-  ylabel('Size conv. zone (radio conv. zone/radio star)');
+  ylabel('Size conv. zone (radius conv. zone/radius star)');
   title(atitle);
 
   hold('off');
   
+  save_figure(f, atitle);
+  
+end
+
+function age_vs_m_dot_plots(gauss_fields, rotational_vels, ytick, atitle, axis_limits)
+  global data_parent_folder;
+  global filename;
+  global star_age_col;
+  global log_abs_m_dot_col;
+  global header_lines;
+  global sun_age;
+  global colors;
+  line_width = 3;
+  
+  hold('on');
+  labels = {};
+  
+  f = format_figure();
+  
+  for i=1:rows(gauss_fields)
+    for j=1:rows(rotational_vels)
+      sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
+      full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+      
+      fmt = get_parsing_fmt([star_age_col, log_abs_m_dot_col]);
+      
+      A = read_matrix_from_file(full_path, fmt, header_lines, 2);
+     
+      plot_m_dot(A, colors(i*j,:), line_width, ytick, axis_limits);
+      
+      % Plot ZAMS reference
+      zams = calculate_ZAMS(full_path);
+      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      
+      %Generate serie labels
+      labels = {labels{:}, ['Mass loss - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS -', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+    end
+  end
+
+  grid on;
+  legend(labels, "location", "southeastoutside");
+  legend boxoff
+  xlabel('star age (yrs)');
+  ylabel('Mass loss (log(solar mass/yr))');
+  title(atitle);
+
+  hold('off');
+  
+  save_figure(f, atitle);
+  
 end
 
 
-function age_vs_vel_plots(gauss_fields, rotational_vels, atitle)
+
+function age_vs_vel_plots(gauss_fields, rotational_vels, atitle, ytick, x_limits)
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -466,21 +555,25 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, atitle)
       fmt = get_parsing_fmt([star_age_col, surf_avg_v_rot_col, sz_top_vrot_col, sz_bot_vrot_col]);
       
       A = read_matrix_from_file(full_path, fmt, header_lines, 4);
+      %Get the index of the last records lower than or equal to the temporal limits
+      ix_ini = find(A(:,1)<=x_limits(1), 1, 'last');
+      ix_end = find(A(:,1)<=x_limits(2), 1, 'last');
+      
       %Calculate maximum for y axis
       %Get vel max value, divide it by 10, plus 1, multiply by 10
-      ymax = (idivide(max(A(:,2)), 10, "fix") + 1) * 10;
+      ymax = (idivide(max(A(ix_ini:ix_end,2)), ytick, "fix") + 1) * ytick;
       
       %Get vel max value, divide it by 10, minus 1, multiply by 10
-      ymin = (idivide(min(A(:,2)), 10, "fix") - 1) * 10;
+      ymin = (idivide(min(A(ix_ini:ix_end,2)), ytick, "fix") - 1) * ytick;
            
-      plot_vel_rot(A, colors(i*j,:), line_width, [1.0e5, 1.0e10, ymin, ymax]);
+      plot_vel_rot(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
       
       % Plot ZAMS reference
       zams = calculate_ZAMS(full_path);
       % Here we can properly assing the ymin and ymax values for all the plots
       % Each of them will potentially have a different one. We opt for fixing
       % the limits by hand.
-      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 1, "linestyle", "--", "color", colors(i*j,:))    
+      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       
       %Generate serie labels
@@ -564,7 +657,7 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, atitle)
   y_labels = {};
   
   %Figure size
-  f = figure(1, 'position', [150, 100, 900 , 700]);
+  f = format_figure();
   
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
@@ -591,9 +684,18 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, atitle)
       %plot_mb_activation(A, colors(i*j,:), line_width, y_offset + 1.5);
       plot_mb_activation(A, colors(i*j,:), line_width, [1.0e1, 1.0e10, 0, y_offset + 1.5]);
       
+      % Plot ZAMS reference
+      zams = calculate_ZAMS(full_path);
+      % Here we can properly assing the ymin and ymax values for all the plots
+      % Each of them will potentially have a different one. We opt for fixing
+      % the limits by hand.
+      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      
+      
       %Generate serie labels
       labels = {labels{:}, ['MB ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
       labels = {labels{:}, ['CR ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
+      labels = {labels{:}, ['ZAMS - ', gauss_fields(i,:), ',', rotational_vels(j,:)]};
       %Generate y ticks labels 0=off, 1=on
       y_labels = {y_labels{:}, 'off', 'on', 'conv.', 'rad.'};
     end
@@ -631,20 +733,13 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, atitle)
   legend(labels, "location", "southeastoutside");
   legend boxoff
   xlabel('star age (yrs)');
-  ylabel('Magnetic braking activation');
+  ylabel('Magnetic braking activation & Radiative vs. Convective core');
   title(atitle);
 
   hold('off');
-  
-  H=7;W=12;
-  set(f,'PaperUnits','inches');
-  set(f,'PaperOrientation','portrait');
-  set(f,'PaperSize',[H,W]);
-  set(f,'PaperPosition',[0,0,W,H]);
-  print(f,'-dpng','-color',[atitle,'.png']);
-  print(f,'-deps','-color',[atitle,'.eps']);
 
-  
+  save_figure(f, atitle);  
+
 end
 
 
@@ -653,7 +748,15 @@ function plot_0G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(1,:), rotational_vels(1:6,:), 'A(Li7) - 0G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
+  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
+end
+
+
+function plot_0G_var_vel_z1()
+  global gauss_fields;
+  global rotational_vels; 
+
+  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.1, [1.0e7, 1.0e8, 2.0, 2.5]);
 end
 
 
@@ -661,44 +764,136 @@ function plot_3_5G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(2,:), rotational_vels(2:6,:), 'A(Li7) - 3.5G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
+  age_vs_li_plots(gauss_fields(2,:), rotational_vels(2:6,:), 'A(Li7) - 3.5G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
 end
 
 function plot_4_0G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(3,:), rotational_vels(2:6,:), 'A(Li7)- 4.0G & variable rotational velocity', [1.0e5,1.0e10,0,4.5]);
+  age_vs_li_plots(gauss_fields(3,:), rotational_vels(2:6,:), 'A(Li7)- 4.0G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
 end
 
-function plot_3kms_var_g()
+function plot_4_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels; 
+
+  age_vs_li_plots(gauss_fields(4,:), rotational_vels(2:6,:), 'A(Li7)- 4.5G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
+end
+
+function plot_5_0G_var_vel()
+  global gauss_fields;
+  global rotational_vels; 
+
+  age_vs_li_plots(gauss_fields(5,:), rotational_vels(2:6,:), 'A(Li7)- 5.0G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
+end
+
+function plot_5_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels; 
+
+  age_vs_li_plots(gauss_fields(6,:), rotational_vels(2:6,:), 'A(Li7)- 5.5G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
+end
+
+
+function plot_0084vc_var_g()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(2,:), 'A(Li7)- 3km/s & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(2,:), 'A(Li7)- vcrit=0.0084 & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
 end
+function plot_014vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(3,:), 'A(Li7)- vcrit=0.014 & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
+end
+function plot_0196vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(4,:), 'A(Li7)- vcrit=0.0196 & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
+end
+function plot_028vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(5,:), 'A(Li7)- vcrit=0.028 & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
+end
+
+function plot_0336vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_li_plots(gauss_fields(1:5,:), rotational_vels(6,:), 'A(Li7)- vcrit=0.0336 & variable magnetic field', [1.0e5,1.0e10,0,4.5]);
+end
+
+
 
 function plot_vel_rot_3_5G_var_vel()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_vel_plots(gauss_fields(2,:), rotational_vels(2:6,:), 'Rotational vel - 3.5G');
+  age_vs_vel_plots(gauss_fields(2,:), rotational_vels(2:6,:), 'Rotational vel - 3.5G', 10, [1.0e5,1.0e10]);
 end
 
 function plot_vel_rot_4G_var_vel()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_vel_plots(gauss_fields(3,:), rotational_vels(2:6,:), 'Rotational vel - 4G');
+  age_vs_vel_plots(gauss_fields(3,:), rotational_vels(2:6,:), 'Rotational vel - 4.0G', 10, [1.0e5,1.0e10]);
 end
+
+function plot_vel_rot_4G_var_vel_z1()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_vel_plots(gauss_fields(3,:), rotational_vels(2:6,:), 'Rotational vel - 4.0G', 2, [3.0e9, 1.0e10]);
+end
+
+
+function plot_vel_rot_4_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_vel_plots(gauss_fields(4,:), rotational_vels(2:6,:), 'Rotational vel - 4.5G', 10, [1.0e5,1.0e10]);
+end
+
+function plot_vel_rot_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_vel_plots(gauss_fields(5,:), rotational_vels(2:6,:), 'Rotational vel - 5.0G', 10, [1.0e5,1.0e10]);
+end
+
+function plot_vel_rot_5_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_vel_plots(gauss_fields(6,:), rotational_vels(2:6,:), 'Rotational vel - 5.5G', 10, [1.0e5,1.0e10]);
+end
+
 
 function plot_vel_rot_3kms_var_g()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_vel_plots(gauss_fields(1:5,:), rotational_vels(2,:), 'Rotational vel - 3 km/s');
+  age_vs_vel_plots(gauss_fields(1:5,:), rotational_vels(2,:), 'Rotational vel - 3 km/s', 10, [1.0e5,1.0e10]);
 end
 
+function plot_hr_0G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  hr_plots(gauss_fields(1,:), rotational_vels(1:6,:), 0.5, 'HR - 0G', [3.58, 3.8, -0.5, 2.2]);
+end
+
+function plot_hr_0G_var_vel_z1()
+  global gauss_fields;
+  global rotational_vels;
+  
+  hr_plots(gauss_fields(1,:), rotational_vels(1:6,:), 0.1, 'HR - 0G', [3.74, 3.78, -0.3, 0.45]);
+end
 
 function plot_hr_3_5G_var_vel()
   global gauss_fields;
@@ -714,35 +909,107 @@ function plot_hr_3_5G_var_vel_z_1()
   hr_plots(gauss_fields(2,:), rotational_vels(2:6,:), 0.1, 'HR - 3.5G', [3.75, 3.775, -0.25, 0.4]);
 end
 
+function plot_hr_5_0G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  hr_plots(gauss_fields(5,:), rotational_vels(2:6,:), 0.5, 'HR - 5.0G', [3.58, 3.8, -0.5, 2.2]);
+end
+
+function plot_hr_0336vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  hr_plots(gauss_fields(1:5,:), rotational_vels(6,:), 0.5, 'HR - vcrit=0.0336 & variable magnetic field', [3.58, 3.8, -0.5, 2.2]);
+end
+
+
+
 
 function plot_cz_size_0G_var_vel()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_cz_size_plots(gauss_fields(1,:), rotational_vels(2:6,:), 0.1, 'Convective zone radius - 0G', [1.0e5, 1.0e10, 0.0, 1.05]);
+  age_vs_cz_size_plots(gauss_fields(1,:), rotational_vels(2:6,:), 0.1, 'Convective zone radius - 0G & variable rotational velocity', [1.0e5, 1.0e10, 0.0, 1.05]);
 end
-
-function plot_cz_size_4G_var_vel()
-  global gauss_fields;
-  global rotational_vels;
-  
-  age_vs_cz_size_plots(gauss_fields(3,:), rotational_vels(2:6,:), 0.1, 'Convective zone radius - 4G', [1.0e5, 1.0e10, 0.0, 1.05]);
-end
-
 
 function plot_cz_size_3_5G_var_vel()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_cz_size_plots(gauss_fields(2,:), rotational_vels(2:6,:), 0.1, 'Convective zone radio - 3.5G', [1.0e2, 1.0e10, 0.0, 1.05]);
+  age_vs_cz_size_plots(gauss_fields(2,:), rotational_vels(2:6,:), 0.1, 'Convective zone size - 3.5G & variable rotational velocity', [1.0e2, 1.0e10, 0.0, 1.05]);
 end
+function plot_cz_size_4_0G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(3,:), rotational_vels(2:6,:), 0.1, 'Convective zone size - 4.0G & variable rotational velocity', [1.0e2, 1.0e10, 0.0, 1.05]);
+end
+function plot_cz_size_4_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(4,:), rotational_vels(2:6,:), 0.1, 'Convective zone size - 4.5G & variable rotational velocity', [1.0e2, 1.0e10, 0.0, 1.05]);
+end
+function plot_cz_size_5_0G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(5,:), rotational_vels(2:6,:), 0.1, 'Convective zone size - 5.0G & variable rotational velocity', [1.0e2, 1.0e10, 0.0, 1.05]);
+end
+function plot_cz_size_5_5G_var_vel()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(6,:), rotational_vels(2:6,:), 0.1, 'Convective zone size - 5.5G & variable rotational velocity', [1.0e2, 1.0e10, 0.0, 1.05]);
+end
+
+function plot_cz_size_028vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(1:6,:), rotational_vels(5,:), 0.1, 'Convective zone radius - vcrit=0.028 & variable magnetic field', [1.0e2, 1.0e10, 0.0, 1.05]);
+end
+
+function plot_cz_size_028vc_var_g_z1()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(1:6,:), rotational_vels(5,:), 0.01, 'Convective zone radius - vcrit=0.028 & variable magnetic field', [1.0e7, 1.0e10, 0.25, 0.30]);
+end
+
+function plot_cz_size_0G_var_vel_z1()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_cz_size_plots(gauss_fields(1,:), rotational_vels(2:6,:), 0.01, 'Convective zone radius - 0G & variable rotational velocity', [1.0e7, 1.0e10, 0.25, 0.30]);
+end
+
+
 
 function plot_cz_size_3_5G_var_vel_z_1()
   global gauss_fields;
   global rotational_vels;
   
-  age_vs_cz_size_plots(gauss_fields(2,:), rotational_vels(2:6,:), 0.01, 'Convective zone radio - 3.5G', [1.0e7, 1.0e10, 0.25, 0.28]);
+  age_vs_cz_size_plots(gauss_fields(2,:), rotational_vels(2:6,:), 0.01, 'Convective zone size - 3.5G', [1.0e7, 1.0e10, 0.25, 0.28]);
 end
+
+
+function plot_m_dot_028vc_var_g()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_m_dot_plots(gauss_fields(1:6,:), rotational_vels(5,:), 0.5, 'Mass loss - vcrit=0.028 & variable magnetic field', [1.0e2, 1.0e10, -14.0, -10.0]);
+end
+
+function plot_m_dot_028vc_var_g_z1()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_m_dot_plots(gauss_fields(1:6,:), rotational_vels(5,:), 0.05, 'Mass loss - vcrit=0.028 & variable magnetic field', [3.0e8, 1.0e10, -13.6, -13.3]);
+end
+
+
 
 
 
@@ -761,21 +1028,104 @@ function plot_age_vs_mb_activation_3_5G()
   age_vs_mb_activation(gauss_fields(2,:), rotational_vels(2:6,:), 'Magnetic braking activation & core radiative - 3.5G');
 end
 
+function plot_age_vs_mb_activation_4_0G()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(3,:), rotational_vels(2:6,:), 'Magnetic braking activation & core radiative - 4.0G');
+end
+
+function plot_age_vs_mb_activation_4_5G()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(4,:), rotational_vels(2:6,:), 'Magnetic braking activation & core radiative - 4.5G');
+end
+
+function plot_age_vs_mb_activation_5_0G()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(5,:), rotational_vels(2:6,:), 'Magnetic braking activation & core radiative - 5.0G');
+end
+
+function plot_age_vs_mb_activation_5_5G()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(6,:), rotational_vels(2:6,:), 'Magnetic braking activation & core radiative - 5.5G');
+end
+
+function plot_age_vs_mb_activation_0084vc()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(2:6,:), rotational_vels(2,:), 'Magnetic braking activation & core radiative - vcrit=0.0084');
+end
+
+function plot_age_vs_mb_activation_028vc()
+  global gauss_fields;
+  global rotational_vels;
+  
+  age_vs_mb_activation(gauss_fields(2:6,:), rotational_vels(5,:), 'Magnetic braking activation & Radiative vs. Convective Core - vcrit=0.028');
+end
+
+
+
+
 
 function main()
   %plot_age_vs_mb_activation_3_5G();
-  plot_0G_var_vel();  
+  %plot_age_vs_mb_activation_4_0G();
+  %plot_age_vs_mb_activation_4_5G();
+  %plot_age_vs_mb_activation_5_0G();
+  %plot_age_vs_mb_activation_5_5G();
+  %plot_age_vs_mb_activation_0084vc();
+  %plot_age_vs_mb_activation_028vc();
+  
+  
+  %plot_0G_var_vel();
+  %plot_0G_var_vel_z1();
   %plot_3_5G_var_vel();  
   %plot_4_0G_var_vel(); 
-  %plot_3kms_var_g();  
-  %plot_vel_rot_3_5G_var_vel();
-  %plot_vel_rot_4G_var_vel();
+  %plot_4_5G_var_vel(); 
+  %plot_5_0G_var_vel(); 
+  %plot_5_5G_var_vel(); 
+  
+  %plot_0084vc_var_g();
+  %plot_014vc_var_g();
+  %plot_0196vc_var_g();
+  %plot_028vc_var_g();
+  %plot_0336vc_var_g();
+  
+  
   %plot_vel_rot_0G_var_vel();
-  %plot_cz_size_3_5G_var_vel();
+  %plot_vel_rot_3_5G_var_vel();
+  plot_vel_rot_4G_var_vel();
+  %plot_vel_rot_4G_var_vel_z1();
+  %plot_vel_rot_4_5G_var_vel();
+  %plot_vel_rot_5G_var_vel();
+  %plot_vel_rot_5_5G_var_vel();  
+  
   %plot_cz_size_0G_var_vel();
-  %plot_cz_size_4G_var_vel();
+  %plot_cz_size_3_5G_var_vel();  
+  %plot_cz_size_4_0G_var_vel();  
+  %plot_cz_size_4_5G_var_vel();  
+  %plot_cz_size_5_0G_var_vel();  
+  %plot_cz_size_5_5G_var_vel();  
+  %plot_cz_size_028vc_var_g();
+  %plot_cz_size_028vc_var_g_z1();
+  %plot_cz_size_0G_var_vel_z1();
+  
+  %plot_m_dot_028vc_var_g();
+  %plot_m_dot_028vc_var_g_z1();
+  
   %plot_cz_size_3_5G_var_vel_z_1();
   %plot_hr_3_5G_var_vel();
+  %plot_hr_5_0G_var_vel();
+  %plot_hr_0336vc_var_g
+  %plot_hr_0G_var_vel();
+  %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);
@@ -783,30 +1133,3 @@ end
 
 
 main();
-
-
- 
-  
-
-
-
-% Overwrite y with new values
-%filename = 'out2.data';
-%outfileID = fopen(filename, 'w');
-%dlmwrite('out2.data',A,'delimiter',' ','precision','%.16e');
-
-
-%https://ch.mathworks.com/help/matlab/creating_plots/change-tick-marks-and-tick-labels-of-graph-1.html#d119e2453
-%https://stackoverflow.com/questions/54002845/octave-add-secondary-y-axis-to-existing-plot
-%https://octave.sourceforge.io/octave/function/plotyy.html
-%fig = gcf();
-
-
-% Open file for writing
-%i = 1;
-%while i <= no_of_lines
-%	fprintf(outfileID, '%10.5f %10.5f', x(i), y(i));
-%	i = i + 1;
-%end
-
-%fclose(outfileID);
