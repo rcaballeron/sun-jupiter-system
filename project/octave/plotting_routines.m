@@ -748,7 +748,7 @@ function plot_0G_var_vel()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
+  age_vs_li_plots(gauss_fields(1,:), rotational_vels(1:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.5, [1.0e5,1.0e10,0,4.5]);
 end
 
 
@@ -756,7 +756,7 @@ function plot_0G_var_vel_z1()
   global gauss_fields;
   global rotational_vels; 
 
-  age_vs_li_plots(gauss_fields(1,:), rotational_vels(2:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.1, [1.0e7, 1.0e8, 2.0, 2.5]);
+  age_vs_li_plots(gauss_fields(1,:), rotational_vels(1:6,:), 'A(Li7) - 0G & variable rotational velocity', 0.1, [1.0e7, 1.0e8, 2.0, 2.5]);
 end
 
 
@@ -1084,7 +1084,7 @@ function main()
   %plot_age_vs_mb_activation_028vc();
   
   
-  %plot_0G_var_vel();
+  plot_0G_var_vel();
   %plot_0G_var_vel_z1();
   %plot_3_5G_var_vel();  
   %plot_4_0G_var_vel(); 
@@ -1101,7 +1101,7 @@ function main()
   
   %plot_vel_rot_0G_var_vel();
   %plot_vel_rot_3_5G_var_vel();
-  plot_vel_rot_4G_var_vel();
+  %plot_vel_rot_4G_var_vel();
   %plot_vel_rot_4G_var_vel_z1();
   %plot_vel_rot_4_5G_var_vel();
   %plot_vel_rot_5G_var_vel();
