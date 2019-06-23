@@ -449,6 +449,138 @@ It is also important to emphasize that our models fail to match the observed sol
 In the near future, with the new version of our code including magnetic field evolution in MESA, we will focus our efforts on understanding how magnetic fields are linked to rotation (e.g. \citep{Maeder2005}, \citep{Morin2012}, \citep{Gondoin2018}), how their topologies are and how they evolves in time (e.g. \citep{Keppens1995}, \citep{Maeder2003a}, \citep{Vidotto2014}) in order to go beyond the treatment on the MB routine that has been done in this work.\par
 
 
+
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_0_0g.eps}
+    \label{fig:subim1}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_3_5g.eps}
+    \label{fig:subim2}
+    \end{subfigure}
+    
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_4_0g.eps}
+    \label{fig:subim3}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_4_5g.eps}
+    \label{fig:subim4}
+    \end{subfigure}
+    
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_5_0g.eps}
+    \label{fig:subim5}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_var_vel_5_5g.eps}
+    \label{fig:subim6}
+    \end{subfigure}
+\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\label{fig:image2}
+\end{figure*}
+\par
+
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_vc_0084_var_b.eps}
+    \label{fig:subim21}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_vc_014_var_b.eps}
+    \label{fig:subim22}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_vc_0196_var_b.eps}
+    \label{fig:subim23}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_vc_028_var_b.eps}
+    \label{fig:subim24}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/li_vc_0336_var_b.eps}
+    \label{fig:subim25}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/blank.eps}
+    \label{fig:subim26}
+    \end{subfigure}
+\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which $v/v_{crit}$ has been fixed and the magnetic field with intensity varies between 3.5 and 5.5 G, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\label{fig:image22}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_0g.eps}
+    \label{fig:subim41}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_3_5g.eps}
+    \label{fig:subim42}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_4g.eps}
+    \label{fig:subim43}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_4_5g.eps}
+    \label{fig:subim44}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_5g.eps}
+    \label{fig:subim45}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/rot_vel_5_5g.eps}
+    \label{fig:subim46}
+    \end{subfigure}
+\caption{Grid showing the evolution of the evolution of surface rotational velocity, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\label{fig:image24}
+\end{figure*}
+
+
+
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/mb_act_3_5g.eps}
+    \label{fig:subim31}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/mb_act_4_0g.eps}
+    \label{fig:subim32}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/mb_act_4_5g.eps}
+    \label{fig:subim33}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/mb_act_5_0g.eps}
+    \label{fig:subim34}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/mb_act_5_5g.eps}
+    \label{fig:subim35}
+    \end{subfigure}
+    \begin{subfigure}[h]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{figures/blank.eps}
+    \label{fig:subim36}
+    \end{subfigure}
+\caption{Grid showing the evolution of magnetic braking activation, as a function of time and the existence of a radiative core for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\label{fig:image32}
+\end{figure*}
+
+
+
+
 \section*{Acknowledgements}
 I am pleased to acknowledge Jieun Choi her kindness in responding to the different questions about her work necessary to reproduce the results obtained as far as Li is concerned, as well as sharing the MESA files that she used. I wish also to thank Matteo Cantiello and Bill Paxton for their very valuable support in the development of the magnetic braking routine in MESA. Finally, I wish to acknowledge the generous work and help offered by the MESA community.
 
