@@ -192,14 +192,7 @@ In reference to MESA and as stated in \citet{Paxton2013}: "the transport of AM a
 \subsection{Modelling magnetic braking}
 The origin of magnetic fields is still unknown. The organized magnetic fields detected in some O stars \citep{Wade2010} might be fossil fields (see \citet{Dudorov2014} for details about the Theory of fossil magnetic field), or fields produced through a dynamo mechanism \citep{Cantiello2009}. Besides that, the presence of magnetic fields with intensities of the order of kG \citep{Hussain2014} has been a sine qua non condition for dealing with certain data observed in T Tauri type stars in young, accreting PMS systems \citep{Johns-Krull2007}. One of this features is the long rotating periods  which is much longer than predicted from AM conservation. A key question is to understand how these young stars can accrete large amounts of material from their circumstellar disk with high specific angular momentum and at the same time they're able to keep slow rotation periods, between 7-10 days \citep{Hussain2014}. One plausible explanation for this behaviour considers the AML produced by the interaction between the magnetic field and the particles that form its circumstellar disk \citep{Zanni2012}. Once the accretion process stops or becomes less efficient then the star is able to spin up as it contracts towards the ZAMS.\par
 
-The mass of stars plays a determining role in the existence or not of an external convective envelope. In turn, the presence of this convective region conditions the evolution of magnetic fields. As depicted in figure (\ref{fig:hr_hussain}), massive stars do not have external convective zones although they can expose a convective core. In these cases, the dominant type of energy transport in the outer zones of the star is radiative. On the other hand, the less massive stars, such as those of the solar-type, have convective covers and radiative core. In both types of stars strong magnetic fields can be generated in the limits of both zones (the so-called tachocline) but with notable differences. In the case of massive stars, these magnetic fields can survive for a long time but not reach the surface of the star. On the other hand in less massive stars these magnetic fields, although they are able to reach the surface of the star, decay quickly in time, in a few hundred years or even only in a few decades \citep{Chabrier2006}, so it is necessary a mechanism for generating magnetic field, e.g. a dynamo type, continued in time to explain its existence. The way in which this dynamo process is able to generate magnetic fields depends on different parameters and to this day this mechanism is still not fully accepted and is subject of controversy, e.g. \citep{Charbonneau2010}.\par
-
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/hussain_gaitee_fig1.png}
-    \caption{H-R diagram showing PMS evolutionary tracks for stars with masses up to $4.0 \; M_{\sun}$. The dashed blue line marks the position of the birthline. The stars with $1.0 \; M_{\sun}$ which have a fully convective interior near the Hayashi track, they will to develop a radiative core when they're approaching the ZAMS (black dot-dashed line). Image copied from \citet{Hussain2014}}
-    \label{fig:hr_hussain}
-\end{figure}
-
+The mass of stars plays a determining role in the existence or not of an external convective envelope. In turn, the presence of this convective region conditions the evolution of magnetic fields. Massive stars do not have external convective zones although they can expose a convective core. In these cases, the dominant type of energy transport in the outer zones of the star is radiative. On the other hand, the less massive stars, such as those of the solar-type, have convective covers and radiative core. In both types of stars strong magnetic fields can be generated in the limits of both zones (the so-called tachocline) but with notable differences. In the case of massive stars, these magnetic fields can survive for a long time but not reach the surface of the star. On the other hand in less massive stars these magnetic fields, although they are able to reach the surface of the star, decay quickly in time, in a few hundred years or even only in a few decades \citep{Chabrier2006}, so it is necessary a mechanism for generating magnetic field, e.g. a dynamo type, continued in time to explain its existence. The way in which this dynamo process is able to generate magnetic fields depends on different parameters and to this day this mechanism is still not fully accepted and is subject of controversy, e.g. \citep{Charbonneau2010}.\par
 
 In the present work we do not take into account the existence of possible magnetic fields during the T-Tauri phase and we adopt a simple theoretical approach to establish their existence during the ZAMS approximation phase. The adopted criterion is based on the simultaneous existence of an extensive convective layer and a radiative core. From this moment on, the MB routine will be activated, acting as an additional mechanism to those existing in the MESA evolutionary code that participate in the star AML. Additionally, we assume that the magnetic field does not vary its intensity throughout the evolution of the star until it reaches TAMS.\par
 
@@ -317,19 +310,19 @@ Theoretical models of stars don't inform about the initial amount of Li that a s
 On the other hand, the initial abundance of $A(\isotope[7]{Li}) = 3.34 \, dex$ is obtained from meteorite measurements \citep{Randich2006}. According to the theory for newly born stars, we have that the initial abundance of Li can be estimated fairly accurately from photospherical measurements on T-Tauri type stars, or from the hottest F stars forming part of slightly older clusters. For the latter, the current theory of stellar evolution suggests that Li must not yet be exhausted. The results obtained from the measurements on both types of stars allow us to fix the initial abundance of Li in the interval $3.0 \, dex < A(\isotope[7]{Li}) < 3.4 \, dex$ \citep{Randich2006}.\par
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/li_var_vel_0_0g.eps}
-    \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. The solid black line represents the reference model according to \citet{Choi2016}. The rest of lines are models which include PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip, width=\columnwidth]{figures/li_var_vel_0_0g.eps}
+    \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. The solid black line represents the reference model according to \citet{Choi2016}. The rest of lines are models which include PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS.}
     \label{fig:li_var_vel_0g}
 \end{figure}
 
 Today, standard models are not able to replicate in a satisfactory way the observed values of Li abundance on star surfaces with the predictions that these models yield. This lack of agreement makes us think that certain physical mechanisms that influence the destruction of Li are either being modelled correctly or simply not being taken into account, e.g. the magnetic braking. Figure (\ref{fig:li_var_vel_0g}) shows the evolution of surface Li abundance relative to H as a function of time and for several $1M_{\odot}$ models which take into account the effects of rotation and AML caused by stellar winds but not MB. The purple star and square are surface Li abundances for the present-day Sun \citep{Asplund2009} and Pleiades \citep{Sestito2005}.\par
 
-The figure (\ref{fig:li_var_vel_0g}) clearly allows to appreciate how the Li abundance in the star surface decreases over time for all simulated models. The solid black line represents the reference model that adopts the solar-calibrated envelope overshooting parameters as documented in \citet{Choi2016}. In general, all models burn too much Li early on and do not match with the Pleiades surface Li abundance. Later, the reference model (black line) does not deplete Li efficiently on the MS and fail (again) to match the current solar surface Li abundance. On the other hand, the other models which include rotation during the PMS with values of $v/v_{crit}$ between 0.0084 and 0.0336 are able to burn Li in a more realistic way although only one of them (green line) is close to match the present-day Li abundance of the Sun but it rotational velocity is much higher (see fig. (\ref{fig:rot_vel_0g})) than the $2\,kms^{-1}$ of the Sun \citep{Gill2012}. \par
+The figure (\ref{fig:li_var_vel_0g}) clearly allows to appreciate how the Li abundance in the star surface decreases over time for all simulated models. The solid black line represents the reference model that adopts the solar-calibrated envelope overshooting parameters as documented in \citet{Choi2016}. In general, all models burn too much Li before the ZAMS \footnote{Defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.} and do not match with the Pleiades surface Li abundance. Later, the reference model (black line) does not deplete Li efficiently on the MS and fail (again) to match the current solar surface Li abundance. On the other hand, the other models which include rotation during the PMS with values of $v/v_{crit}$ between 0.0084 and 0.0336 are able to burn Li in a more realistic way although only one of them (green line) is close to match the present-day Li abundance of the Sun but it rotational velocity is much higher (see fig. (\ref{fig:rot_vel_0g})) than the $2\,kms^{-1}$ of the Sun \citep{Gill2012}. \par
 
 For much of the PMS the star rotates as a solid body (see fig. (\ref{fig:rot_vel_0g})) and this is because the star has a completely convective interior. It is not until the end of Hayashi track that the star begins to develop a radiative core due to the increase in temperature that occurs inside the star during the contraction process. It is in this stage of evolution of the star when a difference in angular velocity appears between the upper and lower limits of the radiative and convective zones respectively. This effects can be clearly recognized in the figure (\ref{fig:rot_vel_cz_0g}) which shows, in addition to star surface $\Omega$, the angular velocity corresponding to the upper and lower limits of the CZ. The degree of differential rotation is directly influenced by the initial $\Omega$. As the models are initialized with a higher angular velocity, the difference in velocity between the BCZ and the star surface is accentuated in a directly proportional mode; the higher the initial velocity, the bigger the velocity gradient between the bottom and top limits of the CZ. As a consequence, the turbulence strength located at the BCZ increases so that Li can reach regions with temperatures about $T_{Li}$ where it is finally burned and destroyed (see fig. (\ref{fig:li_var_vel_0g})). Also remarkable from the results offered by the simulations is the fact that there are barely any differences between the different models in terms of the abundance of Li during the PMS (see fig. (\ref{fig:li_var_vel_0g_z1})).\par
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/li_var_vel_0_0g_z1.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/li_var_vel_0_0g_z1.eps}
     \caption {The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models in the approach to the ZAMS (dashed lines). The solid black line represents the reference model according to \citet{Choi2016}. The rest of lines are models with includes PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively.}
     \label{fig:li_var_vel_0g_z1}
 \end{figure}
@@ -338,25 +331,26 @@ Another well known structural effect of rotation is the decrease of the effectiv
 
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rot_vel_0g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_0_0g.eps}
     \caption{The evolution of surface rotational velocity, as a function of time for several 1 $M_{\sun}$ models. The lines are models with includes PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS.}
     \label{fig:rot_vel_0g}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rot_vel_cz_0g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_0_0g.eps}
     \caption{The evolution of angular velocity at surface and limits of the uppermost convective zone, as a function of time for several 1 $M_{\sun}$ models. The lines are models with includes PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS.}
     \label{fig:rot_vel_cz_0g}
 \end{figure}
+%\includegraphics[trim = 35mm 95mm 40mm 100mm, clip, width=0.475\textwidth]
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/hr_var_vel_0g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/hr_vc_0336_var_g_z1.eps}
     \caption{An example solar 1$M_{\sun}$ grid of stellar evolutionary track from PMS till TAMS covering a wide range of angular velocities. The rotation is activated in the models in the PMS.}
     \label{fig:hr_var_vel_0g}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/hr_var_vel_0g_z1.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/hr_var_vel_0_0g_z1.eps}
     \caption{Similar to figure (\ref{fig:hr_var_vel_0g}) but now showing in detail the effects of rotation on the evolutionary tracks.}
     \label{fig:hr_var_vel_0g_z1}
 \end{figure}
@@ -368,7 +362,7 @@ In the rest of this document we are going to focus, unless otherwise indicated, 
 If we concentrate our attention on figure (\ref{fig:li_var_vel_4_0g}) and compare it with figure (\ref{fig:li_var_vel_0g}) we will see how the profiles of Li abundance are already altered during PMS and MS. In the first phase we can describe the effect as modest, somewhat expected and in line with the fact that the AML caused by MB (see equation (\ref{eq:j_dot})) depends directly on the loss of mass. If we take into account that for solar-type stars the models predict a modest total loss of mass, this is even much lower during PMS. On the contrary, during the MS it is observed in a much more evident way how the AML is much more significant, causing the star to rotate more slowly and as a result a smaller amount of Li to be destroyed.\par
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/li_var_vel_4_0g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/li_var_vel_4_0g.eps}
     \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. The models include a magnetic field with an intensity of 4G and PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS.}
     \label{fig:li_var_vel_4_0g}
 \end{figure}
@@ -378,19 +372,19 @@ The effect of the MB routine can be seen even more clearly in figure (\ref{fig:r
 We also find interesting to highlight the behaviour of $\Omega$ profiles when approaching TAMS. As can be seen in figure (\ref{fig:rot_vel_4g}) and in more detail in (\ref{fig:rot_vel_4g_z1}), we find that the evolution of $\Omega$ suffers from a series of ups and downs that do not appear previously. Everything seems to indicate that this behavior is due to a combined effect of the MB routine and the time-step (probably to big) used by MESA during the last part of the simulation. We based this affirmation on the fact that this effect is not observed in the series of simulations in which the routine is not included (figs. (\ref{fig:rot_vel_0g}) and (\ref{fig:rot_vel_cz_0g})).\par
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rot_vel_4g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_4_0g.eps}
     \caption{The evolution of surface rotational velocity, as a function of time for several 1 $M_{\sun}$ models. The models include a magnetic field with an intensity of 4G and PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. Additionally it's simulated the magnetic braking effect of magnetic field with an intensity of 4G. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS.}
     \label{fig:rot_vel_4g}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rot_vel_cz_4g.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_4_0g.eps}
     \caption{The evolution of angular velocity at surface and limits of the uppermost convective zone, as a function of time for several 1 $M_{\sun}$ models. The lines are models with includes PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. The dashed lines make reference to the ZAMS.}
     \label{fig:rot_vel_cz_4g}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rot_vel_4g_z1.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_4_0g_z1.eps}
     \caption{Similar to figure (\ref{fig:rot_vel_4g}) but now showing in detail the surface rotational velocity as the star approaches TAMS.}
     \label{fig:rot_vel_4g_z1}
 \end{figure}
@@ -403,13 +397,13 @@ As mentioned above, the MB routine distributes the total amount of AML calculate
 Similar to the evolution of the $\Omega$ towards the end of the MS discussed in the previous paragraph, we observe that the size of the CZ also shows a series of ups and downs. Again we think that this effect is a direct consequence of the temporal resolution used by MESA in the stellar evolution equations. The specific origin of these fluctuations is a subject that we will deal with in more depth and detail in subsequent works.\par
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/cz_vc_028_var_b.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/cz_vc_028_var_g.eps}
     \caption{The evolution of convective zone size, as a function of time for several 1 $M_{\sun}$ models. The models include a magnetic field with an intensity of 4G and PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. Additionally it's simulated the magnetic braking effect of magnetic field with an intensity of 4G.The dashed lines make reference to the ZAMS.}
     \label{fig:cz_vc_028_var_b}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/cz_vc_028_var_b_z1.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/cz_vc_028_var_g_z1.eps}
     \caption{Similar to figure (\ref{fig:cz_vc_028_var_b}) but now showing in detail the convection zone size from the near ZAMS till the TAMS. As the intensity of the magnetic field increases, the size of the convective zone decreases.}
     \label{fig:cz_vc_028_var_b_z1}
 \end{figure}
@@ -417,19 +411,19 @@ Similar to the evolution of the $\Omega$ towards the end of the MS discussed in 
 Before ending this section we would also like to comment on the other factor that directly affects AML; the loss of mass, $\Dot{M}$. In figure (\ref{fig:mdot_vc_028_var_b}) we can see the evolution of $\Dot{M}$ during PMS and MS. In the first stages of PMS is where the greatest loss of mass is concentrated and this diminishes as it approaches the ZAMS. If we add to the scenario the fact that the star also decreases its radius during the PMS we have as a result that the star increases $\Omega$ obeying the principle of conservation of AM. When reaching the ZAMS, the radius of the star remains more or less stable for much of the MS (except for its final stage) but continues to lose mass so it continues to increase its $\Omega$, although in a less aggressive way if we compare it with the PMS. However, as a consequence of both the appearance of the radiative core during Henyey track and the existence of a CZ (see fig. (\ref{fig:mb_act_var_vel_vc_028})), the MB routine is activated, causing the angular velocity of the star to begin to decrease along the entire MS. The more intense the magnetic field, the greater the braking effect.\par 
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/mdot_vc_028_var_b.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/mdot_vc_028_var_g.eps}
     \caption{The evolution of mass loss $\Dot{M}$ , as a function of time for several 1 $M_{\sun}$ models. The models include a variable magnetic field intensity between 0G and 5.5G and PMS rotation with $v/v_{crit}=0.028$. The dashed lines make reference to the ZAMS.}
     \label{fig:mdot_vc_028_var_b}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/mdot_vc_028_var_b_z1.eps}
+	\includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\columnwidth]{figures/mdot_vc_028_var_g_z1.eps}
     \caption{The evolution of mass loss $\Dot{M}$ as the star is approaching TAMS, as a function of time for several 1 $M_{\sun}$ models. The models include a variable magnetic field intensity between 0G and 5.5G and PMS rotation with $v/v_{crit}=0.028$. The stronger the magnetic field, the lower both the angular velocity and $\Dot{M}$. The dashed lines make reference to the ZAMS.}
     \label{fig:mdot_vc_028_var_b_z1}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/mb_act_var_vel_vc_028.eps}
+	\includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\columnwidth]{figures/mb_act_vc_028_var_g.eps}
     \caption{The activation of the magnetic braking routine as a function of the presence of a radiative core. The models include a magnetic field with an intensity of 4G and PMS rotation with $v/v_{crit}$ between 0.0084 and 0.0336, respectively. Additionally it's simulated the magnetic braking effect of magnetic field with an intensity of 4G. The solid lines signal the magnetic braking routine activation (on) and deactivation (off). The horizontal dashed lines inform about the star's core nature: radiative (rad) or convective (conv). By implementation decision, once the routine is activated, it remains on even if the star's core nature change to convective. The vertical dashed lines make reference to the ZAMS.}
     \label{fig:mb_act_var_vel_vc_028}
 \end{figure}
@@ -455,32 +449,32 @@ In the near future, with the new version of our code including magnetic field ev
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_0_0g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_0_0g.eps}
     \label{fig:subim1}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_3_5g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_3_5g.eps}
     \label{fig:subim2}
     \end{subfigure}
     
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_4_0g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_4_0g.eps}
     \label{fig:subim3}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_4_5g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_4_5g.eps}
     \label{fig:subim4}
     \end{subfigure}
     
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_5_0g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_5_0g.eps}
     \label{fig:subim5}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_var_vel_5_5g.eps}
+    \includegraphics[trim = 40mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/li_var_vel_5_5g.eps}
     \label{fig:subim6}
     \end{subfigure}
-\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS.}
 \label{fig:image2}
 \end{figure*}
 \par
@@ -489,60 +483,60 @@ In the near future, with the new version of our code including magnetic field ev
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_vc_0084_var_b.eps}
+    \includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\textwidth]{figures/li_vc_0084_var_g.eps}
     \label{fig:subim21}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_vc_014_var_b.eps}
+    \includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\textwidth]{figures/li_vc_014_var_g.eps}
     \label{fig:subim22}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_vc_0196_var_b.eps}
+    \includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\textwidth]{figures/li_vc_0196_var_g.eps}
     \label{fig:subim23}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_vc_028_var_b.eps}
+    \includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\textwidth]{figures/li_vc_028_var_g.eps}
     \label{fig:subim24}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/li_vc_0336_var_b.eps}
+    \includegraphics[trim = 40mm 15mm 15mm 15mm, clip,width=\textwidth]{figures/li_vc_0336_var_g.eps}
     \label{fig:subim25}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
     \includegraphics[width=\textwidth]{figures/blank.eps}
     \label{fig:subim26}
     \end{subfigure}
-\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which $v/v_{crit}$ has been fixed and the magnetic field with intensity varies between 3.5 and 5.5 G, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which $v/v_{crit}$ has been fixed and the magnetic field with intensity varies between 3.5 and 5.5 G, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed lines make reference to the ZAMS.}
 \label{fig:image22}
 \end{figure*}
 
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_0g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_0_0g.eps}
     \label{fig:subim41}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_3_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_3_5g.eps}
     \label{fig:subim42}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_4g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_4_0g.eps}
     \label{fig:subim43}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_4_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_4_5g.eps}
     \label{fig:subim44}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_5_0g.eps}
     \label{fig:subim45}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/rot_vel_5_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/rot_vel_var_vel_5_5g.eps}
     \label{fig:subim46}
     \end{subfigure}
-\caption{Grid showing the evolution of the evolution of surface rotational velocity, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\caption{Grid showing the evolution of the evolution of surface rotational velocity, as a function of time for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed lines make reference to the ZAMS.}
 \label{fig:image24}
 \end{figure*}
 
@@ -552,30 +546,30 @@ In the near future, with the new version of our code including magnetic field ev
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/mb_act_3_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/mb_act_var_vel_3_5g.eps}
     \label{fig:subim31}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/mb_act_4_0g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/mb_act_var_vel_4_0g.eps}
     \label{fig:subim32}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/mb_act_4_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/mb_act_var_vel_4_5g.eps}
     \label{fig:subim33}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/mb_act_5_0g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/mb_act_var_vel_5_0g.eps}
     \label{fig:subim34}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[width=\textwidth]{figures/mb_act_5_5g.eps}
+    \includegraphics[trim = 30mm 15mm 20mm 15mm, clip,width=\textwidth]{figures/mb_act_var_vel_5_5g.eps}
     \label{fig:subim35}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
     \includegraphics[width=\textwidth]{figures/blank.eps}
     \label{fig:subim36}
     \end{subfigure}
-\caption{Grid showing the evolution of magnetic braking activation, as a function of time and the existence of a radiative core for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The dashed lines make reference to the ZAMS defined as the temporal simulation instant closest to the timestep in which both the central H mass fraction has been reduced by 0.0015 from its initial value and the model first $L_H/L_{phot} \geq 0.99$, where $L_{H}$ is luminosity produced by the H burning power at the star core and $L_{phot}$ represents the star luminosity in the photosphere.}
+\caption{Grid showing the evolution of magnetic braking activation, as a function of time and the existence of a radiative core for several 1 $M_{\sun}$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $v/v_{crit}$ varies between 0.0084 and 0.0336. The dashed lines make reference to the ZAMS.}
 \label{fig:image32}
 \end{figure*}
 
