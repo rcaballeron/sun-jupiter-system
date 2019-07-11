@@ -698,7 +698,7 @@ end
 
 function save_figure(f, title)  
   print(f,'-deps','-color',[title,'.eps']);
-  close;
+  %close;
   %print(f,'-dpng','-color',[title,'.png']);
 end
 
@@ -1275,14 +1275,14 @@ function main()
   %plot_hr_3_5G_var_vel();
   %plot_hr_5_0G_var_vel();
   %plot_hr_0336vc_var_g();
-  %plot_hr_0336vc_var_g_z1();
+  plot_hr_0336vc_var_g_z1();
   %plot_hr_0G_var_vel();
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);
   
-  paper1();
+  %paper1();
 end
 
 
