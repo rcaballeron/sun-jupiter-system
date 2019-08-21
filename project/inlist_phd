@@ -228,8 +228,12 @@
 
       !A larger value increases the max allowed deltas and decreases the number of grid points.
       mesh_delta_coeff = 1.0 !Default value 1.0
+      !mesh_delta_coeff = 0.5
+      
       !This is the target value for relative variation in the structure from one model to the next.
       varcontrol_target = 1d-4 !Default value 1d-4
+      !varcontrol_target = 1d-5 !Default value 1d-4
+
       !Maximum number of grid points allowed.
       max_allowed_nz = 50000 !Default value 8000
     
@@ -266,7 +270,7 @@
       ! Magnetic braking input parameters
       ! **********************************
       
-      x_ctrl(1) = 5.0d0 ! B - magnetic field torque (G)
+      x_ctrl(1) = 4.0d0 ! B - magnetic field torque (G)
       x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
 
       ! How to redistribute the loss of angular momentum

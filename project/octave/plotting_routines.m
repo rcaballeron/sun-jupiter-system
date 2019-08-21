@@ -698,7 +698,7 @@ end
 
 function save_figure(f, title)  
   print(f,'-deps','-color',[title,'.eps']);
-  %close;
+  close;
   %print(f,'-dpng','-color',[title,'.png']);
 end
 
@@ -872,6 +872,20 @@ function plot_4_0G_var_vel()
   age_vs_li_plots(gauss_fields(3,:), rotational_vels(2:6,:), true, 0.5, [1.0e5,1.0e10,0,4.5], 'A(Li7) - 4.0G & var. rotational velocity', 'li_var_vel_4_0g');
 end
 
+function plot_4_0G_var_vel_st()
+  global gauss_fields;
+  rotational_vels = ['0196crit'; '0196crit_st'];
+  age_vs_li_plots(gauss_fields(3,:), rotational_vels(1:2,:), true, 0.5, [1.0e5,1.0e10,0,4.5], 'A(Li7) - 4.0G & var. rotational velocity', 'li_var_vel_4_0g');
+end
+
+function plot_4_0G_var_vel_vc5()
+  global gauss_fields;
+  rotational_vels = ['0196crit'; '0196crit_vc5'; '0196crit_vc5_md5'];
+  age_vs_li_plots(gauss_fields(3,:), rotational_vels(1:3,:), true, 0.5, [1.0e5,1.0e10,0,4.5], 'A(Li7) - 4.0G & var. rotational velocity', 'li_var_vel_4_0g');
+end
+
+
+
 function plot_4_5G_var_vel()
   global gauss_fields;
   global rotational_vels; 
@@ -952,11 +966,26 @@ function plot_vel_rot_4G_var_vel()
   age_vs_vel_plots(gauss_fields(3,:), rotational_vels(2:6,:), true, 10, [1.0e5,1.0e10], 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g');
 end
 
+function plot_vel_rot_4G_var_vel_vc5_md5()
+  global gauss_fields;
+  rotational_vels = ['0196crit'; '0196crit_vc5'; '0196crit_vc5_md5'];
+  
+  age_vs_vel_plots(gauss_fields(3,:), rotational_vels(1:3,:), true, 10, [1.0e5,1.0e10], 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g');
+end
+
+
 function plot_vel_rot_4G_var_vel_z1()
   global gauss_fields;
   global rotational_vels;
   
   age_vs_vel_plots(gauss_fields(3,:), rotational_vels(2:6,:), true, 2, [3.0e9, 1.0e10], 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g_z1');
+end
+
+function plot_vel_rot_4G_var_vel_z1_vc5_md5()
+  global gauss_fields;
+  rotational_vels = ['0196crit'; '0196crit_vc5'; '0196crit_vc5_md5'];
+  
+  age_vs_vel_plots(gauss_fields(3,:), rotational_vels(3:3,:), true, 2, [3.0e9, 1.0e10], 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g_z1');
 end
 
 
@@ -1242,6 +1271,12 @@ function main()
   %plot_5_0G_var_vel(); 
   %plot_5_5G_var_vel(); 
   
+  %Includes dynamo effect
+  %plot_4_0G_var_vel_st();
+  
+  %Var control 0.00001
+  %plot_4_0G_var_vel_vc5();
+  
   %plot_0084vc_var_g();
   %plot_014vc_var_g();
   %plot_0196vc_var_g();
@@ -1256,6 +1291,11 @@ function main()
   %plot_vel_rot_4_5G_var_vel();
   %plot_vel_rot_5G_var_vel();
   %plot_vel_rot_5_5G_var_vel();  
+  
+  %Var control 0.00001
+  %plot_vel_rot_4G_var_vel_vc5_md5();
+  %plot_vel_rot_4G_var_vel_z1_vc5_md5();
+
   
   %plot_cz_size_0G_var_vel();
   %plot_cz_size_3_5G_var_vel();  
@@ -1275,14 +1315,14 @@ function main()
   %plot_hr_3_5G_var_vel();
   %plot_hr_5_0G_var_vel();
   %plot_hr_0336vc_var_g();
-  plot_hr_0336vc_var_g_z1();
+  %plot_hr_0336vc_var_g_z1();
   %plot_hr_0G_var_vel();
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
-  %calculate_ZAMS(filename);
+  %calculate_ZAMS(filename);  
   
-  %paper1();
+  paper1();
 end
 
 
