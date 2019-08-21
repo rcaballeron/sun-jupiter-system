@@ -51,10 +51,10 @@ global ratio_log_LH_vs_log_L = 0.99;
 global line_width = 3;
 global W = 18;
 global H = 14;
-global tick_font_size = 16;
-global title_font_size = 20;
-global axis_font_size = 18;
-global legend_font_size = 18;
+global tick_font_size = 18;
+global title_font_size = 22;
+global axis_font_size = 20;
+global legend_font_size = 20;
 
 
 
