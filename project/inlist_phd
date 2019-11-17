@@ -27,11 +27,12 @@
       new_rotation_flag = .true.
       change_rotation_flag = .true.
       !change_initial_rotation_flag = .true.
-      !new_omega_div_omega_crit = 0.0084 !3km/s
-      !new_omega_div_omega_crit = 0.014 !5km/s
-      new_omega_div_omega_crit = 0.0196 !7km/s
-      !new_omega_div_omega_crit = 0.028 !10km/s
-      !new_omega_div_omega_crit = 0.0336 !12km/s
+      !new_omega_div_omega_crit = 0.0084 
+      !new_omega_div_omega_crit = 0.014 
+      !new_omega_div_omega_crit = 0.0196 
+      !new_omega_div_omega_crit = 0.028 
+      !new_omega_div_omega_crit = 0.0336 
+      new_omega_div_omega_crit = 0.0395
       set_omega_div_omega_crit = .true.
 
       !new_surface_rotation_v = 20.0 ! km/s     
@@ -39,9 +40,9 @@
 
       
 !PMS
-  ! begin with a pre-main sequence model  
+      !begin with a pre-main sequence model  
       create_pre_main_sequence_model = .true.
-    ! Initial center temperature (must be below 1d6)  
+      !Initial center temperature (must be below 1d6)  
       pre_ms_T_c = 5d5
 
 !MISC. SETUP
@@ -138,7 +139,12 @@
       alpha_semiconvection = 0.1
       thermohaline_coeff = 666.0
 
-      mixing_length_alpha = 1.82
+      !use with overshoot_f_above/below_xxxxxx_shell=0.0174 and
+      !use with overshoot_f0_above/below_xxxxxx_shell=0.0087
+      mixing_length_alpha = 1.82 
+      !use with overshoot_f/f0_above/below_xxxxxx_shell=0.002
+      !mixing_length_alpha = 1.7 
+
       mlt_option = 'Henyey'
     
       !to help with convergence
@@ -209,7 +215,7 @@
       ! own separate class. This can cause significant slowdowns 
       ! for large nets, so it is off by default.
       ! diffusion_use_full_net = .true.  <--TFM option
-      diffusion_use_full_net = .false.
+      diffusion_use_full_net = .true.
       diffusion_use_cgs_solver = .false.
 
 
@@ -227,12 +233,12 @@
 !MESH AND TIMESTEP PARAMETERS
 
       !A larger value increases the max allowed deltas and decreases the number of grid points.
-      mesh_delta_coeff = 1.0 !Default value 1.0
-      !mesh_delta_coeff = 0.5
+      !mesh_delta_coeff = 1.0 !Default value 1.0
+      mesh_delta_coeff = 0.5
       
       !This is the target value for relative variation in the structure from one model to the next.
-      varcontrol_target = 1d-4 !Default value 1d-4
-      !varcontrol_target = 1d-5 !Default value 1d-4
+      !varcontrol_target = 1d-4 !Default value 1d-4
+      varcontrol_target = 1d-5 !Default value 1d-4
 
       !Maximum number of grid points allowed.
       max_allowed_nz = 50000 !Default value 8000
@@ -270,7 +276,7 @@
       ! Magnetic braking input parameters
       ! **********************************
       
-      x_ctrl(1) = 4.0d0 ! B - magnetic field torque (G)
+      x_ctrl(1) = 2.0d0 ! B - magnetic field torque (G)
       x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
 
       ! How to redistribute the loss of angular momentum
@@ -287,11 +293,6 @@
       ! .true. = wait
       x_logical_ctrl(5) = .true. 
       x_logical_ctrl(6) = .true.  !keep_on_rad_core
-      
-      
-      
-      
-
 
       
 / ! end of controls namelist

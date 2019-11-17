@@ -262,7 +262,7 @@
                   end do
 
                   if (debug_reset_other_torque) then
-                        !Just only who the values, don't pass them back to MESA
+                        !Just only print out the values, don't pass them back to MESA
                         s% extra_jdot(:) = 0.0
                   end if
             end if
