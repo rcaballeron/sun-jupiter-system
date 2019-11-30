@@ -29,8 +29,7 @@ global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system
 global filename = '1M_photosphere_history.data';
 global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
-global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';];
-global rotational_vels2 = ['na/035';'na/037'; 'na/039'; 'na/0395';'na/040'; 'na/041'; ];
+global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
 
 %Array indexes
@@ -46,12 +45,21 @@ global idx_4_5G  = 9;
 global idx_5_0G  = 10;
 global idx_5_5G  = 11;
 
+%The following are with mlt=1.82
 global idx_0crit    = 1;
 global idx_0084crit = 2;
 global idx_014crit  = 3;
 global idx_0196crit = 4;
 global idx_028crit  = 5;
 global idx_0336crit = 6;
+%The following are with mlt=1.7
+global idx_029crit  = 7;
+global idx_030crit  = 8;
+global idx_031crit  = 9;
+global idx_0312crit  = 10;
+global idx_0314crit  = 11;
+global idx_032crit  = 12;
+
 
 %Sun constants
 global sun_gauss_field = 1.0; %G
@@ -303,17 +311,22 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
   
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
-  plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
+  %Don't show sup limit of CZ
+  %plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
   plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', ':');
 
   %Axis scales
   set(gca, 'XScale', 'log');  
   
   %Axis limits
+  axis_limits
   set(gca,'YTick',axis_limits(3):ytick:axis_limits(4));
+  %set(gca,'YTick',0:2.5:25);
+  %set(gca,'XTick',axis_limits(1):5.0e8:axis_limits(2));
   
   %Axis ticks
   axis(axis_limits);
+  %axis([axis_limits(1), axis_limits(2), 0, 20]);
   xticks = get (gca, "xtick"); 
   xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
   set (gca, "xticklabel", xlabels) ;
@@ -521,20 +534,26 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       plot_A_Li7(A, B, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))
+      %zams = calculate_ZAMS(full_path);
+      %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))
     
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['A(Li)-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['A(Li)-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
     end
   end
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
   % Plot sun reference
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
   plot(pleiades_age, pleiades_A_Li7, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
@@ -586,19 +605,26 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
       plot_size_cz(A, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %zams = calculate_ZAMS(full_path);
+      %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['CZ radius-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['CZ radius-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif        
     end
   end
+  
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
 
   grid on;
   l = legend(labels, "location", "southeastoutside");
@@ -643,20 +669,27 @@ function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, ax
       plot_m_dot(A, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %zams = calculate_ZAMS(full_path);
+      %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['Mass loss-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['Mass loss-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
     end
   end
+  
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
 
   grid on;
   l = legend(labels, "location", "southeastoutside");
@@ -703,21 +736,27 @@ function age_vs_reimers_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, y
       plot_reimers_m_dot(A, colors(i*j,:), line_width, ytick, axis_limits);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
-      line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %zams = calculate_ZAMS(full_path);
+      %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['Mass loss-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['Mass loss-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
     end
   end
 
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
   grid on;
   l = legend(labels, "location", "southeastoutside");
   set (l, "fontsize", legend_font_size);
@@ -775,11 +814,11 @@ function age_vs_m_l_r_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
       %plot_m_l_r(A, colors(i*j,:), line_width, ytick, x_limits);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
+      %zams = calculate_ZAMS(full_path);
       % Here we can properly assing the ymin and ymax values for all the plots
       % Each of them will potentially have a different one. We opt for fixing
       % the limits by hand.
-      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       
       %Generate serie labels
@@ -787,16 +826,22 @@ function age_vs_m_l_r_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
         labels = {labels{:}, ['Mass-', strtrim(rotational_vels(j,:))]};
         labels = {labels{:}, ['Luminosity-', strtrim(rotational_vels(j,:))]};
         labels = {labels{:}, ['Radius-', strtrim(rotational_vels(j,:))]};        
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};      
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};      
       else
         labels = {labels{:}, ['Mass-', strtrim(gauss_fields(i,:))]};
         labels = {labels{:}, ['Luminosity-', strtrim(gauss_fields(i,:))]};
         labels = {labels{:}, ['Radius-', strtrim(gauss_fields(i,:))]};        
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};            
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};            
       endif
       
     end
   end
+  
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 3, "linestyle", "--", "color", "k");
   
   grid on;
   l = legend(labels, "location", "southeastoutside");
@@ -857,30 +902,44 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
       plot_vel_rot(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
+      %zams = calculate_ZAMS(full_path);
       % Here we can properly assing the ymin and ymax values for all the plots
       % Each of them will potentially have a different one. We opt for fixing
       % the limits by hand.
-      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:));
       
       
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['Surface-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['Top CZ-', strtrim(rotational_vels(j,:))]};
+        %Dont show lim sup CZ
+        %labels = {labels{:}, ['Top CZ-', strtrim(rotational_vels(j,:))]};
         labels = {labels{:}, ['Bottom CZ-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};      
+        %Dont show individual ZAMS
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};      
       else
         labels = {labels{:}, ['Surface-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['Top CZ-', strtrim(gauss_fields(i,:))]};
+        %Dont show lim sup CZ
+        %labels = {labels{:}, ['Top CZ-', strtrim(gauss_fields(i,:))]};
         labels = {labels{:}, ['Bottom CZ-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};            
+        %Dont show individual ZAMS
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};            
       endif
       
     end
   end
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  % Here we can properly assing the ymin and ymax values for all the plots
+  % Each of them will potentially have a different one. We opt for fixing
+  % the limits by hand.  
+  line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 3, "linestyle", "--", "color", "k");
+  
+
   % Plot sun reference
-  plot(sun_age, sun_vel_rot, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  plot(sun_age, sun_vel_rot, '*', 'markersize', 15, 'linewidth', 2, 'color', [0.5,0.1,0.8]);
   
   grid on;
   l = legend(labels, "location", "southeastoutside");
@@ -912,7 +971,7 @@ end
 
 function save_figure(f, title)  
   print(f,'-deps','-color',[title,'.eps']);
-  close;
+  %close;
   %print(f,'-dpng','-color',[title,'.png']);
 end
 
@@ -990,22 +1049,22 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, atitle,
       plot_mb_activation(A, colors(i*j,:), line_width, [1.0e1, 1.0e10, 0, y_offset + 1.5]);
       
       % Plot ZAMS reference
-      zams = calculate_ZAMS(full_path);
+      %zams = calculate_ZAMS(full_path);
       % Here we can properly assing the ymin and ymax values for all the plots
       % Each of them will potentially have a different one. We opt for fixing
       % the limits by hand.
-      line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      %line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
       
       
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['MB-', strtrim(rotational_vels(j,:))]};
         labels = {labels{:}, ['CR-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['MB-', strtrim(gauss_fields(i,:))]};
         labels = {labels{:}, ['CR-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
       %Generate y ticks labels 0=off, 1=on
@@ -1036,6 +1095,13 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, atitle,
       pos = pos + 0.4;
     end      
   end
+  
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 3, "linestyle", "--", "color", "k");
+  
   
   
   yticks(y_ticks);
@@ -1093,10 +1159,17 @@ end
 function plot_3_0G_var_vel(rot_vels)
   global gauss_fields;
   global idx_3_0G;
-  %rotational_vels = ['029crit';'031crit';'033crit']; 
 
   age_vs_li_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,4.5], 'A(Li7) - 3.0G & var. rotational velocity', 'li_var_vel_3_0g');
 end
+
+function plot_3_0G_0314vc(rot_vels)
+  global gauss_fields;
+  global idx_3_0G;
+
+  age_vs_li_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,4.5], 'A(Li7) - 3.0G & vcrit=0.0314', 'li_3_0g_0314vc');
+end
+
 
 
 function plot_3_3G_var_vel(rot_vels)
@@ -1236,6 +1309,21 @@ function plot_vel_rot_3_0G_var_vel(rot_vels)
   
   age_vs_vel_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'Rotational vel - 3.0G & var. rotational velocity', 'rot_vel_var_vel_3_0g');
 end
+
+function plot_vel_rot_3_0G_0314vc(rot_vels)
+  global gauss_fields;
+  global idx_3_0G;
+  
+  age_vs_vel_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'Rotational vel - 3.0G & vcrit=0.0314', 'rot_vel_3_0g_0314vc');
+end
+
+function plot_vel_rot_3_0G_var_vel_mlt(rot_vels)
+  global gauss_fields;
+  global idx_3_0G;
+  
+  age_vs_vel_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'Rotational vel - 3.0G & var. rotational velocity', 'rot_vel_var_vel_3_0g');
+end
+
 
 function plot_vel_rot_3_3G_var_vel(rot_vels)
   global gauss_fields;
@@ -1514,6 +1602,14 @@ function plot_m_dot_0G_var_vel(rot_vels)
   age_vs_m_dot_plots(gauss_fields(idx_0_0G,:), rot_vels, true, 0.5, [1.0e2, 1.0e10, -14.0, -10.0], 'Mass loss - 0.0G & var. rotational velocity', 'mdot_var_vel_0_0_g');
 end
 
+function plot_m_dot_3G_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_3_0G;
+  
+  age_vs_m_dot_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e2, 1.0e10, -14.0, -10.0], 'Mass loss - 3.0G & var. rotational velocity', 'mdot_var_vel_3_0_g');
+end
+
+
 
 function plot_reimers_m_dot_0G_var_vel(rot_vels)
   global gauss_fields;
@@ -1623,6 +1719,10 @@ function paper1()
   global idx_0196crit;
   global idx_028crit;
   global idx_0336crit;
+  global idx_029crit;
+  global idx_030crit;
+  global idx_031crit;
+  global idx_032crit;
   
   
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
@@ -1630,11 +1730,12 @@ function paper1()
   
   rot_vels = rotational_vels([idx_0crit;idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   rot_vels2 = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
+  rot_vels3 = rotational_vels([idx_0314crit],:);
   
   
   plot_0G_var_vel(rot_vels);
   plot_0G_var_vel_z1(rot_vels);
-  plot_vel_rot_0G_var_vel(rot_vels);
+  plot_vel_rot_0G_var_vel(rot_vels2);
   %plot_hr_0336vc_var_g();
   plot_hr_0336vc_var_g_z1(mag_fields);
   plot_hr_0G_var_vel_z1(rot_vels);
@@ -1646,6 +1747,8 @@ function paper1()
   plot_m_dot_028vc_var_g(mag_fields);
   plot_m_dot_028vc_var_g_z1(mag_fields);
   plot_age_vs_mb_activation_028vc(mag_fields2);
+  plot_3_0G_0314vc(rot_vels3);
+  plot_vel_rot_3_0G_0314vc(rot_vels3);
   
   %grid Li var_vel
   plot_0G_var_vel(rot_vels);
@@ -1673,11 +1776,11 @@ function paper1()
   %plot_vel_rot_5_5G_var_vel();
   
   %grid mag breaking
-  plot_age_vs_mb_activation_3_0G(rot_vels2);
-  plot_age_vs_mb_activation_3_5G(rot_vels2);
-  plot_age_vs_mb_activation_4_0G(rot_vels2);
-  plot_age_vs_mb_activation_4_5G(rot_vels2);
-  plot_age_vs_mb_activation_5_0G(rot_vels2);
+  %plot_age_vs_mb_activation_3_0G(rot_vels2);
+  %plot_age_vs_mb_activation_3_5G(rot_vels2);
+  %plot_age_vs_mb_activation_4_0G(rot_vels2);
+  %plot_age_vs_mb_activation_4_5G(rot_vels2);
+  %plot_age_vs_mb_activation_5_0G(rot_vels2);
   %plot_age_vs_mb_activation_5_5G(rot_vels2);
   
 end
@@ -1700,13 +1803,24 @@ function main()
   global idx_0196crit;
   global idx_028crit;
   global idx_0336crit;
+  global idx_029crit;
+  global idx_030crit;
+  global idx_031crit;
+  global idx_032crit;
+  global idx_0312crit;
+  global idx_0314crit;
+  
   
   
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
   mag_fields2 = gauss_fields([idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
+  mag_fields3 = gauss_fields([idx_3_0G],:);
   
   rot_vels = rotational_vels([idx_0crit;idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   rot_vels2 = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
+  %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
+  rot_vels3 = rotational_vels([idx_0314crit],:);
+  rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
   
   %plot_age_vs_mb_activation_3_5G();
   %plot_age_vs_mb_activation_4_0G();
@@ -1717,16 +1831,18 @@ function main()
   %plot_age_vs_mb_activation_028vc();
   
   
-  %plot_0G_var_vel();
-  %plot_0G_var_vel_z1();
-  %plot_2_5G_var_vel();
-  %plot_3_0G_var_vel();
-  %plot_3_5G_var_vel();
-  %plot_4_0G_var_vel(); 
-  %plot_4_3G_var_vel(); 
-  %plot_4_5G_var_vel(); 
-  %plot_5_0G_var_vel(); 
-  %plot_5_5G_var_vel(); 
+  %plot_0G_var_vel(rot_vels);
+  %plot_0G_var_vel_z1(rot_vels);
+  %plot_2_5G_var_vel(rot_vels);
+  %plot_3_0G_var_vel(rot_vels);
+  %plot_3_0G_var_vel(rot_vels3);
+  %plot_3_0G_0314vc(rot_vels3);
+  %plot_3_5G_var_vel(rot_vels);
+  %plot_4_0G_var_vel(rot_vels); 
+  %plot_4_3G_var_vel(rot_vels); 
+  %plot_4_5G_var_vel(rot_vels); 
+  %plot_5_0G_var_vel(rot_vels); 
+  %plot_5_5G_var_vel(rot_vels); 
   
   %Includes dynamo effect
   %plot_4_0G_var_vel_st();
@@ -1743,7 +1859,9 @@ function main()
   %plot_3G_var_vel();
   %plot_3_3G_var_vel();
   %plot_vel_rot_2G_var_vel();
-  %plot_vel_rot_3G_var_vel();  
+  %plot_vel_rot_3_0G_var_vel(rot_vels3);
+  plot_vel_rot_3_0G_0314vc(rot_vels3);
+  %plot_vel_rot_3_0G_var_vel_mlt(rot_vels4);
   %plot_vel_rot_3_5G_var_vel();
   %plot_vel_rot_3_3G_var_vel();
   
@@ -1754,15 +1872,15 @@ function main()
   %plot_0336vc_var_g();
   
   
-  %plot_vel_rot_0G_var_vel();
-  %plot_vel_rot_2_5G_var_vel();
-  %plot_vel_rot_3G_var_vel();
-  %plot_vel_rot_3_5G_var_vel();
-  %plot_vel_rot_4G_var_vel();
-  %plot_vel_rot_4G_var_vel_z1();
-  %plot_vel_rot_4_5G_var_vel();
-  %plot_vel_rot_5G_var_vel();
-  %plot_vel_rot_5_5G_var_vel();  
+  %plot_vel_rot_0G_var_vel(rot_vels2);
+  %plot_vel_rot_2_5G_var_vel(rot_vels2);
+  %plot_vel_rot_3_0G_var_vel(rot_vels2);
+  %plot_vel_rot_3_5G_var_vel(rot_vels2);
+  %plot_vel_rot_4G_var_vel(rot_vels2);
+  %plot_vel_rot_4G_var_vel_z1(rot_vels2);
+  %plot_vel_rot_4_5G_var_vel(rot_vels2);
+  %plot_vel_rot_5G_var_vel(rot_vels2);
+  %plot_vel_rot_5_5G_var_vel(rot_vels2);  
   
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
@@ -1770,6 +1888,7 @@ function main()
 
   
   %plot_cz_size_0G_var_vel();
+  %plot_cz_size_3G_var_vel(rot_vels4);
   %plot_cz_size_3_5G_var_vel();  
   %plot_cz_size_3_5G_var_vel_z_1();
   %plot_cz_size_4_0G_var_vel();  
@@ -1783,12 +1902,14 @@ function main()
   %plot_m_dot_028vc_var_g();
   %plot_m_dot_028vc_var_g_z1();
   %plot_m_dot_0G_var_vel();
+  %plot_m_dot_3G_var_vel(rot_vels4);
   %plot_reimers_m_dot_0G_var_vel();
   %plot_m_l_r_0G_var_vel();
   %plot_m_l_r_0G_var_vel_z1();
     
   
   %plot_hr_3_0G_var_vel();
+  %plot_hr_3G_var_vel(rot_vels4);
   %plot_hr_3_5G_var_vel();
   %plot_hr_5_0G_var_vel();
   %plot_hr_0336vc_var_g();
@@ -1799,7 +1920,6 @@ function main()
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);  
   
-  plot_0G_var_vel(rot_vels);
   %paper1();
 end
 
