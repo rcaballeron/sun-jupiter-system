@@ -27,6 +27,8 @@ global sz_bot_vrot_col    = 86;
 
 global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper';
 global filename = '1M_photosphere_history.data';
+%global filename = 'annexB/1M_photosphere_history.data';
+%global filename = 'annex2B/1M_photosphere_history.data';
 global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
 global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';];
@@ -344,10 +346,15 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
 end
 
 function plot_size_cz(A, color, width, ytick, axis_limits)
+  plot_size_cz2(A, color, width, ytick, axis_limits, 0, '-');
+end
+
+function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
   global tick_font_size;
   
   %Plot values
-  plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
+  %plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
+  plot(A(:,1), A(:,3) .- A(:,4) .+ offset , color, 'linewidth', width, 'linestyle', linestyle);
   %plot(A(:,1), 10 .** A(:,2), color, 'linewidth', width, 'linestyle', '--');
   
   %Axis scales
@@ -359,8 +366,10 @@ function plot_size_cz(A, color, width, ytick, axis_limits)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick"); 
-  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
-  xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  %Usar la siguiente instrucción si queremos fijar nosotros las marcas a mostrar
+  %No está pensado usarlas para las gráficas de zoom
+  %xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
   set (gca, "xticklabel", xlabels);
   yticks = get (gca, "ytick"); 
   ylabels = arrayfun (@(x) sprintf ("%1.2f", x), yticks, "uniformoutput", false); 
@@ -648,6 +657,89 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
   
   save_figure(f, afilename);
 end
+
+
+
+function age_vs_cz_size_plots_special(rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+  global data_parent_folder;
+  global filename;
+  global star_age_col;
+  global log_R_col;
+  global sz_top_radius_col;
+  global sz_bot_radius_col;
+  global header_lines;
+  global sun_age;
+  global sun_vel_rot;
+  %global colors;
+  global title_font_size;
+  global axis_font_size;
+  global legend_font_size;
+  global line_width;
+  
+  colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'k'; 'r'; 'g'];
+  
+  hold('on');
+  labels = {};
+  
+  f = format_figure();
+  
+  gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'; '5gx2s'; '5gx2st'; '5gx4s'];
+  
+  for i=1:rows(gauss_fields)
+    for j=1:rows(rotational_vels)
+      sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
+      full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+      
+      fmt = get_parsing_fmt([star_age_col, log_R_col, sz_top_radius_col, sz_bot_radius_col]);
+      
+      A = read_matrix_from_file(full_path, fmt, header_lines, 4);
+
+      if (i == 7)     
+        plot_size_cz2(A, colors(i*j,:), line_width, ytick, axis_limits, -0.005, ':');
+      elseif (i == 8)
+        plot_size_cz2(A, colors(i*j,:), line_width, ytick, axis_limits, -0.0065, ':');
+      elseif (i == 9)
+        plot_size_cz2(A, colors(i*j,:), line_width, ytick, axis_limits, -0.0090, ':');
+      else
+        plot_size_cz2(A, colors(i*j,:), line_width, ytick, axis_limits, 0, '-');
+      endif
+      
+      % Plot ZAMS reference
+      %zams = calculate_ZAMS(full_path);
+      %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))    
+      
+      %Generate serie labels
+      if (is_var_vel)
+        labels = {labels{:}, ['CZ radius-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+      else
+        labels = {labels{:}, ['CZ radius-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+      endif        
+    end
+  end
+  
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
+
+  grid on;
+  %l = legend(labels, "location", "southeastoutside");
+  l = legend(labels, "location", leg_loc);
+  set (l, "fontsize", legend_font_size);
+  %legend boxoff
+  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  ylabel('Size conv. zone (radius conv. zone/radius star)', 'fontsize', axis_font_size);
+  title(atitle, 'fontsize', title_font_size);
+
+  hold('off');
+  
+  save_figure(f, afilename);
+end
+
 
 function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
   global data_parent_folder;
@@ -1582,6 +1674,13 @@ function plot_cz_size_028vc_var_g_z1(mag_fields)
   age_vs_cz_size_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', 'Convective zone radius - vcrit=0.028 & var. magnetic field','cz_vc_028_var_g_z1');
 end
 
+function plot_cz_size_028vc_var_g_z1_special(mag_fields)
+  global rotational_vels;
+  global idx_028crit;
+  
+  age_vs_cz_size_plots_special(rotational_vels(idx_028crit,:), false, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', 'Convective zone radius - vcrit=0.028 & var. magnetic field','cz_vc_028_var_g_z1');
+end
+
 function plot_cz_size_0G_var_vel_z1(rot_vels)
   global gauss_fields;
   global idx_0_0G;
@@ -1834,12 +1933,15 @@ function main()
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
   mag_fields2 = gauss_fields([idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
   mag_fields3 = gauss_fields([idx_3_0G],:);
+  mag_fields_annexA = gauss_fields([idx_5_0G],:);
+  mag_fields_annexB = gauss_fields([idx_5_0G],:);
   
   rot_vels = rotational_vels([idx_0crit;idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   rot_vels2 = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
   rot_vels3 = rotational_vels([idx_0314crit],:);
   rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
+  rot_vels_annexB = rotational_vels([idx_028crit],:);
   
   %plot_age_vs_mb_activation_3_5G();
   %plot_age_vs_mb_activation_4_0G();
@@ -1915,8 +2017,10 @@ function main()
   %plot_cz_size_4_5G_var_vel();  
   %plot_cz_size_5_0G_var_vel();  
   %plot_cz_size_5_5G_var_vel();  
-  plot_cz_size_028vc_var_g(mag_fields);
-  %plot_cz_size_028vc_var_g_z1();
+  %plot_cz_size_028vc_var_g(mag_fields);
+  %plot_cz_size_028vc_var_g_z1(mag_fields);
+  %plot_cz_size_028vc_var_g_z1_special(mag_fields);
+  plot_cz_size_028vc_var_g_z1_special();
   %plot_cz_size_0G_var_vel_z1();
   
   
