@@ -1,0 +1,33 @@
+This run was executed with the MESA release 10000 using Choi's inlist but without modifying MESA standard version.
+
+
+Convergence problems
+---------------------
+
+hydro_newton_step failed to accept
+       retry log10(dt/yr), log10(dt), retry_factor     2 19536      -12.779468       -5.280356        0.500000
+ have reached retry limit so now backup
+ png/trho_019535.png/png
+ png/hr_019535.png/png
+ png/abund_019535.png/png
+       retry log10(dt/yr), log10(dt), retry_factor     1 19536      -13.080498       -5.581386        0.500000
+hydro_newton_step failed to accept
+       retry log10(dt/yr), log10(dt), retry_factor     2 19536      -13.381528       -5.882416        0.500000
+ have reached retry limit so now backup
+ png/trho_019535.png/png
+ png/hr_019535.png/png
+ png/abund_019535.png/png
+       retry log10(dt/yr), log10(dt), retry_factor     1 19536      -13.682558       -6.183446        0.500000
+hydro_newton_step failed to accept
+       retry log10(dt/yr), log10(dt), retry_factor     2 19536      -13.983588       -6.484476        0.500000
+                                                     dt    6.5547119273240283D-07
+                                     min_timestep_limit    9.9999999999999995D-07
+
+ stopping because of problems dt < min_timestep_limit
+
+
+terminated evolution: cannot find acceptable model
+
+termination code: min_timestep_limit
+pause_before_terminate: hit RETURN to continue
+

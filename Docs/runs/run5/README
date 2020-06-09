@@ -1,0 +1,3 @@
+This run was executed with the MESA release 10000 and the modifications introduced by Choi for her paper.
+Additional modifications:
+mixing_length_alpha = 1.70

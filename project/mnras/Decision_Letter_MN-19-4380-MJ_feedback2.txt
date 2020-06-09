@@ -1,0 +1,16 @@
+
+Comments to the Author 
+I am satisfied with the authors' changes in general.  There remains only one point.  The authors state "The jagged appearance of the convective zones in 
+Figure 10 was due to numerical effects." Citing numerical effects (as is 
+frequently done in this community) makes astronomers lose confidence in 
+theoretical/numerical work in general and MESA in particular.  I would 
+ask that the authors try to probe this issue a little deeper. What 
+aspect of the numerical choices in MESA leads to this effect? Do these effects 
+become smaller with higher radial mesh, or a different choices of the time step? 
+I think this point is worth spending a little more time on, since the results are both dramatic, but marred by this unphysical behavior.
+
+
+Comments from author:
+
+We would like to thank the referee for the valuable comments, in particular those regarding the numerical effects we mention in the paper. We agree that such an statement must be supported for the simulation and results to be trusted. We have included three new curves in Fig.10 artificially shifted below 0.26 for the sake of clarity. We used the case of 5G to illustrate the numerical impact of increasing the spatial and/or temporal resolution in the modelling, although the conclusions are similar for any of the physical options studied. Notice that the larger the spatial resolution the smoother is the curve. The effect is less significant for the temporal resolution. The curve with 2x in both spatial and temporal resolution shows no difference with the case of 2x in only the number of shells. The 4x in spatial resolution points to the most appropriate number of shells to fine-track the evolution of the convective zone.
+However such high resolution implies to significantly increase the computation time, with no effect in the final conclusions of this work. Indeed, the size of the zigzag features is around 10^-3,  which is far below the convection timescale and Li abundances measured in the stellar surface. It is thus save to neglect such effects by using the original time/space resolution.

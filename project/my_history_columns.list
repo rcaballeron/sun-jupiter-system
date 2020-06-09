@@ -136,7 +136,7 @@
       ! you might want to get a more complete list of mixing regions by using the following
 
       !mixing_regions <integer> ! note: this includes regions where the mixing type is no_mixing.
-	   mixing_regions 40
+	   !mixing_regions 40
 
          ! the <integer> is the number of regions to report
          ! there will be 2*<integer> columns for this in the log file, 2 for each region.
@@ -322,7 +322,7 @@
       ! you might want to get a more complete list of burning regions by using the following
 
       !burning_regions <integer>
-	   burning_regions 80
+	   !burning_regions 80
          ! the <integer> is the number of regions to report
          ! there will be 2*<integer> columns for this in the log file, 2 for each region.
          ! the first column for a region gives int(sign(val)*log10(max(1,abs(val))))
@@ -344,7 +344,7 @@
 !# information about core and envelope
 
    !## helium core
-      !he_core_mass
+      he_core_mass
       !he_core_radius
       !he_core_lgT
       !he_core_lgRho
@@ -355,7 +355,7 @@
       !he_core_k
 
    !## carbon core
-      c_core_mass
+      !c_core_mass
       !c_core_radius
       !c_core_lgT
       !c_core_lgRho
@@ -366,7 +366,7 @@
       !c_core_k
 
    !## oxygen core
-      o_core_mass
+      !o_core_mass
       !o_core_radius
       !o_core_lgT
       !o_core_lgRho
@@ -377,7 +377,7 @@
       !o_core_k
 
    !## silicon core
-      si_core_mass
+      !si_core_mass
       !si_core_radius
       !si_core_lgT
       !si_core_lgRho
@@ -388,7 +388,7 @@
       !si_core_k
 
    !## iron core
-      fe_core_mass
+      !fe_core_mass
       !fe_core_radius
       !fe_core_lgT
       !fe_core_lgRho
@@ -399,7 +399,7 @@
       !fe_core_k
 
    !## neuton rich core
-      neutron_rich_core_mass
+      !neutron_rich_core_mass
       !neutron_rich_core_radius
       !neutron_rich_core_lgT
       !neutron_rich_core_lgRho
@@ -507,27 +507,27 @@
       !surface_cell_entropy ! in units of kerg per baryon
           ! old name was surface_entropy
 
-      !v_surf ! (cm/s)
+      v_surf ! (cm/s)
       !v_surf_km_s ! (km/s)
-      v_div_csound_surf ! velocity divided by sound speed at outermost grid point
+      !v_div_csound_surf ! velocity divided by sound speed at outermost grid point
       !v_div_csound_max ! max value of velocity divided by sound speed at face
 
       !v_surf_div_v_kh ! v_surf/(photosphere_r/kh_timescale)
       !surface_accel_div_grav ! (v - v_old)/dt divided by GM/R^2 at outermost grid point
 
-      !surf_avg_j_rot
-      !surf_avg_omega
-      !surf_avg_omega_crit
-      !surf_avg_omega_div_omega_crit
-      !surf_avg_v_rot ! km/sec rotational velocity at equator
-      !surf_avg_v_crit ! critical rotational velocity at equator
-      !surf_avg_v_div_v_crit
+      surf_avg_j_rot
+      surf_avg_omega
+      surf_avg_omega_crit
+      surf_avg_omega_div_omega_crit
+      surf_avg_v_rot ! km/sec rotational velocity at equator
+      surf_avg_v_crit ! critical rotational velocity at equator
+      surf_avg_v_div_v_crit
       !surf_avg_Lrad_div_Ledd
       !surf_avg_logT
       !surf_avg_logRho
       !surf_avg_opacity
 
-      !surf_escape_v ! cm/s
+      surf_escape_v ! cm/s
 
       !v_wind_Km_per_s ! Km/s
          ! = 1d-5*s% opacity(1)*max(0d0,-s% mstar_dot)/ &
@@ -621,11 +621,11 @@
    !## mass fractions near center
 
       ! the following controls automatically add columns for all of the isos that are in the current net
-      add_center_abundances
-      add_log_center_abundances
+      !add_center_abundances
+      !add_log_center_abundances
 
       ! individual central mass fractions (as many as desired)
-      !center h1
+      center h1
       !center he4
       !center c12
       !center o16
@@ -640,15 +640,20 @@
    !## mass fractions near surface
 
       ! the following controls automatically add columns for all of the isos that are in the current net
-      add_surface_abundances
-      add_average_abundances
+      !add_surface_abundances
+      !add_average_abundances
 
       ! individual surface mass fractions (as many as desired)
       !surface h1
       !surface he4
-      surface c12
-      surface o16
+      !surface c12
+      !surface o16
       ! etc.
+      surface h1
+      surface h2
+      surface he3
+      surface he4
+      surface li7
 
       ! individual log10 surface mass fractions (as many as desired)
 
@@ -659,8 +664,8 @@
    !## mass fractions for entire star
 
       ! the following controls automatically add columns for all of the isos that are in the current net
-      add_log_surface_abundances
-      add_log_average_abundances
+      !add_log_surface_abundances
+      !add_log_average_abundances
 
       ! individual average mass fractions (as many as desired)
       !average h1
@@ -677,7 +682,10 @@
 
       ! individual mass totals for entire star (as many as desired)
       total_mass h1
+      total_mass h2
+      total_mass he3
       total_mass he4
+      total_mass li7
       ! etc.
 
       !individial log10  mass totals for entire star (in Msun units)
@@ -731,13 +739,13 @@
 
 
    !## info about location where have max rate of hydrogen burning (PP and CNO)
-      !max_eps_h ! erg/g/s
+      max_eps_h ! erg/g/s
       !max_eps_h_lgT ! log10 temperature at location of max burn
       !max_eps_h_lgRho ! log10 density at location of max burn
-      !max_eps_h_m ! mass coordinate at location of max burn (Msun units)
+      max_eps_h_m ! mass coordinate at location of max burn (Msun units)
       !max_eps_h_xm ! mass exterior to location of max burn (Msun units)
-      !max_eps_h_lgP ! log10 pressure at location of max burn
-      !max_eps_h_lgR ! log10 radius at location of max burn
+      max_eps_h_lgP ! log10 pressure at location of max burn
+      max_eps_h_lgR ! log10 radius at location of max burn
       !max_eps_h_opacity ! opacity at location of max burn
 
    !## info about location where have max rate of helium burning

@@ -1,0 +1,28 @@
+
+Comments from author:
+First of all, we would like to thank you for your comments and suggestions. These have enabled us to substantially improve the content of the document. In addition, we would like to inform you that for the sake of better reading we have decided to remove some sections (1.1 and 1.2) that are not fundamental to the understanding of the text. As suggested, we have also undertaken a thorough revision of the English language editing. Finally, we would like to note that we have only highlighted in bold those sections that directly respond to your questions.
+
+Many thanks in advance for your time and support.
+
+Answers to questions and suggestions:
+
+(1) We agree with the comment and the text has been adjusted in the following way: "In the remainder of this paper, we introduce a semi-empirical approach for the calculation of the AML as a result of the torque applied by a magnetically-coupled stellar winds."
+
+(2) We agree that we abused the language, the text has been adjusted in the following way: "MESA uses the shellular approach \citep{Meynet1997} to account for hydrostatic effects of rotation into 1D stellar models."
+
+(3) It has been clearly stated from where eq. (11) (now it's equation (10)) is coming from. 
+
+(4) An explanatory note has been added to the section indicating the reason for the abrupt changes: "The jagged appearance of the convective zones in Figure 10 was due to numerical effects. The size of these features is of the order of 10^-3, which is negligible in terms of the size of the CZ and Li abundances measured on the surface."
+
+(5) We agree with the comment and acknowledge the abuse made of the language when referring to "demonstration". This reference has been deleted and the text adjusted to: "We have shown, through the different simulated stellar models, that the effects induced by the combination of both rotation and magnetic braking mechanisms offer a plausible way to reconcile the observational data with the theoretical models."
+
+(6) The required description has been added: "Thus, our approach points to reproduce the observed A(Li) and the solar rotational velocity at the same time."
+
+(7) As commented previously, the English language editing has been reviewed in detail.
+
+(8) Agreed and done.
+
+(9) The font size of the labels has been adjusted as required.
+
+(10) Vertical ranges adjusted as required.
+

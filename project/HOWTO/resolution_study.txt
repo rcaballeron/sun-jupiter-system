@@ -1,0 +1,142 @@
+
+https://lists.mesastar.org/pipermail/mesa-users/2014-August/004084.html
+https://lists.mesastar.org/pipermail/mesa-users/2012-September/001342.html
+
+I routinely use the control 'max_years_for_timestep' in my inlists.  You can of course also set it from your run_star_extras.
+
+Alternatively, if you'd like to go deeper, take a look at run1_star in star/job/run_star_support for the following lines:
+
+               result = star_evolve_step(id, first_try, just_did_backup)
+               if (result == keep_going) result = star_check_model(id)
+               if (result == keep_going) result = extras_check_model(id, id_extra)
+               if (result == keep_going) result = star_pick_next_timestep(id)            
+ 
+This happens for each step -- it does "star_evolve_step", then calls check_model in star, followed by your extras check_model.
+After those, it calls star_pick_next_timestep which sets s% dt_next, the timestep for the next step.
+
+Then after a few more housekeeping tasks, run1_star calls extras_finish_step. 
+So if you change dt_next in your extras_finish_step it will change the next timestep.
+You should probably only decrease dt_next -- trying to force larger timesteps is likely to give convergence problems.
+
+Hope that helps.
+
+Cheers,
+Bill
+
+
+[Mesa-users] resolution study
+https://lists.mesastar.org/pipermail/mesa-users/2012-April/000985.html
+
+Hi,
+
+My mesa sermon of the week is to remind people to check the effects of varying 
+the number of grid points and the size of timesteps in addition to varying the physics.
+Even though mesa/star produces an answer, it doesn't mean that it won't happily produce
+a quite different answer for a different resolution in time/space.  So if you find something
+that looks a bit strange (or a lot strange), check how it responds to a factor of 2 or so
+increase in number of grid points and number of steps before making up a story
+to explain it physically (or, heaven forbid, deciding it is a bug in mesa).
+
+mesh_delta_coeffs and varcontrol_target are the 1st things to vary.
+If the weirdness is still there at higher resolution, then, and only then, consider
+varying the physics to look for an explanation.   Don't decide you've found a great
+new thing (or even a great new bug in mesa) until you've checked to see if the result
+is still present when you look more closely by using more cells and more timesteps.
+
+Thanks,
+Bill
+
+
+https://lists.mesastar.org/pipermail/mesa-users/2019-March/009857.html
+
+i will mostly restrict my comments here to mass and temporal resolution
+with respect to convergence studies. 
+
+obviously if one's stellar model depends on free parameters, one
+should investigate the robustness of model to variations in
+the free parameters. an example of this is the radial stellar pulsation
+capability in section 2 of the recent mesa V instrument paper 
+(https://ui.adsabs.harvard.edu/?#abs/2019arXiv190301426P/abstract) 
+where variations with respect to the convective parameter sets are highlighted.
+
+controls for energy conservation are also discussed in the mesa V instrument paper,
+and i will not mention them further here.
+
+
+mess resolution:
+
+mesa has two coarse level controls for the mass resolution
+max_dq = 0.01
+mesh_delta_coeff = 1.0
+where the default values are given.
+
+max_dq is the maximum size for cell as fraction of total mass,
+perhaps more conveniently said as 1/max_dq being the minimum number of cells in a model.
+the default value means there is a minimum baseline grid of 100 cells.
+the smaller dq_max, the larger the minimum number of cells
+and a larger dq_max means a smaller number of cells.
+
+mesh_delta_coeff controls the relative magnitude of changes between adjacent cells.
+see appendix B.4 of the mesa II instrument paper, https://ui.adsabs.harvard.edu/?#abs/2013ApJS..208....4P/abstract ,
+for a more complete discussion. a larger value of mesh_delta_coeff increases the maximum allowed changes between
+cells and thus decreases the number of grid points. a smaller of mesh_delta_coeff does the opposite.
+
+my method of madness for mass resolution convergence studies is to set mesh_delta_coeff = 1.0 
+and vary the underlying grid max_dq = 0.01. for normal science exploration runs 
+i routinely use max_dq = 0.001 (1000 cells). when i get closer to publishing a model
+i always conduct a mass resolution study. usually i will run models with max_dq = 0.0005 (2000 cells) 
+and max_dq = 0.00025 (4000 cells) and plot the behavior of a quantity of interest with 
+respect to the number of cells. what i'm looking for, crudely, is that the quantity of interest 
+does not change with ever increasing amounts of mass resolution. based on what i see, 
+i may run additional models with max_dq = 0.002 (500 cells) or max_dq = 1.25e-4 (8000 cells).
+
+others may prefer to set or leave max_dq = 0.01, fixing the baseline grid,
+and varying mesh_delta_coeff. 
+
+mesa has numerous fine-level controls for the setting the mass resolution
+http://mesa.sourceforge.net/controls_defaults.html#mesh_adjustment .
+for example, if i am using log_kap_function_weight to put more cells
+where the opacity changes (e.g., He II or Z bump or sharp composition interfaces), 
+then, with everything else held fixed, i will explore how changing this mesh setting 
+impacts the quantity of interest.
+
+
+temporal resolution:
+
+mesa has a coarse level control for time resolution
+varcontrol_target = 1.0d-4
+where the default values is given.
+
+varcontrol_target modulates the relative variation in the structure from one model to the next. 
+if the relative variations from one time step to the next time step is larger than varcontrol_target,
+then the time step is reduced. if the the relative variations between time steps is smaller than
+varcontrol_target, then the time step is increased see appendix B.3 of the mesa II instrument paper, 
+https://ui.adsabs.harvard.edu/?#abs/2013ApJS..208....4P/abstract , fir a more complete discussion.
+
+for normal science exploration runs i routinely set varcontrol_target = 1.0d-4.
+when i get closer to publishing  a model i always conduct a temporal resolution study. 
+usually i will run models with varcontrol_target = 5.0d-5 and varcontrol_target = 1.0d-5,
+with the latter value requiring patience for the longer run times.
+
+mesa has numerous fine-level controls for the setting the time resolution,
+http://mesa.sourceforge.net/controls_defaults.html#timestep_controls .
+of these, my favorites are delta_lg_*_cntr_limit, delta_lg_*_cntr_max , and delta_lg_*_cntr_min
+as they enforce smaller time steps as a nuclear fuel depletes in the core. this is important for,
+say, helium burning when it is the final few percent of burnt helium that largely determine 
+the o16/c12 ratio of the ashes. as above, when i get closer to publication, i will always 
+explore how my "extra" time step controls impacts the quantity of interest.
+
+
+mass and temporal resolution:
+
+mesa is solving a discrete version of continuum partial differential equations.
+formal verification error models usually have a first-order term that couples the
+mass and time discreteness (e.g., error ~ b*(delta m * delta t)**a ).
+i have not yet explored the importance of this cross-term for mesa.
+if my experiences exploring this cross-term for various explicit hydro instruments 
+applies for mesa, then this cross term is smaller in magnitude and power than the
+first-order terms that isolate the individual space and time dependencies.
+
+------------------------------------------------------------------------------------
+
+These stars are in the process of migrating from fast to slow rotation, as they are being efficiently braked by strong stellar winds on the zero-age main sequence

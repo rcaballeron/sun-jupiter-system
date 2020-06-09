@@ -1,0 +1,150 @@
+Monthly Notices of the Royal Astronomical Society
+
+
+
+
+	 	
+Decision Letter (MN-19-4380-MJ)
+
+From:
+
+hklus@ras.ac.uk
+
+To:
+
+rcaballeron@ugr.correo.es
+
+CC:
+
+rcaballeron@ugr.correo.es, agh@ugr.es, aayala@ugr.es, jcsuarez@ugr.es
+
+Subject:
+
+MNRAS: MN-19-4380-MJ
+
+Body:
+
+Dear Mr Caballero,
+
+Copied below are the comments on your manuscript entitled "Study of the effects of magnetic braking on the lithium abundances of the Sun and solar-type stars", ref. MN-19-4380-MJ, which you submitted to Monthly Notices of the Royal Astronomical Society.
+
+Moderate revision of your manuscript is requested before it is reconsidered for publication.
+
+You should submit your revised version, together with your response to any comments from the editor and reviewer at https://mc.manuscriptcentral.com/mnras. The deadline for this is six months from today.
+
+Enter your Author Centre, where you will find your manuscript title listed under "Manuscripts with Decisions". Under "Actions," click on "Create a Revision". Please ensure that you also respond to any comments from the editor or assistant editor.
+
+IMPORTANT: do not submit your revised manuscript as a new paper!
+
+When submitting your revised manuscript, you should provide details of any changes you make to the original manuscript. Changes to the manuscript should also be highlighted (e.g. in bold or colour), to assist the referee and editor.
+
+We look forward to receiving your revised manuscript.
+
+Regards,
+
+Helen
+
+Dr Helen Klus
+Assistant Editor MNRAS
+Royal Astronomical Society
+
+cc: all listed co-authors.
+
+
+Assistant Editor's Comments:
+Editor:
+Comments to the Author:
+Please note that abstracts should only contain one paragraph.
+Please note that the word limit for abstracts in MNRAS is 250 words.
+Please ensure that all labels in figures are at least as large as the caption text; any smaller and they become too difficult to read.
+
+Reviewer's Comments:
+Reviewer: 1
+
+Comments to the Author
+
+This report is about the paper "Study of the effects of magnetic braking
+on the lithium abundances of the Sun and solar-type stars" by Caballero
+Navarro et al.  The authors evaluate (1) lithium abundances at the
+stellar surface and (2) convection zone depth produced by stellar
+evolution models that include angular momentum loss due to
+magnetic braking.  They use the MESA code to produce structures and
+evolutionary tracks for solar-like stars of one solar mass.
+
+Main questions and suggestions:
+(1) The authors state: "Today, standard models are not able to replicate
+in a satisfactory way the observed values of Li abundance on star
+surfaces with the predictions that these models yield. This lack of
+agreement makes us think that certain physical mechanisms that influence
+the destruction of Li are either being modeled improperly or simply not
+being taken into account, e.g. the magnetic braking. In view of these
+findings, it seems evident that there are still open questions to be
+resolved on the subject of the processes that participate, directly or
+indirectly, in the mixing mechanisms that are not incorporated in the
+standard stellar models. Therefore, it is essential a proper
+consideration of the interactions between rotation and magnetic fields
+when it comes to study the AM distribution."
+
+The authors then proceed to describe "a physically sound yet
+computationally simple model." It is not clear why this model is to be
+viewed as complete, physically sound, or better than any other model.
+The authors should explain this clearly or remove the imprecise
+language.
+
+(2)The authors state: "it has been proven sufficient to solve the
+equations in only one dimension, extrapolating the results to the other
+two".  In view of the statement in point (1) how has it been proven
+sufficient to model stars in one dimension?  The authors should provide
+such proof, or moderate their statement.
+
+(3) In section 2 and eq. (11) the authors describe a model for the
+angular momentum loss due to magnetic breaking.  Because of the lengthy
+discussion of different contributions to this model, it is not clear
+whether the authors have themselves contributed anything to the model.
+The authors should clearly and directly state whether they have made any
+new contribution to the model, or are using a model formulated entirely by
+others.
+
+(4) In Figure 10, there are abrupt changes to the size of the convection
+zone.  The authors should explain this physically, and what effect their
+model has on this behavior.  Is there observational data to compare with?
+
+(5)The authors state: "We have demonstrated that both rotation and MB
+induced effects must be taken into account in the theoretical models for
+a proper understanding and modelling of the evolution of stars." The
+authors have not done anything like this statement. What they have done
+is program a model in MESA, and through selecting the parameters, shown
+that they can come somewhat close to selected observational data points.
+The authors should remove this statement.
+
+(6)The authors state: "A combination of rotation during the PMS and MB
+effect during MS produces different, potentially more promising behavior
+than those produced by standard models." The authors should describe
+what "potentially more promising behavior" means.
+
+(7) English language editing is recommended.  Editing for colloquial use
+of language is also recommended.  The style is very wordy for technical
+writing, which makes the details difficult to sort out.
+
+(8) Since this work is focused on solar-like stars of one solar mass, any
+statements about massive stars are irrelevant.  I recommend that they be
+removed.
+
+(9) All Figures: labeling is significantly smaller than the text, and
+therefore unreadable.  The labels should be of the same size as the main
+text.
+
+(10) Figures 1, 2, 5, 14, A1, A2: The vertical range of the graphs is
+significantly larger than the data shown.  The data range should indicate the
+upper limit to the range in the graphs.
+
+Date Sent:
+
+03-Jan-2020
+
+ 
+
+
+ 
+© Clarivate Analytics |  © ScholarOne, Inc., 2020. All Rights Reserved.
+

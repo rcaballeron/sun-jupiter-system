@@ -1,0 +1,298 @@
+!low and intermediate mass
+
+&star_job
+
+      history_columns_file = 'my_history_columns.list'
+      profile_columns_file = 'my_profile_columns.list'
+      pause_before_terminate = .true.
+      ! display on-screen plots
+      pgstar_flag = .true.
+
+      ! Rotation off until near ZAMS
+      !change_rotation_flag = .false.
+      !new_rotation_flag = .true.
+      !new_surface_rotation_v = 5 ! solar (km sec^1) or new_omega_div_omega_crit = 0.057 (adimensional)
+      ! to turn on rotation when near zams
+      ! if rotation_flag is false and L_nuc_burn_total >= L_phot and this control > 0
+      ! then turn on rotation and set set_surf_rotation_v_step_limit to
+      ! the current model_number plus this control      
+      !set_near_zams_surface_rotation_v_steps = 10 
+
+      ! turn on rotation near zams
+      !near_zams_relax_omega_div_omega_crit = .true.  ! turn on rotation at zams
+      !num_steps_to_relax_rotation = 100              ! this number steps in the relaxation to the desired value   
+      !new_omega_div_omega_crit = 0.03d0              ! desired zams value of rotation
+
+      ! turn on PMS
+      new_rotation_flag = .true.
+      change_rotation_flag = .true.
+      !change_initial_rotation_flag = .true.
+      !new_omega_div_omega_crit = 0.0084 
+      !new_omega_div_omega_crit = 0.014 
+      !new_omega_div_omega_crit = 0.0196 
+      !new_omega_div_omega_crit = 0.028 
+      !new_omega_div_omega_crit = 0.0336 
+      new_omega_div_omega_crit = 0.032
+      set_omega_div_omega_crit = .true.
+
+      !new_surface_rotation_v = 20.0 ! km/s     
+      !set_surface_rotation_v = .true.      
+
+      
+!PMS
+      !begin with a pre-main sequence model  
+      create_pre_main_sequence_model = .true.
+      !Initial center temperature (must be below 1d6)  
+      pre_ms_T_c = 5d5
+
+!MISC. SETUP
+    
+      history_columns_file = 'my_history_columns.list'
+      save_model_filename = '1M_photosphere_tables_TAMS.mod'
+      save_model_when_terminate = .true.
+    
+      !parameters to be used for mass on/off for rotation
+      extras_lrpar = 3
+      extras_rpar(1) = 1.2 !full off
+      extras_rpar(2) = 1.8 !full on
+      extras_rpar(3) = 0.4 !omega_div_omega_crit
+
+!OPACITY, NETWORK, RATE, etc.
+
+      !network 
+      change_net = .true.
+      new_net_name = 'mesa_49.net'
+    
+      !first 100 models are run with simple_photosphere then switched to the following
+      extras_lcpar = 1
+      extras_cpar(1) = 'photosphere_tables'
+    
+      !opacities with AGSS09 abundances
+      kappa_file_prefix = 'a09'
+      kappa_lowT_prefix = 'lowT_fa05_a09p'
+      kappa_CO_prefix = 'a09_co'
+
+      !use jina
+      set_rates_preference = .true.
+      new_rates_preference = 2
+
+!CHANGE SOLAR ABUNDANCES
+
+      set_uniform_initial_composition = .true.
+      !initial_h1 = 7.154D-01
+      !initial_h2 = 0
+      !initial_he3 = 0
+      !initial_he4 = 2.703D-01
+      
+      !According to Choi's feedback
+      initial_h1 = 0.715399992
+      initial_h2 = 1.430799984e-05
+      initial_he3 = 4.48623528494e-05
+      initial_he4 = 0.270255137647
+      !!for initial Z = 0.0142857
+      !for initial Z = <<Z>>
+
+      initial_zfracs = 6 ! AGSS09_zfracs
+            
+/ ! end of star_job namelist
+
+&controls
+
+      report_why_dt_limits = .false.
+      initial_mass = 1.0
+
+!OUTPUT OPTIONS
+
+      history_interval = 1
+      terminal_interval = 10
+      write_header_frequency = 10
+      photo_digits = 5
+      !photostep = 250 replaced by photo_interval
+      photo_interval = 50
+
+      star_history_dbl_format = '(1pes32.16e3, 1x)'
+      star_history_int_format = '(i32, 1x)'
+      star_history_txt_format = '(a32, 1x)'
+
+      star_history_name = '1M_photosphere_history.data'
+      write_controls_info_with_profile = .false.
+      !write_profiles_flag = .false.
+      !This option is changed to true
+      write_profiles_flag = .true.
+
+!WHEN TO STOP
+
+      !in run_star_extras, it's set to H1 depletion in the core for low mass stars
+      !gamma_center_limit = 20.0
+
+      ! stop when the center mass fraction of h1 drops below this limit
+      xa_central_lower_limit_species(1) = 'h1'
+      xa_central_lower_limit(1) = 1d-9
+
+            
+!PHYSICS
+
+      !only for the first 100 model steps
+      which_atm_option = 'simple_photosphere'
+
+      use_Ledoux_criterion = .true.
+      alpha_semiconvection = 0.1
+      thermohaline_coeff = 666.0
+
+      !use with overshoot_f_above/below_xxxxxx_shell=0.0174 and
+      !use with overshoot_f0_above/below_xxxxxx_shell=0.0087
+      !mixing_length_alpha = 1.82 
+      !use with overshoot_f/f0_above/below_xxxxxx_shell=0.002
+      mixing_length_alpha = 1.7 
+
+      mlt_option = 'Henyey'
+    
+      !to help with convergence
+      okay_to_reduce_gradT_excess = .true.
+      Pextra_factor = 2.0
+
+      !H core overshoot calibrated to M67
+      overshoot_f_above_nonburn_core = 0.016
+      overshoot_f_above_burn_h_core  = 0.016
+      overshoot_f_above_burn_he_core = 0.016
+      overshoot_f_above_burn_z_core  = 0.016
+      overshoot_f0_above_nonburn_core = 0.008
+      overshoot_f0_above_burn_h_core  = 0.008
+      overshoot_f0_above_burn_he_core = 0.008
+      overshoot_f0_above_burn_z_core  = 0.008
+
+      !envelope overshoot calibrated to the sun
+      overshoot_f_above_nonburn_shell = 0.002
+      overshoot_f_below_nonburn_shell = 0.002
+      overshoot_f_above_burn_h_shell  = 0.002
+      overshoot_f_below_burn_h_shell  = 0.002
+      overshoot_f_above_burn_he_shell = 0.002
+      overshoot_f_below_burn_he_shell = 0.002
+      overshoot_f_above_burn_z_shell  = 0.002
+      overshoot_f_below_burn_z_shell  = 0.002
+      overshoot_f0_above_nonburn_shell = 0.002
+      overshoot_f0_below_nonburn_shell = 0.002
+      overshoot_f0_above_burn_h_shell  = 0.002
+      overshoot_f0_below_burn_h_shell  = 0.002
+      overshoot_f0_above_burn_he_shell = 0.002
+      overshoot_f0_below_burn_he_shell = 0.002
+      overshoot_f0_below_burn_z_shell  = 0.002
+      overshoot_f0_above_burn_z_shell  = 0.002
+
+      !enhance `overshoot_f_below_nonburn_shell` by this factor during 3DUP in TPAGB
+      overshoot_below_noburn_shell_factor = 10
+      
+      !CO enhanced opacities
+      use_Type2_opacities = .true.
+      kap_Type2_full_off_X = 1d-3
+      kap_Type2_full_on_X = 1d-6
+      Zbase = 0.00 ! this is set to Z of the star in run_star_extras.f
+    
+      !rotational mixing if applicable
+      D_SH_factor =  1.0
+      D_SSI_factor = 1.0
+      D_ES_factor =  1.0
+      D_GSF_factor = 1.0
+      D_DSI_factor = 1.0
+      D_ST_factor = 0.0
+      am_D_mix_factor = 0.033
+      am_gradmu_factor = 0.05
+
+      ! mass loss       
+      cool_wind_RGB_scheme = 'Reimers'
+      cool_wind_AGB_scheme = 'Blocker'
+      RGB_to_AGB_wind_switch = 1d-4
+      Reimers_scaling_factor = 0.1
+      Blocker_scaling_factor = 0.2
+      max_wind = 1d-3
+
+      ! toggle element diffusion
+      do_element_diffusion = .true.
+      diffusion_dt_limit = 3.15e13
+      diffusion_min_T_at_surface = 1d3
+      ! If true, don't lump elements into classes for diffusion. 
+      ! Instead, each isotope in the network is treated as its 
+      ! own separate class. This can cause significant slowdowns 
+      ! for large nets, so it is off by default.
+      ! diffusion_use_full_net = .true.  <--TFM option
+      diffusion_use_full_net = .true.
+      diffusion_use_cgs_solver = .false.
+
+
+      radiation_turbulence_coeff = 1.0
+    
+      !to help with breathing pulses
+      include_dmu_dt_in_eps_grav = .true.
+
+!CORE MASS DEFINITION
+
+      he_core_boundary_h1_fraction = 1d-4
+      c_core_boundary_he4_fraction = 1d-4
+      o_core_boundary_c12_fraction = 1d-4
+        
+!MESH AND TIMESTEP PARAMETERS
+
+      !A larger value increases the max allowed deltas and decreases the number of grid points.
+      !mesh_delta_coeff = 1.0 !Default value 1.0
+      mesh_delta_coeff = 0.5
+      
+      !This is the target value for relative variation in the structure from one model to the next.
+      !varcontrol_target = 1d-4 !Default value 1d-4
+      varcontrol_target = 1d-5 !Default value 1d-4
+
+      !Maximum number of grid points allowed.
+      max_allowed_nz = 50000 !Default value 8000
+    
+      !better resolution of the Henyey hook
+      !lg_XH_cntr is log10(h1 mass fraction at center). 
+      !Small timesteps as the center hydrogen is exhausted.
+      !Ignore changes in lg_XH_cntr if value is more than this.
+      delta_lg_XH_cntr_max = -1 !Default value -3
+
+      ! limit for magnitude of max change
+      !Limit for magnitude of max change in log10 temperature at photosphere
+      delta_lgTeff_limit = 0.005
+      delta_lgTeff_hard_limit = 0.01
+      !Limit for magnitude of change in log10(L/Lsun)
+      delta_lgL_limit = 0.02 
+      delta_lgL_hard_limit = 0.05
+    
+      !multiply mesh_delta_coeff in overshooting regions by this factor
+      xtra_coef_os_above_nonburn = 0.5
+      xtra_coef_os_below_nonburn = 0.5
+      xtra_coef_os_above_burn_h = 0.5
+      xtra_coef_os_below_burn_h = 0.5
+      xtra_coef_os_above_burn_he = 0.5
+      xtra_coef_os_below_burn_he = 0.5
+      xtra_coef_os_above_burn_z = 0.5
+      xtra_coef_os_below_burn_z = 0.5
+
+!HOOKs
+      ! make use of 'hooks'
+      use_other_torque = .true.
+      use_other_wind = .true.
+
+      ! **********************************
+      ! Magnetic braking input parameters
+      ! **********************************
+      
+      x_ctrl(1) = 3.0d0 ! B - magnetic field torque (G)
+      x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
+
+      ! How to redistribute the loss of angular momentum
+      ! 0 = Only among the zones of outmost convective zone
+      ! 1 = till the outmost zone, r(1)
+      x_integer_ctrl(1) = 0 
+
+      x_logical_ctrl(1) = .false. ! debug flag for use_other_torque routine
+      x_logical_ctrl(2) = .false. ! debug flag for reset_other_torque, if true, jdot is discarded
+      x_logical_ctrl(3) = .false. ! debug flag for get_convective_info
+      x_logical_ctrl(4) = .false.  ! debug flag for get_core_info
+      ! Controls if the mb routine is executed only when a radiative core is develop
+      ! .false. = don't wait, 
+      ! .true. = wait
+      x_logical_ctrl(5) = .true. 
+      x_logical_ctrl(6) = .true.  !keep_on_rad_core
+
+      
+/ ! end of controls namelist

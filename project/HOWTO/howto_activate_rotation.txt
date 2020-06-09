@@ -1,0 +1,36 @@
+hi roque,
+
+the default values are 
+
+new_rotation_flag = .false.
+change_rotation_flag = .false.
+change_initial_rotation_flag = .false.
+
+for now, consider the first two controls.
+to activate rotation 
+
+change_rotation_flag = .true.
+new_rotation_flag = .true.
+
+to deactivate rotation after it has been turned on
+
+change_rotation_flag = .true.
+new_rotation_flag = .false.
+
+to leave rotation in whatever on/off state it is in
+
+change_rotation_flag = .false.
+
+these two controls enable one to alter a model 
+at the start of a run (./rn) or after a restart (./re). 
+controls that only apply to the first model have ‘initial’ 
+in their names and are ignored for restarts, for example
+change_initial_rotation_flag.
+
+there is also a family of controls that will automatically change the flags for you.
+for example, to activate rotation when the model star is near the main-sequence:
+
+! turn on rotation near zams
+      near_zams_relax_omega_div_omega_crit = .true.  ! turn on rotation at zams
+      num_steps_to_relax_rotation = 100              ! this number steps in the relaxation to the desired value   
+      new_omega_div_omega_crit = 0.50d0              ! desired zams value of rotation
