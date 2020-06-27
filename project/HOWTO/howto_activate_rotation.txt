@@ -9,8 +9,8 @@ change_initial_rotation_flag = .false.
 for now, consider the first two controls.
 to activate rotation 
 
-change_rotation_flag = .true.
-new_rotation_flag = .true.
+change_rotation_flag = .true.  <- Is it allow to change the rotation flag?
+new_rotation_flag = .true. <-Activate (true) or deactivate (false) rotation
 
 to deactivate rotation after it has been turned on
 
