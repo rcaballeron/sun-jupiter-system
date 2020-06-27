@@ -35,12 +35,16 @@
       real(dp) :: original_diffusion_dt_limit
       real(dp) :: burn_check = 0.0
       real(dp) :: eps_threshold = 0.1d-100
+      real(dp) :: disk_lt
+      real(dp) :: disk_omega
       logical :: debug_use_other_torque = .false.
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
       logical :: debug_get_core_info = .false.
       logical :: keep_on_rad_core = .false.
       logical :: rad_core_developed = .false.
+      integer :: idx_low_x_ctrl = 20
+      integer :: idx_high_x_ctrl = 46
 
       type star_zone_info
        real(dp) :: &
@@ -76,14 +80,15 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-         write(*,*) '*******  Version: 2.0.2'
-         write(*,*) '*******  Dec. 15: Magnetic braking routine'
+         write(*,*) '*******  Version: 2.2.0'
+         write(*,*) '*******  09.06.2020: Disk locking & Magnetic braking routines'
          write(*,*) '*******  Roque Caballero'
          
          original_diffusion_dt_limit = s% diffusion_dt_limit
          !s% other_wind => Reimers_then_VW
          s% other_wind => Reimers_then_Blocker
-         s% other_torque => other_torque_mag_brk
+         !s% other_torque => other_torque_mag_brk
+         s% other_torque => other_torque_hook
 
          !debug flags
          debug_use_other_torque = s% x_logical_ctrl(1)
@@ -97,6 +102,11 @@
 
          !eps thershold
          eps_threshold = s% x_ctrl(2)
+
+         !disk locking
+         disk_lt = s% x_ctrl(3)
+         disk_omega = s% x_ctrl(4)
+
 
       
          ! Once you have set the function pointers you want,
@@ -115,6 +125,57 @@
          
          s% job% warn_run_star_extras =.false.             
       end subroutine extras_controls
+
+      subroutine other_torque_hook(id, ierr)
+         use const_def
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         !real(dp) :: disk_lt
+
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+
+         !disk_lt = s% x_ctrl(3)
+
+         if ((disk_lt > 0) .and. (s% star_age < disk_lt) .and. (s% omega(1) > disk_omega)) then
+            call other_torque_disk_lock(id, ierr)
+         else
+            call other_torque_mag_brk(id, ierr)
+         endif
+         
+      end subroutine other_torque_hook
+
+      ! This routine implements a disk locking effect based on 
+      ! Marc Pinsonneault Evolution of low mass stars MESA 2019 
+      ! Summer school lecture.
+      subroutine other_torque_disk_lock(id, ierr)
+         use const_def
+         integer, intent(in) :: id
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         integer :: j
+
+         
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+
+         do j=1,s% nz
+            s% omega(j) = disk_omega
+         end do
+
+         s% extra_omegadot(:) = 0
+         s% extra_jdot(:) = 0
+
+         if (debug_use_other_torque) then
+               write(*,*) "other_torque_disk_lock invoked:"
+               do j=1, s% nz
+                     write(*,*) "omega(", j, ")=", s% omega(j), "i_rot(", j, ")=", s% i_rot(j)
+               end do
+         end if
+      end subroutine other_torque_disk_lock
 
       ! This routine implements a magnetic braking effect based on
       ! Matteos MESA star summer school. Additionally, this implementation
@@ -148,7 +209,7 @@
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
          activated = 0
-         call reset_x_ctrl(s, 20, 45)
+         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
          call reset_core_info(core_info_ptr)
          call reset_convective_info(sz_info_ptr)
 
@@ -449,6 +510,7 @@
 
                  
                  !if the star is fully convective, then the bottom boundary is the center
+                 !if sz_info% bot_zone remains equal to 0 means that the bottom limit were not yet found
                  if ((sz_info% bot_zone == 0) .and. (sz_info% top_zone > 0)) then
                      sz_info% bot_zone = nz
                  end if
@@ -555,6 +617,7 @@
          do k=nz, 1, -1
             ! When the relese nuclear energy is below than the value in the if comparison, it means that there is not H fusion
             ! The top zone of the core was found.
+            ! NB: nz is the inner most zone and 1 the outter most one.
             if (s% eps_nuc_categories(ipp, k) + s% eps_nuc_categories(icno, k) < eps_threshold) then
                if (k /= nz) then
                   core_info% top_radius = s% r(k+1)
@@ -596,65 +659,30 @@
                "bot_vrot=", core_info% bot_vrot, "top_vrot=", core_info% top_vrot, "d_vrot=", core_info% d_vrot
                
          end if
-   end subroutine get_core_info
+      end subroutine get_core_info
       
       integer function extras_startup(id, restart, ierr)
-      integer, intent(in) :: id
-      logical, intent(in) :: restart
-      integer, intent(out) :: ierr
-      type (star_info), pointer :: s
-      real(dp) :: core_ov_full_on, core_ov_full_off, frac, rot_full_off, rot_full_on, frac2, vct30, vct100
-      ierr = 0
-      call star_ptr(id, s, ierr)
-      if (ierr /= 0) return
-      extras_startup = 0
-      if (.not. restart) then
-         call alloc_extra_info(s)
-      else                      ! it is a restart
-         call unpack_extra_info(s)
-      end if
-      
-!     set OPACITIES: Zbase for Type 2 Opacities automatically to the Z for the star
-      s% Zbase = 1.0 - (s% job% initial_h1 + s% job% initial_h2 + &
-      s% job% initial_he3 + s% job% initial_he4)
-      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      write(*,*) 'Zbase for Type 2 Opacities: ', s% Zbase
-      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      
-!     set ROTATION: extra param are set in inlist: star_job
-      !rot_full_off = s% job% extras_rpar(1) !1.2
-      !rot_full_on = s% job% extras_rpar(2) !1.8
-      
-      !if (s% job% extras_rpar(3) > 0.0) then
-      !   if (s% star_mass < rot_full_off) then
-      !      frac2 = 0
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !      write(*,*) 'no rotation'
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !   else if (s% star_mass >= rot_full_off .and. s% star_mass <= rot_full_on) then
-      !      frac2 = (s% star_mass - rot_full_off) / &
-      !      (rot_full_on - rot_full_off)
-      !      frac2 = 0.5d0*(1 - cos(pi*frac2))
-      !      s% job% set_near_zams_omega_div_omega_crit_steps = 10
-      !      s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !      write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !   else
-      !      frac2 = 1.0
-      !      s% job% set_near_zams_omega_div_omega_crit_steps = 10
-      !      s% job% new_omega_div_omega_crit = s% job% extras_rpar(3) * frac2 !nominally 0.4
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !      write(*,*) 'new omega_div_omega_crit, fraction', s% job% new_omega_div_omega_crit, frac2
-      !      write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !   end if
-      !else
-      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !   write(*,*) 'no rotation'
-      !   write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-      !end if
-      
-      
+         integer, intent(in) :: id
+         logical, intent(in) :: restart
+         integer, intent(out) :: ierr
+         type (star_info), pointer :: s
+         real(dp) :: core_ov_full_on, core_ov_full_off, frac, rot_full_off, rot_full_on, frac2, vct30, vct100
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+         extras_startup = 0
+         if (.not. restart) then
+            call alloc_extra_info(s)
+         else                      ! it is a restart
+            call unpack_extra_info(s)
+         end if
+         
+   !     set OPACITIES: Zbase for Type 2 Opacities automatically to the Z for the star
+         s% Zbase = 1.0 - (s% job% initial_h1 + s% job% initial_h2 + &
+         s% job% initial_he3 + s% job% initial_he4)
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+         write(*,*) 'Zbase for Type 2 Opacities: ', s% Zbase
+         write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
       end function extras_startup
       
 !     returns either keep_going, retry, backup, or terminate.

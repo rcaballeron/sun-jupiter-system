@@ -23,17 +23,23 @@
       !num_steps_to_relax_rotation = 100              ! this number steps in the relaxation to the desired value   
       !new_omega_div_omega_crit = 0.03d0              ! desired zams value of rotation
 
-      ! turn on PMS
+      ! turn rotation on PMS
       new_rotation_flag = .true.
       change_rotation_flag = .true.
       !change_initial_rotation_flag = .true.
+
+      ! set uniforms omega
+      set_omega = .true.
+      new_omega = 9.090256e-6
+
+      !set_omega_div_omega_crit = .true.      
       !new_omega_div_omega_crit = 0.0084 
       !new_omega_div_omega_crit = 0.014 
       !new_omega_div_omega_crit = 0.0196 
       !new_omega_div_omega_crit = 0.028 
       !new_omega_div_omega_crit = 0.0336 
-      new_omega_div_omega_crit = 0.032
-      set_omega_div_omega_crit = .true.
+      !new_omega_div_omega_crit = 0.032
+            
 
       !new_surface_rotation_v = 20.0 ! km/s     
       !set_surface_rotation_v = .true.      
@@ -50,12 +56,6 @@
       history_columns_file = 'my_history_columns.list'
       save_model_filename = '1M_photosphere_tables_TAMS.mod'
       save_model_when_terminate = .true.
-    
-      !parameters to be used for mass on/off for rotation
-      extras_lrpar = 3
-      extras_rpar(1) = 1.2 !full off
-      extras_rpar(2) = 1.8 !full on
-      extras_rpar(3) = 0.4 !omega_div_omega_crit
 
 !OPACITY, NETWORK, RATE, etc.
 
@@ -129,6 +129,8 @@
       xa_central_lower_limit_species(1) = 'h1'
       xa_central_lower_limit(1) = 1d-9
 
+      !max_age = 2.5d5
+
             
 !PHYSICS
 
@@ -141,9 +143,9 @@
 
       !use with overshoot_f_above/below_xxxxxx_shell=0.0174 and
       !use with overshoot_f0_above/below_xxxxxx_shell=0.0087
-      !mixing_length_alpha = 1.82 
+      mixing_length_alpha = 1.82 
       !use with overshoot_f/f0_above/below_xxxxxx_shell=0.002
-      mixing_length_alpha = 1.7 
+      !mixing_length_alpha = 1.7 
 
       mlt_option = 'Henyey'
     
@@ -161,23 +163,41 @@
       overshoot_f0_above_burn_he_core = 0.008
       overshoot_f0_above_burn_z_core  = 0.008
 
-      !envelope overshoot calibrated to the sun
-      overshoot_f_above_nonburn_shell = 0.002
-      overshoot_f_below_nonburn_shell = 0.002
-      overshoot_f_above_burn_h_shell  = 0.002
-      overshoot_f_below_burn_h_shell  = 0.002
-      overshoot_f_above_burn_he_shell = 0.002
-      overshoot_f_below_burn_he_shell = 0.002
-      overshoot_f_above_burn_z_shell  = 0.002
-      overshoot_f_below_burn_z_shell  = 0.002
-      overshoot_f0_above_nonburn_shell = 0.002
-      overshoot_f0_below_nonburn_shell = 0.002
-      overshoot_f0_above_burn_h_shell  = 0.002
-      overshoot_f0_below_burn_h_shell  = 0.002
-      overshoot_f0_above_burn_he_shell = 0.002
-      overshoot_f0_below_burn_he_shell = 0.002
-      overshoot_f0_below_burn_z_shell  = 0.002
-      overshoot_f0_above_burn_z_shell  = 0.002
+      !envelope overshoot calibrated to the sun, use with alpha MTL = 1.82
+      overshoot_f_above_nonburn_shell = 0.0174
+      overshoot_f_below_nonburn_shell = 0.0174
+      overshoot_f_above_burn_h_shell  = 0.0174
+      overshoot_f_below_burn_h_shell  = 0.0174
+      overshoot_f_above_burn_he_shell = 0.0174
+      overshoot_f_below_burn_he_shell = 0.0174
+      overshoot_f_above_burn_z_shell  = 0.0174
+      overshoot_f_below_burn_z_shell  = 0.0174
+      overshoot_f0_above_nonburn_shell = 0.0087
+      overshoot_f0_below_nonburn_shell = 0.0087
+      overshoot_f0_above_burn_h_shell  = 0.0087
+      overshoot_f0_below_burn_h_shell  = 0.0087
+      overshoot_f0_above_burn_he_shell = 0.0087
+      overshoot_f0_below_burn_he_shell = 0.0087
+      overshoot_f0_below_burn_z_shell  = 0.0087
+
+
+      !envelope overshoot, use with alpha MTL = 1.7
+      !overshoot_f_above_nonburn_shell = 0.002
+      !overshoot_f_below_nonburn_shell = 0.002
+      !overshoot_f_above_burn_h_shell  = 0.002
+      !overshoot_f_below_burn_h_shell  = 0.002
+      !overshoot_f_above_burn_he_shell = 0.002
+      !overshoot_f_below_burn_he_shell = 0.002
+      !overshoot_f_above_burn_z_shell  = 0.002
+      !overshoot_f_below_burn_z_shell  = 0.002
+      !overshoot_f0_above_nonburn_shell = 0.002
+      !overshoot_f0_below_nonburn_shell = 0.002
+      !overshoot_f0_above_burn_h_shell  = 0.002
+      !overshoot_f0_below_burn_h_shell  = 0.002
+      !overshoot_f0_above_burn_he_shell = 0.002
+      !overshoot_f0_below_burn_he_shell = 0.002
+      !overshoot_f0_below_burn_z_shell  = 0.002
+      !overshoot_f0_above_burn_z_shell  = 0.002
 
       !enhance `overshoot_f_below_nonburn_shell` by this factor during 3DUP in TPAGB
       overshoot_below_noburn_shell_factor = 10
@@ -234,14 +254,21 @@
 
       !A larger value increases the max allowed deltas and decreases the number of grid points.
       !mesh_delta_coeff = 1.0 !Default value 1.0
-      mesh_delta_coeff = 0.5
+      mesh_delta_coeff = 0.5 !Used in paper
+      !mesh_delta_coeff = 0.25 !Used in extended graphic
+      !mesh_delta_coeff = 0.12 !Used in extended graphic
+
       
       !This is the target value for relative variation in the structure from one model to the next.
-      !varcontrol_target = 1d-4 !Default value 1d-4
-      varcontrol_target = 1d-5 !Default value 1d-4
+      varcontrol_target = 1d-4 !Default value 1d-4
+      !varcontrol_target = 1d-5 !Used in paper
+      !varcontrol_target = 5d-6 !Used in extended graphic
+
+
 
       !Maximum number of grid points allowed.
-      max_allowed_nz = 50000 !Default value 8000
+      max_allowed_nz = 8000 !Default value 8000
+      !max_allowed_nz = 50000
     
       !better resolution of the Henyey hook
       !lg_XH_cntr is log10(h1 mass fraction at center). 
@@ -294,5 +321,11 @@
       x_logical_ctrl(5) = .true. 
       x_logical_ctrl(6) = .true.  !keep_on_rad_core
 
+      ! **********************************
+      ! Disk locking input parameters
+      ! **********************************      
+      x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1 for deactivating the routine
+      !x_ctrl(3) = -1.0
+      x_ctrl(4) = 9.090256e-6 ! disk omega in rad/s
       
 / ! end of controls namelist
