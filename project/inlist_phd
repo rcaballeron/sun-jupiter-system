@@ -31,19 +31,20 @@
       ! Use block1 or block2 for setting omega
 ! Block 1
       ! set uniforms omega
-      set_omega = .true.
-      new_omega = 9.090256e-6
+      !set_omega = .true.
+      !new_omega = 9.090256e-6
 
 ! End Block 1
 
 ! Block 2
-      !set_omega_div_omega_crit = .true.      
+      set_omega_div_omega_crit = .true.      
       !new_omega_div_omega_crit = 0.0084 
       !new_omega_div_omega_crit = 0.014 
       !new_omega_div_omega_crit = 0.0196 
       !new_omega_div_omega_crit = 0.028 
       !new_omega_div_omega_crit = 0.0336 
       !new_omega_div_omega_crit = 0.032
+      new_omega_div_omega_crit = 0.0314
       
 ! End Block 2      
 
@@ -259,8 +260,8 @@
 !MESH AND TIMESTEP PARAMETERS
 
       !A larger value increases the max allowed deltas and decreases the number of grid points.
-      !mesh_delta_coeff = 1.0 !Default value 1.0
-      mesh_delta_coeff = 0.5 !Used in paper
+      mesh_delta_coeff = 1.0 !Default value 1.0
+      !mesh_delta_coeff = 0.5 !Used in paper
       !mesh_delta_coeff = 0.25 !Used in extended graphic
       !mesh_delta_coeff = 0.12 !Used in extended graphic
 
@@ -321,6 +322,7 @@
       x_logical_ctrl(2) = .false. ! debug flag for reset_other_torque, if true, jdot is discarded
       x_logical_ctrl(3) = .false. ! debug flag for get_convective_info
       x_logical_ctrl(4) = .false.  ! debug flag for get_core_info
+      x_logical_ctrl(7) = .false.  ! debug flag for new_alpha
       ! Controls if the mb routine is executed only when a radiative core is develop
       ! .false. = don't wait, 
       ! .true. = wait
@@ -330,8 +332,8 @@
       ! **********************************
       ! Disk locking input parameters
       ! **********************************      
-      x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1 for deactivating the routine
-      !x_ctrl(3) = -1.0
+      !x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1 for deactivating the routine
+      x_ctrl(3) = -1.0
       x_ctrl(4) = 9.090256e-6 ! disk omega in rad/s
       
 / ! end of controls namelist

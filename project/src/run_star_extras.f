@@ -41,6 +41,7 @@
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
       logical :: debug_get_core_info = .false.
+      logical :: debug_new_alpha = .false.
       logical :: keep_on_rad_core = .false.
       logical :: rad_core_developed = .false.
       integer :: idx_low_x_ctrl = 20
@@ -95,6 +96,7 @@
          debug_reset_other_torque = s% x_logical_ctrl(2)
          debug_get_cz_info = s% x_logical_ctrl(3)
          debug_get_core_info = s% x_logical_ctrl(4)
+         debug_new_alpha = s% x_logical_ctrl(7)
 
          !If true, once the radiative core is developed, report always true
          !in is_radiative_core function
@@ -115,7 +117,8 @@
          ! Uncomment these lines if you wish to use the functions in this file,
          ! otherwise we use a null_ version which does nothing.
          s% extras_startup => extras_startup
-         s% extras_check_model => extras_check_model
+         s% extras_start_step => extras_start_step
+         s% extras_check_model => extras_check_model         
          s% extras_finish_step => extras_finish_step
          s% extras_after_evolve => extras_after_evolve
          s% how_many_extra_history_columns => how_many_extra_history_columns
@@ -660,13 +663,36 @@
                
          end if
       end subroutine get_core_info
+
+      !Calibration of the mixing-length parameter alpha for the MLT
+      !and FST models by matching with CO5BOLD models
+      real function calculate_alpha(s) result(new_alpha)
+         type (star_info), pointer, intent(in) :: s
+
+         !Parameters taken from Table 2 - MTL(BV) Eddington
+         real(dp) :: a0 = 1.790295, a1 = -0.149542, a2 = 0.069574, a3 = -0.008292
+         real(dp) :: a4 = 0.013165, a5 = 0.080333, a6 = -0.033066
+         real(dp) :: x, y
+
+         !f(x, y) = a0 + (a1 + (a3 + a5x + a6y)x + a4y)x + a2y
+         !where x ≡ (Teff−5777)/1000 and y ≡ log g − 4.44
+         !Namely, x and y represent deviation from the solar effective 
+         !temperature and surface gravity, respectively.
+         x = (s% Teff - 5777) / 1000
+         y = s% log_surface_gravity - 4.44
+         !Equation 4
+         new_alpha = a0 + (a1 + (a3 + a5*x + a6*y)*x + a4*y)*x + a2*y
+
+         if (debug_new_alpha) then
+            write(*,*) 'x', x, 'y', y, 'mixing_length_alpha', s% mixing_length_alpha, 'new_alpha', new_alpha
+         end if
+      end function
       
       integer function extras_startup(id, restart, ierr)
          integer, intent(in) :: id
          logical, intent(in) :: restart
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
-         real(dp) :: core_ov_full_on, core_ov_full_off, frac, rot_full_off, rot_full_on, frac2, vct30, vct100
          ierr = 0
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
@@ -684,6 +710,21 @@
          write(*,*) 'Zbase for Type 2 Opacities: ', s% Zbase
          write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
       end function extras_startup
+
+      integer function extras_start_step(id, id_extra)
+         integer, intent(in) :: id, id_extra
+         integer :: ierr
+         real(dp) :: x, y, new_alpha
+         type (star_info), pointer :: s
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+         extras_start_step = keep_going
+
+         s% mixing_length_alpha = calculate_alpha(s);
+
+      end function extras_start_step
+
       
 !     returns either keep_going, retry, backup, or terminate.
       integer function extras_check_model(id, id_extra)
@@ -735,7 +776,7 @@
             how_many_extra_history_columns = 0
 
             !if (s% use_other_torque .eqv. .true.) then
-                  how_many_extra_history_columns = 28
+                  how_many_extra_history_columns = 29
             !end if
       end function how_many_extra_history_columns
       
@@ -864,6 +905,9 @@
         !core_bot_omega
         names(28) = 'core_bot_omega'
         vals(28) = s% x_ctrl(46)
+
+        names(29) = 'mlt_alpha'
+        vals(29) = s% mixing_length_alpha
 
       !end if
 

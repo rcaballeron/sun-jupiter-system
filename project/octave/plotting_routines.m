@@ -15,8 +15,11 @@ global log_R_col          = 35;
 global surf_avg_omega_col = 39;
 global surf_avg_v_rot_col = 42;
 global center_h1_col      = 54;
-global surface_h1_col     = 55;
-global surface_li_col     = 59;
+#global surface_h1_col     = 55;
+#global surface_li_col     = 59;
+global surface_h1_col     = 175;
+global surface_li_col     = 179;
+
 global mb_activated_col   = 72;
 global j_dot_col          = 77;
 global sz_top_radius_col  = 79;
@@ -30,6 +33,7 @@ global sz_bot_omega_col   = 88;
 global core_top_radius_col= 90;
 global core_bot_radius_col= 91;
 global core_top_omega_col = 98;
+global alpha_mlt_col      = 220
 
 global num_mix_regions    = 10;
 global mix_type_ini_col   = 17;
@@ -42,8 +46,8 @@ global filename = '1M_photosphere_history.data';
 %global filename = 'annex2B/1M_photosphere_history.data';
 global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
-global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';];
-global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';'0312crit_dl';'0314crit_dl';'032crit_dl';];
+global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha'];
+global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';'0312crit_dl';'0314crit_dl';'032crit_dl';'9_090256e-6_dl'];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
 
 %Array indexes
@@ -73,7 +77,10 @@ global idx_031crit  = 9;
 global idx_0312crit  = 10;
 global idx_0314crit  = 11;
 global idx_032crit  = 12;
-%The following with mlt=1.82 and disk locking
+global idx_0336crit_alpha = 13;
+%The following with mlt=var and disk locking
+global idx_9_090256e_6_dl  = 13;
+
 
 
 %Sun constants
@@ -500,6 +507,36 @@ function plot_m_l_r(A, color, width, ytick, axis_limits)
 
 end
 
+function plot_alpha_mlt(A, color, width, ytick, axis_limits)
+  global tick_font_size
+  
+  %Plot values
+  plot(A(:,1), A(:,2), color, 'linewidth', width);
+
+  %Axis scales
+  set(gca, 'XScale', 'log');
+  
+  set(gca,'YTick',axis_limits(3):ytick:axis_limits(4));
+  
+  %Axis limits
+  axis(axis_limits);
+  
+  %Axis ticks
+  %set(gca,'YTick',1.0:ytick:4.5);
+  
+  xticks = get (gca, "xtick"); 
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  set (gca, "xticklabel", xlabels) ;
+  
+  yticks = get (gca, "ytick"); 
+  ylabels = arrayfun (@(x) sprintf ("%2.2f", x), yticks, "uniformoutput", false); 
+  set (gca, "yticklabel", ylabels);
+  
+  set(gca, 'fontsize', tick_font_size);
+
+end
+
+
 function plot_kipperhahn(A, B, color, width, ytick, axis_limits)
   global tick_font_size;
   global num_mix_regions;
@@ -632,6 +669,8 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   labels = {};
   
   f = format_figure();
+  
+  rotational_vels
   
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
@@ -1261,6 +1300,77 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
   
 end
 
+function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+  global data_parent_folder;
+  global filename;
+  global star_age_col;
+  global alpha_mlt_col;
+  global header_lines;
+  global colors;
+  global title_font_size;
+  global axis_font_size;
+  global legend_font_size;
+  global line_width;
+  
+  hold('on');
+  labels = {};
+  
+  f = format_figure();
+ 
+  for i=1:rows(gauss_fields)
+    for j=1:rows(rotational_vels)
+      sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
+      full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+      
+      fmt = get_parsing_fmt([star_age_col, alpha_mlt_col]);
+      
+      A = read_matrix_from_file(full_path, fmt, header_lines, 2);
+      %Get the index of the last records lower than or equal to the temporal limits
+      %ix_ini = find(A(:,1)<=x_limits(1), 1, 'last');
+      %ix_end = find(A(:,1)<=x_limits(2), 1, 'last');
+      
+      %Calculate maximum for y axis
+      %Get vel max value, divide it by ytick, plus 1, multiply by ytick
+      %ymax = (idivide(max(A(ix_ini:ix_end,2)), ytick, "fix") + 1) * ytick;
+      %ymax = 100.0;
+      
+      %Get vel max value, divide it by ytick, minus 1, multiply by ytick
+      %ymin = (idivide(min(A(ix_ini:ix_end,2)), ytick, "fix") - 1) * ytick;
+      %ymin = 0.5;
+           
+      plot_alpha_mlt(A, colors(i*j,:), line_width, ytick, axis_limits);
+      
+      
+      %Generate serie labels
+      if (is_var_vel)
+        labels = {labels{:}, ['alpha MLT-', strtrim(rotational_vels(j,:))]};
+      else
+        labels = {labels{:}, ['alpha MLT-', strtrim(gauss_fields(i,:))]};
+      endif
+      
+    end
+  end
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+
+  grid on;
+  l = legend(labels, "location", leg_loc);
+
+  set (l, "fontsize", legend_font_size);
+  %legend boxoff
+  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  ylabel('alpha MLT', 'fontsize', axis_font_size);
+  title(atitle, 'fontsize', title_font_size);
+  
+  hold('off');  
+  save_figure(f, afilename);
+  
+end
+
+
 
 
 function kipperhahn_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_limits, leg_loc, atitle, afilename)
@@ -1368,7 +1478,7 @@ end
 
 function save_figure(f, title)  
   print(f,'-deps','-color',[title,'.eps']);
-  close;
+  %close;
   %print(f,'-dpng','-color',[title,'.png']);
 end
 
@@ -2128,6 +2238,14 @@ function plot_age_vs_mb_activation_028vc(mag_fields)
 end
 
 
+function plot_age_vs_alpha_mlt_3_0G(rot_vels)
+  global gauss_fields;
+  global idx_3_0G;
+  
+  age_vs_alpha_mlt(gauss_fields(idx_3_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 3.0G & var. rotational velocity', 'alpha_mlt_var_vel_3_0g');
+end
+
+
 function plot_kipperhahn_3G_var_vel(rot_vels)
   global gauss_fields;
   global idx_3_0G;
@@ -2245,6 +2363,8 @@ function main()
   global idx_032crit;
   global idx_0312crit;
   global idx_0314crit;
+  global idx_9_090256e_6_dl;
+  global idx_0336crit_alpha;
   
   
   
@@ -2279,6 +2399,8 @@ function main()
   %plot_3_0G_var_vel(rot_vels3);
   %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
   %plot_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
+  %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  %plot_3_0G_var_vel(rotational_vels([idx_0336crit,idx_0336crit_alpha],:));
   %plot_3_0G_0314vc(rot_vels3);
   %plot_3_5G_var_vel(rot_vels);
   %plot_4_0G_var_vel(rot_vels); 
@@ -2287,7 +2409,10 @@ function main()
   %plot_5_0G_var_vel(rot_vels); 
   %plot_5_5G_var_vel(rot_vels); 
   
-  plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
+  %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
+  plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
+  
+  %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
   %Includes dynamo effect
   %plot_4_0G_var_vel_st();
