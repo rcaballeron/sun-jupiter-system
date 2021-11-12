@@ -14,11 +14,12 @@ global log_L_col          = 34;
 global log_R_col          = 35;
 global surf_avg_omega_col = 39;
 global surf_avg_v_rot_col = 42;
+#global surf_avg_omega_col = 160;
+#global surf_avg_v_rot_col = 163;
+
 global center_h1_col      = 54;
-#global surface_h1_col     = 55;
-#global surface_li_col     = 59;
-global surface_h1_col     = 175;
-global surface_li_col     = 179;
+global surface_h1_col     = 55;
+global surface_li_col     = 59;
 
 global mb_activated_col   = 72;
 global j_dot_col          = 77;
@@ -33,7 +34,7 @@ global sz_bot_omega_col   = 88;
 global core_top_radius_col= 90;
 global core_bot_radius_col= 91;
 global core_top_omega_col = 98;
-global alpha_mlt_col      = 220
+global alpha_mlt_col      = 100
 
 global num_mix_regions    = 10;
 global mix_type_ini_col   = 17;
@@ -47,6 +48,7 @@ global filename = '1M_photosphere_history.data';
 global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
 global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha'];
+%dl -> disk locking
 global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';'0312crit_dl';'0314crit_dl';'032crit_dl';'9_090256e-6_dl'];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
 
@@ -339,6 +341,9 @@ end
 
 function plot_vel_rot(A, color, width, ytick, axis_limits)
   global tick_font_size;
+  
+  ytick
+  axis_limits
   
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -1052,7 +1057,7 @@ function age_vs_m_l_r_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
       %Get vel max value, divide it by 10, minus 1, multiply by 10
       ymin = (idivide(power(10, min(A(ix_ini:ix_end,3))), ytick, "fix") - 1) * ytick;
            
-      plot_m_l_r(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
+      plot_m_l_r(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
       %plot_m_l_r(A, colors(i*j,:), line_width, ytick, x_limits);
       
       % Plot ZAMS reference
@@ -1119,7 +1124,7 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
   
   hold('on');
   labels = {};
-  
+   
   f = format_figure();
  
   for i=1:rows(gauss_fields)
@@ -1133,15 +1138,15 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
       %Get the index of the last records lower than or equal to the temporal limits
       ix_ini = find(A(:,1)<=x_limits(1), 1, 'last');
       ix_end = find(A(:,1)<=x_limits(2), 1, 'last');
-      
+     
       %Calculate maximum for y axis
       %Get vel max value, divide it by 10, plus 1, multiply by 10
-      ymax = (idivide(max(A(ix_ini:ix_end,2)), ytick, "fix") + 1) * ytick;
+      ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
       
       %Get vel max value, divide it by 10, minus 1, multiply by 10
-      ymin = (idivide(min(A(ix_ini:ix_end,2)), ytick, "fix") - 1) * ytick;
+      ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
            
-      plot_vel_rot(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
+      plot_vel_rot(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
       
       % Plot ZAMS reference
       %zams = calculate_ZAMS(full_path);
@@ -1235,14 +1240,14 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
       
       %Calculate maximum for y axis
       %Get vel max value, divide it by ytick, plus 1, multiply by ytick
-      %ymax = (idivide(max(A(ix_ini:ix_end,2)), ytick, "fix") + 1) * ytick;
+      %ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
       ymax = 100.0;
       
       %Get vel max value, divide it by ytick, minus 1, multiply by ytick
-      %ymin = (idivide(min(A(ix_ini:ix_end,2)), ytick, "fix") - 1) * ytick;
+      %ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
       ymin = 0.5;
            
-      plot_omega(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
+      plot_omega(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
       
       % Plot ZAMS reference
       %zams = calculate_ZAMS(full_path);
@@ -1331,11 +1336,11 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
       
       %Calculate maximum for y axis
       %Get vel max value, divide it by ytick, plus 1, multiply by ytick
-      %ymax = (idivide(max(A(ix_ini:ix_end,2)), ytick, "fix") + 1) * ytick;
+      %ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
       %ymax = 100.0;
       
       %Get vel max value, divide it by ytick, minus 1, multiply by ytick
-      %ymin = (idivide(min(A(ix_ini:ix_end,2)), ytick, "fix") - 1) * ytick;
+      %ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
       %ymin = 0.5;
            
       plot_alpha_mlt(A, colors(i*j,:), line_width, ytick, axis_limits);
@@ -1412,7 +1417,7 @@ function kipperhahn_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
       ymax = 1.0;
       ymin = 0.0;
       
-      plot_kipperhahn(A, B, 1, line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
+      plot_kipperhahn(A, B, 1, line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
            
       %plot_omega(A, colors(i*j,:), line_width, ytick, [x_limits(1), x_limits(2), ymin, ymax]);
       %line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:));
@@ -2398,7 +2403,9 @@ function main()
   %plot_3_0G_var_vel(rot_vels);
   %plot_3_0G_var_vel(rot_vels3);
   %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  
   %plot_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
+  
   %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
   %plot_3_0G_var_vel(rotational_vels([idx_0336crit,idx_0336crit_alpha],:));
   %plot_3_0G_0314vc(rot_vels3);
@@ -2410,7 +2417,7 @@ function main()
   %plot_5_5G_var_vel(rot_vels); 
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
-  plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
+  %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
   
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -2430,8 +2437,10 @@ function main()
   %plot_3_3G_var_vel();
   %plot_vel_rot_2G_var_vel();
   %plot_vel_rot_3_0G_var_vel(rot_vels3);
-  %plot_vel_rot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  plot_vel_rot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  
   %plot_vel_rot_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
+  
   %plot_vel_rot_3_0G_0314vc(rot_vels3);
   %plot_vel_rot_3_0G_var_vel_mlt(rot_vels4);
   %plot_vel_rot_3_5G_var_vel();
