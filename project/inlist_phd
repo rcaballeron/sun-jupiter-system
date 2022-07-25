@@ -29,14 +29,14 @@
       !change_initial_rotation_flag = .true.
 
       ! Use block1 or block2 for setting omega
-! Block 1
+! Block 1 -> Intended when using the disk locking routine
       ! set uniforms omega
       !set_omega = .true.
       !new_omega = 9.090256e-6
 
 ! End Block 1
 
-! Block 2
+! Block 2 -> Intended when NOT using the disk locking routine
       set_omega_div_omega_crit = .true.      
       !new_omega_div_omega_crit = 0.0084 
       !new_omega_div_omega_crit = 0.014 
@@ -310,7 +310,8 @@
       ! Magnetic braking input parameters
       ! **********************************
       
-      x_ctrl(1) = 3.0d0 ! B - magnetic field torque (G)
+      x_ctrl(1) = 4.0d0 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
+      !x_ctrl(1) = -1 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
       x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
 
       ! How to redistribute the loss of angular momentum
@@ -318,11 +319,16 @@
       ! 1 = till the outmost zone, r(1)
       x_integer_ctrl(1) = 0 
 
+      ! Debug flags
       x_logical_ctrl(1) = .false. ! debug flag for use_other_torque routine
       x_logical_ctrl(2) = .false. ! debug flag for reset_other_torque, if true, jdot is discarded
       x_logical_ctrl(3) = .false. ! debug flag for get_convective_info
       x_logical_ctrl(4) = .false.  ! debug flag for get_core_info
       x_logical_ctrl(7) = .false.  ! debug flag for new_alpha
+      x_logical_ctrl(8) = .false.  ! debug flag for calculate_mag_field_intensity
+      x_logical_ctrl(9) = .false.  ! debug flag for calculate_jdot_rate
+
+
       ! Controls if the mb routine is executed only when a radiative core is develop
       ! .false. = don't wait, 
       ! .true. = wait
@@ -331,9 +337,15 @@
 
       ! **********************************
       ! Disk locking input parameters
-      ! **********************************      
-      !x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1 for deactivating the routine
-      x_ctrl(3) = -1.0
+      ! **********************************
+      x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1=deactivated
+      !x_ctrl(3) = -1
       x_ctrl(4) = 9.090256e-6 ! disk omega in rad/s
+
+      ! **********************************
+      ! Variable MLT alpha
+      ! **********************************
+      x_logical_ctrl(10) = .true.  ! (de)activate variable MLT alpha routine
+
       
 / ! end of controls namelist

@@ -42,10 +42,13 @@
       logical :: debug_get_cz_info = .false.
       logical :: debug_get_core_info = .false.
       logical :: debug_new_alpha = .false.
+      logical :: debug_mag_field = .false.      
       logical :: keep_on_rad_core = .false.
       logical :: rad_core_developed = .false.
+      logical :: debug_j_dot = .false.
+      logical :: var_mlt_alpha = .false.
       integer :: idx_low_x_ctrl = 20
-      integer :: idx_high_x_ctrl = 46
+      integer :: idx_high_x_ctrl = 62
 
       type star_zone_info
        real(dp) :: &
@@ -81,8 +84,9 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-         write(*,*) '*******  Version: 2.2.0'
+         write(*,*) '*******  Version: 2.3.0'
          write(*,*) '*******  09.06.2020: Disk locking & Magnetic braking routines'
+         write(*,*) '*******  11.11.2021: Varaible MLT alpha & magnetic filed strengh'
          write(*,*) '*******  Roque Caballero'
          
          original_diffusion_dt_limit = s% diffusion_dt_limit
@@ -97,6 +101,8 @@
          debug_get_cz_info = s% x_logical_ctrl(3)
          debug_get_core_info = s% x_logical_ctrl(4)
          debug_new_alpha = s% x_logical_ctrl(7)
+         debug_mag_field = s% x_logical_ctrl(8)
+         debug_j_dot = s% x_logical_ctrl(9)
 
          !If true, once the radiative core is developed, report always true
          !in is_radiative_core function
@@ -108,6 +114,9 @@
          !disk locking
          disk_lt = s% x_ctrl(3)
          disk_omega = s% x_ctrl(4)
+
+         !Variable MLT alpha
+         var_mlt_alpha = s% x_logical_ctrl(10)
 
 
       
@@ -134,14 +143,14 @@
          integer, intent(in) :: id
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
-         !real(dp) :: disk_lt
 
          ierr = 0
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-         !disk_lt = s% x_ctrl(3)
 
+         !If disk locking is actived & the star is younger that disk locking period &
+         !star rotates faster than disk locking rotational velocitiy
          if ((disk_lt > 0) .and. (s% star_age < disk_lt) .and. (s% omega(1) > disk_omega)) then
             call other_torque_disk_lock(id, ierr)
          else
@@ -180,9 +189,8 @@
          end if
       end subroutine other_torque_disk_lock
 
-      ! This routine implements a magnetic braking effect based on
-      ! Matteos MESA star summer school. Additionally, this implementation
-      ! distribute among the zones which conforms the convective shell the
+      ! This routine implements a magnetic braking effect.
+      ! It distributes among the zones which conforms the convective shell the
       ! loss of angular momentum
       subroutine other_torque_mag_brk(id, ierr)
          use const_def
@@ -190,13 +198,13 @@
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
-         real(dp) :: r_st, m_st, i_st, alfven_r
-         real(dp) :: j_dot, omega_surf, m_dot, eta_surf, v_inf, v_esc, B, jdot_routine
+         real(dp) :: B, j_dot, r_st
          type (star_zone_info), target :: sz_info, core_info
          type (star_zone_info), pointer :: sz_info_ptr, core_info_ptr
          real(dp), dimension(:), pointer :: mag_brk_jdot
+         integer :: jdot_routine !how to distribute the j_dot
          logical :: only_cz !controls if jdot distribution must only affect the convective zone
-         logical :: wait_rad_core !controls if jdot distribution must wait till a radiative core is develop
+         logical :: wait_rad_core !controls if jdot distribution must wait till a radiative core is develop         
          integer :: activated !signals when the jdot routine is activated
          
          !Pointer to structure which conveys information about the convectice and core zones
@@ -208,6 +216,7 @@
          if (ierr /= 0) return
 
 
+         !Reset support structures
          allocate(mag_brk_jdot(s% nz))
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
@@ -216,29 +225,8 @@
          call reset_core_info(core_info_ptr)
          call reset_convective_info(sz_info_ptr)
 
-         !Magnetic braking according to MESA school 2012 assignment by Cantiello
-         !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
-         ! j_dot = angular momentum lost
-         ! omega_surf = surface angular velocity (rad/s)
-         ! m_dot = mass lost rate (Msun/year)
-         ! alfven_r = Alfven radius
-
-         !Wind-confinmenet parameter eta_surf
-         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
-         ! r_st = stellar surface radius (cm)
-         ! B = magnetic field torque (G)
-         ! v_inf = terminal velocity of the stellar wind (cm/s)
-
-         !v_inf = 1.92*v_esc
-         !v_esc = photospheric escape velocity (cm/s)
-         !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
-         !loss of angular momentum
-         !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
-
          !Wait till radiative core is develop?
          wait_rad_core = s% x_logical_ctrl(5)
-
-         !Get information about the convective zone and core
 
          !Loss of angular momentum distribution method
          jdot_routine = s% x_integer_ctrl(1)
@@ -261,35 +249,15 @@
 
 
          !Calculate amount of loss of angular moment
-
-         !TODO move out the reading of inlist parameters
          !Magentic field intensity
          B = s% x_ctrl(1)
-         !B_new = B * (Rsun/r_st)**3 !q=3 para un dipolo simple
-
-         !Star data
-         r_st = s% r(1)
-         m_st = s% m(1)
-         omega_surf = s% omega(1)
-         !omega_surf = s% omega_avg_surf
-
-         ! escape and infinite velocities
-         v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
-         v_inf = 1.92 * v_esc
-
-
-         !m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
-         m_dot = s% mstar_dot !This in g/s
-
-         !eta = ( s% photosphere_r * rsun * bfield )**2.0 / (abs( s% mstar_dot ) * vinf)
-         !with vinf in cm/s (the wind terminal velocity) rsun in cm, bfield in Gauss
-         !rest are MESA vars accessible through the star structure in run_star_extras.f
-         eta_surf = ((r_st * B)**2)/(abs(m_dot) * v_inf)
-         !eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
-
-         j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf !Formula 2.3 Cantiello's MESA assigment
-         !alfven_r = 50.0 * Rsun
-         !j_dot = two_thirds * m_dot * omega_surf * (alfven_r**2) * eta_surf !Formula 2.1 Cantiello's MESA assigment
+         if (B < 0) then
+            B = calculate_mag_field_intensity_gb(s)
+            j_dot = calculate_jdot_rate_gb(s, B)
+         else
+            j_dot = calculate_jdot_rate_cantiello(s, B)
+         end if
+         
 
          ! The magnetic braking routine is activated under the following conditions:
          ! - use_other_torque flag is activated in inlist
@@ -305,6 +273,7 @@
          !)
          if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. (B > 0.0) .and. &
             (.not. wait_rad_core .or. (wait_rad_core .and. is_core_rad(s)))) then
+
             activated = 1
 
             !Distribute the loss of angular momentum
@@ -333,20 +302,17 @@
          end if
 
          !We abuse the x_ctrl array for storing temporary the values to be reported in history file
-         s% x_ctrl(20) = v_esc
-         s% x_ctrl(21) = v_inf
-         s% x_ctrl(22) = eta_surf
+         s% x_ctrl(61) = B
          s% x_ctrl(23) = j_dot
-         s% x_ctrl(24) = m_dot
 
          !Routine activated
          s% x_ctrl(25) = activated
 
          !Convective zone info
-         s% x_ctrl(26) = sz_info_ptr% top_radius / r_st
-         s% x_ctrl(27) = sz_info_ptr% bot_radius / r_st
-         s% x_ctrl(28) = sz_info_ptr% top_mass / m_st
-         s% x_ctrl(29) = sz_info_ptr% bot_mass/ m_st
+         s% x_ctrl(26) = sz_info_ptr% top_radius / s% r(1)
+         s% x_ctrl(27) = sz_info_ptr% bot_radius / s% r(1)
+         s% x_ctrl(28) = sz_info_ptr% top_mass / s% m(1)
+         s% x_ctrl(29) = sz_info_ptr% bot_mass/ s% m(1)
          s% x_ctrl(30) = sz_info_ptr% top_zone
          s% x_ctrl(31) = sz_info_ptr% bot_zone
          s% x_ctrl(32) = sz_info_ptr% top_vrot
@@ -356,10 +322,10 @@
 
          !Core info
          s% x_ctrl(36) = eps_threshold
-         s% x_ctrl(37) = core_info_ptr% top_radius / r_st
-         s% x_ctrl(38) = core_info_ptr% bot_radius / r_st
-         s% x_ctrl(39) = core_info_ptr% top_mass / m_st
-         s% x_ctrl(40) = core_info_ptr% bot_mass/ m_st
+         s% x_ctrl(37) = core_info_ptr% top_radius / s% r(1)
+         s% x_ctrl(38) = core_info_ptr% bot_radius / s% r(1)
+         s% x_ctrl(39) = core_info_ptr% top_mass / s% m(1)
+         s% x_ctrl(40) = core_info_ptr% bot_mass/ s% m(1)
          s% x_ctrl(41) = core_info_ptr% top_zone
          s% x_ctrl(42) = core_info_ptr% bot_zone
          s% x_ctrl(43) = core_info_ptr% top_vrot
@@ -609,7 +575,7 @@
       ! all the zones in my star in which H fusion occurs.
       subroutine get_core_info(s, core_info)
          type (star_info), pointer, intent(in) :: s
-               integer :: i, j, k, nz
+         integer :: i, j, k, nz
          type (star_zone_info), pointer, intent(out) :: core_info
          real(dp) zone_top_mass
          logical fusion_h
@@ -670,6 +636,7 @@
          type (star_info), pointer, intent(in) :: s
 
          !Parameters taken from Table 2 - MTL(BV) Eddington
+
          real(dp) :: a0 = 1.790295, a1 = -0.149542, a2 = 0.069574, a3 = -0.008292
          real(dp) :: a4 = 0.013165, a5 = 0.080333, a6 = -0.033066
          real(dp) :: x, y
@@ -680,14 +647,231 @@
          !temperature and surface gravity, respectively.
          x = (s% Teff - 5777) / 1000
          y = s% log_surface_gravity - 4.44
+
          !Equation 4
          new_alpha = a0 + (a1 + (a3 + a5*x + a6*y)*x + a4*y)*x + a2*y
+         s% x_ctrl(47) = new_alpha
 
          if (debug_new_alpha) then
             write(*,*) 'x', x, 'y', y, 'mixing_length_alpha', s% mixing_length_alpha, 'new_alpha', new_alpha
          end if
       end function
-      
+
+      ! This routine implements a magnetic braking effect based on
+      ! Matteos MESA star summer school. Additionally, this implementation
+      ! distribute among the zones which conforms the convective shell the
+      ! loss of angular momentum
+      real function calculate_jdot_rate_cantiello(s, bf_star) result(new_j_dot)
+         use const_def
+         type (star_info), pointer, intent(in) :: s
+         real(dp), intent(in) :: bf_star
+
+         real(dp) :: r_st, m_st, i_st, alfven_r
+         real(dp) :: omega_surf, m_dot, eta_surf, v_inf, v_esc
+
+
+         !Magnetic braking according to MESA school 2012 assignment by Cantiello
+         !j_dot = 2/3*m_dot*omega*alfven_r*alfven_r
+         ! j_dot = angular momentum lost
+         ! omega_surf = surface angular velocity (rad/s)
+         ! m_dot = mass lost rate (Msun/year)
+         ! alfven_r = Alfven radius
+
+         !Wind-confinmenet parameter eta_surf
+         !eta_surf = ((r_st*r_st)/(B*B)) / (m_dot*v_inf)
+         ! r_st = stellar surface radius (cm)
+         ! B = magnetic field torque (G)
+         ! v_inf = terminal velocity of the stellar wind (cm/s)
+
+         !v_inf = 1.92*v_esc
+         !v_esc = photospheric escape velocity (cm/s)
+         !v_esc = 618*((r_sol/r_st)*(m_st/m_sol))^(1/2)
+         !loss of angular momentum
+         !j_dot = 2/3*m_dot*omega_surf*r_st*r_st*eta_surf
+
+         !Star data
+         r_st = s% r(1)
+         m_st = s% m(1)
+         omega_surf = s% omega(1)
+         !omega_surf = s% omega_avg_surf
+
+         ! escape and infinite velocities
+         v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
+         v_inf = 1.92 * v_esc
+
+
+         !m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
+         m_dot = s% mstar_dot !This in g/s
+
+         !eta = ( s% photosphere_r * rsun * bfield )**2.0 / (abs( s% mstar_dot ) * vinf)
+         !with vinf in cm/s (the wind terminal velocity) rsun in cm, bfield in Gauss
+         !rest are MESA vars accessible through the star structure in run_star_extras.f
+         eta_surf = ((r_st * bf_star)**2)/(abs(m_dot) * v_inf)
+         !eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
+         
+         new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf !Formula 2.3 Cantiello's MESA assigment         
+         !alfven_r = 50.0 * Rsun
+         !j_dot = two_thirds * m_dot * omega_surf * (alfven_r**2) * eta_surf !Formula 2.1 Cantiello's MESA assigment
+
+         s% x_ctrl(20) = v_esc
+         s% x_ctrl(21) = v_inf
+         s% x_ctrl(22) = eta_surf
+         s% x_ctrl(24) = m_dot
+
+         if (debug_j_dot) then
+            write (*,*) 'r_st', r_st, 'm_st', m_st, 'omega_surf', omega_surf, &
+            'm_dot', m_dot, 'bf_star', bf_star
+            write (*,*) 'v_esc', v_esc, 'v_inf', v_inf, 'eta_surf', eta_surf, 'j_dot', new_j_dot
+         end if         
+      end function
+
+
+
+      !Based on the following papers:
+      ![1] Improved angular momentum evolution model for solar-like stars, Gallet & Bouvier
+      ![2] Testing a predictive theoretical model for the mass loss rates of cool stars, Cranmer & Saar      
+      real function calculate_mag_field_intensity_gb(s) result(new_b)
+         use const_def
+         type (star_info), pointer, intent(in) :: s
+
+         ! rossby_sun = 1.96, Eq 9 [1]
+         real(dp) :: r_st, rossby_sun = 1.96, rossby, rossby_norm, m_hydrogen, p_rot, p_rot_sun = 25.38 !Carrington solar  rotation
+         real(dp) :: tau_c_sun, tau_c, f_star, f_min, f_max, b_star, bf_min, bf_max, bf_star, b_equi, mu_avg
+         real(dp) :: p_gas_photo, p_photo, p_rad_photo, p_photo2
+
+         !tau_c -> convective turnover time (d)
+         !exp ->  natural exponential function
+         ! Eq 36 [2]
+         tau_c = 314.241 * exp(-s% Teff/1952.5) * exp(-(s% Teff/6250)**18) + 0.002 
+         tau_c_sun = 314.241 * exp(-teffsun/1952.5) * exp(-(teffsun/6250)**18) + 0.002
+
+         !Star data
+         r_st = s% r(1)
+         p_rot = (2*pi*r_st) / (s% v_rot_avg_surf * 86400) ! day
+
+         !Rossby number = p_rot / tau_c
+         rossby = p_rot / tau_c
+         rossby_sun = p_rot_sun / tau_c_sun
+         rossby_norm = rossby / rossby_sun
+
+         !magnetic filling factor fmin & fmax
+         !eq 9 [1]
+         f_min = 0.5 / (1. + (rossby_norm / 0.16)**2.6)**1.3 
+         !eq 10 [1]
+         f_max = 1 / (1. + (rossby_norm / 0.31)**2.5)
+         !f_star = f_min
+         !eq 11 [1]
+         f_star = 0.55 / (1. + (rossby_norm / 0.16)**2.3)**1.22
+
+         
+         !Eq 3 [2]
+         !mean atomic weight
+         mu_avg = 1.75 + 0.5 * tanh((3500. - s% Teff) / 600.)
+         !photospheric pressure 
+         m_hydrogen = mp !proton mass
+         !p_gas_photo = s% Pgas(s% photosphere_cell_k)
+         !p_rad_photo = s% Prad(s% photosphere_cell_k)
+         p_photo = s% P(s% photosphere_cell_k)         
+         p_photo2 = s% rho(s% photosphere_cell_k) * boltzm * s% Teff / (mu_avg * m_hydrogen)
+         !Eq 8 [1]
+         !Equipartition magnetic filed strength
+         b_equi = sqrt(8.* pi * p_photo2)
+
+
+         !Eq 7 [1], magnetic field strength b_star is proportional to the
+         !equipartition magnetic field strength b_equi
+         !b_star * f_star = mean magnetic field
+         b_star = 1.13 * b_equi
+         bf_min = f_min * b_star
+         bf_max = f_max * b_star
+         bf_star = f_star * b_star
+
+         !return the min value, as it does the paper
+         new_b = bf_star
+
+         s% x_ctrl(48) = p_photo2
+         s% x_ctrl(49) = p_rot
+         s% x_ctrl(50) = tau_c
+         s% x_ctrl(51) = rossby
+         s% x_ctrl(52) = rossby_norm
+         s% x_ctrl(53) = b_equi
+         s% x_ctrl(54) = b_star
+         s% x_ctrl(55) = f_min
+         s% x_ctrl(56) = f_max
+         s% x_ctrl(57) = f_star
+         s% x_ctrl(58) = bf_min
+         s% x_ctrl(59) = bf_max
+         s% x_ctrl(60) = bf_star
+
+         if (debug_mag_field) then
+            write (*,*) 'p_photo2', p_photo2, 'p_rot', p_rot, 'tau_c', tau_c, 'rossby', rossby, &
+            'p_rot_sun', p_rot_sun, 'tau_c_sun', tau_c_sun, 'rossby_sun', rossby_sun
+            write (*,*) 'b_equi', b_equi, 'b_star', b_star, 'f_min', f_min, 'f_max', f_max, &
+            'f_star', f_star, 'bf_min', bf_min, 'bf_max', bf_max, 'bf_star', bf_star
+         end if
+
+      end function
+
+
+      !Based on the following papers:
+      ![1] Improved angular momentum evolution model for solar-like stars, Gallet & Bouvier
+      ![2] Testing a predictive theoretical model for the mass loss rates of cool stars, Cranmer & Saar      
+      real function calculate_jdot_rate_gb(s, bf_star) result(new_j_dot)
+         use const_def
+         type (star_info), pointer, intent(in) :: s
+         real(dp), intent(in) :: bf_star
+
+         real(dp), parameter :: k1 = 1.30
+         real(dp), parameter :: k2 = 0.0506
+         !real(dp), parameter :: m = 0.2177 !original parameter in paper
+         real(dp), parameter :: m = 0.1675
+         real(dp), parameter :: omega_sun = 2.87d-6
+
+         
+         real(dp) :: r_st, m_st, omega_surf, j_dot
+         real(dp) :: v_esc, m_dot, alfven_r, alfven_r_num, alfven_r_den
+
+
+         
+         !Star data
+         r_st = s% r(1)
+         m_st = s% m(1)
+         omega_surf = s% omega(1)
+         m_dot = abs(s% mstar_dot) !This in g/s
+
+         !eq 3 [1]
+         v_esc = (2 * standard_cgrav * m_st / r_st)**0.5
+
+         alfven_r_num = bf_star**2 * r_st**2
+
+         alfven_r_den = m_dot * ((k2**2 * v_esc**2) + (omega_surf**2 * r_st**2))**0.5
+
+         alfven_r = k1 * (alfven_r_num / alfven_r_den)**m * r_st
+
+         j_dot = omega_surf * m_dot * alfven_r**2
+
+         !eq 16 [1]
+         !if (omega_surf >= 1.5* && omega_surf <= 4*omega_sun) then
+            !j_dot_num = k1**2 * r_st**3.1
+            !j_dot_den = ( (k2**2 * 2 * standard_cgrav * m_st) + (omega_surf**2 * r_st**3) ) ** 0.22 
+            !j_dot = 1.22d36 * (j_dot_num / j_dot_den) * omega_surf**4.17
+         !else if (omega_surf >= 1.5* && omega_surf <= 4*omega_sun)
+
+         new_j_dot = -j_dot
+
+         s% x_ctrl(24) = m_dot
+         s% x_ctrl(62) = alfven_r
+
+         if (debug_j_dot) then
+            write (*,*) 'r_st', r_st, 'm_st', m_st, 'omega_surf', omega_surf, &
+            'm_dot', m_dot, 'bf_star', bf_star, 'v_esc', v_esc
+            write (*,*) 'alfven_r_num', alfven_r_num, 'alfven_r_den', alfven_r_den, &
+            'alfven_r', alfven_r, 'j_dot', new_j_dot
+         end if         
+
+      end function
+
+
       integer function extras_startup(id, restart, ierr)
          integer, intent(in) :: id
          logical, intent(in) :: restart
@@ -711,6 +895,8 @@
          write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
       end function extras_startup
 
+
+
       integer function extras_start_step(id, id_extra)
          integer, intent(in) :: id, id_extra
          integer :: ierr
@@ -721,7 +907,9 @@
          if (ierr /= 0) return
          extras_start_step = keep_going
 
-         s% mixing_length_alpha = calculate_alpha(s);
+         if (var_mlt_alpha .eqv. .true.) then
+            s% mixing_length_alpha = calculate_alpha(s)
+         end if
 
       end function extras_start_step
 
@@ -751,7 +939,7 @@
       
 !     check DIFFUSION: to determine whether or not diffusion should happen
 !     no diffusion for fully convective, post-MS, and mega-old models 
-	  s% diffusion_dt_limit = 3.15d7
+      s% diffusion_dt_limit = 3.15d7
       if(abs(s% mass_conv_core - s% star_mass) < 1d-2) then ! => fully convective
          s% diffusion_dt_limit = huge_dt_limit
       end if
@@ -763,21 +951,18 @@
          s% diffusion_dt_limit = huge_dt_limit
       end if
       
-	  end function extras_check_model
+      end function extras_check_model
       
       
       integer function how_many_extra_history_columns(id, id_extra)
-            integer, intent(in) :: id, id_extra
-            integer :: ierr
-            type (star_info), pointer :: s
-            ierr = 0
-            call star_ptr(id, s, ierr)
-            if (ierr /= 0) return
-            how_many_extra_history_columns = 0
+         integer, intent(in) :: id, id_extra
+         integer :: ierr
+         type (star_info), pointer :: s
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
 
-            !if (s% use_other_torque .eqv. .true.) then
-                  how_many_extra_history_columns = 29
-            !end if
+         how_many_extra_history_columns = 43
       end function how_many_extra_history_columns
       
       
@@ -800,8 +985,9 @@
 
         !magnetic field torque
         names(2) = 'B'
-        vals(2) = s% x_ctrl(1) 
+        vals(2) = s% x_ctrl(61) 
 
+        !other_torque_mag_brk section
         !photospheric escape velocity
         names(3) = 'v_esc'
         vals(3) = s% x_ctrl(20)
@@ -906,28 +1092,85 @@
         names(28) = 'core_bot_omega'
         vals(28) = s% x_ctrl(46)
 
+        !calculate_new_alpha setion
+        !mlt_alpha
         names(29) = 'mlt_alpha'
-        vals(29) = s% mixing_length_alpha
+        vals(29) = s% x_ctrl(47)
 
+        !calculate_mag_field_intensity section
+        !p_photo
+        names(30) = 'p_photo'
+        vals(30) = s% x_ctrl(48)
+
+        !p_rot
+        names(31) = 'p_rot'
+        vals(31) = s% x_ctrl(49)
+
+        !tau_c
+        names(32) = 'tau_c'
+        vals(32) = s% x_ctrl(50)
+
+        !rossby
+        names(33) = 'rossby'
+        vals(33) = s% x_ctrl(51)
+
+        !rossby_norm
+        names(34) = 'rossby_norm'
+        vals(34) = s% x_ctrl(52)
+
+        !b_equi
+        names(35) = 'b_equi'
+        vals(35) = s% x_ctrl(53)
+
+        !b_star
+        names(36) = 'b_star'
+        vals(36) = s% x_ctrl(54)
+
+        !f_min
+        names(37) = 'f_min'
+        vals(37) = s% x_ctrl(55)
+
+        !f_max
+        names(38) = 'f_max'
+        vals(38) = s% x_ctrl(56)
+
+        !f_star
+        names(39) = 'f_star'
+        vals(39) = s% x_ctrl(57)
+
+        !bf_min
+        names(40) = 'bf_min'
+        vals(40) = s% x_ctrl(58)
+
+        !bf_max
+        names(41) = 'bf_max'
+        vals(41) = s% x_ctrl(59)
+
+        !bf_star
+        names(42) = 'bf_star'
+        vals(42) = s% x_ctrl(60)
+
+        !alfven_r
+        names(43) = 'alfven_r'
+        vals(43) = s% x_ctrl(62)
       !end if
 
       end subroutine data_for_extra_history_columns
       
       
       integer function how_many_extra_profile_columns(id, id_extra)
-      use star_def, only: star_info
-      integer, intent(in) :: id, id_extra
-      integer :: ierr
-      type (star_info), pointer :: s
-      ierr = 0
-      call star_ptr(id, s, ierr)
-      if (ierr /= 0) return
-      how_many_extra_profile_columns = 0
+         use star_def, only: star_info
+         integer, intent(in) :: id, id_extra
+         integer :: ierr
+         type (star_info), pointer :: s
+         ierr = 0
+         call star_ptr(id, s, ierr)
+         if (ierr /= 0) return
+         how_many_extra_profile_columns = 0
 
-      if (s% use_other_torque .eqv. .true.) then 
-            how_many_extra_profile_columns = 1
-      end if
-
+         if (s% use_other_torque .eqv. .true.) then 
+               how_many_extra_profile_columns = 1
+         end if
       end function how_many_extra_profile_columns
       
       
