@@ -1,9 +1,10 @@
 format longEng;
 clear global;
 
-global header_lines       = 6;
+global header_lines       = 6; 
+global table_header_lines = 1;
 
-%cols position in output files
+%cols position in output MESA files
 global star_age_col       = 3;
 global star_mass_col      = 5;
 global log_abs_m_dot_col  = 7;
@@ -34,20 +35,51 @@ global sz_bot_omega_col   = 88;
 global core_top_radius_col= 90;
 global core_bot_radius_col= 91;
 global core_top_omega_col = 98;
-global alpha_mlt_col      = 100
+global alpha_mlt_col      = 100;
+global tau_c_col          = 103;
+global rossby_col         = 104;
+global rossby_norm_col    = 105;
+global b_equi_col         = 106;
+global b_star_col         = 107;
+global f_min_col          = 108;
+global f_max_col          = 109;
+global f_star_col         = 110;
+global bf_min_col         = 111;
+global bf_max_col         = 112;
+global bf_star_col        = 113;
+global alfven_r_col       = 114;
 
-global num_mix_regions    = 10;
+global num_mix_regions    = 0;
 global mix_type_ini_col   = 17;
 global mix_relr_top_ini_col = 78;
 
+#Clusters section
+global clusters_teff_col = 2;
+global clusters_li_col = 4;
+global clusters_age_col = 6;
+global clusters_err_up_age_col = 7;
+global clusters_err_down_age_col = 8;
+global pleiades_table_filename = 'Pleiades_J_A+A_613_A63_tableb1';
+global ori_table_filename = '25_Ori_J_A+A_659_A85_tableb1';
+global gamma_vel_a_table_filename = 'Gamma_Vel_A_J_A+A_659_A85_tableb2';
+global gamma_vel_b_table_filename = 'Gamma_Vel_B_J_A+A_659_A85_tableb3';
+global ngc_2451_b_table_filename = 'NGC_2451_B_J_A+A_659_A85_tableb4';
+global ngc_2547_table_filename = 'NGC_2547_J_A+A_659_A85_tableb5';
+global ngc_2516_table_filename = 'NGC_2516_J_A+A_659_A85_tableb6';
+global teff_low_limit = 5700;
+global teff_top_limit = 5800;
 
-global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper';
+
+
+global data_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper3d';
+global tables_parent_folder = '/home/rcaballeron/MESA/workspace/sun-jupiter-system/project/tables';
 global filename = '1M_photosphere_history.data';
+
 %global filename = 'annexB/1M_photosphere_history.data';
 %global filename = 'annex2B/1M_photosphere_history.data';
-global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'];
+global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'; 'Xg'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
-global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha'];
+global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha';'11crit';'105crit'];
 %dl -> disk locking
 global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';'0312crit_dl';'0314crit_dl';'032crit_dl';'9_090256e-6_dl'];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
@@ -64,6 +96,7 @@ global idx_4_3G  = 8;
 global idx_4_5G  = 9;
 global idx_5_0G  = 10;
 global idx_5_5G  = 11;
+global idx_X_G  = 12;
 
 %The following are with mlt=1.82
 global idx_0crit    = 1;
@@ -80,6 +113,8 @@ global idx_0312crit  = 10;
 global idx_0314crit  = 11;
 global idx_032crit  = 12;
 global idx_0336crit_alpha = 13;
+global idx_11crit  = 14;
+global idx_105crit  = 15;
 %The following with mlt=var and disk locking
 global idx_9_090256e_6_dl  = 13;
 
@@ -95,7 +130,7 @@ global sun_L = 3.828e26; %W
 global sun_omega = 2.903e-6 %rad/s
 
 %Pleiades constants
-global pleiades_age = 1.0e8; %years
+%global pleiades_age = 1.0e8; %years
 global pleiades_A_Li7 = 2.95;
 
 
@@ -107,10 +142,6 @@ global ratio_log_LH_vs_log_L = 0.99;
 global line_width = 3;
 global W = 18;
 global H = 14;
-%global tick_font_size = 18;
-%global title_font_size = 24;
-%global axis_font_size = 20;
-%global legend_font_size = 22;
 global tick_font_size = 32;
 global title_font_size = 32;
 global axis_font_size = 32;
@@ -138,6 +169,7 @@ end
 function result = read_matrix_from_file(filename, line_fmt, header_lines, num_cols)
   % Open file for reading
   infileID = fopen(filename, 'r');
+  filename
 
   %Discard header lines
   i = 1;
@@ -176,7 +208,6 @@ function result = read_matrix_from_file(filename, line_fmt, header_lines, num_co
   
   %Transpose the array so that A matches the orientation of the data in the file.
   result = A';
-
 end
 
 % Calculate ZAMS age position according to the following criterium:
@@ -223,11 +254,6 @@ function result = calculate_ZAMS(full_path)
   C = A(1:B(1),:);
   % Now find those row in which LH div L > ratio_log_LH_vs_log_L
   D = find(C(:,6) > ratio_log_LH_vs_log_L);
-  % Select the first one
-  %B(1)
-  %D(1)
-  %A(D(1),5)
-  %A(D(1),6)
   
   %Age at which ZAMS is reached
   result = A(D(1),1);
@@ -258,6 +284,101 @@ function plot_ZAMS(A, color, width, ytick, axis_limits)
 
 end
 
+function plot_clusters(A, color, width, ytick, axis_limits)
+  global tables_parent_folder;
+  global pleiades_table_filename;
+  global ori_table_filename;
+  global gamma_vel_a_table_filename;
+  global gamma_vel_b_table_filename;
+  global ngc_2451_b_table_filename;
+  global ngc_2547_table_filename;
+  global ngc_2516_table_filename;
+  
+ 
+  full_path = strcat(tables_parent_folder, '/', pleiades_table_filename);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ori_table_filename);  
+  plot_cluster(A, 'r', 'o', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', gamma_vel_a_table_filename);  
+  plot_cluster(A, 'g', '*', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', gamma_vel_b_table_filename);  
+  plot_cluster(A, 'b', 'x', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2451_b_table_filename);  
+  plot_cluster(A, 'y', 's', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2547_table_filename);  
+  plot_cluster(A, 'm', 'd', width, ytick, axis_limits, full_path);
+  full_path = strcat(tables_parent_folder, '/', ngc_2516_table_filename);  
+  plot_cluster(A, 'c', '^', width, ytick, axis_limits, full_path);
+  
+end
+
+function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
+  global tick_font_size;
+  global table_header_lines;
+  global clusters_teff_col;
+  global clusters_li_col;
+  global clusters_age_col;
+  global clusters_err_up_age_col;
+  global clusters_err_down_age_col;
+
+  fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
+      
+  C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
+  
+
+  %Get cluster age and limits
+  cluster_age = C(1, 3);  
+  cluster_top_age = C(1, 4) + cluster_age;
+  cluster_low_age = C(1, 5) + cluster_age;
+  
+  %Find rows with age older than cluster_low_age and get Teff
+  D = find(A(:,1) >= cluster_low_age);
+  teff_low_limit = power(10, A(D(1), 2));
+  
+  %Find rows with age older than cluster_top_age and get Teff
+  D = find(A(:,1) >= cluster_top_age);
+  teff_top_limit = power(10, A(D(1), 2));
+  
+  %Filter out starts with Teff below and above the limits
+  B1 = C(:,1) < teff_low_limit;
+  B2 = C(:,1) > teff_top_limit;
+  % Mark rows which fulfill either B1 or B2 and remove them
+  B = B1 | B2;  
+  C(B,:) = [];
+
+  %save file
+  filename = strcat(full_path, ".sub");
+  fid = fopen (filename, "w");
+  fputs (fid, "recno Teff e_Teff ALi e_ALi Age pe_Age ne_Age\n");
+  fclose (fid);  
+  dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
+  
+  %Plot values
+  %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  plot(C(:,3), C(:,2), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
+
+  %Axis scales
+  set(gca, 'XScale', 'log');
+  
+  %Axis limits
+  axis(axis_limits);
+  
+  xticks = get (gca, "xtick"); 
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  set (gca, "xticklabel", xlabels) ;
+  
+  yticks = get (gca, "ytick"); 
+  ylabels = arrayfun (@(x) sprintf ("%2.1f", x), yticks, "uniformoutput", false); 
+  set (gca, "yticklabel", ylabels);
+  
+  set(gca, 'fontsize', tick_font_size);
+
+end
 
 % Calculate the Li abundancies. The format of the matrix must be:
 % A(1) = star age
@@ -274,7 +395,7 @@ function result = calculate_A_Li7(A)
   
   A_Li7 = zeros(length(A), 1);
   
-  A_Li7(:,1) = fA_Li7(A(:,2),A(:,3));
+  A_Li7(:,1) = fA_Li7(A(:,3),A(:,4));
   
   result = A_Li7;
 end 
@@ -342,9 +463,6 @@ end
 
 function plot_vel_rot(A, color, width, ytick, axis_limits)
   global tick_font_size;
-  
-  ytick
-  axis_limits
   
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -542,6 +660,39 @@ function plot_alpha_mlt(A, color, width, ytick, axis_limits)
 
 end
 
+function plot_mag_field(A, color, width, show_limits, ytick, axis_limits)
+  global tick_font_size;
+  global sun_omega
+  
+  %Plot values
+  %Omega
+  plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width, 'linestyle', ':');
+  if (show_limits)
+    %Min bf
+    plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
+    %Max bf
+    plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', '--');
+  endif
+  %Mean bf
+  plot(A(:,1), A(:,5), color, 'linewidth', width);
+
+  %Axis scales
+  set(gca, 'XScale', 'log');    
+  set(gca, 'YScale', 'log');
+  
+  %Axis ticks
+  axis(axis_limits);
+  xticks = get (gca, "xtick"); 
+  xlabels = arrayfun (@(x) sprintf ("%.1e", x), xticks, "uniformoutput", false); 
+  set (gca, "xticklabel", xlabels) ;
+  yticks = get (gca, "ytick"); 
+  %ylabels = arrayfun (@(x) sprintf ("%2.1f", x), yticks, "uniformoutput", false); 
+  ylabels = arrayfun (@(x) sprintf ("%2.0f", x), yticks, "uniformoutput", false); 
+  set (gca, "yticklabel", ylabels);
+  set(gca, 'fontsize', tick_font_size);
+
+end
+
 
 function plot_kipperhahn(A, B, color, width, ytick, axis_limits)
   global tick_font_size;
@@ -659,6 +810,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   global star_age_col;
   global surface_h1_col;
   global surface_li_col;
+  global log_Teff_col;
   global header_lines;
   global sun_age;
   global sun_A_Li7;
@@ -683,9 +835,9 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
       full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
        
-      fmt = get_parsing_fmt([star_age_col, surface_h1_col, surface_li_col]);
+      fmt = get_parsing_fmt([star_age_col, log_Teff_col, surface_h1_col, surface_li_col]);
       
-      A = read_matrix_from_file(full_path, fmt, header_lines, 3);
+      A = read_matrix_from_file(full_path, fmt, header_lines, 4);
       
       B = calculate_A_Li7(A);      
       
@@ -714,7 +866,8 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
   % Plot sun reference
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
-  plot(pleiades_age, pleiades_A_Li7, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
+  %plot(pleiades_age, pleiades_A_Li7, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
 
   grid on;
   %l = legend(labels, "location", "southeastoutside");
@@ -1330,20 +1483,7 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
       
       fmt = get_parsing_fmt([star_age_col, alpha_mlt_col]);
       
-      A = read_matrix_from_file(full_path, fmt, header_lines, 2);
-      %Get the index of the last records lower than or equal to the temporal limits
-      %ix_ini = find(A(:,1)<=x_limits(1), 1, 'last');
-      %ix_end = find(A(:,1)<=x_limits(2), 1, 'last');
-      
-      %Calculate maximum for y axis
-      %Get vel max value, divide it by ytick, plus 1, multiply by ytick
-      %ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
-      %ymax = 100.0;
-      
-      %Get vel max value, divide it by ytick, minus 1, multiply by ytick
-      %ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
-      %ymin = 0.5;
-           
+      A = read_matrix_from_file(full_path, fmt, header_lines, 2);         
       plot_alpha_mlt(A, colors(i*j,:), line_width, ytick, axis_limits);
       
       
@@ -1375,6 +1515,80 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   save_figure(f, afilename);
   
 end
+
+function omegs_vs_mag_field_plots(gauss_fields, rotational_vels, show_limits, ytick, axis_limits, leg_loc, atitle, afilename)
+  global data_parent_folder;
+  global filename;
+  global star_age_col;
+  global surf_avg_omega_col;
+  global tau_c_col;
+  global rossby_col;
+  global rossby_norm_col;
+  global b_equi_col;
+  global b_star_col;
+  global f_min_col;
+  global f_max_col;
+  global f_star_col;
+  global bf_min_col;
+  global bf_max_col;
+  global bf_star_col;
+  global alfven_r_col;
+ 
+  
+  global header_lines;
+  global colors;
+  global title_font_size;
+  global axis_font_size;
+  global legend_font_size;
+  global line_width;
+  
+  hold('on');
+  labels = {};
+  
+  f = format_figure();
+ 
+  for i=1:rows(gauss_fields)
+    for j=1:rows(rotational_vels)
+      sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
+      full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+      
+      fmt = get_parsing_fmt([star_age_col, surf_avg_omega_col, bf_min_col, bf_max_col, bf_star_col]);
+      
+      A = read_matrix_from_file(full_path, fmt, header_lines, 5);
+      
+      plot_mag_field(A, colors(i*j,:), line_width, show_limits, ytick, axis_limits);
+      
+      
+      %Generate serie labels
+      
+      labels = {labels{:}, ['Omega/Sun -', strtrim(rotational_vels(j,:))]};
+      if (show_limits) 
+        labels = {labels{:}, ['Bfmin -', strtrim(rotational_vels(j,:))]};
+        labels = {labels{:}, ['Bfmax -', strtrim(rotational_vels(j,:))]};
+      endif
+      labels = {labels{:}, ['Bfmean -', strtrim(rotational_vels(j,:))]};
+    end
+  end
+  %Plot ZAMS, only one of them
+  sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+  zams = calculate_ZAMS(full_path);
+  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+
+  grid on;
+  l = legend(labels, "location", leg_loc);
+
+  set (l, "fontsize", legend_font_size);
+  %legend boxoff
+  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  ylabel('Mean mag. field (B) & Omega (rad)', 'fontsize', axis_font_size);
+  title(atitle, 'fontsize', title_font_size);
+  
+  hold('off');  
+  save_figure(f, afilename);
+  
+end
+
 
 
 
@@ -1483,9 +1697,9 @@ function result = format_figure()
 end
 
 function save_figure(f, title)  
-  print(f,'-deps','-color',[title,'.eps']);
+  %print(f,'-deps','-color',[title,'.eps']);
   %close;
-  %print(f,'-dpng','-color',[title,'.png']);
+  print(f,'-dpng','-color',[title,'.png']);
 end
 
 function plot_mb_activation(A, color, width, axis_limits)
@@ -1764,6 +1978,14 @@ function plot_5_5G_var_vel(rot_vels)
   age_vs_li_plots(gauss_fields(idx_5_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 5.5G & var. rotational velocity', 'li_var_vel_5_5g');
 end
 
+function plot_XG_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+
+  age_vs_li_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - var G & var. rotational velocity', 'li_var_vel_var_g');
+end
+
+
 
 function plot_0084vc_var_g(mag_fields)
   global rotational_vels;
@@ -1921,6 +2143,21 @@ function plot_vel_rot_5_5G_var_vel(rot_vels)
   age_vs_vel_plots(gauss_fields(idx_5_5G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - 5.5G & var. rotational velocity', 'rot_vel_var_vel_5_5g');
 end
 
+function plot_vel_rot_XG_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g');
+end
+
+function plot_vel_rot_XG_var_vel_z1(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 2, [3.0e9, 1.0e10], 'northeast', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g_z1');
+end
+
+
 
 function plot_vel_rot_0084vc_var_g(mag_fields)
   global rotational_vels;
@@ -1942,6 +2179,13 @@ function plot_omega_3_0G_var_vel(rot_vels)
   global idx_3_0G;
   
   age_vs_omega_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', 'Omega - 3.0G & var. rotational velocity', 'omega_var_vel_3_0g');
+end
+
+function plot_omega_4_0G_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_4_0G;
+  
+  age_vs_omega_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', 'Omega - 4.0G & var. rotational velocity', 'omega_var_vel_4_0g');
 end
 
 
@@ -2248,8 +2492,32 @@ function plot_age_vs_alpha_mlt_3_0G(rot_vels)
   global gauss_fields;
   global idx_3_0G;
   
-  age_vs_alpha_mlt(gauss_fields(idx_3_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 3.0G & var. rotational velocity', 'alpha_mlt_var_vel_3_0g');
+  age_vs_alpha_mlt_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 3.0G & var. rotational velocity', 'alpha_mlt_var_vel_3_0g');
 end
+
+function plot_age_vs_alpha_mlt_4_0G(rot_vels)
+  global gauss_fields;
+  global idx_4_0G;
+  
+  age_vs_alpha_mlt_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 4.0G & var. rotational velocity', 'alpha_mlt_var_vel_4_0g');
+end
+
+function plot_age_vs_alpha_mlt_XG(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_alpha_mlt_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.73, 1.87], 'northwest', 'alpha MLT - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
+end
+
+function plot_omega_vs_mag_field_XG(rot_vels, show_limits)
+  global gauss_fields;
+  global idx_X_G;
+  
+  %omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [0.5, 50, 1, 1000], 'northwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
+  omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
+end
+
+
 
 
 function plot_kipperhahn_3G_var_vel(rot_vels)
@@ -2371,6 +2639,8 @@ function main()
   global idx_0314crit;
   global idx_9_090256e_6_dl;
   global idx_0336crit_alpha;
+  global idx_11crit;
+  global idx_105crit;
   
   
   
@@ -2380,12 +2650,13 @@ function main()
   mag_fields_annexA = gauss_fields([idx_5_0G],:);
   mag_fields_annexB = gauss_fields([idx_5_0G],:);
   
-  rot_vels = rotational_vels([idx_0crit;idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
+  rot_vels = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   dl_rot_vels = dl_rotational_vels([idx_0336crit],:);
   rot_vels2 = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
   rot_vels3 = rotational_vels([idx_0314crit],:);
   rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
+  rot_vels5 = rotational_vels([idx_11crit;idx_105crit],:);
   rot_vels_annexB = rotational_vels([idx_028crit],:);
   
   %plot_age_vs_mb_activation_3_5G();
@@ -2416,9 +2687,15 @@ function main()
   %plot_4_5G_var_vel(rot_vels); 
   %plot_5_0G_var_vel(rot_vels); 
   %plot_5_5G_var_vel(rot_vels); 
+  %plot_XG_var_vel(rot_vels2); 
+  
+  %Works only with paper3d folder
+  plot_XG_var_vel(rot_vels5); 
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
+  %plot_age_vs_alpha_mlt_4_0G(rot_vels2);
+  %plot_age_vs_alpha_mlt_XG(rot_vels2);
   
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -2438,7 +2715,7 @@ function main()
   %plot_3_3G_var_vel();
   %plot_vel_rot_2G_var_vel();
   %plot_vel_rot_3_0G_var_vel(rot_vels3);
-  plot_vel_rot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  %plot_vel_rot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
   
   %plot_vel_rot_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -2452,6 +2729,7 @@ function main()
   %plot_omega_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
   %plot_omega_0_0G_var_vel(rot_vels2);
   %plot_omega_3_0G_var_vel(rot_vels2);
+  %plot_omega_4_0G_var_vel(rot_vels2)
   
   %plot_0084vc_var_g();
   %plot_014vc_var_g();
@@ -2468,7 +2746,9 @@ function main()
   %plot_vel_rot_4G_var_vel_z1(rot_vels2);
   %plot_vel_rot_4_5G_var_vel(rot_vels2);
   %plot_vel_rot_5G_var_vel(rot_vels2);
-  %plot_vel_rot_5_5G_var_vel(rot_vels2);  
+  %plot_vel_rot_5_5G_var_vel(rot_vels2);
+  %plot_vel_rot_XG_var_vel(rot_vels2);
+  %plot_vel_rot_XG_var_vel_z1(rot_vels2);
   
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
@@ -2512,6 +2792,10 @@ function main()
   %plot_hr_0G_var_vel();
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
+  
+  %plot_omega_vs_mag_field_XG(rot_vels2, false);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_0336crit],:), true);
+  
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);  
   

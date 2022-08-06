@@ -221,7 +221,6 @@
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
          activated = 0
-         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
          call reset_core_info(core_info_ptr)
          call reset_convective_info(sz_info_ptr)
 
@@ -906,6 +905,9 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
          extras_start_step = keep_going
+
+         !Reset support structures
+         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
 
          if (var_mlt_alpha .eqv. .true.) then
             s% mixing_length_alpha = calculate_alpha(s)

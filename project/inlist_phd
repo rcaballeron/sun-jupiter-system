@@ -260,15 +260,15 @@
 !MESH AND TIMESTEP PARAMETERS
 
       !A larger value increases the max allowed deltas and decreases the number of grid points.
-      mesh_delta_coeff = 1.0 !Default value 1.0
-      !mesh_delta_coeff = 0.5 !Used in paper
+      !mesh_delta_coeff = 1.0 !Default value 1.0
+      mesh_delta_coeff = 0.5 !Used in paper
       !mesh_delta_coeff = 0.25 !Used in extended graphic
       !mesh_delta_coeff = 0.12 !Used in extended graphic
 
       
       !This is the target value for relative variation in the structure from one model to the next.
-      varcontrol_target = 1d-4 !Default value 1d-4
-      !varcontrol_target = 1d-5 !Used in paper
+      !varcontrol_target = 1d-4 !Default value 1d-4
+      varcontrol_target = 1d-5 !Used in paper
       !varcontrol_target = 5d-6 !Used in extended graphic
 
 
@@ -338,8 +338,8 @@
       ! **********************************
       ! Disk locking input parameters
       ! **********************************
-      x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1=deactivated
-      !x_ctrl(3) = -1
+      !x_ctrl(3) = 3.0d6 ! disk lifetime in years. Set to -1=deactivated
+      x_ctrl(3) = -1
       x_ctrl(4) = 9.090256e-6 ! disk omega in rad/s
 
       ! **********************************
