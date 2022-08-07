@@ -55,8 +55,10 @@ global mix_relr_top_ini_col = 78;
 
 #Clusters section
 global clusters_teff_col = 2;
-global clusters_li_col = 4;
-global clusters_age_col = 6;
+#global clusters_li_col = 4;
+global clusters_li_col = 8;
+#global clusters_age_col = 6;
+global clusters_age_col = 10;
 global clusters_err_up_age_col = 7;
 global clusters_err_down_age_col = 8;
 global pleiades_table_filename = 'Pleiades_J_A+A_613_A63_tableb1';
@@ -66,6 +68,22 @@ global gamma_vel_b_table_filename = 'Gamma_Vel_B_J_A+A_659_A85_tableb3';
 global ngc_2451_b_table_filename = 'NGC_2451_B_J_A+A_659_A85_tableb4';
 global ngc_2547_table_filename = 'NGC_2547_J_A+A_659_A85_tableb5';
 global ngc_2516_table_filename = 'NGC_2516_J_A+A_659_A85_tableb6';
+global ges_dr5_all_oc_table_filename = 'ges_dr5_oc_li1_feh_teff_logg_age2.csv';
+global br_21 ='Br21';
+global br_22 ='Br22';
+global br_25 ='Br25';
+global br_30 ='Br30';
+global br_31 ='Br31';
+global br_32 ='Br32';
+global br_36 ='Br36';
+global br_39 ='Br39';
+global br_44 ='Br44';
+global br_73 ='Br73';
+global br_75 ='Br75';
+global br_81 ='Br81';
+global blanco_1 = 'Blanco1';
+global assc_50 = 'Assc50';
+global ori_25 = '25_Ori';
 global teff_low_limit = 5700;
 global teff_top_limit = 5800;
 
@@ -293,8 +311,25 @@ function plot_clusters(A, color, width, ytick, axis_limits)
   global ngc_2451_b_table_filename;
   global ngc_2547_table_filename;
   global ngc_2516_table_filename;
+  global ges_dr5_all_oc_table_filename;
+  global br_21;
+  global br_22;
+  global br_25;
+  global br_30;
+  global br_31;
+  global br_32;
+  global br_36;
+  global br_39;
+  global br_44;
+  global br_73;
+  global br_75;
+  global br_81;
+  global blanco_1;
+  global assc_50;
+  global ori_25;
+
   
- 
+ %{
   full_path = strcat(tables_parent_folder, '/', pleiades_table_filename);  
   plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
 
@@ -312,9 +347,58 @@ function plot_clusters(A, color, width, ytick, axis_limits)
 
   full_path = strcat(tables_parent_folder, '/', ngc_2547_table_filename);  
   plot_cluster(A, 'm', 'd', width, ytick, axis_limits, full_path);
+  
   full_path = strcat(tables_parent_folder, '/', ngc_2516_table_filename);  
   plot_cluster(A, 'c', '^', width, ytick, axis_limits, full_path);
   
+  %}
+  
+  full_path = strcat(tables_parent_folder, '/', br_21);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_22);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_25);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_30);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_31);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_32);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_36);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_39);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', br_44);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', br_73);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', br_75);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', br_81);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  
+  full_path = strcat(tables_parent_folder, '/', blanco_1);  
+  plot_cluster(A, 'r', 'o', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', assc_50);  
+  plot_cluster(A, 'g', '*', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ori_25);  
+  plot_cluster(A, 'b', 'x', width, ytick, axis_limits, full_path);
+
 end
 
 function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
@@ -326,23 +410,32 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   global clusters_err_up_age_col;
   global clusters_err_down_age_col;
 
-  fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
+  %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
+  fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col]);
       
-  C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
+  %C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
+  C = read_matrix_from_file(full_path, fmt, table_header_lines, 3);
   
 
   %Get cluster age and limits
-  cluster_age = C(1, 3);  
-  cluster_top_age = C(1, 4) + cluster_age;
-  cluster_low_age = C(1, 5) + cluster_age;
+  cluster_age = C(1, 3) * 1000000000;  
+  %cluster_top_age = C(1, 4) + cluster_age;
+  %cluster_low_age = C(1, 5) + cluster_age;
+  cluster_top_age = cluster_age + ((cluster_age*10)/100);
+  cluster_low_age = cluster_age - ((cluster_age*10)/100);
+  cluster_top_age
+  cluster_low_age
+
   
   %Find rows with age older than cluster_low_age and get Teff
   D = find(A(:,1) >= cluster_low_age);
   teff_low_limit = power(10, A(D(1), 2));
+  teff_low_limit
   
   %Find rows with age older than cluster_top_age and get Teff
   D = find(A(:,1) >= cluster_top_age);
   teff_top_limit = power(10, A(D(1), 2));
+  teff_top_limit
   
   %Filter out starts with Teff below and above the limits
   B1 = C(:,1) < teff_low_limit;
@@ -352,15 +445,24 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   C(B,:) = [];
 
   %save file
+  %{
   filename = strcat(full_path, ".sub");
   fid = fopen (filename, "w");
   fputs (fid, "recno Teff e_Teff ALi e_ALi Age pe_Age ne_Age\n");
   fclose (fid);  
   dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
+  %}
+
+  filename = strcat(full_path, ".sub");
+  fid = fopen (filename, "w");
+  fputs (fid, "Teff ALi Age(Gyr)\n");
+  fclose (fid);  
+  dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
+
   
   %Plot values
   %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
-  plot(C(:,3), C(:,2), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
+  plot(C(:,3)*1000000000, C(:,2), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
 
   %Axis scales
   set(gca, 'XScale', 'log');
