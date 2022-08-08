@@ -13,6 +13,7 @@ global log_LH_col         = 17;
 global log_Teff_col       = 33;
 global log_L_col          = 34;
 global log_R_col          = 35;
+global log_g_col          = 36;
 global surf_avg_omega_col = 39;
 global surf_avg_v_rot_col = 42;
 #global surf_avg_omega_col = 160;
@@ -55,6 +56,8 @@ global mix_relr_top_ini_col = 78;
 
 #Clusters section
 global clusters_teff_col = 2;
+global clusters_log_g_col = 4;
+global clusters_e_log_g_col = 5;
 #global clusters_li_col = 4;
 global clusters_li_col = 8;
 #global clusters_age_col = 6;
@@ -641,40 +644,61 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   global clusters_age_col;
   global clusters_err_up_age_col;
   global clusters_err_down_age_col;
+  global clusters_log_g_col;
+  global clusters_e_log_g_col;
 
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
-  fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col]);
+  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
       
   %C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
-  C = read_matrix_from_file(full_path, fmt, table_header_lines, 3);
+  C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
   
 
   %Get cluster age and limits
-  cluster_age = C(1, 3) * 1000000000;  
+  cluster_age = C(1, 5) * 1000000000;
   %cluster_top_age = C(1, 4) + cluster_age;
   %cluster_low_age = C(1, 5) + cluster_age;
   cluster_top_age = cluster_age + ((cluster_age*10)/100);
   cluster_low_age = cluster_age - ((cluster_age*10)/100);
-  cluster_top_age
-  cluster_low_age
 
   
   %Find rows with age older than cluster_low_age and get Teff
   D = find(A(:,1) >= cluster_low_age);
+  %teff is given in log10 and is present in A(2)
   teff_low_limit = power(10, A(D(1), 2));
-  teff_low_limit
+  %logg is present in A(3)
+  log_g_low_limit = A(D(1), 3);
   
   %Find rows with age older than cluster_top_age and get Teff
   D = find(A(:,1) >= cluster_top_age);
-  teff_top_limit = power(10, A(D(1), 2));
-  teff_top_limit
+  teff_top_limit = power(10, A(D(1), 2));  
+  log_g_top_limit = A(D(1), 3);
   
+  cluster_top_age
+  cluster_low_age  
+  teff_top_limit
+  teff_low_limit
+  log_g_low_limit
+  log_g_top_limit
+
+  %First filter by Teff  
   %Filter out starts with Teff below and above the limits
   B1 = C(:,1) < teff_low_limit;
   B2 = C(:,1) > teff_top_limit;
+  
   % Mark rows which fulfill either B1 or B2 and remove them
   B = B1 | B2;  
   C(B,:) = [];
+  C
+  
+  %Second filter by logg
+  B1 = C(:,2) < log_g_low_limit;
+  B2 = C(:,2) > log_g_top_limit;
+  
+  % Mark rows which fulfill either B1 or B2 and remove them
+  B = B1 | B2;  
+  C(B,:) = [];
+  C
 
   %save file
   %{
@@ -694,7 +718,7 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   
   %Plot values
   %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
-  plot(C(:,3)*1000000000, C(:,2), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
+  plot(C(:,5)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
 
   %Axis scales
   set(gca, 'XScale', 'log');
@@ -729,7 +753,7 @@ function result = calculate_A_Li7(A)
   
   A_Li7 = zeros(length(A), 1);
   
-  A_Li7(:,1) = fA_Li7(A(:,3),A(:,4));
+  A_Li7(:,1) = fA_Li7(A(:,4),A(:,5));
   
   result = A_Li7;
 end 
@@ -1145,6 +1169,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   global surface_h1_col;
   global surface_li_col;
   global log_Teff_col;
+  global log_g_col;
   global header_lines;
   global sun_age;
   global sun_A_Li7;
@@ -1169,9 +1194,9 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
       full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
        
-      fmt = get_parsing_fmt([star_age_col, log_Teff_col, surface_h1_col, surface_li_col]);
+      fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
       
-      A = read_matrix_from_file(full_path, fmt, header_lines, 4);
+      A = read_matrix_from_file(full_path, fmt, header_lines, 5);
       
       B = calculate_A_Li7(A);      
       
