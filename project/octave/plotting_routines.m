@@ -84,6 +84,53 @@ global br_81 ='Br81';
 global blanco_1 = 'Blanco1';
 global assc_50 = 'Assc50';
 global ori_25 = '25_Ori';
+global cha_i = 'Cha_I';
+global col_197 = 'Col197';
+global cz_24 = 'Cz24';
+global cz_30 = 'Cz30';
+global es_092_05 = 'ES092_05';
+global haf_10 = 'Haf10';
+global ic_2391 = 'IC2391';
+global ic_2602 = 'IC2602';
+global ic_4665 = 'IC4665';
+global loden165 = 'Loden165';
+global m_67 = 'M67';
+global ngc_2141 = 'NGC2141';
+global ngc_2158 = 'NGC2158';
+global ngc_2232 = 'NGC2232';
+global ngc_2243 = 'NGC2243';
+global ngc_2355 = 'NGC2355';
+global ngc_2244 = 'NGC2244';
+global ngc_2264 = 'NGC2264';
+global ngc_2420 = 'NGC2420';
+global ngc_2425 = 'NGC2425';
+global ngc_2451 = 'NGC2451';
+global ngc_2516 = 'NGC2516';
+global ngc_3532 = 'NGC3532';
+global ngc_4815 = 'NGC4815';
+global ngc_6005 = 'NGC6005';
+global ngc_6067 = 'NGC6067';
+global ngc_6253 = 'NGC6253';
+global ngc_6259 = 'NGC6259';
+global ngc_6281 = 'NGC6281';
+global ngc_6405 = 'NGC6405';
+global ngc_6530 = 'NGC6530';
+global ngc_6633 = 'NGC6633';
+global ngc_6649 = 'NGC6649';
+global ngc_6705 = 'NGC6705';
+global ngc_6709 = 'NGC6709';
+global ngc_6802 = 'NGC6802';
+global pismis_15 = 'Pismis15';
+global pismis_18 = 'Pismis18';
+global rho_oph = 'Rho_Oph';
+global rup_134 = 'Rup134';
+global trumpler_14 = 'Trumpler14';
+global trumpler_20 = 'Trumpler20';
+global trumpler_23 = 'Trumpler23';
+global trumpler_5 = 'Trumpler5';
+global gamma2_vel = 'gamma2_Vel';
+global lam_ori = 'lam_Ori';
+
 global teff_low_limit = 5700;
 global teff_top_limit = 5800;
 
@@ -327,6 +374,54 @@ function plot_clusters(A, color, width, ytick, axis_limits)
   global blanco_1;
   global assc_50;
   global ori_25;
+  global cha_i;
+  global col_197;
+  global cz_24;
+  global cz_30;
+  global es_092_05;
+  global haf_10;
+  global ic_2391;
+  global ic_2602;
+  global ic_4665;
+  global loden165;
+  global m_67;
+  global ngc_2141;
+  global ngc_2158;
+  global ngc_2232;
+  global ngc_2243;
+  global ngc_2355;
+  global ngc_2244;
+  global ngc_2264;
+  global ngc_2420;
+  global ngc_2425;
+  global ngc_2451;
+  global ngc_2516;
+  global ngc_3532;
+  global ngc_4815;
+  global ngc_6005;
+  global ngc_6067;
+  global ngc_6253;
+  global ngc_6259;
+  global ngc_6281;
+  global ngc_6405;
+  global ngc_6530;
+  global ngc_6633;
+  global ngc_6649;
+  global ngc_6705;
+  global ngc_6709;
+  global ngc_6802;
+  global pismis_15;
+  global pismis_18;
+  global rho_oph;
+  global rup_134;
+  global trumpler_14;
+  global trumpler_20;
+  global trumpler_23;
+  global trumpler_5;
+  global gamma2_vel;
+  global lam_ori;
+  
+  
 
   
  %{
@@ -388,7 +483,144 @@ function plot_clusters(A, color, width, ytick, axis_limits)
   
   full_path = strcat(tables_parent_folder, '/', br_81);  
   plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+ 
+  full_path = strcat(tables_parent_folder, '/', cha_i);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', col_197);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
   
+  full_path = strcat(tables_parent_folder, '/', cz_24);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', cz_30);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', es_092_05);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', haf_10);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ic_2391);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ic_2602);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ic_4665);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', loden165);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', m_67);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2141);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2158);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2232);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2243);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2244);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2264);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2355);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_2420);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_2425);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_2451);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_2516);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_3532);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_4815);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6005);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6067);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6253);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6259);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6281);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6405);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_6530);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_6633);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_6649);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', ngc_6705);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6709);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', ngc_6802);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', pismis_15);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', pismis_18);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', rho_oph);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', rup_134);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+
+  full_path = strcat(tables_parent_folder, '/', trumpler_14);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', trumpler_20);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', trumpler_23);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', trumpler_5);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', gamma2_vel);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  
+  full_path = strcat(tables_parent_folder, '/', lam_ori);  
+  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', blanco_1);  
   plot_cluster(A, 'r', 'o', width, ytick, axis_limits, full_path);
