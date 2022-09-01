@@ -58,9 +58,8 @@ global mix_relr_top_ini_col = 78;
 global clusters_teff_col = 2;
 global clusters_log_g_col = 4;
 global clusters_e_log_g_col = 5;
-#global clusters_li_col = 4;
+global clusters_fe_h_col = 6;
 global clusters_li_col = 8;
-#global clusters_age_col = 6;
 global clusters_age_col = 10;
 global clusters_err_up_age_col = 7;
 global clusters_err_down_age_col = 8;
@@ -624,7 +623,8 @@ function plot_clusters(A, color, width, ytick, axis_limits)
   
   full_path = strcat(tables_parent_folder, '/', lam_ori);  
   plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
-  
+ 
+%{ 
   full_path = strcat(tables_parent_folder, '/', blanco_1);  
   plot_cluster(A, 'r', 'o', width, ytick, axis_limits, full_path);
 
@@ -633,6 +633,7 @@ function plot_clusters(A, color, width, ytick, axis_limits)
 
   full_path = strcat(tables_parent_folder, '/', ori_25);  
   plot_cluster(A, 'b', 'x', width, ytick, axis_limits, full_path);
+%}
 
 end
 
@@ -646,41 +647,49 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   global clusters_err_down_age_col;
   global clusters_log_g_col;
   global clusters_e_log_g_col;
+  global clusters_fe_h_col
+  delta_log_g = 0.05 %dex
+  delta_teff = 50 %K
+  delta_fe_h = 0.05 %dex
 
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
-  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
+  %fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
+  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_fe_h_col, clusters_li_col, clusters_age_col]);
       
   %C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
   C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
   
 
-  %Get cluster age and limits
+  %Get cluster age (in yrs) and limits
   cluster_age = C(1, 5) * 1000000000;
   %cluster_top_age = C(1, 4) + cluster_age;
   %cluster_low_age = C(1, 5) + cluster_age;
-  cluster_top_age = cluster_age + ((cluster_age*10)/100);
-  cluster_low_age = cluster_age - ((cluster_age*10)/100);
+  age_top_limit = cluster_age + ((cluster_age*0.1)/100);
+  age_low_limit = cluster_age - ((cluster_age*0.1)/100);
 
   
-  %Find rows with age older than cluster_low_age and get Teff
-  D = find(A(:,1) >= cluster_low_age);
+  %Find rows with age older than cluster_low_age and get: Teff, logg
+  D = find(A(:,1) >= age_low_limit);
   %teff is given in log10 and is present in A(2)
-  teff_low_limit = power(10, A(D(1), 2));
+  teff_low_limit = power(10, A(D(1), 2)) - delta_teff;
   %logg is present in A(3)
-  log_g_low_limit = A(D(1), 3);
+  log_g_low_limit = A(D(1), 3) - delta_log_g;
+  %FeH compared to the Sun one
+  fe_h_low_limit = 0.0 - delta_fe_h;
   
-  %Find rows with age older than cluster_top_age and get Teff
-  D = find(A(:,1) >= cluster_top_age);
-  teff_top_limit = power(10, A(D(1), 2));  
-  log_g_top_limit = A(D(1), 3);
-  
+  %Find rows with age older than cluster_top_age and get Teff, logg
+  D = find(A(:,1) >= age_top_limit);
+  teff_top_limit = power(10, A(D(1), 2)) + delta_teff;
+  log_g_top_limit = A(D(1), 3) + delta_log_g;
+  fe_h_top_limit = 0.0 + delta_fe_h;
+  %{
   cluster_top_age
   cluster_low_age  
   teff_top_limit
   teff_low_limit
   log_g_low_limit
   log_g_top_limit
-
+%}
   %First filter by Teff  
   %Filter out starts with Teff below and above the limits
   B1 = C(:,1) < teff_low_limit;
@@ -689,29 +698,33 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   % Mark rows which fulfill either B1 or B2 and remove them
   B = B1 | B2;  
   C(B,:) = [];
-  C
-  
+  %C
+
   %Second filter by logg
   B1 = C(:,2) < log_g_low_limit;
   B2 = C(:,2) > log_g_top_limit;
-  
-  % Mark rows which fulfill either B1 or B2 and remove them
   B = B1 | B2;  
   C(B,:) = [];
-  C
-
-  %save file
-  %{
+  %C
+  
+  %Third filter by metallicity
+  B1 = C(:,3) < fe_h_low_limit;
+  B2 = C(:,3) > fe_h_top_limit;
+  B = B1 | B2;  
+  C(B,:) = [];
+  
+  
   filename = strcat(full_path, ".sub");
   fid = fopen (filename, "w");
-  fputs (fid, "recno Teff e_Teff ALi e_ALi Age pe_Age ne_Age\n");
-  fclose (fid);  
-  dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
-  %}
-
-  filename = strcat(full_path, ".sub");
-  fid = fopen (filename, "w");
-  fputs (fid, "Teff ALi Age(Gyr)\n");
+  
+  filter_setup = strcat("%Filter setup: Teff_low=", num2str(teff_low_limit), " Teff_top=", num2str(teff_top_limit),
+    " log_g_low=", num2str(log_g_low_limit), " log_g_top=", num2str(log_g_top_limit),
+    " fe_h_low=", num2str(fe_h_low_limit), " fe_h_top=", num2str(fe_h_top_limit),
+    " age_low=", num2str(age_low_limit/1000000000), " age_top=", num2str(age_top_limit/1000000000),
+    "\n");
+    
+  fputs (fid, filter_setup);
+  fputs (fid, "Teff(K) log_g(dex) FeH(dex) ALi(dex) Age(Gyr)\n");
   fclose (fid);  
   dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
 
@@ -1215,6 +1228,8 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
+      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
+      
     end
   end
   %Plot ZAMS, only one of them
@@ -1225,7 +1240,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
   % Plot sun reference
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
-  plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
+  %plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
   %plot(pleiades_age, pleiades_A_Li7, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
 
   grid on;
@@ -3049,7 +3064,9 @@ function main()
   %plot_XG_var_vel(rot_vels2); 
   
   %Works only with paper3d folder
-  plot_XG_var_vel(rot_vels5); 
+  %plot_XG_var_vel(rot_vels5); 
+  %plot_XG_var_vel(rotational_vels([idx_105crit],:));
+  plot_XG_var_vel(rotational_vels([idx_11crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
