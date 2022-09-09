@@ -146,9 +146,13 @@ global filename = '1M_photosphere_history.data';
 %global filename = 'annex2B/1M_photosphere_history.data';
 global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '4.5g'; '5g'; '5.5g'; 'Xg'];
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
-global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha';'11crit';'105crit'];
+global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; 
+  '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha';
+  '11crit';'105crit';'1075crit';'1125crit';'1025crit'];
 %dl -> disk locking
-global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';'0312crit_dl';'0314crit_dl';'032crit_dl';'9_090256e-6_dl'];
+global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; 
+  '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';
+  '0312crit_dl';'0314crit_dl';'032crit_dl';'9_090256e-6_dl'];
 global colors = ['k'; 'r'; 'g'; 'b'; 'y'; 'm'; 'c'];
 
 %Array indexes
@@ -182,6 +186,10 @@ global idx_032crit  = 12;
 global idx_0336crit_alpha = 13;
 global idx_11crit  = 14;
 global idx_105crit  = 15;
+global idx_1075crit  = 16;
+global idx_1125crit  = 17;
+global idx_1025crit  = 18;
+
 %The following with mlt=var and disk locking
 global idx_9_090256e_6_dl  = 13;
 
@@ -3015,7 +3023,9 @@ function main()
   global idx_0336crit_alpha;
   global idx_11crit;
   global idx_105crit;
-  
+  global idx_1075crit;
+  global idx_1125crit;
+  global idx_1025crit;
   
   
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
@@ -3030,7 +3040,9 @@ function main()
   %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
   rot_vels3 = rotational_vels([idx_0314crit],:);
   rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
-  rot_vels5 = rotational_vels([idx_11crit;idx_105crit],:);
+  rot_vels5 = rotational_vels([idx_11crit;idx_105crit;idx_1075crit;idx_1125crit;idx_1025crit],:);
+  
+
   rot_vels_annexB = rotational_vels([idx_028crit],:);
   
   %plot_age_vs_mb_activation_3_5G();
@@ -3065,8 +3077,8 @@ function main()
   
   %Works only with paper3d folder
   %plot_XG_var_vel(rot_vels5); 
-  %plot_XG_var_vel(rotational_vels([idx_105crit],:));
-  plot_XG_var_vel(rotational_vels([idx_11crit],:));
+  plot_XG_var_vel(rotational_vels([idx_1075crit],:));
+  %plot_XG_var_vel(rotational_vels([idx_1125crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
@@ -3076,7 +3088,7 @@ function main()
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
   %Includes dynamo effect
-  %plot_4_0G_var_vel_st();
+  %plot_4_0G_var_vel_st();  
   
   %Var control 0.00001
   %plot_4_0G_var_vel_vc5();
