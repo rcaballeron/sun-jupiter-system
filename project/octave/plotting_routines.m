@@ -148,7 +148,8 @@ global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '
 %global gauss_fields = ['0g'; '3g'; '3.5g'; '4g'; '4.5g'; '5g'];
 global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; 
   '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha';
-  '11crit';'105crit';'1075crit';'1125crit';'1025crit'];
+  '11crit';'105crit';'1075crit';'1125crit';'1025crit';
+  '115crit';'10crit';'0975crit';'095crit';'0925crit'];
 %dl -> disk locking
 global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; 
   '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';
@@ -189,6 +190,13 @@ global idx_105crit  = 15;
 global idx_1075crit  = 16;
 global idx_1125crit  = 17;
 global idx_1025crit  = 18;
+global idx_115crit  = 19;
+global idx_10crit  = 20;
+global idx_0975crit  = 21;
+global idx_095crit  = 22;
+global idx_0925crit  = 23;
+
+
 
 %The following with mlt=var and disk locking
 global idx_9_090256e_6_dl  = 13;
@@ -359,7 +367,7 @@ function plot_ZAMS(A, color, width, ytick, axis_limits)
 
 end
 
-function plot_clusters(A, color, width, ytick, axis_limits)
+function plot_clusters(A, width, ytick, axis_limits)
   global tables_parent_folder;
   global pleiades_table_filename;
   global ori_table_filename;
@@ -740,23 +748,6 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   %Plot values
   %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
   plot(C(:,5)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
-
-  %Axis scales
-  set(gca, 'XScale', 'log');
-  
-  %Axis limits
-  axis(axis_limits);
-  
-  xticks = get (gca, "xtick"); 
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
-  set (gca, "xticklabel", xlabels) ;
-  
-  yticks = get (gca, "ytick"); 
-  ylabels = arrayfun (@(x) sprintf ("%2.1f", x), yticks, "uniformoutput", false); 
-  set (gca, "yticklabel", ylabels);
-  
-  set(gca, 'fontsize', tick_font_size);
-
 end
 
 % Calculate the Li abundancies. The format of the matrix must be:
@@ -1210,6 +1201,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
   rotational_vels
   
+  %First plot Li
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
       sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
@@ -1236,10 +1228,24 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
       
-      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
+      %plot_clusters(A, line_width, ytick, axis_limits); <-- Doing this the legend is not shown properly
       
     end
   end
+  
+  %Second plot clusters. This approch, althoug slower, allows to show the legend properly
+  for i=1:rows(gauss_fields)
+    for j=1:rows(rotational_vels)
+      sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
+      full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
+       
+      fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
+      
+      A = read_matrix_from_file(full_path, fmt, header_lines, 5);
+      plot_clusters(A, line_width, ytick, axis_limits);      
+    end
+  end
+  
   %Plot ZAMS, only one of them
   sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
@@ -1248,7 +1254,6 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
   % Plot sun reference
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
-  %plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);
   %plot(pleiades_age, pleiades_A_Li7, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
 
   grid on;
@@ -1677,12 +1682,12 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
      
       %Calculate maximum for y axis
       %Get vel max value, divide it by 10, plus 1, multiply by 10
-      ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
+      ymax = (idivide(max(A(ix_ini:ix_end,2)), int16(ytick), "fix") + 1) * ytick;
       
       %Get vel max value, divide it by 10, minus 1, multiply by 10
-      ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
+      ymin = (idivide(min(A(ix_ini:ix_end,2)), int16(ytick), "fix") - 1) * ytick;
            
-      plot_vel_rot(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
+      plot_vel_rot(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);      
       
       % Plot ZAMS reference
       %zams = calculate_ZAMS(full_path);
@@ -2529,7 +2534,7 @@ function plot_vel_rot_XG_var_vel(rot_vels)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g');
+  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 20, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g');
 end
 
 function plot_vel_rot_XG_var_vel_z1(rot_vels)
@@ -2888,7 +2893,7 @@ function plot_age_vs_alpha_mlt_XG(rot_vels)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_alpha_mlt_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.73, 1.87], 'northwest', 'alpha MLT - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
+  age_vs_alpha_mlt(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.69, 1.87], 'northwest', 'alpha MLT - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
 end
 
 function plot_omega_vs_mag_field_XG(rot_vels, show_limits)
@@ -3026,7 +3031,11 @@ function main()
   global idx_1075crit;
   global idx_1125crit;
   global idx_1025crit;
-  
+  global idx_115crit;
+  global idx_10crit;
+  global idx_0975crit;
+  global idx_095crit;
+  global idx_0925crit;
   
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
   mag_fields2 = gauss_fields([idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
@@ -3039,8 +3048,13 @@ function main()
   rot_vels2 = rotational_vels([idx_0084crit;idx_014crit;idx_0196crit;idx_028crit;idx_0336crit],:);
   %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
   rot_vels3 = rotational_vels([idx_0314crit],:);
-  rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
-  rot_vels5 = rotational_vels([idx_11crit;idx_105crit;idx_1075crit;idx_1125crit;idx_1025crit],:);
+  rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);  
+  rot_vels5 = rotational_vels([idx_0925crit;idx_095crit;idx_0975crit;idx_10crit;idx_1025crit],:);
+  rot_vels6 = rotational_vels([idx_105crit;idx_1075crit;idx_11crit;idx_1125crit;idx_115crit],:);
+  rot_vels7 = rotational_vels([idx_11crit;idx_1125crit],:);
+  
+  
+  
   
 
   rot_vels_annexB = rotational_vels([idx_028crit],:);
@@ -3073,17 +3087,17 @@ function main()
   %plot_4_5G_var_vel(rot_vels); 
   %plot_5_0G_var_vel(rot_vels); 
   %plot_5_5G_var_vel(rot_vels); 
-  %plot_XG_var_vel(rot_vels2); 
   
   %Works only with paper3d folder
-  %plot_XG_var_vel(rot_vels5); 
-  plot_XG_var_vel(rotational_vels([idx_1075crit],:));
+  %plot_XG_var_vel(rot_vels6); 
+  %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
   %plot_XG_var_vel(rotational_vels([idx_1125crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
   %plot_age_vs_alpha_mlt_4_0G(rot_vels2);
   %plot_age_vs_alpha_mlt_XG(rot_vels2);
+  %plot_age_vs_alpha_mlt_XG(rot_vels6);
   
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -3137,6 +3151,7 @@ function main()
   %plot_vel_rot_5_5G_var_vel(rot_vels2);
   %plot_vel_rot_XG_var_vel(rot_vels2);
   %plot_vel_rot_XG_var_vel_z1(rot_vels2);
+  plot_vel_rot_XG_var_vel(rot_vels6);
   
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
