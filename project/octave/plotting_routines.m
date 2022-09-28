@@ -1039,12 +1039,15 @@ function plot_mag_field(A, color, width, show_limits, ytick, axis_limits)
   plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width, 'linestyle', ':');
   if (show_limits)
     %Min bf
-    plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
+    %plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
+    plot(A(:,1), A(:,3), color+1, 'linewidth', width);
     %Max bf
-    plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', '--');
+    %plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', '--');
+    plot(A(:,1), A(:,4), color+2, 'linewidth', width);
   endif
   %Mean bf
-  plot(A(:,1), A(:,5), color, 'linewidth', width);
+  %plot(A(:,1), A(:,5), color, 'linewidth', width);
+  plot(A(:,1), A(:,5), color+3, 'linewidth', width);
 
   %Axis scales
   set(gca, 'XScale', 'log');    
@@ -1903,7 +1906,7 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   
 end
 
-function omegs_vs_mag_field_plots(gauss_fields, rotational_vels, show_limits, ytick, axis_limits, leg_loc, atitle, afilename)
+function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, axis_limits, leg_loc, atitle, afilename)
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -2901,7 +2904,7 @@ function plot_omega_vs_mag_field_XG(rot_vels, show_limits)
   global idx_X_G;
   
   %omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [0.5, 50, 1, 1000], 'northwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
-  omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
+  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
 end
 
 
@@ -3089,15 +3092,16 @@ function main()
   %plot_5_5G_var_vel(rot_vels); 
   
   %Works only with paper3d folder
-  %plot_XG_var_vel(rot_vels6); 
+  %plot_XG_var_vel(rot_vels5); 
   %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
-  %plot_XG_var_vel(rotational_vels([idx_1125crit],:));
+  %plot_XG_var_vel(rotational_vels([idx_0975crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
   %plot_age_vs_alpha_mlt_4_0G(rot_vels2);
   %plot_age_vs_alpha_mlt_XG(rot_vels2);
-  %plot_age_vs_alpha_mlt_XG(rot_vels6);
+  %plot_age_vs_alpha_mlt_XG(rot_vels7);
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_0975crit],:));
   
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -3151,7 +3155,8 @@ function main()
   %plot_vel_rot_5_5G_var_vel(rot_vels2);
   %plot_vel_rot_XG_var_vel(rot_vels2);
   %plot_vel_rot_XG_var_vel_z1(rot_vels2);
-  plot_vel_rot_XG_var_vel(rot_vels6);
+  %plot_vel_rot_XG_var_vel(rot_vels6);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_0975crit],:));
   
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
@@ -3196,8 +3201,9 @@ function main()
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
   
-  %plot_omega_vs_mag_field_XG(rot_vels2, false);
-  %plot_omega_vs_mag_field_XG(rotational_vels([idx_0336crit],:), true);
+  %plot_omega_vs_mag_field_XG(rot_vels6, false);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), false);
+  plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
   
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);  
