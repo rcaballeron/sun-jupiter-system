@@ -44,7 +44,7 @@
       !new_omega_div_omega_crit = 0.028 
       !new_omega_div_omega_crit = 0.0336 
       !new_omega_div_omega_crit = 0.032
-      new_omega_div_omega_crit = 0.0314
+      new_omega_div_omega_crit = 0.105
       
 ! End Block 2      
 
@@ -161,31 +161,31 @@
       Pextra_factor = 2.0
 
       !H core overshoot calibrated to M67
-      overshoot_f_above_nonburn_core = 0.016
-      overshoot_f_above_burn_h_core  = 0.016
-      overshoot_f_above_burn_he_core = 0.016
-      overshoot_f_above_burn_z_core  = 0.016
-      overshoot_f0_above_nonburn_core = 0.008
-      overshoot_f0_above_burn_h_core  = 0.008
-      overshoot_f0_above_burn_he_core = 0.008
-      overshoot_f0_above_burn_z_core  = 0.008
+      !overshoot_f_above_nonburn_core = 0.016
+      !overshoot_f_above_burn_h_core  = 0.016
+      !overshoot_f_above_burn_he_core = 0.016
+      !overshoot_f_above_burn_z_core  = 0.016
+      !overshoot_f0_above_nonburn_core = 0.008
+      !overshoot_f0_above_burn_h_core  = 0.008
+      !overshoot_f0_above_burn_he_core = 0.008
+      !overshoot_f0_above_burn_z_core  = 0.008
 
       !envelope overshoot calibrated to the sun, use with alpha MTL = 1.82
-      overshoot_f_above_nonburn_shell = 0.0174
-      overshoot_f_below_nonburn_shell = 0.0174
-      overshoot_f_above_burn_h_shell  = 0.0174
-      overshoot_f_below_burn_h_shell  = 0.0174
-      overshoot_f_above_burn_he_shell = 0.0174
-      overshoot_f_below_burn_he_shell = 0.0174
-      overshoot_f_above_burn_z_shell  = 0.0174
-      overshoot_f_below_burn_z_shell  = 0.0174
-      overshoot_f0_above_nonburn_shell = 0.0087
-      overshoot_f0_below_nonburn_shell = 0.0087
-      overshoot_f0_above_burn_h_shell  = 0.0087
-      overshoot_f0_below_burn_h_shell  = 0.0087
-      overshoot_f0_above_burn_he_shell = 0.0087
-      overshoot_f0_below_burn_he_shell = 0.0087
-      overshoot_f0_below_burn_z_shell  = 0.0087
+      !overshoot_f_above_nonburn_shell = 0.0174
+      !overshoot_f_below_nonburn_shell = 0.0174
+      !overshoot_f_above_burn_h_shell  = 0.0174
+      !overshoot_f_below_burn_h_shell  = 0.0174
+      !overshoot_f_above_burn_he_shell = 0.0174
+      !overshoot_f_below_burn_he_shell = 0.0174
+      !overshoot_f_above_burn_z_shell  = 0.0174
+      !overshoot_f_below_burn_z_shell  = 0.0174
+      !overshoot_f0_above_nonburn_shell = 0.0087
+      !overshoot_f0_below_nonburn_shell = 0.0087
+      !overshoot_f0_above_burn_h_shell  = 0.0087
+      !overshoot_f0_below_burn_h_shell  = 0.0087
+      !overshoot_f0_above_burn_he_shell = 0.0087
+      !overshoot_f0_below_burn_he_shell = 0.0087
+      !overshoot_f0_below_burn_z_shell  = 0.0087
 
 
       !envelope overshoot, use with alpha MTL = 1.7
@@ -267,8 +267,8 @@
 
       
       !This is the target value for relative variation in the structure from one model to the next.
-      !varcontrol_target = 1d-4 !Default value 1d-4
-      varcontrol_target = 1d-5 !Used in paper
+      varcontrol_target = 1d-4 !Default value 1d-4
+      !varcontrol_target = 1d-5 !Used in paper
       !varcontrol_target = 5d-6 !Used in extended graphic
 
 
@@ -301,6 +301,9 @@
       xtra_coef_os_above_burn_z = 0.5
       xtra_coef_os_below_burn_z = 0.5
 
+      !Limit max_timestep(s) to 1 million year
+      max_timestep = 31536000000000
+
 !HOOKs
       ! make use of 'hooks'
       use_other_torque = .true.
@@ -310,8 +313,9 @@
       ! Magnetic braking input parameters
       ! **********************************
       
-      x_ctrl(1) = 4.0d0 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
-      !x_ctrl(1) = -1 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
+      !x_ctrl(1) = 4.0d0 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
+
+      x_ctrl(1) = -1 ! B - magnetic field torque (G). If set to -1, a variable magnetic field strengh is calculated
       x_ctrl(2) = 0.1d-1 ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
 
       ! How to redistribute the loss of angular momentum

@@ -60,6 +60,7 @@ global clusters_log_g_col = 4;
 global clusters_e_log_g_col = 5;
 global clusters_fe_h_col = 6;
 global clusters_li_col = 8;
+global clusters_e_li_col = 9;
 global clusters_age_col = 10;
 global clusters_err_up_age_col = 7;
 global clusters_err_down_age_col = 8;
@@ -149,7 +150,10 @@ global gauss_fields = ['0g'; '2g'; '2.5g'; '3g'; '3.3g'; '3.5g'; '4g'; '4.3g'; '
 global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit'; 
   '0336crit';'029crit';'030crit';'031crit';'0312crit';'0314crit';'032crit';'0336crit_alpha';
   '11crit';'105crit';'1075crit';'1125crit';'1025crit';
-  '115crit';'10crit';'0975crit';'095crit';'0925crit'];
+  '115crit';'10crit';'0975crit';'095crit';'0925crit';'125crit';
+  '135crit';'1175crit';'12crit';'1225crit';'1275crit';
+  '13crit';'1325crit';'1375crit';'14crit';'1425crit';
+  '145crit';'1475crit';'15crit';'1525crit';'155crit'];
 %dl -> disk locking
 global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl'; 
   '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';
@@ -195,7 +199,22 @@ global idx_10crit  = 20;
 global idx_0975crit  = 21;
 global idx_095crit  = 22;
 global idx_0925crit  = 23;
-
+global idx_125crit  = 24;
+global idx_135crit  = 25;
+global idx_1175crit  = 26;
+global idx_12crit  = 27;
+global idx_1225crit  = 28;
+global idx_1275crit  = 29;
+global idx_13crit  = 30;
+global idx_1325crit  = 31;
+global idx_1375crit  = 32;
+global idx_14crit  = 33;
+global idx_1425crit  = 34;
+global idx_145crit  = 35;
+global idx_1475crit  = 36;
+global idx_15crit  = 37;
+global idx_1525crit  = 38;
+global idx_155crit  = 39;
 
 
 %The following with mlt=var and disk locking
@@ -218,7 +237,8 @@ global pleiades_A_Li7 = 2.95;
 
 
 %ZAMS
-global delta_h1_center = 0.0015;
+%global delta_h1_center = 0.0015;
+global delta_h1_center = 0.0001; %When max_time fixed to 1e6 years
 global ratio_log_LH_vs_log_L = 0.99;
 
 %Graphic size in inches
@@ -330,7 +350,8 @@ function result = calculate_ZAMS(full_path)
     %Calculate ratio_log_LH_vs_log_L
     A(i,6) = power(10,A(i,2)) / power(10,A(i,3));
   end
-  
+  %delta_h1_center
+  %A
   %Find those row in which diff h1 > delta_h1_center
   B = find(A(:,5) > delta_h1_center);
   %Select the first one and get rows from A till that row
@@ -367,7 +388,7 @@ function plot_ZAMS(A, color, width, ytick, axis_limits)
 
 end
 
-function plot_clusters(A, width, ytick, axis_limits)
+function plot_clusters(A, color, width, ytick, axis_limits)
   global tables_parent_folder;
   global pleiades_table_filename;
   global ori_table_filename;
@@ -467,178 +488,178 @@ function plot_clusters(A, width, ytick, axis_limits)
   %}
   
   full_path = strcat(tables_parent_folder, '/', br_21);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_22);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_25);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_30);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_31);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_32);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_36);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_39);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', br_44);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', br_73);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', br_75);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', br_81);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
  
   full_path = strcat(tables_parent_folder, '/', cha_i);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', col_197);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', cz_24);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', cz_30);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', es_092_05);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', haf_10);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ic_2391);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ic_2602);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ic_4665);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', loden165);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', m_67);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2141);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2158);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2232);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2243);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2244);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2264);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2355);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2420);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2425);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2451);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2516);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_3532);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_4815);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6005);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6067);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6253);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6259);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6281);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6405);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6530);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6633);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6649);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6705);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6709);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6802);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', pismis_15);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', pismis_18);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', rho_oph);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', rup_134);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
 
   full_path = strcat(tables_parent_folder, '/', trumpler_14);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_20);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_23);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_5);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', gamma2_vel);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
   
   full_path = strcat(tables_parent_folder, '/', lam_ori);  
-  plot_cluster(A, 'k', '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
  
 %{ 
   full_path = strcat(tables_parent_folder, '/', blanco_1);  
@@ -658,6 +679,7 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   global table_header_lines;
   global clusters_teff_col;
   global clusters_li_col;
+  global clusters_e_li_col;
   global clusters_age_col;
   global clusters_err_up_age_col;
   global clusters_err_down_age_col;
@@ -670,14 +692,14 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
 
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
-  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_fe_h_col, clusters_li_col, clusters_age_col]);
+  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_fe_h_col, clusters_li_col, clusters_e_li_col, clusters_age_col]);
       
   %C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
-  C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
+  C = read_matrix_from_file(full_path, fmt, table_header_lines, 6);
   
 
   %Get cluster age (in yrs) and limits
-  cluster_age = C(1, 5) * 1000000000;
+  cluster_age = C(1, 6) * 1000000000;
   %cluster_top_age = C(1, 4) + cluster_age;
   %cluster_low_age = C(1, 5) + cluster_age;
   age_top_limit = cluster_age + ((cluster_age*0.1)/100);
@@ -747,7 +769,9 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   
   %Plot values
   %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
-  plot(C(:,5)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
+  %plot(C(:,6)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
+  h = errorbar(C(:,6)*1000000000, C(:,4),C(:,5),"~d");
+  set(h, 'markersize', 5, 'color', color, 'markerfacecolor', color);
 end
 
 % Calculate the Li abundancies. The format of the matrix must be:
@@ -1245,7 +1269,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
       
       A = read_matrix_from_file(full_path, fmt, header_lines, 5);
-      plot_clusters(A, line_width, ytick, axis_limits);      
+      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);      
     end
   end
   
@@ -1726,7 +1750,7 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
   % Here we can properly assing the ymin and ymax values for all the plots
   % Each of them will potentially have a different one. We opt for fixing
   % the limits by hand.  
-  line("xdata",[zams,zams], "ydata",[-10,200], "linewidth", 3, "linestyle", "--", "color", "k");
+  line("xdata",[zams,zams], "ydata",[-10,400], "linewidth", 3, "linestyle", "--", "color", "k");
   
 
   % Plot sun reference
@@ -1879,9 +1903,9 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
       
       %Generate serie labels
       if (is_var_vel)
-        labels = {labels{:}, ['alpha MLT-', strtrim(rotational_vels(j,:))]};
+        labels = {labels{:}, ['\alpha_{MLT}-', strtrim(rotational_vels(j,:))]};
       else
-        labels = {labels{:}, ['alpha MLT-', strtrim(gauss_fields(i,:))]};
+        labels = {labels{:}, ['\alpha_{MLT}-', strtrim(gauss_fields(i,:))]};
       endif
       
     end
@@ -1896,9 +1920,11 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   l = legend(labels, "location", leg_loc);
 
   set (l, "fontsize", legend_font_size);
+  set(l, 'interpreter', 'tex');
+  
   %legend boxoff
   xlabel('star age (yrs)', 'fontsize', axis_font_size);
-  ylabel('alpha MLT', 'fontsize', axis_font_size);
+  ylabel('\alpha_{MLT}', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
   
   hold('off');  
@@ -1951,12 +1977,12 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
       
       %Generate serie labels
       
-      labels = {labels{:}, ['Omega/Sun -', strtrim(rotational_vels(j,:))]};
+      labels = {labels{:}, ['\Omega/\Omega_{Sun} -', strtrim(rotational_vels(j,:))]};
       if (show_limits) 
-        labels = {labels{:}, ['Bfmin -', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['Bfmax -', strtrim(rotational_vels(j,:))]};
+        labels = {labels{:}, ['B_{f_{min}} -', strtrim(rotational_vels(j,:))]};
+        labels = {labels{:}, ['B_{f_{max}} -', strtrim(rotational_vels(j,:))]};
       endif
-      labels = {labels{:}, ['Bfmean -', strtrim(rotational_vels(j,:))]};
+      labels = {labels{:}, ['B_{f_{mean}} -', strtrim(rotational_vels(j,:))]};
     end
   end
   %Plot ZAMS, only one of them
@@ -1968,10 +1994,11 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   grid on;
   l = legend(labels, "location", leg_loc);
 
-  set (l, "fontsize", legend_font_size);
+  set(l, "fontsize", legend_font_size);
+  set(l, 'interpreter', 'tex');
   %legend boxoff
   xlabel('star age (yrs)', 'fontsize', axis_font_size);
-  ylabel('Mean mag. field (B) & Omega (rad)', 'fontsize', axis_font_size);
+  ylabel('Mean mag. field (G) & \Omega (rad)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
   
   hold('off');  
@@ -2579,6 +2606,14 @@ function plot_omega_4_0G_var_vel(rot_vels)
 end
 
 
+function plot_hr_XG_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', 'HR - var G & var. rotational velocity', 'hr_var_vel_var_g');
+end
+
+
 function plot_hr_0G_var_vel(rot_vels)
   global gauss_fields;
   global idx_0_0G;
@@ -2650,6 +2685,21 @@ function plot_hr_0336vc_var_g_z1(mag_fields)
   global idx_0336crit;
   
   hr_plots(mag_fields, rotational_vels(idx_0336crit,:), false, [0.005,0.1], [3.745, 3.775, -0.3, 0.45], 'southwest', 'HR - vcrit=0.0336 & var. magnetic field', 'hr_vc_0336_var_g_z1');
+end
+
+
+function plot_cz_size_XG_var_vel(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g');
+end
+
+function plot_cz_size_XG_var_vel_z1(rot_vels)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.01, [2.0e7, 6.0e7, 0.33, 0.40], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g_z1');
 end
 
 
@@ -2882,21 +2932,21 @@ function plot_age_vs_alpha_mlt_3_0G(rot_vels)
   global gauss_fields;
   global idx_3_0G;
   
-  age_vs_alpha_mlt_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 3.0G & var. rotational velocity', 'alpha_mlt_var_vel_3_0g');
+  age_vs_alpha_mlt_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', '\alpha_{MLT} - 3.0G & var. rotational velocity', 'alpha_mlt_var_vel_3_0g');
 end
 
 function plot_age_vs_alpha_mlt_4_0G(rot_vels)
   global gauss_fields;
   global idx_4_0G;
   
-  age_vs_alpha_mlt_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', 'alpha MLT - 4.0G & var. rotational velocity', 'alpha_mlt_var_vel_4_0g');
+  age_vs_alpha_mlt_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', '\alpha_{MLT} - 4.0G & var. rotational velocity', 'alpha_mlt_var_vel_4_0g');
 end
 
 function plot_age_vs_alpha_mlt_XG(rot_vels)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_alpha_mlt(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.69, 1.87], 'northwest', 'alpha MLT - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
+  age_vs_alpha_mlt(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.69, 1.87], 'northwest', '\alpha_{MLT} - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
 end
 
 function plot_omega_vs_mag_field_XG(rot_vels, show_limits)
@@ -3039,6 +3089,24 @@ function main()
   global idx_0975crit;
   global idx_095crit;
   global idx_0925crit;
+  global idx_125crit;
+  global idx_135crit;
+  global idx_1175crit;
+  global idx_12crit;
+  global idx_1225crit;
+  global idx_1275crit;
+  global idx_13crit;
+  global idx_1325crit;
+  global idx_1375crit;
+  global idx_14crit;
+  global idx_1425crit;
+  global idx_145crit;
+  global idx_1475crit;
+  global idx_15crit;
+  global idx_1525crit;
+  global idx_155crit;
+  
+  
   
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
   mag_fields2 = gauss_fields([idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
@@ -3054,7 +3122,11 @@ function main()
   rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);  
   rot_vels5 = rotational_vels([idx_0925crit;idx_095crit;idx_0975crit;idx_10crit;idx_1025crit],:);
   rot_vels6 = rotational_vels([idx_105crit;idx_1075crit;idx_11crit;idx_1125crit;idx_115crit],:);
-  rot_vels7 = rotational_vels([idx_11crit;idx_1125crit],:);
+  rot_vels7 = rotational_vels([idx_1175crit;idx_12crit;idx_1225crit;idx_125crit;idx_1275crit],:);
+  rot_vels8 = rotational_vels([idx_13crit;idx_1325crit;idx_1375crit;idx_14crit;idx_1425crit],:);
+  rot_vels9 = rotational_vels([idx_145crit;idx_1475crit;idx_15crit;idx_1525crit;idx_155crit],:);
+  rot_vels10 = rotational_vels([idx_125crit;idx_13crit;idx_14crit;idx_1475crit;idx_155crit],:);
+  
   
   
   
@@ -3092,16 +3164,23 @@ function main()
   %plot_5_5G_var_vel(rot_vels); 
   
   %Works only with paper3d folder
-  %plot_XG_var_vel(rot_vels5); 
+  %plot_XG_var_vel(rot_vels6); 
+  %plot_XG_var_vel(rot_vels7);
+  %plot_XG_var_vel(rot_vels8);
+  %plot_XG_var_vel(rot_vels9);
+  %plot_XG_var_vel(rot_vels10);
+  %plot_XG_var_vel(rotational_vels([idx_135crit],:));
   %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
-  %plot_XG_var_vel(rotational_vels([idx_0975crit],:));
+  %plot_XG_var_vel(rotational_vels([idx_125crit],:));
+  plot_XG_var_vel(rotational_vels([idx_1475crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
   %plot_age_vs_alpha_mlt_4_0G(rot_vels2);
-  %plot_age_vs_alpha_mlt_XG(rot_vels2);
+  %plot_age_vs_alpha_mlt_XG(rot_vels6);
   %plot_age_vs_alpha_mlt_XG(rot_vels7);
-  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_0975crit],:));
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1025crit],:));
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1475crit],:));
   
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
@@ -3156,7 +3235,13 @@ function main()
   %plot_vel_rot_XG_var_vel(rot_vels2);
   %plot_vel_rot_XG_var_vel_z1(rot_vels2);
   %plot_vel_rot_XG_var_vel(rot_vels6);
-  %plot_vel_rot_XG_var_vel(rotational_vels([idx_0975crit],:));
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_105crit],:));
+  %plot_vel_rot_XG_var_vel(rot_vels7);
+  %plot_vel_rot_XG_var_vel(rot_vels8);
+  %plot_vel_rot_XG_var_vel(rot_vels9);
+  %plot_vel_rot_XG_var_vel(rot_vels10);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_135crit],:));
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_1475crit],:));
   
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
@@ -3177,6 +3262,9 @@ function main()
   %plot_cz_size_028vc_var_g_z1_special(mag_fields);
   %plot_cz_size_028vc_var_g_z1_special();
   %plot_cz_size_0G_var_vel_z1();
+  %plot_cz_size_XG_var_vel(rotational_vels([idx_105crit],:));
+  %plot_cz_size_XG_var_vel_z1(rotational_vels([idx_105crit],:));
+  %plot_cz_size_XG_var_vel_z1(rot_vels6);
   
   
   %plot_m_dot_028vc_var_g();
@@ -3200,10 +3288,12 @@ function main()
   %plot_hr_0G_var_vel();
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
+  %plot_hr_XG_var_vel(rot_vels6);
+  %plot_hr_XG_var_vel(rot_vels8);
   
   %plot_omega_vs_mag_field_XG(rot_vels6, false);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), false);
-  plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
   
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);  
