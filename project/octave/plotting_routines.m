@@ -388,7 +388,7 @@ function plot_ZAMS(A, color, width, ytick, axis_limits)
 
 end
 
-function plot_clusters(A, color, width, ytick, axis_limits)
+function plot_clusters(A, color, width, ytick, axis_limits, aidx, subfolder)
   global tables_parent_folder;
   global pleiades_table_filename;
   global ori_table_filename;
@@ -488,178 +488,178 @@ function plot_clusters(A, color, width, ytick, axis_limits)
   %}
   
   full_path = strcat(tables_parent_folder, '/', br_21);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_22);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_25);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_30);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_31);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_32);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_36);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_39);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_44);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', br_73);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', br_75);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', br_81);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
  
   full_path = strcat(tables_parent_folder, '/', cha_i);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', col_197);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', cz_24);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', cz_30);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', es_092_05);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', haf_10);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ic_2391);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ic_2602);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ic_4665);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', loden165);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', m_67);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2141);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2158);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2232);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2243);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2244);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2264);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2355);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_2420);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2425);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2451);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_2516);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_3532);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_4815);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6005);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6067);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6253);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6259);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6281);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6405);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6530);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6633);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6649);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', ngc_6705);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6709);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', ngc_6802);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', pismis_15);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', pismis_18);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', rho_oph);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', rup_134);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', trumpler_14);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_20);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_23);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', trumpler_5);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', gamma2_vel);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', lam_ori);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path);
+  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
  
 %{ 
   full_path = strcat(tables_parent_folder, '/', blanco_1);  
@@ -674,7 +674,8 @@ function plot_clusters(A, color, width, ytick, axis_limits)
 
 end
 
-function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
+function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path, aidx, subfolder)
+  global tables_parent_folder
   global tick_font_size;
   global table_header_lines;
   global clusters_teff_col;
@@ -752,7 +753,12 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   C(B,:) = [];
   
   
-  filename = strcat(full_path, ".sub");
+  %Create subfolder for each picture and inside it for each data file
+  folder = substr(full_path, 1, rindex(full_path, "/"));
+  name = substr(full_path, rindex(full_path, "/") + 1);
+  new_subfolder = strcat(folder, aidx, "/", subfolder); 
+  mkdir(new_subfolder);
+  filename = strcat(new_subfolder, "/", name, ".sub");
   fid = fopen (filename, "w");
   
   filter_setup = strcat("%Filter setup: Teff_low=", num2str(teff_low_limit), " Teff_top=", num2str(teff_top_limit),
@@ -764,7 +770,7 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path)
   fputs (fid, filter_setup);
   fputs (fid, "Teff(K) log_g(dex) FeH(dex) ALi(dex) Age(Gyr)\n");
   fclose (fid);  
-  dlmwrite (strcat(full_path, ".sub"), C, "delimiter", " ", "newline", "\n", "-append");
+  dlmwrite (filename, C, "delimiter", " ", "newline", "\n", "-append");
 
   
   %Plot values
@@ -1201,7 +1207,7 @@ end
 
 
   
-function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -1269,7 +1275,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
       
       A = read_matrix_from_file(full_path, fmt, header_lines, 5);
-      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits);      
+      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits, aidx, sub_folder);      
     end
   end
   
@@ -1294,7 +1300,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
 
   hold('off');
   
-  save_figure(f, afilename);
+  save_figure(f, strcat(afilename, aidx));
   
 end
 
@@ -2114,9 +2120,9 @@ function result = format_figure()
 end
 
 function save_figure(f, title)  
-  %print(f,'-deps','-color',[title,'.eps']);
-  %close;
-  print(f,'-dpng','-color',[title,'.png']);
+  print(f,'-deps','-color',[title,'.eps']);
+  close;
+  %print(f,'-dpng','-color',[title,'.png']);
 end
 
 function plot_mb_activation(A, color, width, axis_limits)
@@ -2395,11 +2401,11 @@ function plot_5_5G_var_vel(rot_vels)
   age_vs_li_plots(gauss_fields(idx_5_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 5.5G & var. rotational velocity', 'li_var_vel_5_5g');
 end
 
-function plot_XG_var_vel(rot_vels)
+function plot_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_li_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - var G & var. rotational velocity', 'li_var_vel_var_g');
+  age_vs_li_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - var G & var. rotational velocity', 'li_var_vel_var_g_', num2str(idx));
 end
 
 
@@ -3053,6 +3059,49 @@ function paper1()
 end
 
 
+
+function paper2()
+  global gauss_fields;
+  global rotational_vels;
+  global idx_11crit;
+  global idx_105crit;
+  global idx_1075crit;
+  global idx_1125crit;
+  global idx_1025crit;
+  global idx_115crit;
+  global idx_10crit;
+  global idx_0975crit;
+  global idx_095crit;
+  global idx_0925crit;
+  global idx_125crit;
+  global idx_135crit;
+  global idx_1175crit;
+  global idx_12crit;
+  global idx_1225crit;
+  global idx_1275crit;
+  global idx_13crit;
+  global idx_1325crit;
+  global idx_1375crit;
+  global idx_14crit;
+  global idx_1425crit;
+  global idx_145crit;
+  global idx_1475crit;
+  global idx_15crit;
+  global idx_1525crit;
+  global idx_155crit;
+  
+  
+  rot_vels5 = rotational_vels([idx_0925crit;idx_095crit;idx_0975crit;idx_10crit;idx_1025crit],:);
+  rot_vels6 = rotational_vels([idx_105crit;idx_1075crit;idx_11crit;idx_1125crit;idx_115crit],:);
+  rot_vels7 = rotational_vels([idx_1175crit;idx_12crit;idx_1225crit;idx_125crit;idx_1275crit],:);
+  rot_vels8 = rotational_vels([idx_13crit;idx_1325crit;idx_1375crit;idx_14crit;idx_1425crit],:);
+  
+  plot_XG_var_vel(rot_vels5,1); 
+  plot_XG_var_vel(rot_vels6,2); 
+  plot_XG_var_vel(rot_vels7,3);
+  plot_XG_var_vel(rot_vels8,4);
+end
+
 function main()
   global gauss_fields;
   global rotational_vels;
@@ -3153,7 +3202,7 @@ function main()
   
   %plot_3_0G_var_vel(dl_rotational_vels([idx_0336crit],:));
   
-  %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));
+  %plot_3_0G_var_vel(rotational_vels([idx_0336crit],:));  rot_vels6 = rotational_vels([idx_105crit;idx_1075crit;idx_11crit;idx_1125crit;idx_115crit],:);
   %plot_3_0G_var_vel(rotational_vels([idx_0336crit,idx_0336crit_alpha],:));
   %plot_3_0G_0314vc(rot_vels3);
   %plot_3_5G_var_vel(rot_vels);
@@ -3164,6 +3213,7 @@ function main()
   %plot_5_5G_var_vel(rot_vels); 
   
   %Works only with paper3d folder
+  %plot_XG_var_vel(rot_vels5); 
   %plot_XG_var_vel(rot_vels6); 
   %plot_XG_var_vel(rot_vels7);
   %plot_XG_var_vel(rot_vels8);
@@ -3172,7 +3222,7 @@ function main()
   %plot_XG_var_vel(rotational_vels([idx_135crit],:));
   %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
   %plot_XG_var_vel(rotational_vels([idx_125crit],:));
-  plot_XG_var_vel(rotational_vels([idx_1475crit],:));
+  %plot_XG_var_vel(rotational_vels([idx_1475crit],:));
   
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
@@ -3299,6 +3349,7 @@ function main()
   %calculate_ZAMS(filename);  
   
   %paper1();
+  paper2();
 end
 
 
