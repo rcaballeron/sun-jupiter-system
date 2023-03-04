@@ -388,7 +388,7 @@ function plot_ZAMS(A, color, width, ytick, axis_limits)
 
 end
 
-function plot_clusters(A, color, width, ytick, axis_limits, aidx, subfolder)
+function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, subfolder)
   global tables_parent_folder;
   global pleiades_table_filename;
   global ori_table_filename;
@@ -659,7 +659,7 @@ function plot_clusters(A, color, width, ytick, axis_limits, aidx, subfolder)
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
   full_path = strcat(tables_parent_folder, '/', lam_ori);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
+  plot_path = plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
  
 %{ 
   full_path = strcat(tables_parent_folder, '/', blanco_1);  
@@ -674,7 +674,7 @@ function plot_clusters(A, color, width, ytick, axis_limits, aidx, subfolder)
 
 end
 
-function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path, aidx, subfolder)
+function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_limits, full_path, aidx, subfolder)
   global tables_parent_folder
   global tick_font_size;
   global table_header_lines;
@@ -756,7 +756,8 @@ function plot_cluster(A, color, marker, width, ytick, axis_limits, full_path, ai
   %Create subfolder for each picture and inside it for each data file
   folder = substr(full_path, 1, rindex(full_path, "/"));
   name = substr(full_path, rindex(full_path, "/") + 1);
-  new_subfolder = strcat(folder, aidx, "/", subfolder); 
+  root_subfolder = strcat(folder, aidx, "/");
+  new_subfolder = strcat(root_subfolder, subfolder); 
   mkdir(new_subfolder);
   filename = strcat(new_subfolder, "/", name, ".sub");
   fid = fopen (filename, "w");
@@ -1069,15 +1070,15 @@ function plot_mag_field(A, color, width, show_limits, ytick, axis_limits)
   plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width, 'linestyle', ':');
   if (show_limits)
     %Min bf
-    %plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
-    plot(A(:,1), A(:,3), color+1, 'linewidth', width);
+    plot(A(:,1), A(:,3), color, 'linewidth', width-2, 'linestyle', '--');
+    %plot(A(:,1), A(:,3), color+1, 'linewidth', width, 'linestyle', '--');
     %Max bf
-    %plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', '--');
-    plot(A(:,1), A(:,4), color+2, 'linewidth', width);
+    plot(A(:,1), A(:,4), color, 'linewidth', width-2, 'linestyle', '--');
+    %plot(A(:,1), A(:,4), color+2, 'linewidth', width, 'linestyle', '--');
   endif
   %Mean bf
-  %plot(A(:,1), A(:,5), color, 'linewidth', width);
-  plot(A(:,1), A(:,5), color+3, 'linewidth', width);
+  plot(A(:,1), A(:,5), color, 'linewidth', width);
+  %plot(A(:,1), A(:,5), color+3, 'linewidth', width);
 
   %Axis scales
   set(gca, 'XScale', 'log');    
@@ -1232,8 +1233,6 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
   f = format_figure();
   
-  rotational_vels
-  
   %First plot Li
   for i=1:rows(gauss_fields)
     for j=1:rows(rotational_vels)
@@ -1275,7 +1274,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
       
       A = read_matrix_from_file(full_path, fmt, header_lines, 5);
-      plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits, aidx, sub_folder);      
+      plot_path = plot_clusters(A, colors(i*j,:), line_width, ytick, axis_limits, aidx, sub_folder);
     end
   end
   
@@ -1300,7 +1299,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
 
   hold('off');
   
-  save_figure(f, strcat(afilename, aidx));
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
   
 end
 
@@ -1680,7 +1679,8 @@ end
 
 
 
-function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_limits, leg_loc, atitle, afilename)
+function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_limits, leg_loc, atitle, afilename, aidx)
+  global tables_parent_folder;
   global data_parent_folder;
   global filename;
   global star_age_col;
@@ -1772,8 +1772,11 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
   ylabel('Rotational Vel (km/s)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
   
-  hold('off');  
-  save_figure(f, afilename);
+  hold('off');
+  
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  plot_path
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));  
   
 end
 
@@ -1879,8 +1882,9 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
   
 end
 
-function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global alpha_mlt_col;
@@ -1904,7 +1908,7 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
       fmt = get_parsing_fmt([star_age_col, alpha_mlt_col]);
       
       A = read_matrix_from_file(full_path, fmt, header_lines, 2);         
-      plot_alpha_mlt(A, colors(i*j,:), line_width, ytick, axis_limits);
+      plot_alpha_mlt(A, colors(i*j,:), line_width, ytick, axis_limits, aidx, sub_folder);
       
       
       %Generate serie labels
@@ -1933,13 +1937,17 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   ylabel('\alpha_{MLT}', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
   
-  hold('off');  
-  save_figure(f, afilename);
+  hold('off');
+  
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  plot_path
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
   
 end
 
-function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, axis_limits, leg_loc, atitle, afilename)
+function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global surf_avg_omega_col;
@@ -2007,9 +2015,11 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   ylabel('Mean mag. field (G) & \Omega (rad)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
   
-  hold('off');  
-  save_figure(f, afilename);
+  hold('off');
   
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  plot_path
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
 
@@ -2566,11 +2576,11 @@ function plot_vel_rot_5_5G_var_vel(rot_vels)
   age_vs_vel_plots(gauss_fields(idx_5_5G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - 5.5G & var. rotational velocity', 'rot_vel_var_vel_5_5g');
 end
 
-function plot_vel_rot_XG_var_vel(rot_vels)
+function plot_vel_rot_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 20, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g');
+  age_vs_vel_plots(gauss_fields(idx_X_G,:), rot_vels, true, 20, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - var G & var. rotational velocity', 'rot_vel_var_vel_var_g', num2str(idx));
 end
 
 function plot_vel_rot_XG_var_vel_z1(rot_vels)
@@ -2948,19 +2958,19 @@ function plot_age_vs_alpha_mlt_4_0G(rot_vels)
   age_vs_alpha_mlt_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'eastoutside', '\alpha_{MLT} - 4.0G & var. rotational velocity', 'alpha_mlt_var_vel_4_0g');
 end
 
-function plot_age_vs_alpha_mlt_XG(rot_vels)
+function plot_age_vs_alpha_mlt_XG(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_alpha_mlt(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.69, 1.87], 'northwest', '\alpha_{MLT} - var G & var. rotational velocity', 'alpha_mlt_var_vel_g');
+  age_vs_alpha_mlt(gauss_fields(idx_X_G,:), rot_vels, true, 0.02, [1.0e5, 1.0e10, 1.65, 1.88], 'northwest', '\alpha_{MLT} - var G & var. rotational velocity', 'alpha_mlt_var_vel_g', num2str(idx));
 end
 
-function plot_omega_vs_mag_field_XG(rot_vels, show_limits)
+function plot_omega_vs_mag_field_XG(rot_vels, show_limits, idx)
   global gauss_fields;
   global idx_X_G;
   
   %omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [0.5, 50, 1, 1000], 'northwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
-  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
+  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g', num2str(idx));
 end
 
 
@@ -3096,10 +3106,27 @@ function paper2()
   rot_vels7 = rotational_vels([idx_1175crit;idx_12crit;idx_1225crit;idx_125crit;idx_1275crit],:);
   rot_vels8 = rotational_vels([idx_13crit;idx_1325crit;idx_1375crit;idx_14crit;idx_1425crit],:);
   
-  plot_XG_var_vel(rot_vels5,1); 
-  plot_XG_var_vel(rot_vels6,2); 
-  plot_XG_var_vel(rot_vels7,3);
-  plot_XG_var_vel(rot_vels8,4);
+  #plot_XG_var_vel(rot_vels5,1); 
+  #plot_XG_var_vel(rot_vels6,2); 
+  #plot_XG_var_vel(rot_vels7,3);
+  #plot_XG_var_vel(rot_vels8,4);
+  
+  #plot_age_vs_alpha_mlt_XG(rot_vels5,1);
+  #plot_age_vs_alpha_mlt_XG(rot_vels6,2);
+  #plot_age_vs_alpha_mlt_XG(rot_vels7,3);
+  #plot_age_vs_alpha_mlt_XG(rot_vels8,4);
+  
+  #plot_vel_rot_XG_var_vel(rot_vels5,1);
+  #plot_vel_rot_XG_var_vel(rot_vels6,2);
+  #plot_vel_rot_XG_var_vel(rot_vels7,3);
+  #plot_vel_rot_XG_var_vel(rot_vels8,4);
+  
+  plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
+  plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
+  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
+  #plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
+  
 end
 
 function main()
