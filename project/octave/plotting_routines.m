@@ -1149,8 +1149,9 @@ end
 
 
 
-function hr_plots(gauss_fields, rotational_vels, is_var_vel, xy_ticks, axis_limits, leg_loc, atitle, afilename)
+function hr_plots(gauss_fields, rotational_vels, is_var_vel, xy_ticks, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global log_Teff_col;
@@ -1203,7 +1204,8 @@ function hr_plots(gauss_fields, rotational_vels, is_var_vel, xy_ticks, axis_limi
 
   hold('off');
   
-  save_figure(f, afilename);
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
 
@@ -1303,8 +1305,9 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   
 end
 
-function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global log_R_col;
@@ -1372,7 +1375,8 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
 
   hold('off');
   
-  save_figure(f, afilename);
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
 
@@ -1775,7 +1779,6 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
   hold('off');
   
   plot_path = strcat(tables_parent_folder, '/', aidx);
-  plot_path
   save_figure(f, strcat(plot_path, '/', afilename, aidx));  
   
 end
@@ -2622,11 +2625,18 @@ function plot_omega_4_0G_var_vel(rot_vels)
 end
 
 
-function plot_hr_XG_var_vel(rot_vels)
+function plot_hr_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
   
-  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', 'HR - var G & var. rotational velocity', 'hr_var_vel_var_g');
+  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', 'HR - var G & var. rotational velocity', 'hr_var_vel_var_g', num2str(idx));
+end
+
+function plot_hr_XG_var_vel_z1(rot_vels, idx)
+  global gauss_fields;
+  global idx_X_G;
+  
+  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.005,0.1], [3.70, 3.73, -0.35, 0.0], 'southwest', 'HR - 0G & var. rotational velocity', 'hr_var_vel_var_g_z1', num2str(idx));
 end
 
 
@@ -2704,18 +2714,17 @@ function plot_hr_0336vc_var_g_z1(mag_fields)
 end
 
 
-function plot_cz_size_XG_var_vel(rot_vels)
+function plot_cz_size_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
   
-  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g');
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g', num2str(idx));
 end
 
-function plot_cz_size_XG_var_vel_z1(rot_vels)
+function plot_cz_size_XG_var_vel_z1(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
-  
-  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.01, [2.0e7, 6.0e7, 0.33, 0.40], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g_z1');
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.01, [1.0e7, 1.0e10, 0.25, 0.40], 'southwest', 'Convective zone radius - var G & var. rotational velocity', 'cz_var_vel_var_g_z1', num2str(idx));
 end
 
 
@@ -3121,11 +3130,32 @@ function paper2()
   #plot_vel_rot_XG_var_vel(rot_vels7,3);
   #plot_vel_rot_XG_var_vel(rot_vels8,4);
   
-  plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
-  plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
-  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
-  plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
+  #plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
+  #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
+  #plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  #plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
   #plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
+  
+  #plot_cz_size_XG_var_vel_z1(rot_vels5,1);
+  #plot_cz_size_XG_var_vel_z1(rot_vels6,2);
+  #plot_cz_size_XG_var_vel_z1(rot_vels7,3);
+  #plot_cz_size_XG_var_vel_z1(rot_vels8,4);
+
+  #plot_cz_size_XG_var_vel(rot_vels5,1);
+  #plot_cz_size_XG_var_vel(rot_vels6,2);
+  #plot_cz_size_XG_var_vel(rot_vels7,3);
+  #plot_cz_size_XG_var_vel(rot_vels8,4);
+  
+  #plot_hr_XG_var_vel(rot_vels5,1);
+  #plot_hr_XG_var_vel(rot_vels6,2);
+  #plot_hr_XG_var_vel(rot_vels7,3);
+  #plot_hr_XG_var_vel(rot_vels8,4);
+  
+  plot_hr_XG_var_vel_z1(rot_vels5,1);
+  plot_hr_XG_var_vel_z1(rot_vels6,2);
+  plot_hr_XG_var_vel_z1(rot_vels7,3);
+  plot_hr_XG_var_vel_z1(rot_vels8,4);
+
   
 end
 
@@ -3337,7 +3367,7 @@ function main()
   %plot_cz_size_028vc_var_g(mag_fields);
   %plot_cz_size_028vc_var_g_z1(mag_fields);
   %plot_cz_size_028vc_var_g_z1_special(mag_fields);
-  %plot_cz_size_028vc_var_g_z1_special();
+  %plot_cz_size_028vc_var_g_z1_special();set(gca,'YTick',0:ytick:1.0);
   %plot_cz_size_0G_var_vel_z1();
   %plot_cz_size_XG_var_vel(rotational_vels([idx_105crit],:));
   %plot_cz_size_XG_var_vel_z1(rotational_vels([idx_105crit],:));
