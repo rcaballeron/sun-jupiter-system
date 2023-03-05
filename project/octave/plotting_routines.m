@@ -972,8 +972,8 @@ function plot_m_dot(A, color, width, ytick, axis_limits)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick"); 
-  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
-  xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
+  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false); 
+  %xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
   set (gca, "xticklabel", xlabels) ;
   yticks = get (gca, "ytick"); 
   ylabels = arrayfun (@(x) sprintf ("%1.2f", x), yticks, "uniformoutput", false); 
@@ -1462,8 +1462,9 @@ function age_vs_cz_size_plots_special(rotational_vels, is_var_vel, ytick, axis_l
 end
 
 
-function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename)
+function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global log_abs_m_dot_col;
@@ -1525,7 +1526,8 @@ function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, ax
 
   hold('off');
   
-  save_figure(f, afilename);  
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  save_figure(f, strcat(plot_path, '/', afilename, aidx)); 
 end
 
 function age_vs_reimers_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, atitle, afilename)
@@ -2021,7 +2023,6 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   hold('off');
   
   plot_path = strcat(tables_parent_folder, '/', aidx);
-  plot_path
   save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
@@ -2169,8 +2170,9 @@ function plot_mb_activation(A, color, width, axis_limits)
 end
 
 
-function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, leg_loc, atitle, afilename)
+function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
+  global tables_parent_folder;
   global filename;
   global star_age_col;
   global mb_activated_col;
@@ -2286,7 +2288,8 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, leg_loc
 
   hold('off');
 
-  save_figure(f, afilename);  
+  plot_path = strcat(tables_parent_folder, '/', aidx);
+  save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
 
@@ -2632,11 +2635,11 @@ function plot_hr_XG_var_vel(rot_vels, idx)
   hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', 'HR - var G & var. rotational velocity', 'hr_var_vel_var_g', num2str(idx));
 end
 
-function plot_hr_XG_var_vel_z1(rot_vels, idx)
+function plot_hr_XG_var_vel_z1(rot_vels, limits, idx)
   global gauss_fields;
   global idx_X_G;
   
-  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.005,0.1], [3.70, 3.73, -0.35, 0.0], 'southwest', 'HR - 0G & var. rotational velocity', 'hr_var_vel_var_g_z1', num2str(idx));
+  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.005,0.1], limits, 'southwest', 'HR - 0G & var. rotational velocity', 'hr_var_vel_var_g_z1', num2str(idx));
 end
 
 
@@ -2860,6 +2863,20 @@ function plot_m_dot_3G_var_vel(rot_vels)
   age_vs_m_dot_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e2, 1.0e10, -14.0, -10.0], 'southwest', 'Mass loss - 3.0G & var. rotational velocity', 'mdot_var_vel_3_0_g');
 end
 
+function plot_m_dot_XG_var_vel(rot_vels,idx)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_m_dot_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5, 1.0e10, -14.0, -10.0], 'southwest', 'Mass loss - var G & var. rotational velocity', 'mdot_var_vel_g', num2str(idx));
+end
+
+function plot_m_dot_XG_var_vel_z1(rot_vels,idx)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_m_dot_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.05, [3.0e8, 1.0e10, -13.6, -13.3], 'southwest', 'Mass loss - var G & var. rotational velocity', 'mdot_var_vel_g_z1', num2str(idx));
+end
+
 
 
 function plot_reimers_m_dot_0G_var_vel(rot_vels)
@@ -2937,6 +2954,14 @@ function plot_age_vs_mb_activation_5_5G(rot_vels)
   
   age_vs_mb_activation(gauss_fields(idx_5_5G,:), rot_vels, true, 'eastoutside', 'Magnetic braking activation & core nature - 5.5G & var. rotational velocity', 'mb_act_var_vel_5_5g');
 end
+
+function plot_age_vs_mb_activation_XG(rot_vels,idx)
+  global gauss_fields;
+  global idx_X_G;
+  
+  age_vs_mb_activation(gauss_fields(idx_X_G,:), rot_vels, true, 'eastoutside', 'Magnetic braking activation & core nature - var G & var. rotational velocity', 'mb_act_var_vel_g', num2str(idx));
+end
+
 
 function plot_age_vs_mb_activation_0084vc(mag_fields)
   global rotational_vels;
@@ -3151,10 +3176,26 @@ function paper2()
   #plot_hr_XG_var_vel(rot_vels7,3);
   #plot_hr_XG_var_vel(rot_vels8,4);
   
-  plot_hr_XG_var_vel_z1(rot_vels5,1);
-  plot_hr_XG_var_vel_z1(rot_vels6,2);
-  plot_hr_XG_var_vel_z1(rot_vels7,3);
-  plot_hr_XG_var_vel_z1(rot_vels8,4);
+  #plot_hr_XG_var_vel_z1(rot_vels5,[3.70, 3.73, -0.35, 0.0],1);
+  #plot_hr_XG_var_vel_z1(rot_vels6,[3.70, 3.73, -0.35, 0.0],2);
+  #plot_hr_XG_var_vel_z1(rot_vels7,[3.69, 3.72, -0.40, -0.05],3);
+  #plot_hr_XG_var_vel_z1(rot_vels8,[3.68, 3.71, -0.45, -0.15],4);
+  
+  #plot_age_vs_mb_activation_XG(rot_vels5,1);
+  #plot_age_vs_mb_activation_XG(rot_vels6,2);
+  #plot_age_vs_mb_activation_XG(rot_vels7,3);
+  #plot_age_vs_mb_activation_XG(rot_vels8,4);
+  
+  plot_m_dot_XG_var_vel(rot_vels5,1);
+  plot_m_dot_XG_var_vel(rot_vels6,2);
+  plot_m_dot_XG_var_vel(rot_vels7,3);
+  plot_m_dot_XG_var_vel(rot_vels8,4);
+
+  plot_m_dot_XG_var_vel_z1(rot_vels5,1);
+  plot_m_dot_XG_var_vel_z1(rot_vels6,2);
+  plot_m_dot_XG_var_vel_z1(rot_vels7,3);
+  plot_m_dot_XG_var_vel_z1(rot_vels8,4);
+
 
   
 end
