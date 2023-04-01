@@ -87,10 +87,10 @@ $^{2}$Instituto de Astrof\'isica de Andaluc\'ia (CSIC), Glorieta de la Astronom\
 }
 
 % These dates will be filled out by the publisher
-\date{Accepted 2020 May 29. Received 2020 April 17; in original form 2019 November 30}
+\date{Accepted 2023 XXX XX. Received 2023 XXXX XX; in original form 2023 XXXX XX}
 
 % Enter the current year, for the copyright statements etc.
-\pubyear{2019}
+\pubyear{2023}
 
 % Don't change these lines
 \begin{document}
@@ -101,7 +101,8 @@ $^{2}$Instituto de Astrof\'isica de Andaluc\'ia (CSIC), Glorieta de la Astronom\
 % Abstract of the paper
 \begin{abstract}
 The study of lithium (Li) surface abundance in the Sun and young stellar globular clusters which are seemingly anomalous in present-day scenarios, as well as the influence of rotation and magnetic braking (MB) on its depletion during pre-main sequence (PMS) and main sequence (MS).
-In this work, the effects of rotational mixing and of the rotational hydrostatic effects on Li abundances are studied by simulating several grids of PMS and MS rotating and non-rotating models. Those effects are combined with the additional impact of the MB (with magnetic field intensities ranging between 3.0 and 5.0 G). The data obtained from simulations are confronted by comparing different stellar parameters. The results show that the surface Li abundance for the Sun like models at the end of the PMS and throughout the MS decreases when rotational effects are included, i.e. the Li depletion rate for rotating models is higher than for non-rotating ones. This effect is attenuated when the MB produced by a magnetic field is present. This physical phenomena impacts also the star effective temperature ($\teff$) and its location in the HR diagram. The impact of MB in Li depletion is sensitive to the magnetic field intensity: the higher it is, the lower the Li destruction. A direct link between the magnetic fields and the convective zone (CZ) size is observed: stronger magnetic fields produce shallower CZ's. This result suggests that MB effect must be taken into consideration during PMS if we aim to reproduce Li abundances in young clusters.
+In this work, the effects of rotational mixing and of the rotational hydrostatic effects on Li abundances are studied by simulating several grids of PMS and MS rotating models. Those effects are combined with the additional impact caused by the MB effect. Its intensity evolves as the star does i.e. not remaining fixed through the simulations. The data obtained from simulations are confronted with observational data measured on young open clusters collected by the Gaia-ESO Survey (GES). The results show how faster rotating models destroy more Li in the late PMS and during the MS, and how the effects of magnetic braking mitigate this destruction. The interconnection between the star's effective temperature, surface gravity and rotational velocity, as well as its chemical composition, determine the strength of the magnetic field and impact the effectiveness of the convective motions involved in the destruction of Li. The present work documents an approach in which neither the magnetic field strength nor the MLT parametrisation remains fixed throughout the evolution of the star, and which ends up providing results that are compatible with observational data for Li abundances of solar siblings hosted in young clusters.
+
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
@@ -115,122 +116,287 @@ rotation -- magnetic fields -- abundances
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction} \label{sec_intro}
-Over the last few years, decades, data from different observational campaigns have allowed studies of the rotational evolution of low and medium-mass stars (REFERENCES). Among them we find studies (REFERENCES) that focus on modelling the effects of magnetic braking and how its coupling with stellar winds impact the rotational evolution of the star. These models prefix a number of parameters in a fixed way, among them the magnetic field strength B (we will come back to this point later). This approach is not sufficient to explain the observational data, and interaction with other processes in the angular velocity evolution of low-mass stars is necessary: the distribution of angular momentum loss in the interior of the star along the pre-main sequence (PMS; REFERENCES), and main sequence (MS; REFERENCES), and the star - protostellar disc interaction during the PMS (REFERENCES).
+The angular momentum loss (AML) is considered to be governed by magnetically-coupled stellar winds which exert a braking force on the star that eventually causes a loss of angular momentum \citep{UdDoula2002}.
 
+Over the last few years, decades, data from different observational campaigns have allowed studies of the rotational evolution of low and medium-mass stars \citep{Hartman2010,Gallet2013,Bouvier2016}. 
+Among them we find studies \citep{Ud-Doula2008,Cranmer2011,Gallet2015,Amard2016} that focus on modelling the effects of magnetic braking (MB) and how its coupling with stellar winds impact the rotational evolution of the star. These models rely on a number of parameters which are fixed, among them the magnetic field strength B (we will come back to this point later). This approach is not sufficient to explain the observational data, and interaction with other processes in the angular velocity evolution of low-mass stars is necessary: the distribution of angular momentum loss in the interior of the star along the pre-main sequence (PMS) and main sequence (MS) \citep{Charbonnel2005, Eggenberger2008, Eggenberger2009, Navarro2020}, and the star - protostellar disc interaction during the PMS \citep{Bouvier2008,Gallet2013,Eggenberger2012,Zanni2012,Bouvier2016}.\par
 
-Despite decades of theoretical efforts, a coherent explanation for the Li abundance discrepancies detected in star clusters cannot be found. In young and old clusters these differences have been documented for stars in both PMS and MS  evolutionary stages. Additionally, these theoretical models are not able to explain the abundances detected in the late stages of the MS \citep{Tschape2001}.\par
+As noted in our earlier work, discrepancies in Li abundances have been detected in young cluster for which there is as yet no coherent explanation \citep[see][and references therein]{Navarro2020}. Li is destroyed in stellar envelopes when the temperature at the base of the convection zone (BCZ) reaches $\tli \approx 2.5 x 10^6\; K$. The solar-type stars are known to have a convection zone (CZ) that covers much of the stellar radius during the PMS. In this way, the convective movements that occur in its interior manage to drag the Li to areas in which the BCZ limit exceeds the $\tli$ and Li is burned \citep{Iben1965}. This process slows down as the star approaches the zero-age MS (ZAMS) when the convection zone retreats and moves away from areas where the internal temperature is high enough to destroy the Li.\par
 
-Standard models, models that include convection only as a mixing process and do not consider other transport options like diffusion or angular momentum loss (AML), have been mainly involved in the elaboration of these predictions \citep{Sestito2005}. Li is destroyed at a temperature $\tli \approx 2.5 x 10^6\; K$ when a Li atom collides with a proton producing two He atoms. That takes place during proton-proton type II reactions (P-P II), and is therefore directly destroyed in stellar envelopes when the temperature at the base of the convection zone (BCZ) reaches  $\tli$. The Sun in particular and the solar-type stars in general are characterized by having a CZ that covers much of the stellar radius during the PMS which causes that their lower limit to exceed $\tli$ \citep{Iben1965}. This depletion stops during the approach to the zero-age MS (ZAMS) when the convection zone retreats and the temperature at BCZ is cooler than $\tli$. In the standard models only the mass and the initial chemical composition determine at what distance from the stellar surface $\tli$ temperature is reached. Therefore stars with similar mass belonging clusters are expected to reach the ZAMS with equal surface Li abundances. Furthermore, they should also show a very similar Li evolution until their approach to the terminal-age MS (TAMS). During this period the convection mechanisms unleash a mixing process that homogenizes the chemical composition of the envelope, from its lower limit till the star surface. However, different abundances of Li have been observed for different stellar populations \citep[see][and references therein]{Somers2014}.\par
+The impact of rotation both on PMS and Li depletion for solar-type stars has already extensively debated in the past \citep{Pinsonneault1997,Jeffries2004,Somers2014} and revised more recently on the basis of the availability of more accurate measures \citep{Gallet2013,Bouvier2016, Bouvier2018, Franciosini2022}. Of particular interest for this paper are the Li observational data measured on young open clusters. The Gaia-ESO Survey (GES) \citep{Gilmore2012,Randich2013,Randich2022} has produced very high quality spectroscopy records of around 110 000 Milky Way stars, in the field and in open clusters, down to magnitude 19, It has delivered good-quality radial velocities and stellar parameters for a large fraction of its unique target stars. Elemental abundances were derived for up to 31 elements for targets observed with the Fibre Large Array Multi Element Spectrograph (FLAMES) and the UV-Visual Echelle Spectrograph (UVES). Lithium abundances are delivered for about 1/3 of the sample.\par
 
-Theoretical models take initial Li abundance as an input parameter and only describe how it is exhausted. Therefore, in order to make an accurate estimate of the initial abundance of Li, it is a prerequisite to be able to compare observations and models beforehand. Our Sun represents a unique exception, since it allows us to know the current abundance of this element in its photosphere, $A(\isotope[7]{Li}) = 1.1 \pm 0.1 \, dex$ \citep{Jeffries2004}, where $A(\isotope[7]{Li})$ is defined
+As indicated by its name, GES intends to complement the data about parallaxes and proper motions from the Gaia satellite \citep{Mignard2005} with extremely precise information on radial velocities (RVs), Li, and chemistry in general. The first Gaia data release (GDR1) \citep{Brown2016} dated on 2016 and contained information on the first 14 months of operation. Gaia data release 2 (GDR2) \citep{Brown2018}, released on 2018, contained positions, parallaxes, and proper motions for about 1.3 billion sources, together with photometry. The third data release of Gaia has been divided in two parts: the Gaia early data release 3 (GEDR3) \citep{Brown2021} on 2020, and the Gaia data release 3 (GDR3) \citep{Brown2022} on 2022. They convey updated and more precise positions, parallaxes, proper motions, and photometry, spectra, classification and astrophysical parameters. The Gaia-ESO Survey will supplement the Gaia data for a significant subset of its targets, so that Gaia precision astrometry can be coupled with Gaia-ESO precision radial velocities and chemical abundances. In addition, a large fraction of the Gaia-ESO initiative is dedicated to the study of a large sample of open clusters (OCs).\par
 
-
-\begin{ceqn}
-\begin{align}
-    A(\isotope[7]{Li}) &= log(N_{\isotope[7]{Li}} / N_{\isotope[1]{H}}) + 12
-    \label{eq:A_Li}
-\end{align}
-\end{ceqn}
-
-and its initial abundance of $A(\isotope[7]{Li}) = 3.34 \, dex$ is obtained from meteorite measurements \citep{Randich2006}. For other stars the initial Li abundance is found to be in the interval $3.0 \, dex < A(\isotope[7]{Li}) < 3.4 \, dex$. This has been estimated from  \citet{Randich2006}.\par
-
-The impact of rotation both on PMS and Li depletion for solar-type stars has already extensively debated in the past \citep{Pinsonneault1997,Jeffries2004,Somers2014} and revised more recently on the basis of the availability of more accurate measures \citep{Bouvier2016}. However, these previous studies focused mainly on the hydrostatic effects and did not consider the influence of a coupling between the stellar magnetic field and its possible spin-down effect. AML has a direct influence in the mixing processes. It can be produced by a number of relevant mechanisms: mass loss, magnetic fields and gravity waves (g-modes). Gravity waves \citep{Charbonnel2005} and magnetic fields \citep{Eggenberger2009} transmit angular momentum (AM) much more effectively than inducing mixing \citep{Denissenkov2007}. As a consequence, the amount of differential rotation between the radiative and the convective zones of the star is reduced. Additionally, magnetic fields would also originate in the limits between these zones, in the so-called tachoclines \citep{Aschwanden2014, Guerrero2016}, which interact with the solar wind particles that are forced to co-rotate with it. This slows down the star, effect which is known as magnetic braking (MB). \par
-
-Today, standard models are not able to replicate the observed values of Li abundance on stellar surfaces. This might happen because certain physical mechanisms that influence the destruction of Li are either being modelled improperly or simply not being taken into account, e.g. the magnetic braking. In this paper we study the interactions between rotation and magnetic fields when it comes to discuss the AM distribution. \par
----NEW---
-In the first paper of this series \citep{Navarro2020}, we developed a model to account for the angular momentum evolution of solar-mass stars. The parametric model included a magnetic braking law, and mass-loss prescriptions that relied on \citet{Ud-Doula2008}, and core-envelope differential rotation at PMS and MS. The aim of the present study is to extend that model to with a law of interdependence between $\Omega$ and $B$. So that, during the PMS, when the star rotates faster, the MB effect is more efficient. On the other hand, during the MS, when the start slows down, the MB will become less intensive. This approach would establish a self-regulating mechanism over the angular velocity of the star that
-would end up directly influencing the Li evolution.\par
-
-Following a similar approach, we aim the model the evolution of alpha MLT with another law of interdependence between $Teff$ and surface gravity, both of them directly depending on $\Omega$.\par
-
----NEW---
+GES collected data are very handy for our research because they conform a large data set of stellar parameters and Li abundances for several OCs, covering a large age range, from a few million to several billion years \citep{Dumont2021}. The analysis of surface Li abundances in young OCs of different ages can provide important constraints on stellar evolutionary models. As mentioned, GES enhances Gaia observation and several data releases has been made available. Of particular interests for this paper, it is the  latest release (DR5.0). The DR5.0 release includes all the astrophysical parameters derived by the Gaia-ESO consortium for 114 324 stars. In detail the catalogue provides \citep{Gilmore2022}:
+\begin{itemize}
+    \item The radial and projected RVs.
+    \item Stellar parameters (effective temperature, surface gravity and metallicity).
+    \item Abundances of several elements, among them Li.
+    \item Specific parameters for tracing accretion and activity in young stars.
+    \item Cluster probability membership.  
+\end{itemize}
 
 \section{Data} \label{sec_method}
-Mirar Gaia-ESO Survey: Role of magnetic activity and starspots on pre-main-sequence lithium evolution
+The datasets provided by the Gaia mission in GEDR3 and GDR3, as well as those published by GES in DR5.0 form the main references used in this work. In general, we focus on the observations made on OCs, and particularly on those analysed in the \cite{Bragaglia2022} and \cite{Randich2022} papers. On the basis of the results presented in these papers, a set of 65 OCs are selected as the reference dataset for our work. 
+
+\begin{table}
+	\centering
+	\caption{Information on the pre-selected OCs.}
+	\label{tab:oc_list}
+	\begin{tabular}{l l l l} 
+		\hline
+		Cluster & GES\_FLD & age (Gyr) & [Fe/H]\\
+		\hline
+            25 Ori & 25\_Ori & 0.013 & 0 \\
+            ASCC 50 & Assc50 & 0.011 & 0.02 \\
+            Berkeley 21 & Br21 & 2.138 & -0.21 \\
+            Berkeley 22 & Br22 & 2.455 & -0.26 \\
+            Berkeley 25 & Br25 & 2.455 & -0.25 \\
+            Berkeley 30 & Br30 & 0.295 & -0.13 \\
+            Berkeley 31 & Br31 & 2.818 & -0.29 \\
+            Berkeley 32 & Br32 & 4.898 & -0.31 \\
+            Berkeley 36 & Br36 & 6.761 & -0.15 \\
+            Berkeley 39 & Br39 & 5.623 & -0.14 \\
+            Berkeley 44 & Br44 & 1.445 & 0.22 \\
+            Berkeley 73 & Br73 & 1.413 & -0.26 \\
+            Berkeley 75 & Br75 & 1.738 & -0.34 \\
+            Berkeley 81 & Br81 & 1.148 & 0.22 \\
+            Blanco 1 & Blanco1 & 0.105 & -0.03 \\
+            Chamaeleon I & Cha\_I & 0.001 & -0.03 \\
+            Collinder 197 & Col197 & 0.014 & 0.03 \\
+            Collinder 69 & lam\_Ori & 0.013 & -0.09 \\
+            Czernik 24 & Cz24 & 2.692 & -0.11 \\
+            Czernik 30 & Cz30 & 2.884 & -0.31 \\
+            ESO 92-05 & ESO92\_05 & 4.467 & -0.29 \\
+            Haffner 10 & Haf10 & 3.802 & -0.1 \\
+            IC 2391 & IC2391 & 0.029 & -0.06 \\
+            IC 2602 & IC2602 & 0.036 & -0.06 \\
+            IC 4665 & IC4665 & 0.033 & 0.01 \\
+            Loden 165 & Loden165 & 3 &  \\
+            Messier 67 & M67 & 3.981 & -0.02 \\
+            NGC 2141 & NGC2141 & 1.862 & -0.04 \\
+            NGC 2158 & NGC2158 & 1.549 & -0.15 \\
+            NGC 2232 & NGC2232 & 0.018 & -0.03 \\
+            NGC 2243 & NGC2243 & 4.365 & -0.45 \\
+            NGC 2244 & NGC2244 & 0.004 & -0.04 \\
+            NGC 2264 & NGC2264 & 0.003 & -0.1 \\
+            NGC 2355 & NGC2355 & 1 & -0.13 \\
+            NGC 2420 & NGC2420 & 1.698 & -0.15 \\
+            NGC 2425 & NGC2425 & 2.399 & -0.13 \\
+            NGC 2451A & NGC2451 & 0.035 & -0.08 \\
+            NGC 2451B & NGC2451 & 0.041 & -0.02 \\
+            NGC 2516 & NGC2516 & 0.24 & -0.04 \\
+            NGC 2547 & NGC2457 & 0.032 & -0.03 \\
+            NGC 3293 & NGC3293 & 0.01 & -0.08 \\
+            NGC 3532 & NGC3532 & 0.398 & -0.01 \\
+            NGC 3766 & NGC3766 & 0.023 & -0.12 \\
+            NGC 4815 & NGC4815 & 0.372 & 0.08 \\
+            NGC 6005 & NGC6005 & 1.259 & 0.22 \\
+            NGC 6067 & NGC6067 & 0.126 & 0.03 \\
+            NGC 6253 & NGC6253 & 3.246 & 0.33 \\
+            NGC 6259 & NGC6259 & 0.269 & 0.18 \\
+            NGC 6281 & NGC6281 & 0.513 & -0.04 \\
+            NGC 6405 & NGC6405 & 0.035 & -0.02 \\
+            NGC 6530 & NGC6530 & 0.002 & -0.02 \\
+            NGC 6633 & NGC6633 & 0.692 & -0.03 \\
+            NGC 6649 & NGC6649 & 0.071 & -0.08 \\
+            NGC 6705 & NGC6705 & 0.309 & 0.03 \\
+            NGC 6709 & NGC6709 & 0.191 & -0.02 \\
+            NGC 6802 & NGC6802 & 0.661 & 0.14 \\
+            Pismis 15 & Pismis15 & 0.871 & 0.02 \\
+            Pismis 18 & Pismis18 & 0.575 & 0.14 \\
+            Ruprecht 134 & Rup134 & 1.66 & 0.27 \\
+            Trumpler 14 & Trumpler14 & 0.003 & -0.01 \\
+            Trumpler 20 & Trumpler20 & 1.862 & 0.13 \\
+            Trumpler 23 & Trumpler23 & 0.708 & 0.2 \\
+            Trumpler 5 & Trumpler5 & 4.266 & -0.35 \\
+            Gamma Vel & gamma2\_vel & 0.02 & -0.02 \\
+            Rho Oph & Rho\_Oph & 0.001 & 0.03 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{The selection of clusters}
+GES DR5.0 provides information on 114 324 stars, not all of which correspond to OCs, see \cite{Gilmore2022} for details. Of interest for the present work are those identified as belonging to OCs. For them we proceed to perform a first filtering on the GES\_TYPE field to identify those records that meet the condition:
+\begin{itemize}
+    \item GE\_CL: observed by GES, OC programme field
+    \item GE\_SD\_OC: observed by GES, standard field OC
+    \item AR\_CL: ESO Archive observation, OC programme field
+    \item AR\_SD\_OC: Archive observation, standard field OC
+\end{itemize}
+
+As a result of this first filtering, the number of selected records is reduced to 43 299. On this subset of data we perform another filtering, this time aimed at selecting those that offer information on the following attributes:
+\begin{itemize}
+    \item Metallicity
+    \item Li abundance
+    \item GES field identifier
+    \item Effective temperature
+    \item Surface gravity
+\end{itemize}
+
+This second filtering reduces the population of stars to be considered to a total of 21 125 records. Finally, a third filtering is carried out to select those stars belonging to the OCs listed in Table \ref{tab:oc_list}, giving us a final study population of 20 913 stars distributed in 65 OCs.\par
+
+\subsection{The selection of closest solar siblings}
+Once we have pre-selected the stars belonging to the OCs listed in the previous chapter, our interest focus on identifying those that are most similar to our Sun i.e. solar siblings. Finding such solar twins is a difficult task since they are disseminated across our Galaxy. Finding them would help us to figure out the origin of our Sun and and gain information about what conditions prevailed in the OCs in which they were born.\par
+
+Several attempts have been made to find solar siblings in the past \citep[see][and references therein]{Adibekyan2018}. In most of them, the search method is oriented to search the candidates based on its kinematic properties and then their metallicities and chemical abundances are compared with those of our Sun.\par
+
+In our case we extend the selection criteria by adding additional constraints: the surface gravity and age of the star. These two new parameters represent a fine-tuning of the search process for sibling candidates to our Sun. We use the age of the OCs reported in Table \ref{tab:oc_list} and the data obtained from the set of simulations performed using Modules for Experiments in Stellar Astrophysics stellar evolution code \citep[MESA; ][]{Paxton2011, Paxton2013,Paxton2015, Paxton2018, Paxton2019}. Our models extend the investigations documented in \cite{Navarro2020} on the influence of rotation and magnetic braking on the star Li depletion during the pre-main sequence (PMS) and the main sequence (MS). The data obtained from the simulations are confronted by comparing different stellar parameters obtained by Gaia and GES. This allows us to analyse, validate and refine our models against a very large set of candidates. The end result of this process is to obtain a subset of candidate sibling stars of our Sun that help us to support (or refute) our line of investigation of how the Li abundance behaves throughout the evolution of solar-type stars.\par
+
+From the approximately 21 000 identified stars, we proceed to select those with metallicity ($\feh$), effective temperature ($\teff$), and surface gravity ($\gsurf$) within the following limits:
+\begin{itemize}
+    \item $0.05 \, \dex <= \feh <= 0.05 \, \dex$
+    \item $50.0 \, \Kelvin <= \teff <= 50.0 \, \Kelvin$
+    \item $0.05 \, \dex <= \gsurf <= 0.05 \, \dex$
+\end{itemize}
+
 
 \section{Method} \label{sec_method}
+The AML is considered to be governed by magnetically-coupled stellar winds which exert a braking force on the star that eventually causes a loss of angular momentum. In addition, throughout the star's evolution, directly observable parameters such as its rotational velocity, effective temperature, surface gravity or abundance of chemical elements undergo variations. These parameters have an influence, either directly or indirectly, on the angular momentum loss caused by the star's magnetic field. Therefore, assuming that the magnetic field strength of a star remains constant throughout its evolution is a necessary simplification in some scenarios but does not correspond to observations.\par
 
-In the remainder of this paper, we describe a semi-empirical approach for the calculation of the AML as a result of the torque applied by a magnetically-coupled stellar winds. This has been implemented as an extension to Modules for Experiments in Stellar Astrophysics stellar evolution code \citep[MESA; ][]{Paxton2011, Paxton2013,Paxton2015, Paxton2018, Paxton2019}.
+In the remainder of this paper, we describe a semi-empirical approach for the calculation of the AML as a result of the braking caused by a magnetic field of varying strength. The magnetic field evolves according to the $\teff$ and angular velocity ($\Omega$) of the star. This has been implemented as an extension to MESA.
 
 \subsection{Modelling magnetic intensity} \label{mod_mbi}
+The variable magnetic field strength modelling approach is supported by the papers \cite{Cranmer2011} and \cite{Gallet2013}. We start by enumerating the most relevant aspects and assumptions made in modelling the evolution of magnetic field intensity.\par 
 
-
-\subsection{Modelling magnetic braking} \label{mod_mb}
-We start by enumerating the most relevant aspects and assumptions made in modelling the evolution of rotation, magnetic braking and angular momentum in MESA. These will be considered for the calculation of the AML as a result of the torque applied by a magnetically-coupled stellar winds.\par 
-
-A relevant parameter to characterize the influence of a given magnetic field on the stellar wind is the denominated wind confinement magnetic parameter ($\eta_*$). It represents a energy ratio (Eq.~\ref{eq:wind_conf}) and defines a characteristic parameter for the relative effectiveness of the magnetic fields in circumscribing and/or channeling the wind outflow \citep{UdDoula2002}.\par
-
+A relevant parameter to characterize the influence of a given magnetic field on the stellar wind is $\Omega$. Assuming that the magnetic field is generated by a dynamo, its strength is proportional to some power of $\Omega$,
 \begin{ceqn}
 \begin{equation}
-    \eta_* = \frac{B^{2}/8\upi}{\rho\nu^2/2} \label{eq:wind_conf}
+    f_*B_* \propto \Omega_*^b \label{eq:mf_strenght}
 \end{equation}
 \end{ceqn}
+where $b$ is the dynamo exponent, $B_*$ is the strength of the magnetic filed, and $f_*$ is the filling factor, i.e. the fraction of the star surface which is magnetized \citep{Gallet2013}.
 
-where $B^{2}/8\upi$ is the magnetic field energy density, $\frac{1}{2}\rho\nu^{2}$ the kinetic energy density, $B$ the magnetic field intensity, $\rho$ the mass density, and $\nu$ the stellar wind velocity.\par
-
-Stars with similar initial masses but different mass loss ($\Dot{M}$) ratios will end up evolving very differently. The ionized particles carried by the solar wind not only contribute to the mass loss but also to the loss of kinetic ($K_e$) energy that is deposited in the interstellar medium. Given a star with a spherically symmetric wind, $\Dot{M}$ is characterized by the following expression:
-
+On the other hand, $B_*$ is proportional to the equipartition magnetic field strength,
 \begin{ceqn}
 \begin{equation}
-    \Dot{M} = 4\upi r^2\rho\nu \label{eq:mass_loss}
+    B_* \approx 1.13 \Beq \label{eq:mf_bstar}
 \end{equation}
 \end{ceqn}
-
-Using (\ref{eq:wind_conf}) and (\ref{eq:mass_loss}), $\eta_*$ can be approximated by: 
+where $\Beq$ is defined as 
 \begin{ceqn}
 \begin{equation}
-    \eta_* = \frac{B^{2}r^{2}}{\Dot{M}\nu} \label{eq:wind_conf2}
+    \Beq = \sqrt{8\upi P_*} = \sqrt{\frac{8\upi\rho_* \boltzmann \teff}{\mu\massH}}\label{eq:mf_beq}    
 \end{equation}
 \end{ceqn}
+where $\rho_*$ is the photospheric density, $\boltzmann$ is Boltzmann's constant, $\massH$ is the mass of a hydrogen atom, and $\mu$ the mean atomic weight \citep{Cranmer2011}.
 
-In general, a magnetically channeled outflow has a complex stream geometry but for convenience, the Eq.~\ref{eq:mass_loss} simply characterizes the wind strength in terms of a spherically symmetric mass-loss rate. $\nu$ can be characterized by the radial variation of outflow velocity in terms of the velocity law (Eq.~\ref{eq:vel_law})
+As indicated in \cite{Cranmer2011} $\mu$ can be estimated using the OPAL plasma equations of state\footnote{\url{https://opalopacity.llnl.gov/EOS_2005/}},
 \begin{ceqn}
 \begin{equation}
-    \nu(r) = \nu_\infty (1-\rstar/r) \label{eq:vel_law}
+    \mu \approx \frac{7}{4} + \frac{1}{2} \; {\rm tanh}\Bigg(\frac{3500-\teff}{600}\;\Bigg) \label{eq:mf_atom_weight}
 \end{equation}
 \end{ceqn}
-where $r$ represents the distance from the center of the star to the point where the velocity is to be measured, $R_*$ is the radius of the star, and $\nu_\infty$ is the terminal wind velocity. $\nu_\infty$ is defined as the velocity that the wind reaches at large distance from the central star, where it is not accelerated anymore by the wind driving force but its deceleration due to interaction with the interstellar medium (ISM) is negligible \citep{Niedzielski2002}.\par
+Once we are in a position to calculate $\Beq$, we can calculate $B_*$.\par
 
-The line-driven winds of OB stars have terminal velocities that scale with the photospheric escape velocity \citep{Lamers2000} according to:
+\cite{Cranmer2011} found that the magnetic field strength is mainly influenced by $f_*$ rather than by the rotation period of the star. That is, variations in the star's angular velocity do not significantly alter its magnetic field strength. In addition, $f_*$ has a strong dependence on the Rossby number ($\rossby$). In order to calculate $\rossby$ of a given star, it is necessary to know the turn over time ($\turnover$),
+\begin{ceqn}
+\begin{equation}
+    \rossby = \frac{\prot}{\turnover} \label{eq:mf_rossby}
+\end{equation}
+\begin{ceqn}
+\begin{equation}
+    \turnover = 314.24\;exp\left[-\Bigg(\frac{\teff}{1952.5}\Bigg)-\Bigg(\frac{\teff}{6250}\Bigg)^{18} \;\right]+0.002 \label{eq:mf_turnover}
+\end{equation}
+
+\end{ceqn}
+\cite{Cranmer2011} Crammer provides two different settings for $f_*$ which define respectively the upper and lower limits for the mean surface magnetic field strength ($f_*B_*$),
+
 \begin{ceqn}
 \begin{align}
-    \nu_\infty &\simeq 1.92 \;\nu_{{\rm esc}} \label{eq:vinf}\\
-    \nu_{{\rm esc}} &= \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc}
+     \fmin &= \frac{0.5}{(1+(x/0.16)^{2.6})^{1.3}} \label{eq:fmin}\\
+     \fmax &= \frac{1}{1+(x/0.31)^{2.5}} \label{eq:fmax}
 \end{align}
 \end{ceqn}
-where Eq.~\ref{eq:vesc} describes the Newtonian escape velocity from the stellar surface, where $G$ is the gravitational constant,   ${\rstar}$ the radius, and ${\mstar}$ the mass of the star.
+where x = $\rossby$/$\rossbysun$, and $\rossbysun$ = 1.96.
 
-Making use of (\ref{eq:vesc}), $\nu_\infty$ can be reformulated as:
+
+Finally, we are able to calculate the filling factor for a star by applying the adjustment made by \cite{Gallet2013},
+\begin{ceqn}
+\begin{equation}
+     \fstar = \frac{0.55}{(1+(x/0.16)^{2.3})^{1.22}} \label{eq:fstart}
+\end{equation}
+\end{ceqn}
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/mag_field_limits_var_vel_g3.pdf}
+    \caption{The evolution of magnetic field intensity and its upper and lower limits, as a function of time and $\oomegac$ for several 1 $\msun$ models and their. The model include PMS rotation with $\oomegac$ = 0.1425. The solid lines represent the magnetic field strength, while the dotted lines represent the angular evolution of the star. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:mag_field_limits_var_vel_g3}
+\end{figure}
+
+With this formalism we are able to calculate the mean magnetic field as a time-dependent function of $\rho$, $\teff$, and $\Omega$. The time values for these three variables will be obtained from the different simulations carried out with the help of MESA.
+
+\subsection{Modelling magnetic braking} \label{mod_mb}
+Once we have characterised how the magnetic field strength evolves, we need to model how the loss of angular momentum occurs.  In \cite{Navarro2020} we use a model applicable to magnetic fields of non-variable intensity and of few Gauss ($1.0\,\Gauss \leq B \leq 10.0\,\Gauss$). As shown in Figure \ref{fig:mag_field_limits_var_vel_g3}, the simulations yield magnetic field values that show maximum intensities of around $1.0K\,\Gauss$, making the use of the model employed previously non viable.
+
+Let's start by enumerating the most relevant aspects and assumptions made in modelling the evolution of rotation, magnetic braking and angular momentum. If we assume a spherical outflow, the torque applied by a magnetically-coupled stellar winds $\torquewind$ is dictated by,
+\begin{ceqn}
+\begin{equation}
+    \torquewind \propto \Omega_* \; \mwind \; \ralfven^{2} \label{eq:mb_torque}
+\end{equation}
+\end{ceqn}
+where $\mwind$ is the mass loss rate, and $\ralfven$ the averaged value of the Alfvén radius.\par
+Stars with similar initial masses but different mass loss ($\Dot{M}$) ratios will end up evolving very differently. The ionized particles carried by the solar wind not only contribute to the mass loss but also to the loss of kinetic energy that is deposited in the interstellar medium. Given a star with a spherically symmetric wind, $\mwind$ is characterized by the following expression:
 
 \begin{ceqn}
 \begin{equation}
-    \nu_\infty \simeq 1.92 \; x \; 618 \; \Bigg(\sqrt{\frac{\rsun}{\rstar}\frac{\mstar}{\msun}} \;\Bigg) \label{eq:vinf}
+    \mwind = 4\upi r^2\rho\nu \label{eq:mass_loss}
 \end{equation}
 \end{ceqn}
-where ${\rsun}$ is the radius, and ${\msun}$ the mass of the Sun.
+where $r$ is the stellar radius, $\rho$ the mass density, and $\nu$ the stellar wind velocity.
 
-It has been observed that strongly magnetic intermediate-mass stars typically have rotation rates much slower than other stars in their parent population \citep{Mathys2006}. In those stars, the magnetic fields interacts with the mass loss, where the Alfv\'{e}n radius ($R_{A}$) plays an important role. Making use of $\eta_*$ (Eq. \ref{eq:wind_conf}), $R_{A}$ is defined as the point in which the magnetic field energy density and the kinetic energy density are balanced. In case that $R_{A}$ is greater than the stellar radius, then the wind flow will have to follow the magnetic field. As a consequence, the material leaves the stellar surface with a higher specific AM, as the co-rotation radius has increased and it roughly corresponds to $R_{A}$. Following \citet{Weber1967} the AML can be calculated by:
+It has been observed that strongly magnetic intermediate-mass stars typically have rotation rates much slower than other stars in their parent population \citep{Mathys2006}. In those stars, the magnetic fields interacts with the mass loss, where the Alfv\'{e}n radius plays an important role. $\ralfven$ is defined as the point in which the magnetic field energy density and the kinetic energy density are balanced. In case that $\ralfven$ is greater than the stellar radius, then the wind flow will have to follow the magnetic field. As a consequence, the material leaves the stellar surface with a higher specific AM, as the co-rotation radius has increased and it roughly corresponds to $\ralfven$ which can be expressed as \citep{Matt2012}
 \begin{ceqn}
 \begin{equation}
- \Dot{J} = \frac{2}{3} \Dot{M}\Omega R^{2}_{A} \label{eq:j_dot}
+    \ralfven = K_1\left[\frac{\Bp^{2}\;R_*^{2}}{\mwind\;\sqrt{K_2^2\vesc^2 + \Omega_*^2R_*^{2}}\ }\right]^{m}R_*  \label{eq:mb_ralfven}
 \end{equation}
 \end{ceqn}
-where $\Dot{M}$ is the mass loss rate, $\Omega$ the angular velocity at star surface and $R_A$ the Alfv\'{e}n radius. \par
-
-The above expression can be rewritten according to \citet{Ud-Doula2008} so that it depends on the $\eta_*$ instead of the $R_A$ as follows:
+where $\Bp$ is the magnetic field intensity at the stellar surface, $\vesc$ is the escape velocity, $m = 0.1675$, $K_1 = 1.30$, and $K_2 = 0.0506$ \citep{Gallet2013}.
 \begin{ceqn}
 \begin{equation}
- \Dot{J} = \frac{2}{3} \Dot{M}\Omega R^{2}_{*}\eta_* \label{eq:j_dot_mesa}
+\vesc = \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc}
 \end{equation}
 \end{ceqn}
-which is a more convenient expression to be implemented in MESA because is based on values directly exposed during the simulations.
+
+Finally, we have that the AML can be calculated as follows:
+\begin{ceqn}
+\begin{equation}
+ \Dot{J} = \Omega_* \; \mwind \; \ralfven^{2} \label{eq:j_dot}
+\end{equation}
+\end{ceqn}
+where $\mwind$ is the mass loss rate. This expression is implemented in MESA based on values directly exposed during the simulations.
 
 \subsection{Modelling MLT $\alpha$} \label{mod_mltalpha}
+The mixing-length theory (MLT) introduced by Böhm-Vitense (BV) has been commonly adopted to model stellar convection in stellar evolutionary codes, including MESA. The most important free parameter in this theory is the mixing length $l$ which is defined as 
+\begin{ceqn}
+\begin{equation}
+ l = \alpha H_p\label{eq:mixlength}
+\end{equation}
+\end{ceqn}
+where $H_p$ is the pressure scale height, and $\alpha$ a free parameter which is determined in advance and keep fixed during the stellar evolution simulations.\par
+
+ It became evident that the influence of the free, relatively arbitrary, parameters associated with MLT significantly conditioned the evolution of the Li abundance. Moreover, there is no strong arguments which suggest that the mixing-length parameter is the same in all stars and at all evolutionary phases \citep{Pasetto2014}. In \cite{Navarro2020} we showed how an alternative MLT parameterization could produce results in line with the observations. Adjustment of MLT over-shooting and $\amlt$ free parameter seems to be required for explaining Li abundances in OC's.\par
+
+In \cite{Sonoi2018}, the authors introduced a way for calibrating $\amlt$ for solar-like stars in which its value increases with increasing $\gsurf$ or decreasing $\teff$,
+
+\begin{ceqn}
+\begin{equation}
+ f(x,y) = a_0 + (a_1 + (a_3 + a_5x +a_6y)x + a_4y)x + a_2y\label{eq:alpha_ml}
+\end{equation}
+\end{ceqn}
+where
+\begin{ceqn}
+\begin{align}
+     x &= \frac{\teff-5777}{1000} \label{eq:eq:alpha_x}\\
+     y &= \gsurf-4.44 \label{eq:eq:alpha_y}
+\end{align}
+\end{ceqn}
+and $a_i$ are the resulting coefficients of the fitting function \ref{eq:alpha_ml} to the calibrated $\alpha$ values for the MLT-BV convection model \citep{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$.\par
 
 \section{Results} \label{sec_3}
 
 \subsection{Mesh Models} \label{sec_mesh}
-According to the formulation in the previous sections, the only two free parameters of our implementation are $B$ and $\Omega$. The numerical simulations traced the rotational history and $A(\isotope[7]{Li})$ of a $1\, \msun$ star for a variety of initial values for $B$ and $\Omega$ (see also Table \ref{tab:phy_mesa}). MESA uses the shellular approach \citep{Meynet1997} to account for hydrostatic effects of rotation into 1D stellar models.\par
+In the current work we have replaced two pre-set parameters (alpha and intensity) for the different simulations of our model. Not only have we eliminated the need to assign a value to them, but we allow their values to vary as the simulations evolve over time. The single free parameter of our implementation is $\Omega$. The numerical simulations traced the rotational history and $A(\isotope[7]{Li})$ of a $1\, \msun$ star for a variety of initial values for $\Omega$ (see also Table \ref{tab:phy_mesa}).\par
 
 \begin{table}
 	\centering
@@ -252,25 +418,23 @@ According to the formulation in the previous sections, the only two free paramet
 		Semiconvection & $\alpha_{{\rm sc}}=0.1$\\
 		Thermohaline & $\alpha_{{\rm th}}=666$\\
 		Rotational Mixing & Include SH, ES, GSF, SSI \& DSI\\
-            Mixing Length Theory & $\alpha_{{\rm MLT}}$ variable depending on $\teff$\\ & \& effective surface gravity\\
-		Magnetic Effects & Magnetic braking based on idealized \\ & monopole field\\
-		Magnetic Field & B(G) variable, depending on $\teff$ \&  $\Omega$\\
+            Mixing Length Theory & $\alpha_{{\rm MLT}}$ variable depending on $\teff$\\ & \& $\gsurf$\\
+		Magnetic Effects & Magnetic braking based on idealized \\ & dipole field\\
+		Magnetic Field & B(G) variable, depending on $\rho$, $\teff$ \&  $\Omega$\\\
 		Mass Loss & activated, $\Dot{M}_{{\rm max}} = 10^{-3} \: \msun \: yr^{-1}$\\
-		Angular Moment Loss & activated, $\Dot{J} = \frac{2}{3} \Dot{M}\Omega R^{2}_{A}$\\
+		Angular Moment Loss & activated, $\Dot{J} = \Omega_* \; \mwind \; \ralfven^2$\\
 		\hline
 	\end{tabular}
 \end{table}
 
+Most of the configuration used in the simulations remain the same as in our previous work, with the exception of the overshooting (deactivated), the $\amlt$ pre-set value, and the formalism used for calculating $\Dot{J}$ (see \cite{Navarro2020} for further details).\par
 
-We adopted solar-scaled abundances and assume \citet{Asplund2009} solar initial abundance ($Z = Z_{\odot, \mathrm{pr} = 0.0142}$). We also adopted the following nominal values to express stellar properties values in SI units, $\rsun = 6.957x10^{10}\, cm$ and $\msun = 1.988x10^{33}\, g$ which are consistent with IAU resolutions \citep{Mamajek2015}. For a detailed description of the physics adopted in this paper, we refer the reader to \citet{Choi2016}. That work was used as starting point for ours regarding the parameterization of the MESA project which was calibrated to reproduce the measured element abundances on the solar surface.\par
+The models continue to including rotation during the PMS. We adopted a simple and pragmatic theoretical approach to establish when the star is reaching the ZAMS phase: the simultaneous existence of an extensive convective layer and a radiative core. From this moment on, the MB routine was activated, acting as an additional mechanism to those existing in the MESA evolutionary code that participated in the star AML. This time, the restriction of a magnetic field with a constant intensity throughout the evolution of the star until it reached the TAMS is removed in favor of variable one. Something similar happens with $\amlt$ which indeed is  a key factor to determine the near-surface structure of stellar models. 
 
-
-The models included rotation during the PMS as there are evidences that advocate for a strong established relationship between Li destruction and rotation on that phase (\citeauthor{Bouvier2016} \citeyear{Bouvier2016}, \citeyear{Bouvier2018}). We modeled rotation such as AML is computed as a result of the torque applied to the convection zone by a magnetically-coupled wind. Additionally, we did not take into account either the influence of internal magnetic fields or their existence during the T-Tauri phase. We adopted a simple and pragmatic theoretical approach to establish when the star is reaching the ZAMS phase. The selected criterion was based on the simultaneous existence of an extensive convective layer and a radiative core. From this moment on, the MB routine was activated, acting as an additional mechanism to those existing in the MESA evolutionary code that participated in the star AML. We assumed that the magnetic field did not vary its intensity throughout the evolution of the star until it reached the TAMS. In addition, other rotation effects were also considered during the evolution of the models: the AM transport from the radiative interior to the convective envelope and the AM redistribution associated with changes in the internal structure during the process of contraction to the MS.\par
-
-In this study we focused on the indirect role played by the MB on the Li destruction. This is a consequence of its influence on the rotational history of solar-type stars. Our major objective was to check how MB could contribute to explain the evolution of Li in the Sun and other solar-type stars. A set of different scenarios with magnetic field strengths ranging between 3.0 and 5.0 G were exercised. We computed the evolution of $1\,\msun$ stellar models at solar initial metallicity with $\oomegac$ varying between $0.0084$ and $0.0336$. More advanced models for more complex arrangements of the magnetic field as well as the evolution of its intensity throughout the life of the star were left for later work.\par
+In this new paper we continue to focusing on the indirect role played by the MB on the Li destruction. The main objective continues to be to check how MB could contribute to explain the evolution of Li in the Sun and other solar-type stars. We computed the evolution of $1\,\msun$ stellar models at solar initial metallicity with $\oomegac$ varying between $0.12$ and $0.1425$. The results are then compared with the data collected by the Gaia mission and GES for the stars belonging to the OC's referenced in Table \ref{tab:oc_list}.\par
 
 
-As expressed by Eq.~\ref{eq:j_dot_mesa}, the amount of AML depends on $R_A$ (or alternatively on $\eta_*$), $\Omega$ and $\Dot{M}$. For large $\eta_*$ value, the star undergoes a significant deceleration. We controlled the value of $\eta_*$ in the models by varying the magnetic field ($B$) and the stellar rotation speed ($\Omega$). With regards to $\Dot{M}$ and as reported in Table \ref{tab:phy_mesa}, the empirical formula developed by Reimers \citep{Reimers1975} for stars in the asymptotic giant branch (AGB) was used for calculating the mass-loss. For a solar-type star the $\Dot{M}$ during MS is relatively small, about  $10^{-14}\msun \, yr^{-1}$ \citep{Noerdlinger2008}. \par
+As expressed by Eq.~\ref{eq:mb_torque}, the amount of AML depends on $\ralfven$, $\Omega$ and $\Dot{M}$. For large $\ralfven$ values, the star undergoes a significant deceleration. The value of $\ralfven$ depends on the following varying parameters: magnetic field ($B$) intensity, $\teff$ and$\Omega$. With regards to $\Dot{M}$ and as reported in Table \ref{tab:phy_mesa}, the empirical formula developed by Reimers \citep{Reimers1975} for stars in the asymptotic giant branch (AGB) was used for calculating the mass-loss. For a solar-type star the $\Dot{M}$ during MS is relatively small, about  $10^{-14}\msun \, yr^{-1}$ \citep{Noerdlinger2008}. \par
 
 MESA assigns an $\Omega$ value for each cell $k$ ($\Omega_k$) which is adjusted so that the resulting angular momentum is retained after calculating the new mass of the cell $k$ ($m_k$) and its distance to the center of the star ($r_k$). After that, an AM value is assigned to each cell $k$ ($J_k$). At this point, our MB turns on, modifying $J_k$. This was done by providing an additional contribution ($\Dot{J}_{k}$). This contribution is the result of the external torque exerted by the magnetic field once it has been distributed among the different layers that make up the CZ as dictated by Eq.~\ref{eq:k_jdot}:\par
  
@@ -280,35 +444,30 @@ MESA assigns an $\Omega$ value for each cell $k$ ($\Omega_k$) which is adjusted 
 \end{align}
 \end{ceqn}
 
+The distribution is performed in two iterations. In the first iteration, each cell $k$ is assigned the maximum amount of $\Dot{J}_{k}$ that it can accommodate in the time step established by the simulation. The amounts of $\Dot{J}$ not accommodated by the cells are accumulated as residual angular moment ($\jres$). In a second pass, the aggregated residual $\jres$ value collected in the previous iteration is redistributed among those cells that can accommodate more torque. In this way we manage to conserve the angular momentum.\par
 
 \subsection{Li evolution without MB}
+As a baseline, we borrow from \cite{Navarro2020} the Figure \ref{fig:li_var_vel_0g} which shows the temporal evolution of surface Li abundance for several $1\msun$ models initialized with different rotational velocities. The simulations took into account the effects of rotation and AML caused by stellar winds but not those of MB. The purple star and square are the surface Li abundances for the present-day Sun \citep{Asplund2009} and for the Pleiades, respectively \citep{Sestito2005}. For more details, refer to the cited work.\par
 
 \begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip, width=\columnwidth]{figures/li_var_vel_0_0g.eps}
+	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip, width=\columnwidth]{figures/paper1/li_var_vel_0_0g.eps}
     \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. The solid black line represents the reference model according to \citet{Choi2016}. The rest of lines are models which include PMS rotation with $\oomegac$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundances for the present-day Sun \citep{Asplund2009} and the average for the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
     \label{fig:li_var_vel_0g}
 \end{figure}
 
-Figure \ref{fig:li_var_vel_0g} shows the temporal evolution of surface Li abundance for several $1\msun$ models initialized with different rotational velocities. The simulations took into account the effects of rotation and AML caused by stellar winds but not those of MB. The purple star and square are the surface Li abundances for the present-day Sun \citep{Asplund2009} and for the Pleiades, respectively \citep{Sestito2005}.\par
-
-Notice how the Li abundance in the star surface decreased over time for all simulated models. The solid black line represents the reference model that adopts the solar-calibrated envelope overshooting parameters as documented in \citet{Choi2016}. All models burned too much Li before the ZAMS and therefore did not match with the Pleiades average surface Li abundance. Also remarkable was the fact that there were barely any differences between the different models in terms of the abundance of Li for much of the PMS. Only after one million years was Li destroyed to an accentuated degree, since the necessary temperature was not reached at BCZ before. Afterwards the different models destroyed the Li in a very similar way due to two main reasons. On the one hand, the convective zones that the models developed had very similar sizes, so that the temperature at the BCZ was practically the same. On the other hand, the differential rotation between the core and the convective zone did not begin to develop until it reached $ \approx 10^6$ years, achieving its maximum difference in the ZAMS about $ \approx 10^7$ years. It was at this moment that the combined effects of turbulence and rotational difference should increase, leading to notable differences in the evolution of A(Li) (see Figure \ref{fig:li_var_vel_0g_z1}). Later, the reference model (black line) did not deplete Li efficiently on the MS and failed (again) to match the current solar surface Li abundance. The other models which included rotation during the PMS with values of $\oomegac$ between 0.0084 and 0.0336 were able to burn Li in a more realistic way. Among them only one (green line) was close to match the present-day Li abundance of the Sun but its rotational velocity was much higher (see Figure \ref{fig:rot_vel_0g}) than the $2\,\kms$ of the Sun \citep{Gill2012}. \par
-
-For much of the PMS the star rotated as a solid body (see Figure \ref{fig:rot_vel_0g}) and this was because the star had a full convective interior. It was not until the end of the Hayashi track that the star began to develop a radiative core. It was in this stage when a difference in angular velocity appeared between the upper and lower limits of the radiative and convective zones respectively. The degree of differential rotation was directly influenced by the initial $\Omega$. As the models were initialized with a higher angular velocity, the difference in velocity between the BCZ and the star surface was accentuated; the higher the initial velocity, the bigger the velocity gradient between the bottom and top limits of the CZ. As a consequence, the turbulence strength located at the BCZ increased so that Li could reach regions with temperatures about $\tli$ where it was finally burned and destroyed (see Figure  \ref{fig:li_var_vel_0g}). Other investigations \citep{Bouvier2018, Baraffe2017}  point to a tendency diametrically opposed to the one exposed here, i.e. the faster the rotation speed, the greater the abundance of Li on the surface of the star. \par
+The Li abundance in the star surface decreased over time for all simulated models. The solid black line represents the reference model that adopts the solar-calibrated envelope overshooting parameters as documented in \citet{Choi2016}. All models burned too much Li before the ZAMS and therefore did not match with the Pleiades average surface Li abundance. There were barely any differences between the different models in terms of the abundance of Li for much of the PMS. Only after one million years was Li destroyed to an accentuated degree, since the necessary temperature was not reached at BCZ before. Afterwards the different models destroyed the Li in a very similar way due to two main reasons. On the one hand, the convective zones that the models developed had very similar sizes. On the other hand, the differential rotation between the core and the convective zone did not begin to develop until it reached $ \approx 10^6$ years, achieving its maximum difference in the ZAMS about $ \approx 10^7$ years. It was at this moment that the combined effects of turbulence and rotational difference increase, leading to notable differences in the evolution of A(Li) (see Figure \ref{fig:li_var_vel_0g_z1}). Later, the reference model (black line) did not deplete Li efficiently on the MS. The other models were able to burn Li in a more realistic way. Among them only one (green line) was close to match the present-day Li abundance of the Sun but its rotational velocity was much higher (see Figure \ref{fig:rot_vel_0g}) than the $2\,\kms$ of the Sun \citep{Gill2012}. \par
 
 \begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/li_var_vel_0_0g_z1.eps}
+	\includegraphics[trim = 25mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/li_var_vel_0_0g_z1.eps}
     \caption {Similar to Figure \ref{fig:li_var_vel_0g} but zooming in on the ZAMS. The models with a higher initial rotational velocity reach already the ZAMS with a lower amount of Li measure on the star surface.}
     \label{fig:li_var_vel_0g_z1}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/rot_vel_var_vel_0_0g.eps}
+	\includegraphics[trim = 10mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/rot_vel_var_vel_0_0g.eps}
     \caption{The evolution of angular velocity at surface (solid line) and at the bottom (dotted line) limit of the uppermost convective zone, as a function of time for several 1 $\msun$ models. The models includes PMS rotation with $\oomegac$ values between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
     \label{fig:rot_vel_0g}
 \end{figure}
-
-Other well-known structural effects of rotation are the decrease of the effective temperature ($\teff$) and to a less extent of stellar luminosity ($L$). Both effects can be observed graphically in the HR diagram of Figure \ref{fig:hr_var_vel_0g} which shows a zoomed-in view of evolutionary tracks from the ZAMS until the TAMS for several $1\msun$ models initialized with different rotational velocities. If we compare the non-rotating model (black solid line) with the rotating ones we can recognize that at the end of the PMS, the latter reach the ZAMS with a lower $\teff$ than the former. These results are in line with those of previous studies \citep[see e.g. ][]{Eggenberger2012,Piau2001,Pinsonneault1989}.\par
-%(see e.g. \citet{Eggenberger2012}, \citet{Piau2001}, \citet{Pinsonneault1989}).\par
 
 
 \begin{figure}
@@ -318,135 +477,119 @@ Other well-known structural effects of rotation are the decrease of the effectiv
 \end{figure}
 
 \subsection{Li evolution with MB}
-Figure \ref{fig:li_var_vel_4_0g} shows the temporal evolution of surface Li abundance for several 1 $\msun$ models. Those models were initialized with different rotational velocities and took into consideration the effects of MB caused by a magnetic field of intensity 4G. If we compare it with Figure \ref{fig:li_var_vel_0g} in which the effects of MB were neglected, we notice how the profiles of Li abundance were altered during PMS and MS. During the PMS we can describe the effect as modest, somewhat expected and in line with the fact that the AML caused by MB (see Eq.~\ref{eq:j_dot}) depends directly on the mass loss rate. If we take into account that for solar-type stars the models predict a modest total mass loss rate, that value is even much lower in this phase. On the contrary, during the MS it is observed that the AML is much more significant, causing a smaller amount of Li to be destroyed.\par
-
-\begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/li_var_vel_4_0g.eps}
-    \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. The models include a magnetic field with an intensity of 4G and PMS rotation with $\oomegac$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:li_var_vel_4_0g}
-\end{figure}
-
-The effect of the MB routine can be seen even more clearly in Figures~\ref{fig:rot_vel_4g}, \ref{fig:rot_vel_4g_z1} \& Appendixes \footnote{The appendices comprise a series of grids as a function of time and for several 1 $\msun$ models in which on the one hand, the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H} for both variable magnetic field intensities and angular velocities and on the other hand, the evolution of surface rotational velocity are shown.}. In those figures we represented the rotation profiles for the surface of the stars and for the bottom of the convective envelope. They are 1 $\msun$ models initialized with different rotational velocities and considering the influence of MB. Similarly to the $A(\isotope[7]{Li})$ evolution profiles commented in the previous paragraph, the effect of the routine were visible once the ZAMS was reached. If we compare the evolution of the curves presented here with those of Figure \ref{fig:rot_vel_0g} we see how the star, instead of keep increasing $\Omega$, began to slow down after having reached its maximum in the passage through the ZAMS. Notice that at this point the angular velocities at the surface of the star and at the BCZ reached their maximum difference. On the other hand, the MB effect caused the angular velocities between both zones of the star to decrease until, for an age close to that of the Sun (see Figure \ref{fig:rot_vel_4g_z1}), the star practically rotated like a rigid solid. These results were also consistent with those obtained by \citet{Eggenberger2010} as far as the effect of the magnetic field, in particular its influence on the loss of angular momentum, has on the rotational velocity of the star.\par
-
-In a similar way we also observed that the models with lower angular velocity generally ended up exhibiting higher values for the Li abundance on the surface (see Figures~ \ref{fig:li_var_vel_4_0g}, \ref{fig:grid_li_var_vel} \& \ref{fig:grid_li_var_g}). In none of those cases we did obtain values of Li on the surface higher than those shown by the model without rotation.\par
-
-\begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_4_0g.eps}
-    \caption{The evolution of surface rotational velocity, as a function of time for several 1 $\msun$ models. The models include a magnetic field with an intensity of 4\,G, PMS rotation with $\oomegac$ between 0.0084 and 0.0336, respectively and MB. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:rot_vel_4g}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/rot_vel_var_vel_4_0g_z1.eps}
-    \caption{Similar to Figure \ref{fig:rot_vel_4g} but now showing in detail the surface rotational velocity as the star approaches TAMS.}
-    \label{fig:rot_vel_4g_z1}
-\end{figure}
-
-The MB also left its mark on the HR diagram by significantly affecting the $\teff$ of the star. To visualize this effect we take as reference Figure \ref{hr_vc_0336_var_g_z1} in which all models were started with the same value $\oomegac=0.0336$ but the intensity of the simulated magnetic field was different. Notice that the models with MB produced hotter stars due to its influence. The lower speed with which the star rotated due to the MB effect caused the increase of the $\teff$, being this difference of practically $95\,\Kelvin$ between the simulated models with $0.0\,\Gauss$ and $5.0\,\Gauss$ respectively for $log(\llsun)=0$.
-
-\begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/hr_vc_0336_var_g_z1.eps}
-    \caption{Similar to Figure \ref{fig:hr_var_vel_0g} but now showing in detail the effects of magnetic braking on the evolutionary tracks for different magnetic field strengths and $\oomegac=0.0336$. The presence of a magnetic field produces hotter stars due to the influence of the magnetic braking on the rotational velocity of the star.}
-    \label{hr_vc_0336_var_g_z1}
-\end{figure}
-
-
-
-As described in section \ref{sec_mesh}, the MB routine distributed the total amount of AML calculated according to Eq.~\ref{eq:k_jdot} among the different layers that composed the CZ. In Figure \ref{fig:cz_vc_028_var_b} we can observe the evolution of the most external CZ normalized with respect to the radius of the star for several 1 $\msun$ models. The models were all initialized with $\oomegac=0.0336$ and magnetic field strengths varying between $0.0\,\Gauss$ and $5.0\,\Gauss$. In accordance with the established models of stellar evolution, in a solar-type star the CZ covers practically all of it for a large part of the PMS. As it approaches the ZAMS, the CZ is decreasing as a consequence of the appearance of a radiative core and maintains an approximately constant radius until the final stage of the MS. In this point it increases significantly as a response to the generalized expansion of the star's radius. Regarding the effect of MB on the size of the CZ, we observe that as the intensity of the magnetic field increased, the size of the CZ decreased (see Figure \ref{fig:cz_vc_028_var_b_z1_new}). The radiative core pushed outward to include a rapidly increasing fraction of the stellar mass, making that the temperature at the CZ base dropped below $\tli$. This effect was most evident during MS. The decrease in the size of the CZ was in line with the fact that less Li was destroyed by causing less stellar material to reach areas with temperatures above $\tli$.\par
-
-Notice the jagged appearance in Figure~\ref{fig:cz_vc_028_var_b_z1_new}. We suspected a numerical origin for the wriggles. In order to check it out, we computed models for all the physical options considered with higher temporal (time step) and spatial (number of shells) resolutions. For the sake of visual clarity, we illustrated the impact on the numerical solutions only for the 5G case, although the effects are the same in all cases. These are indicated as dotted lines in the figure, shifted-down just to become visible. Note that the larger the spatial resolution the smoother is the curve. The effect is less significant for the temporal resolution. The curve with 2x in both spatial and temporal resolution shows no difference with the case of 2x in only the number of shells. The 4x in spatial resolution points to the most appropriate number of shells to fine-track the evolution of the convective zone. However such high resolution implies to significantly increase the computation time, with no effect in the final conclusions of this work. Indeed, the size of the zigzag features is around $10^{-3}$,  which is far below the convection timescale and Li abundances measured in the stellar surface. It is thus save to neglect such effects by using the original time/space resolution.
-
-\par
-
-\begin{figure}
-	\includegraphics[trim = 15mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/cz_vc_028_var_g.eps}
-    \caption{The evolution of convective zone size as a function of time for several 1 $\msun$ models. The models were all initialized with $\oomegac=0.0336$ and magnetic field strengths vary between $0.0\,\Gauss$ and $5.0\,\Gauss$. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:cz_vc_028_var_b}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[trim = 15mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/cz_vc_028_var_g_z1_new.eps}
-    \caption{Similar to Figure \ref{fig:cz_vc_028_var_b} but now showing in detail the size of the convection zone in the models from ZAMS up to TAMS. As the intensity of the magnetic field increases, the size of the convective zone decreases. The first three pointed curves (below 0.26), have been artificially shifted downwards to illustrate the impact of the temporal (2x in time step and number of shells, red-dotted line) and spatial (2x and 4x number of shells, black and green-dotted lines, respectively) resolution on the numerical solution for the 5G case.}
-    \label{fig:cz_vc_028_var_b_z1_new}
-\end{figure}
-
-
-In Figure \ref{fig:mdot_vc_028_var_b} we can see the evolution of $\Dot{M}$ during PMS and MS for several 1 $\msun$ models. The models were all initialized with $\oomegac=0.0336$ and magnetic field strengths varying between $0.0\,\Gauss$ and $5.0\,\Gauss$. In the first stages of PMS was where the greatest mass loss was concentrated and this diminished as it approached the ZAMS. Because the star also decreased its radius during the PMS, it increased $\Omega$ obeying the principle of conservation of AM. When reaching the ZAMS, the stellar radius remained more or less stable for much of the MS (except for its final stage, see Figure \ref{fig:mdot_vc_028_var_b_z1}) but continued to lose mass whilst increasing $\Omega$, although in a less aggressive way if we compare it with the PMS. However, as a consequence of both the appearance of the radiative core during Henyey track and the existence of a CZ (see Figure \ref{fig:mb_act_var_vel_vc_028}), the MB routine was activated, causing the angular velocity of the star to begin to decrease along the entire MS. The more intense the magnetic field, the greater the braking effect.\par 
-
-\begin{figure}
-	\includegraphics[trim = 5mm 10mm 20mm 10mm, clip,width=\columnwidth]{figures/mdot_vc_028_var_g.eps}
-    \caption{The evolution of mass loss $\Dot{M}$ as a function of time for several 1 $\msun$ models. The models include different magnetic field intensity between $0.0\,\Gauss$ and $5.0\,\Gauss$ and PMS rotation with $\oomegac=0.028$. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:mdot_vc_028_var_b}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[trim = 5mm 10mm 20mm 10mm, clip,width=\columnwidth]{figures/mdot_vc_028_var_g_z1.eps}
-    \caption{The evolution of mass loss $\Dot{M}$ as the star is approaching TAMS, as a function of time for several 1 $\msun$ models. The models include a variable magnetic field intensity between $0.0\,\Gauss$ and $5.0\,\Gauss$ and PMS rotation with $\oomegac=0.028$. The stronger the magnetic field, the lower $\Dot{M}$.}
-    \label{fig:mdot_vc_028_var_b_z1}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[trim = 15mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/mb_act_vc_028_var_g.eps}
-    \caption{The activation of the magnetic braking routine as a function of the presence of a radiative core. The models include a magnetic field with an intensity ranging between $3.0\,\Gauss$ and $5.0\,\Gauss$ and PMS rotation with $\oomegac=0.0228$. The solid lines signal the magnetic braking routine activation (on) and deactivation (off). The horizontal dashed lines inform about the star's core nature: radiative (rad) or convective (conv). By implementation decision, once the routine is activated, it remains on even if the star's core nature change to convective. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:mb_act_var_vel_vc_028}
-\end{figure}
-
-\subsection{Alternative Li evolution with MB}
-Up to this point, the simulations of the different models were based on the parameterization gathered in Table \ref{tab:phy_mesa}, which in turn was adopted from \citet{Choi2016}. If we recall the evolution of the Li shown in Figures~\ref{fig:li_var_vel_0g} and \ref{fig:li_var_vel_4_0g}, we highlighted that on both cases too much Li was burned before reaching the ZAMS and therefore did not match with the Pleiades average surface Li abundance. On the other hand, using a parameterization slightly different from the one used until now in which the parameters of convection and overshooting have been readjusted according to Table \ref{tab:phy_alt_mesa}, the simulations could reproduce more faithfully both the Pleiades cluster and the Sun Li abundances (see Figure \ref{fig:li_3_0g_0314vc}).\par
-
-\begin{table}
-	\centering
-	\caption{Alternative MTL and overshooting parameters.}
-	\label{tab:phy_alt_mesa}
-	\begin{tabular}{ll} 
-		\hline
-		Parameter & Adopted prescriptions and values\\
-		\hline
-		Convection & MLT + Ledoux, $\alpha_\mathrm{MLT}$ = 1.70\\
-		Overshoot & time-dependent, diffusive, $f_\mathrm{ov,core}=0.016$, \\ & $f_\mathrm{ov,sh}=0.002$\\
-		\hline
-	\end{tabular}
-\end{table}
+Figure \ref{fig:li_var_vel_var_g_3} shows the temporal evolution of surface Li abundance for several 1 $\msun$ models. Those models were initialized with different rotational velocities and took into consideration the effects of MB caused by a variable magnetic field which its intensity evolution is shown in Figure \ref{fig:mag_field_var_vel_g3}. If we compare it with Figure \ref{fig:li_var_vel_0g} in which the effects of MB were neglected, we notice how the profiles of Li abundance were altered during PMS and MS. During the PMS we can describe the effect as modest, somewhat expected and in line with the fact that the AML caused by MB (see Eq.~\ref{eq:j_dot}) depends directly on the mass loss rate (see Figure \ref{fig:mdot_var_vel_g3}) and the $\Omega$ (see Figure \ref{fig:rot_vel_var_vel_var_g3}) evolution. If we take into account that for solar-type stars the models predict a modest total mass loss rate, that value is even much lower in this phase. It is in the approach phase to the TAMS that the angular velocity reaches its maximum. This, according to our model, plays a crucial role in both the mass loss and the magnetic field strength. The higher the $\Omega$, the higher the $\Dot{M}$, and therefore the higher the magnetic field strength. These effects combine and lead to an accentuation of the magnetic braking effect. As a consequence, there is a slowing down of Li destruction once the models enter the MS.\par
 
 
 \begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/li_3_0g_0314vc.eps}
-    \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for a 1 $\msun$ model. The model include a magnetic field with an intensity of 3\,G and PMS rotation with $\oomegac= 0.0314$, respectively. MLT and overshooting parameters have been set to $\alpha_\mathrm{MLT}=1.70$, $f_\mathrm{ov,core}=0.016$, $f_\mathrm{ov,sh}=0.002$. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:li_3_0g_0314vc}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/li_var_vel_var_g_3.pdf}
+    \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425, respectively and MB. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The rest of the dots in different colours represent surface \isotope[7]{Li} abundances of stars with similar parameters to the evolution curve represented with the same colour.The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:li_var_vel_var_g_3}
 \end{figure}
 
-Similarly, the evolution of the angular velocity for this new configuration is shown in Figure \ref{fig:rot_vel_var_vel_mlt_3_0g}. Here we did not yet reproduce correctly the angular velocity of the Sun. It became evident that the influence of the free, relatively arbitrary, parameters associated with MLT significantly conditioned the evolution of the Li abundance. However, without the inclusion of MB it was not possible to fit it for the Pleiades and the Sun with the same evolutionary track. This fact opens the door for other solar-compatible parameterizations to reproduce the observations in young stellar clusters and for the Sun. \par
 
 \begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/rot_vel_3_0g_0314vc.eps}
-    \caption{The evolution of surface rotational velocity, as a function of time for a 1 $\msun$ model. The model include a magnetic field with an intensity of 3\,G, PMS rotation with $\oomegac=0.0314$, parameters in Table \ref{tab:phy_alt_mesa} and MB. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
-    \label{fig:rot_vel_var_vel_mlt_3_0g}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/mag_field_var_vel_g3.pdf}
+    \caption{The evolution of magnetic field intensity, as a function of time and $\oomegac$ for several 1 $\msun$ models and their. The models include PMS rotation with $\oomegac$ between 0.12 and 0.1425. The solid lines represent the magnetic field strength, while the dotted lines represent the angular evolution of the star. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:mag_field_var_vel_g3}
 \end{figure}
 
+
+In Figure \ref{fig:rot_vel_var_vel_var_g3} we depict the rotation profiles for the surface of the stars and for the bottom of the convective envelop. It shows how the angular velocity increases in value as the star decreases in radius along the PMS. During this stage of its evolution, the star has a nearly convective structure, as can be seen in Figure \ref{fig:cz_var_vel_var_g3}. As it approaches the ZAMS at $\approx 10^6$ years, the convective zone of the star begins to shrink in size and the core of the star reaches the temperature, pressure and density conditions necessary to develop a radiative core. In turn, the difference in the angular velocities of the different models becomes more evident, being higher in those that were initialised with a higher initial angular velocity. This fact implies that the mass loss is also higher for those stars that rotate faster. As we have described above, a larger mass loss also implies a larger angular momentum loss. The combined effects of the increases in effective temperature, angular velocity and mass loss cause the magnetic field strength to reach its maximum in the approach phase of the ZAMS (see Figure \ref{fig:mag_field_var_vel_g3}). We observed that the models with lower angular velocity generally ended up exhibiting higher values for the Li abundance on the surface (see Figures~ \ref{fig:li_var_vel_var_g_3}, \ref{fig:grid_li_var_vel} \& \ref{fig:grid_li_var_g}).\par
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/rot_vel_var_vel_var_g3.pdf}
+    \caption{The evolution of surface rotational velocity, as a function of time for several 1 $\msun$ models. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425, respectively and MB. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:rot_vel_var_vel_var_g3}
+\end{figure}
+
+As described in section \ref{mod_mb}, the MB routine distributed the total amount of AML calculated according to Eq.~\ref{eq:k_jdot} among the different layers that composed the CZ. In Figure \ref{fig:cz_var_vel_var_g3} we can observe the evolution of the most external CZ normalized with respect to the radius of the star for several 1 $\msun$ models. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425. In accordance with the established models of stellar evolution, in a solar-type star the CZ covers practically all of it for a large part of the PMS. From the ZAMS on-wards, its size starts to decrease gradually in a first phase and then becomes more pronounced at around $4.0x10^8$ years of age. This change in the size of the CZ is due to magnetic braking. As can be seen in Figure \ref{fig:rot_vel_var_vel_var_g3}, the star, after reaching its maximum angular velocity when passing the ZAMS, starts to decelerate due to magnetic braking. In our models the magnetic braking routine is activated when the star develops a radiative core and the existence of a convective zone above it (see Figure \ref{fig:mb_act_var_vel_g3}). It is the presence of the MB that prevents the star from further increasing its angular velocity, as in the models without MB (see Figure \ref{fig:rot_vel_0g}). In this way, the Li destruction is attenuated by a lower rotational velocity. The models start to decelerate gradually once the ZAMS is passed and during the initial period of their stay in the MS. The magnetic field strength remains close to its maximum, decreasing slightly and then decreasing more sharply. Its behaviour reflects that of the evolution of the angular velocity, a consequence of the effects of the MB. The deceleration process continues progressively until, around the present age of the Sun, we obtain angular velocity values very similar to the Sun. The deceleration leads to a reduced effect of centrifugal forces, which allows for a contraction of the star's radius, and thus a smaller size of the CZ. Additionally, a lower angular velocity has an effect on the magnetic field strength, as can be seen in Figure \ref{fig:mag_field_var_vel_g3}. The coupling between angular velocity, magnetic field strength, and star radius is evident and consistent.\par
+
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/cz_var_vel_var_g3.pdf}
+    \caption{The evolution of radiative and convective zones size as a function of time for several 1 $\msun$ models. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:cz_var_vel_var_g3}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/mb_act_var_vel_g3.pdf}
+    \caption{The activation of the magnetic braking routine as a function of the presence of a radiative core. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425. The solid lines signal the magnetic braking routine activation (on) and deactivation (off). The horizontal dashed lines inform about the star's core nature: radiative (rad) or convective (conv). By implementation decision, once the routine is activated, it remains on even if the star's core nature change to convective. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:mb_act_var_vel_g3}
+\end{figure}
+
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/lograd_var_vel_g3.pdf}
+    \caption{The evolution of the stellar radius, as a function of time and $\oomegac$ for several 1 $\msun$ models and their. The models include PMS rotation with $\oomegac$ between 0.12 and 0.1425. The purple star is the radius for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:lograd_var_vel_g3}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/lograd_var_vel_g_z13.pdf}
+    \caption{Similar to \ref{fig:lograd_var_vel_g3} but zooming in on the ZAMS. The fastest model exhibits the smallest radius from around $4.5x10^{7}$ till $11.0x10^{7}$ years.}
+    \label{fig:lograd_var_vel_g_z13}
+\end{figure}
+
+The effects of rotation and magnetic braking can also be seen in the H-R diagram and in the evolution of the $\amlt$. The inclusion of rotation implies the appearance of centrifugal forces that affect both the structure of the star, the chemical composition of the different strata that compose it, as well as its temperature and luminosity. The differential rotation between the boundaries of the radiative core and the convective layers leads to mixing effects in the so-called tachocline. The effects of this mixing and of its hydrostatic effects are governed by the MLT in which the $\amlt$ plays a major role in it. As aforementioned, MLT suffers from the arbitrariness of the value of $\amlt$, and it was necessary to establish its value based on physical constraints occurring in the interior of the star. Figure \ref{fig:alpha_mlt_var_vel_g3} shows how the $\amlt$ parameter evolves over time.\par 
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/alpha_mlt_var_vel_g3.pdf}
+    \caption{The evolution of $\amlt$, as a function of time and $\oomegac$ for several 1 $\msun$ models and their. The models include PMS rotation with $\oomegac$ between 0.12 and 0.1425. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:alpha_mlt_var_vel_g3}
+\end{figure}
+
+Additionally, these same centrifugal forces, accentuated in stars with a higher angular velocity, reinforce the gravity darkening \citep[see e.g. ][]{Gossage2021,Paxton2019,Eggenberger2012} as well. The centrifugal force causes the star to shift its mass outwards with respect to the rotation axis, the effect being more pronounced in the equatorial regions than at the poles. The consequence is that the pressure ($\gsurf$) to which the gas is subjected is lower in the former than in the latter. This effect causes those stars that rotate fast enough to appear less dense ($\rho$), less luminous ($L$) and therefore with a lower effective temperature ($\teff$) as they approach the ZAMS (see Figure \ref{fig:hr_var_vel_var_g_z13}). If we compare the non-rotating model (black solid line in Figure \ref{fig:rot_vel_0g}) with the rotating ones we can recognize that at the end of the PMS, the latter reach the ZAMS with a lower $\teff$ than the former. This also has an impact on the evolution of $\amlt$ because, as discussed above, in our model its value depends proportionally on $\teff$ and $\gsurf$. Both parameters are comparatively smaller for stars that rotate faster than for those that rotate more slowly. As a consequence $\amlt$ yields a lower value in its time evolution in those phases in which the star rotates faster, being this effect more accentuated in the ZAMS approach.\par
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/hr_var_vel_var_g_z13.pdf}
+    \caption{Similar to Figure \ref{fig:hr_var_vel_0g} but now showing in detail the combined effects of the gravity darkening and magnetic braking on the evolutionary tracks for several 1 $\msun$ models. The models include a magnetic field with variable intensity, PMS rotation with $\oomegac$ between 0.12 and 0.1425. The presence of a magnetic field produces hotter stars due to the influence of the magnetic braking on the rotational velocity of the star. $\lsun$ = 3.761.}
+    \label{fig:hr_var_vel_var_g_z13}
+\end{figure}
+
+Figures \ref{fig:teff_logg_var_vel_g3} and \ref{fig:teff_logg_var_vel_g_z13} show how $\teff$ and $\gsurf$ behave over the evolution of the models. For those with a higher rotation speed we observe that both their temperature and surface gravity are lower than in the slower rotating models, in line with the gravity darkening. It is worth noting that in the ZAMS approach phase we observe for the faster rotating model (yellow) that its surface gravity is higher than that of the rest of the slower models. This can be explained by looking at Figure \ref{fig:mdot_var_vel_g3}, which shows the mass loss of the star. Around the interval $2.5x10^{7}$ and $3.5x10^{7}$ years the mass loss of the fastest model is smaller than that of the rest. Since the surface gravity is directly proportional to the amount of mass of the star, if the mass of the star decreases, the surface gravity decreases as well. During this period the faster model does so at a lower rate and so we have a higher surface gravity. This "anomaly" disappears as soon as the mass loss becomes more pronounced and becomes noticeably larger between $3.5x10^{7}$ and $4.5x10^{7}$ years, shortly before reaching ZAMS. In this phase the surface gravity of the fastest rotator is lower than that of the other models. We have a similar situation past ZAMS, from around $4.5x10^{7}$ till $11.0x10^{7}$ years. In this case the explanation for the higher surface gravity of the model that rotates faster than the others is due to the size of the star, how its radius behaves. Figures \ref{fig:lograd_var_vel_g3} and \ref{fig:lograd_var_vel_g_z13} show the time evolution of the radius for the different models. In them we can see how for the fastest rotator, in the above-mentioned time interval, its size is smaller. As it decreases more than the others, and although it also continues to lose more mass, its $\gsurf$ is greater. Let us remember that the radius has an inversely quadratic influence on the value of the $\gsurf$.\par
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/teff_logg_var_vel_g3.pdf}
+    \caption{The evolution of $\teff$ and $\gsurf$, as a function of time and $\oomegac$ for several 1 $\msun$ models and their. The models include PMS rotation with $\oomegac$ between 0.12 and 0.1425. The purple star is the $\teff$, and the purple square is the $\gsurf$ for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:teff_logg_var_vel_g3}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/teff_logg_var_vel_g_z13.pdf}
+    \caption{Similar to \ref{fig:teff_logg_var_vel_g3} but zooming in on the ZAMS. The models with a higher initial rotational velocity reach already the ZAMS with a lower $\teff$ and higher $\gsurf$.}
+    \label{fig:teff_logg_var_vel_g_z13}
+\end{figure}
+
+
+\begin{figure}
+	\includegraphics[clip,width=\columnwidth]{figures/paper2/mdot_var_vel_g3.pdf}
+    \caption{The evolution of mass loss $\Dot{M}$ as a function of time for several 1 $\msun$ models. The models include variable magnetic field intensity and PMS rotation with $\oomegac$ between 0.12 and 0.1425. The dashed vertical line makes reference to the ZAMS.}
+    \label{fig:mdot_var_vel_g3}
+\end{figure}
 
 \section{Conclusions and future works} \label{sec_conclusions}
-We have shown, through the different simulated stellar models, that the effects induced by the combination of both rotation and magnetic braking mechanisms offer a plausible way to reconcile the observational data with the theoretical models. The latter is of major importance both for the transport of AM and for the transport of chemical elements. We are also well aware that we are still far from understanding the exact physical mechanisms that govern these processes, so it is necessary to continue to delve into these areas of study. Particularly the study of the evolution of the magnetic fields during the PMS and MS and their impact on AML. \par
+We have shown, through the different simulated stellar models, that the effects induced by the combination of both rotation and magnetic braking mechanisms offer a plausible way to reconcile the observational data with the theoretical models. We propose that this result could be achieved by a law of interdependence between $\Omega$ and $B$. In contrast to our previous work, these new models remove the restrictions of pre-setting initial and fixed values along their time evolution for the magnetic field strength and the $\amlt$ parameter. We cross-checked the model results with measurements obtained from the Gaia and GES mission for stars with similar characteristics to our Sun, focusing on their Li abundances. Our models seem to suggest a lower limit to the surface Li abundances for Sun-like stars, and that the Sun indeed appears to have a lower surface Li abundance than the rest. They also suggest that the Sun had a much higher angular velocity than it currently shows and that as a result it effectively destroyed its Li reservoirs. Coupled with this higher angular velocity, strong magnetic fields developed, triggering an intensive magnetic braking that slowed its angular velocity to its present value.\par
 
-Future and improved implementations of our routine will be made to study the results on tracks, surface Li composition, rotation, etc. It is likely that in a rotating stellar model simulated with MB from the beginning, the differential rotation is very much reduced and therefore Li abundances observed in young stars could be properly explained. We propose that this result could be achieved by a law of interdependence between $\Omega$ and $B$. So that, during the PMS, when the star rotates faster, the MB effect is more efficient. On the other hand, during the MS, when the start slows down, the MB will become less intensive. This approach would establish a self-regulating mechanism over the angular velocity of the star that would end up directly influencing the Li evolution. It is equally important to understand better the general role of mass loss in AML and mostly in cooler, low-mass stars. Nowadays it is challenging to determine the terminal velocity of the stellar wind for this type of stars which plays a key role on the AML.\par
+Yet our models still seem to be destroying too much Li when comparing the Li abundances obtained with those provided by the Gaia and GES data. Taking as a starting point that faster rotating stars destroy more Li, other mechanisms in addition to magnetic braking are necessary to explain the observational data. Among them, disk locking to the protostellar disk contributes to counteract the acceleration of the star during PMS. Thus, we would have two braking mechanisms acting at different ages of the star. The disk locking would act during the PMS and the magnetic braking mainly during the MS. This approach would establish a self-regulating mechanism over the angular velocity of the star that would end up directly influencing the Li evolution.\par
 
-We emphasize as well that our models failed to match at the same time the observed solar Li abundance and $\Omega$. We could not, therefore, ascertain to have correctly modeled the rotational history of the Sun. In view of these shortcomings in our models, we must analyse the results obtained with caution and not draw any premature conclusions. We have also shown how an alternative MLT parametrizations could produce results in line with the observations. The following conclusions have been supported in the course of this work:
+We emphasize as well that our models are close to match at the same time the observed solar Li abundance and $\Omega$, but they are not yet accurate enough. Therefore, we must analyse the results obtained with caution and not draw any premature conclusions. In addition, it should be noted that our models fail to replicate the average magnetic field strength of the Sun of $1.0\,\Gauss$. We have also shown how both an evolving magnetic field strength and, a MLT parametrization could produce results in line with the observations. The following conclusions have been supported in the course of this work:
+
 \begin{enumerate}
+    \item A magnetic field with varying intensity is a valid alternative to explain the rotational history of Sun-like stars.
+    \item It is a plausible line of research to provide an answer to the problem of surface Li on the Sun.
+    \item A variable $\amlt$ eliminates the need to pre-fix its value in advance for the entire evolution of the star.
+    \item Our models seem to suggest a lower limit to the observations provided by Gaia and GES for solar sibling stars.
+    \item The strength of the magnetic field regulates the size of the star's convection zone. The magnetic field has a direct implication on the rotational history of the star, and the speed with which the star rotates impacts the size of the convective zone.     
     \item Inclusion of the magnetic field leads to cooler models and lower Li depletion in the MS.
-    \item A combination of rotation during the PMS and MB effect during MS produces different, potentially more promising behavior than those produced by standard models. Thus, our approach points to reproduce the observed A(Li) and the solar rotational velocity at the same time.
-    \item $\teff$ from standard evolutionary tracks represent upper limits since these models do not take into consideration the magnetic braking effect nor rotation.
-    \item The convective zone extension decreases when the intensity of the magnetic field increases.
-    \item MB during PMS and/or adjustment of MLT overshooting and $\amlt$ free parameters seems to be also required for explaining Li abundances in young clusters.
+    \item Disk-locking during PMS seem to be also required for explaining Li abundances in young clusters.
 \end{enumerate}
-
-The next steps will be focused on understanding how magnetic fields are linked to rotation, how their topologies are and how they evolve in time in order to go beyond the treatment on the MB routine that has been done in this work.\par
-
-
+\par
 
 \section*{Acknowledgements}
-We are pleased to acknowledge Jieun Choi her kindness in responding to the different questions about her work which were aimed to reproduce the results obtained as far as Li is concerned, and also for allowing us access to the MESA files she used. Also we very much appreciate the expert support provided by Elisa Delgado-Mena during the process review of this document. Similarly, we wish also to thank Matteo Cantiello and Bill Paxton for their very valuable support in the development of the magnetic braking routine in MESA. Finally, we wish to acknowledge the generous work and help offered by the MESA community. Authors acknowledges funding support from Spanish public funds (including FEDER fonds) for research under projects ESP2017-87676-C5-2-R and ESP2017-87676-C5-5-R. JCS also acknowledges support from project RYC-2012-09913 under the 'Ram\'on y Cajal' program of the Spanish Ministry of Science and Education.
+We wish to acknowledge the generous work and help offered by the MESA and TOPCAT communities. Authors acknowledges funding support from Spanish public funds (including FEDER fonds) for research under projects ESP2017-87676-C5-2-R and ESP2017-87676-C5-5-R. JCS also acknowledges support from project RYC-2012-09913 under the 'Ram\'on y Cajal' program of the Spanish Ministry of Science and Education.
 
 \section*{Software}
-The simulations used in this paper been executed with the MESA release 10398 \footnote{\url{http://mesa.sourceforge.net/release/2018/03/21/r10398.html}}. The different figures have been generated making use of GNU Octave 5.1.0. \footnote{\url{https://www.gnu.org/software/octave/}} 
+The simulations used in this paper been executed with the MESA release 10398 \footnote{\url{http://mesa.sourceforge.net/release/2018/03/21/r10398.html}}. The different figures have been generated making use of GNU Octave 5.1.0. \footnote{\url{https://www.gnu.org/software/octave/}}. The Gaia and GES data sets have been analyzed using TOPCAT 4.8-7 \footnote{\url{https://www.g-vo.org/topcat/topcat/}}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -480,29 +623,22 @@ The following figures comprise a series of grids as a function of time and for s
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_0_0g.eps}
-    \label{fig:subim1}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/li_var_vel_var_g_1.pdf}
+    \label{fig:subim11}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_3_0g.eps}
-    \label{fig:subim2}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/li_var_vel_var_g_3.pdf}
+    \label{fig:subim12}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_3_5g.eps}
-    \label{fig:subim3}
+    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/paper1/li_var_vel_0_0g.eps}
+    \label{fig:subim13}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_4_0g.eps}
-    \label{fig:subim4}
+    \includegraphics[width=\textwidth]{figures/blank.eps}
+    \label{fig:subim14}
     \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_4_5g.eps}
-    \label{fig:subim5}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_var_vel_5_0g.eps}
-    \label{fig:subim6}
-    \end{subfigure}
+
 \caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $\oomegac$ varies between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
 \label{fig:grid_li_var_vel}
 \end{figure*}
@@ -512,28 +648,20 @@ The following figures comprise a series of grids as a function of time and for s
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_vc_0084_var_g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/rot_vel_var_vel_var_g1.pdf}
     \label{fig:subim21}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_vc_014_var_g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/rot_vel_var_vel_var_g3.pdf}
     \label{fig:subim22}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_vc_0196_var_g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper1/rot_vel_var_vel_0_0g.eps}
     \label{fig:subim23}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_vc_028_var_g.eps}
-    \label{fig:subim24}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/li_vc_0336_var_g.eps}
-    \label{fig:subim25}
-    \end{subfigure}
+    \end{subfigure}    
     \begin{subfigure}[h]{0.47\textwidth}
     \includegraphics[width=\textwidth]{figures/blank.eps}
-    \label{fig:subim26}
+    \label{fig:subim24}
     \end{subfigure}
 \caption{Grid showing the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. Each figure shows a set of models in which $\oomegac$ has been fixed and the magnetic field with intensity varies between $0.0\,\Gauss$ and $5.0\,\Gauss$, respectively. The purple star and square are surface Li abundance for the present-day Sun \citep{Asplund2009} and the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
 \label{fig:grid_li_var_g}
@@ -542,28 +670,12 @@ The following figures comprise a series of grids as a function of time and for s
 \begin{figure*}
     \centering
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_0_0g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/alpha_mlt_var_vel_g1.pdf}
     \label{fig:subim41}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_3_0g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper2/alpha_mlt_var_vel_g3.pdf}
     \label{fig:subim42}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_3_5g.eps}
-    \label{fig:subim43}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_4_0g.eps}
-    \label{fig:subim44}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_4_5g.eps}
-    \label{fig:subim45}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/rot_vel_var_vel_5_0g.eps}
-    \label{fig:subim46}
     \end{subfigure}
 \caption{Grid showing of the evolution of surface rotational velocity, as a function of time for several 1 $\msun$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $\oomegac$ varies between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
 \label{fig:grid_rot_vel}
