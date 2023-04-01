@@ -2127,7 +2127,7 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
   line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
-
+  
   grid on;
   l = legend(labels, "location", leg_loc);
 
@@ -2165,7 +2165,9 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   global bf_max_col;
   global bf_star_col;
   global alfven_r_col;
- 
+  global sun_vel_rot;
+  global sun_gauss_field;  
+  global sun_age;
   
   global header_lines;
   global colors;
@@ -2206,6 +2208,11 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
   line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  
+  % Plot sun reference
+  plot(sun_age, sun_vel_rot, '*', 'markersize', 15, 'linewidth', 2, 'color', [0.5,0.1,0.8]);
+  plot(sun_age, sun_gauss_field, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  
 
   grid on;
   l = legend(labels, "location", leg_loc);
@@ -3201,7 +3208,7 @@ function plot_omega_vs_mag_field_XG(rot_vels, show_limits, idx)
   global idx_X_G;
   
   %omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [0.5, 50, 1, 1000], 'northwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
-  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 2000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g', num2str(idx));
+  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 5.0e9, 1, 3000], 'northeastoutside', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g', num2str(idx));
 end
 
 function plot_teff_vs_mag_field_XG(rot_vels, idx)
@@ -3388,9 +3395,9 @@ function paper2()
   
   #plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
   #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
-  #plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   #plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
-  #plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
+  #plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
   
   #plot_cz_size_XG_var_vel_z1(rot_vels5,1);
   #plot_cz_size_XG_var_vel_z1(rot_vels6,2);
@@ -3437,19 +3444,16 @@ function paper2()
   #plot_teff_vs_mag_field_XG_z1(rot_vels7,3);
   #plot_teff_vs_mag_field_XG(rot_vels8,4);
   
-  plot_radius_vs_mag_field_XG(rot_vels5,1);
+  #plot_radius_vs_mag_field_XG(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  plot_radius_vs_mag_field_XG(rot_vels7,3);
+  #plot_radius_vs_mag_field_XG(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
   
-  plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
+  #plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  plot_radius_vs_mag_field_XG_z1(rot_vels7,3);
+  #plot_radius_vs_mag_field_XG_z1(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
 
-  
-
-  
 end
 
 function main()
