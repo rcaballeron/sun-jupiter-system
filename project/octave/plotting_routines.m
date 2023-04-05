@@ -55,15 +55,15 @@ global mix_type_ini_col   = 17;
 global mix_relr_top_ini_col = 78;
 
 #Clusters section
-global clusters_teff_col = 2;
-global clusters_log_g_col = 4;
-global clusters_e_log_g_col = 5;
-global clusters_fe_h_col = 6;
-global clusters_li_col = 8;
-global clusters_e_li_col = 9;
-global clusters_age_col = 10;
-global clusters_err_up_age_col = 7;
-global clusters_err_down_age_col = 8;
+global clusters_object_col1 = 1;
+global clusters_object_col2 = 2;
+global clusters_teff_col = 3;
+global clusters_log_g_col = 5;
+global clusters_e_log_g_col = 6;
+global clusters_fe_h_col = 7;
+global clusters_li_col = 9;
+global clusters_e_li_col = 10;
+global clusters_age_col = 11;
 global pleiades_table_filename = 'Pleiades_J_A+A_613_A63_tableb1';
 global ori_table_filename = '25_Ori_J_A+A_659_A85_tableb1';
 global gamma_vel_a_table_filename = 'Gamma_Vel_A_J_A+A_659_A85_tableb2';
@@ -680,12 +680,12 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   global tables_parent_folder
   global tick_font_size;
   global table_header_lines;
+  global clusters_object_col1;
+  global clusters_object_col2;
   global clusters_teff_col;
   global clusters_li_col;
   global clusters_e_li_col;
   global clusters_age_col;
-  global clusters_err_up_age_col;
-  global clusters_err_down_age_col;
   global clusters_log_g_col;
   global clusters_e_log_g_col;
   global clusters_fe_h_col
@@ -695,14 +695,14 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
 
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
-  fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_fe_h_col, clusters_li_col, clusters_e_li_col, clusters_age_col]);
+  fmt = get_parsing_fmt([clusters_object_col1, clusters_object_col2, clusters_teff_col, clusters_log_g_col, clusters_fe_h_col, clusters_li_col, clusters_e_li_col, clusters_age_col]);
       
   %C = read_matrix_from_file(full_path, fmt, table_header_lines, 5);
-  C = read_matrix_from_file(full_path, fmt, table_header_lines, 6);
+  C = read_matrix_from_file(full_path, fmt, table_header_lines, 8);
   
 
   %Get cluster age (in yrs) and limits
-  cluster_age = C(1, 6) * 1000000000;
+  cluster_age = C(1, 8) * 1000000000;
   %cluster_top_age = C(1, 4) + cluster_age;
   %cluster_low_age = C(1, 5) + cluster_age;
   age_top_limit = cluster_age + ((cluster_age*0.1)/100);
@@ -733,8 +733,8 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
 %}
   %First filter by Teff  
   %Filter out starts with Teff below and above the limits
-  B1 = C(:,1) < teff_low_limit;
-  B2 = C(:,1) > teff_top_limit;
+  B1 = C(:,3) < teff_low_limit;
+  B2 = C(:,3) > teff_top_limit;
   
   % Mark rows which fulfill either B1 or B2 and remove them
   B = B1 | B2;  
@@ -742,15 +742,15 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   %C
 
   %Second filter by logg
-  B1 = C(:,2) < log_g_low_limit;
-  B2 = C(:,2) > log_g_top_limit;
+  B1 = C(:,4) < log_g_low_limit;
+  B2 = C(:,4) > log_g_top_limit;
   B = B1 | B2;  
   C(B,:) = [];
   %C
   
   %Third filter by metallicity
-  B1 = C(:,3) < fe_h_low_limit;
-  B2 = C(:,3) > fe_h_top_limit;
+  B1 = C(:,5) < fe_h_low_limit;
+  B2 = C(:,5) > fe_h_top_limit;
   B = B1 | B2;  
   C(B,:) = [];
   
@@ -764,22 +764,26 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   filename = strcat(new_subfolder, "/", name, ".sub");
   fid = fopen (filename, "w");
   
-  filter_setup = strcat("%Filter setup: Teff_low=", num2str(teff_low_limit), " Teff_top=", num2str(teff_top_limit),
-    " log_g_low=", num2str(log_g_low_limit), " log_g_top=", num2str(log_g_top_limit),
-    " fe_h_low=", num2str(fe_h_low_limit), " fe_h_top=", num2str(fe_h_top_limit),
-    " age_low=", num2str(age_low_limit/1000000000), " age_top=", num2str(age_top_limit/1000000000),
+  
+  
+  filter_setup = strcat("%Filter setup: $\\teff$ low=", num2str(teff_low_limit), " $\\teff$ top=", num2str(teff_top_limit),
+    " $\\gsurf$ low=", num2str(log_g_low_limit), " $\\gsurf$ top=", num2str(log_g_top_limit),
+    " $\\feh$ low=", num2str(fe_h_low_limit), " $\\feh$ top=", num2str(fe_h_top_limit),
+    " Age low=", num2str(age_low_limit/1000000000), " Age top=", num2str(age_top_limit/1000000000),
     "\n");
     
   fputs (fid, filter_setup);
-  fputs (fid, "Teff(K) log_g(dex) FeH(dex) ALi(dex) Age(Gyr)\n");
+  fputs (fid, "ObjectId Teff(K) logg(dex) FeH(dex) ALi(dex) eALi(dex) Age(Gyr)\n");
+    
   fclose (fid);  
-  dlmwrite (filename, C, "delimiter", " ", "newline", "\n", "-append");
+  dlmwrite (filename, C, "delimiter", " & ", "newline", "\\\\\\\\ \n", "-append");
 
   
   %Plot values
   %plot(A(:,3), A(:,2), marker, 'markersize', 8, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
   %plot(C(:,6)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
-  h = errorbar(C(:,6)*1000000000, C(:,4),C(:,5),"~d");
+  %h = errorbar(C(:,6)*1000000000, C(:,4),C(:,5),"~d");
+  h = errorbar(C(:,8)*1000000000, C(:,6),C(:,7),"~d");
   set(h, 'markersize', 5, 'color', color, 'markerfacecolor', color);
 end
 
@@ -3378,9 +3382,10 @@ function paper2()
   rot_vels8 = rotational_vels([idx_13crit;idx_14crit;idx_1425crit],:);
 
   
-  #plot_XG_var_vel(rot_vels5,1); 
+  #plot_XG_var_vel(rotational_vels([idx_1425crit],:),1);
+  plot_XG_var_vel(rot_vels5,1); 
   #plot_XG_var_vel(rot_vels6,2); 
-  #plot_XG_var_vel(rot_vels7,3);
+  plot_XG_var_vel(rot_vels7,3);
   #plot_XG_var_vel(rot_vels8,4);
   
   #plot_age_vs_alpha_mlt_XG(rot_vels5,1);
@@ -3395,7 +3400,7 @@ function paper2()
   
   #plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
   #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
-  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  ##plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   #plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
   #plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
   
