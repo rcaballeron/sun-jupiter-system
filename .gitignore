@@ -23,54 +23,14 @@ project/1M_photosphere_tables_pAGB\.mod
 
 project/restart_photo
 
-Docs/Stellar Evolution/Planets, stars and stellar systems _ Volume 3, Solar and stellar \.pdf
-
-Docs/Stellar Evolution/Planets, Stars and Stellar Systems_ Volume 1_ Telescopes and Instruments\.pdf
-
-Docs/Stellar Evolution/Planets, Stars and Stellar Systems_ Volume 2_ Astronomical Techniques, Software\.pdf
-
-Docs/Stellar Evolution/Planets, Stars and Stellar Systems_ Volume 4_Stellar Structure and Evolution\.pdf
-
-Docs/Stellar Evolution/Planets, Stars and Stellar Systems_ Volume 5_ Galactic Structure and Stell\.pdf
-
-Docs/Stellar Evolution/Planets, Stars and Stellar Systems_ Volume 6_ Extragalactic Astronomy and Cosmology\.pdf
-
-Docs/Stellar Evolution/Stellar Interiors-Virgina Trimble\.pdf
-
-Docs/Stellar Evolution/\[Astronomy and Astrophysics Library\] Rudolf Kippenhahn, Alfred Weigert, Achim Weiss \(auth\.\) - Stellar Structure and Evolution \(2012, Springer-Verlag B\.pdf
-
-Docs/Stellar Evolution/\[Springer Praxis Books\] Walter J\. Maciel \(auth\.\) - Introduction to Stellar Structure \(2016, Springer International Publishing\)\.pdf
-
-Docs/Stellar Evolution/Dina Prialnik - An introduction to the theory of stellar structure and evolution \(2000, Cambridge University Press\)\.djvu
-
-Docs/Stellar Evolution/Icko Iben - Stellar Evolution Physics, Vol\. 1_ Physical Processes in Stellar Interiors \(2013, Cambridge University Press\)\.pdf
-
-Docs/Stellar Evolution/Icko Iben - Stellar Evolution Physics, Vol\. 2_ Advanced Evolution of Single Stars \(2013, Cambridge University Press\)\.pdf
-
-Docs/Stellar Evolution/Henny J  G  L  M Lamers_ Joseph P Cassinelli - Introduction to stellar winds \(1997, Cambridge University Press \)\.pdf
-
-Docs/Stellar Evolution/\[Astronomy and Astrophysics Library\] Rudolf Kippenhahn, Alfred Weigert, Achim Weiss \(auth\.\) - Stellar Structure and Evolution \(2012, Springer-Verlag B\.pdf
-
-Docs/Stellar Evolution/\[Springer Praxis Books\] Walter J\. Maciel \(auth\.\) - Introduction to Stellar Structure \(2016, Springer International Publishing\)\.pdf
-
-Docs/Stellar Evolution/Dina Prialnik - An introduction to the theory of stellar structure and evolution \(2000, Cambridge University Press\)\.pdf
-
-Docs/Stellar Evolution/\[Astronomy and Astrophysics Library\] Rudolf Kippenhahn, Alfred Weigert, Achim Weiss \(auth\.\) - Stellar Structure and Evolution \(2012, Springer-Verlag B\.pdf
-
-Docs/Stellar Evolution/\[Springer Praxis Books\] Walter J\. Maciel \(auth\.\) - Introduction to Stellar Structure \(2016, Springer International Publishing\)\.pdf
-
-Docs/Stellar Evolution/\[Astronomy and Astrophysics Library\] Rudolf Kippenhahn, Alfred Weigert, Achim Weiss \(auth\.\) - Stellar Structure and Evolution \(2012, Springer-Verlag B\.pdf
-
-Docs/Stellar Evolution/\[Springer Praxis Books\] Walter J\. Maciel \(auth\.\) - Introduction to Stellar Structure \(2016, Springer International Publishing\)\.pdf
-
-Docs/PhD/
-
-Docs/runs/run_pms_rot/
-
-Docs/runs/run_paper_keep_on_false/
+Docs/**
 
 Stellar Evolution/
 
 project/core
 
 *.mod
+
+project/tables/ges_edr5_ges_fld_and_li1_not_null
+
+project/tables/ges_edr5_ges_fld_not_null

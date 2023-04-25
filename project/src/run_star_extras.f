@@ -37,6 +37,7 @@
       real(dp) :: eps_threshold = 0.1d-100
       real(dp) :: disk_lt
       real(dp) :: disk_omega
+      real(dp) :: t_spindown
       logical :: debug_use_other_torque = .false.
       logical :: debug_reset_other_torque = .false.
       logical :: debug_get_cz_info = .false.
@@ -84,9 +85,10 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
 
-         write(*,*) '*******  Version: 2.3.0'
+         write(*,*) '*******  Version: 2.4.0'
          write(*,*) '*******  09.06.2020: Disk locking & Magnetic braking routines'
-         write(*,*) '*******  11.11.2021: Varaible MLT alpha & magnetic filed strengh'
+         write(*,*) '*******  11.11.2021: Variable MLT alpha & magnetic filed strengh'
+         write(*,*) '*******  28.09.2022: Improve the angular moment lost routine'
          write(*,*) '*******  Roque Caballero'
          
          original_diffusion_dt_limit = s% diffusion_dt_limit
@@ -198,7 +200,7 @@
          integer, intent(out) :: ierr
          type (star_info), pointer :: s
          integer :: k
-         real(dp) :: B, j_dot, r_st
+         real(dp) :: B, j_dot, r_st, i_tot, j_tot
          type (star_zone_info), target :: sz_info, core_info
          type (star_zone_info), pointer :: sz_info_ptr, core_info_ptr
          real(dp), dimension(:), pointer :: mag_brk_jdot
@@ -206,6 +208,7 @@
          logical :: only_cz !controls if jdot distribution must only affect the convective zone
          logical :: wait_rad_core !controls if jdot distribution must wait till a radiative core is develop         
          integer :: activated !signals when the jdot routine is activated
+
          
          !Pointer to structure which conveys information about the convectice and core zones
          sz_info_ptr => sz_info
@@ -221,7 +224,9 @@
          s% extra_jdot(:) = 0
          s% extra_omegadot(:) = 0
          activated = 0
-         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
+         i_tot = 0d0
+         j_tot = 0d0
+         t_spindown = 0d0
          call reset_core_info(core_info_ptr)
          call reset_convective_info(sz_info_ptr)
 
@@ -274,10 +279,27 @@
          if ((s% use_other_torque) .and. (s% mstar_dot < 0.0) .and. (B > 0.0) .and. &
             (.not. wait_rad_core .or. (wait_rad_core .and. is_core_rad(s)))) then
 
+            ! logical flag which indicates the the magnetic braking routine is activated
             activated = 1
 
+            ! Calculate total specific moment of inertia and angular momentum
+            i_tot = sum(s% i_rot(1:s% nz))
+            j_tot = dot_product(s% j_rot(1:s% nz),s% dm(1:s% nz)) ! g cm^2/s Total Stellar Angular Momentum Content
+            t_spindown = abs(j_tot / j_dot) ! Estimate spindown timescale
+
+
+            if (debug_use_other_torque) then
+               ! Check if spindown timescale is shorter than timestep. Print a warning in case.
+               ! In extras_finish_step check that dt < t_spindown. If not, decrease timestep               
+               write(*,*) 'Spindown Timescale (Myr)', t_spindown / (1d6*secyer)
+               write(*,*) 'Spindown Timescale / dt: ', t_spindown / s% dt
+            end if
+
+
             !Distribute the loss of angular momentum
-            call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
+            !call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
+            call distribute_with_residual_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)   
+            !call distribute_all_zones_with_residual_j_dot(s, j_dot, mag_brk_jdot)
 
             !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot is just defined
             !for s% nz elements
@@ -299,6 +321,8 @@
                         s% extra_jdot(:) = 0.0
                   end if
             end if
+         else
+            t_spindown = 100 * s% dt ! To avoid decreasing the timestep in extras_finish_step when j_tot < 1d49
          end if
 
          !We abuse the x_ctrl array for storing temporary the values to be reported in history file
@@ -549,11 +573,96 @@
             !angular momentum of the zone vs total angular momentum of the convective zone
 
             !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
+            !Paper Eq 11
             mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
                   (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
 
          end do
       end subroutine distribute_j_dot
+
+      subroutine distribute_with_residual_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
+         type (star_info), pointer, intent(in) :: s
+         real(dp), intent(in) :: total_j_dot
+         type (star_zone_info), pointer, intent(in) :: sz_info
+         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+         integer :: k, j
+         real(dp) :: residual_jdot, final_residual_jdot, delta_residual_jdot
+
+         !By default, no lost of angular moment
+         mb_jdot_list(:) = 0.0
+         residual_jdot = 0d0
+         final_residual_jdot = 0d0
+         delta_residual_jdot = 0d0
+      
+         do k = sz_info% top_zone, sz_info% bot_zone, 1
+            !Here the jdot distribution strategy is defined
+            !TODO externalize to a method, this will isolate the strategy implementation
+            !Simple rule of three distribution loss of angular momentum based on the 
+            !angular momentum of the zone vs total angular momentum of the convective zone
+
+            !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
+            !Paper Eq 11
+            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+                  (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
+
+            !write(*,*) "mb_jdot_list(k)=", abs(mb_jdot_list(k)), "s% j_rot(k)/ s% dt=", s% j_rot(k)/ s% dt
+            if (abs(mb_jdot_list(k)) .gt. abs(s% j_rot(k) / s% dt)) then
+               !write(*,*) "WARNING mb_jdot_list(k)=", abs(mb_jdot_list(k)), "s% j_rot(k)/ s% dt=", abs(s% j_rot(k)/ s% dt)
+               residual_jdot = residual_jdot - (abs(mb_jdot_list(k)) - abs(s% j_rot(k) / s% dt)) * s% dm(k) ! Residual J_dot cm^2/s^2 * g
+               mb_jdot_list(k) = - s% j_rot(k) / s% dt ! Set torque = - s% j_rot(k)/ s% dt. Note this way we're not conserving angular momentum, need to distribute residual torque
+               j = j + 1;
+            end if
+
+         end do
+         ! second iteration
+         ! Redistribute residual J_dot (only to gridpoints that can accomodate more torque)
+         ! j number of cells that can not take anymore torque ()
+         if (abs(residual_jdot) .gt. 0d0) then
+            write(*,*) "WARNING total jdot=", total_j_dot
+            write(*,*) "WARNING residual jdot=", residual_jdot
+            write(*,*) "WARNING total jdot - residual jdot=", total_j_dot - residual_jdot
+
+            do k = sz_info% top_zone, sz_info% bot_zone, 1
+               if (abs(mb_jdot_list(k)) .lt. abs(s% j_rot(k) / s% dt)) then
+                  delta_residual_jdot = residual_jdot / ((sz_info% d_zone + 1 - j) * s% dm(k))
+                  if ((abs(mb_jdot_list(k) + delta_residual_jdot)) .gt. (abs(s% j_rot(k) / s% dt))) then
+                     final_residual_jdot = final_residual_jdot - (abs(mb_jdot_list(k)) - abs(s% j_rot(k) / s% dt)) * s% dm(k);
+                     mb_jdot_list(k) = - s% j_rot(k) / s% dt
+                  end if
+
+                  !mb_jdot_list(k) = mb_jdot_list(k) + (residual_jdot / ((sz_info% d_zone + 1 - j) * s% dm(k)))
+              end if
+            end do
+
+            write(*,*) "WARNING final residual jdot=", final_residual_jdot 
+         end if
+
+
+          ! Let's assume the magnetic field applies a ~uniform torque through the star
+          ! Strategy:
+          ! 1) Start from the surface. Apply weighted torque (jdot) to each gridpoint
+          ! 2) If j_dot * dt < j_rot(k), all good. If j_dot * dt > j_rot(k) then set j_dot = -j_rot(k)/dt. This is to avoid flip/flops in omega
+          ! 3) To conserve angular momentum one has to redistribute the residual torque
+          !j = 0
+          !do k = 1, s% nz
+          !  s% extra_jdot(k) =  j_dot / (s% nz * s% dm_bar(k))  ! Specific torque cm^2/s^2. Divide by shell mass and total number of shells
+          !  if (abs(s% extra_jdot(k)) .gt. abs(s% j_rot(k)/ s% dt)) then
+          !    residual_jdot = residual_jdot - (abs( s% extra_jdot(k)) - abs( s% j_rot(k) / s% dt )) * s% dm_bar(k) ! Residual J_dot cm^2/s^2 * g
+          !    s% extra_jdot(k) = - s% j_rot(k)/ s% dt ! Set torque = - s% j_rot(k)/ s% dt. Note this way we're not conserving angular momentum, need to distribute residual torque
+          !    j=j+1
+          !  endif
+          !end do
+
+          ! Redistribute residual J_dot (only to gridpoints that can accomodate more torque)
+          ! j number of cells that can not take anymore torque ()
+          !do k = 1, s% nz
+          !  if (abs(s% extra_jdot(k)) .lt. abs(s% j_rot(k)/ s% dt)) then
+          !    s% extra_jdot(k) = s% extra_jdot(k) + (residual_jdot / ((s% nz - j) * s% dm_bar(k)))
+          !  endif
+          !end do
+
+      end subroutine distribute_with_residual_j_dot
+
 
       subroutine distribute_all_zones_j_dot(s, total_j_dot, mb_jdot_list)
          type (star_info), pointer, intent(in) :: s
@@ -565,11 +674,51 @@
          mb_jdot_list(:) = 0.0
       
          do k = 1, s% nz, 1
-            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / (s% m(1) * s% r(1)**2)) / s% dm(k)
+            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+               (s% m(1) * s% r(1)**2)) / s% dm(k)
             !Using the photsosphere radius
             !mb_jdot_list(k) = (s% dm(k) * s% r(k)**2 * total_j_dot) / (s% m(1) * (s% photosphere_r * rsun)**2)
          end do
       end subroutine distribute_all_zones_j_dot
+
+      subroutine distribute_all_zones_with_residual_j_dot(s, total_j_dot, mb_jdot_list)
+         type (star_info), pointer, intent(in) :: s
+         real(dp), intent(in) :: total_j_dot
+         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+         integer :: k, j
+         real(dp) :: residual_jdot
+
+         !By default, no lost of angular moment
+         mb_jdot_list(:) = 0.0
+         residual_jdot = 0d0
+      
+         do k = 1, s% nz, 1
+
+            !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
+            !Paper Eq 11
+            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+               (s% m(1) * s% r(1)**2)) / s% dm(k)
+
+            !write(*,*) "mb_jdot_list(k)=", abs(mb_jdot_list(k)), "s% j_rot(k)/ s% dt=", s% j_rot(k)/ s% dt
+            if (abs(mb_jdot_list(k)) .gt. abs(s% j_rot(k)/ s% dt)) then
+               !write(*,*) "WARNING mb_jdot_list(k)=", abs(mb_jdot_list(k)), "s% j_rot(k)/ s% dt=", abs(s% j_rot(k)/ s% dt)
+               residual_jdot = residual_jdot - (abs(mb_jdot_list(k)) - abs( s% j_rot(k) / s% dt )) * s% dm(k) ! Residual J_dot cm^2/s^2 * g
+               mb_jdot_list(k) = - s% j_rot(k)/ s% dt ! Set torque = - s% j_rot(k)/ s% dt. Note this way we're not conserving angular momentum, need to distribute residual torque
+               j = j + 1;
+            end if
+
+         end do
+         ! Redistribute residual J_dot (only to gridpoints that can accomodate more torque)
+         ! j number of cells that can not take anymore torque ()
+         do k = 1, s% nz, 1
+           if (abs(mb_jdot_list(k)) .lt. abs(s% j_rot(k)/ s% dt)) then
+             mb_jdot_list(k) = mb_jdot_list(k) + (residual_jdot / ((s% nz - j) * s% dm(k)))
+           end if
+         end do
+
+      end subroutine distribute_all_zones_with_residual_j_dot
+
+
 
 
       ! all the zones in my star in which H fusion occurs.
@@ -696,6 +845,7 @@
          !omega_surf = s% omega_avg_surf
 
          ! escape and infinite velocities
+         ! Paper eq. 8
          v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000 !100000 transform from km/s to cm/s
          v_inf = 1.92 * v_esc
 
@@ -709,6 +859,7 @@
          eta_surf = ((r_st * bf_star)**2)/(abs(m_dot) * v_inf)
          !eta_surf = ((s% photosphere_r * rsun * B)**2)/(abs(m_dot) * v_inf)
          
+         !Paper eq. 10
          new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf !Formula 2.3 Cantiello's MESA assigment         
          !alfven_r = 50.0 * Rsun
          !j_dot = two_thirds * m_dot * omega_surf * (alfven_r**2) * eta_surf !Formula 2.1 Cantiello's MESA assigment
@@ -823,8 +974,8 @@
 
          real(dp), parameter :: k1 = 1.30
          real(dp), parameter :: k2 = 0.0506
-         !real(dp), parameter :: m = 0.2177 !original parameter in paper
-         real(dp), parameter :: m = 0.1675
+         real(dp), parameter :: m = 0.2177 !original parameter in paper
+         !real(dp), parameter :: m = 0.1675 !adjusted during our simulations
          real(dp), parameter :: omega_sun = 2.87d-6
 
          
@@ -906,6 +1057,9 @@
          call star_ptr(id, s, ierr)
          if (ierr /= 0) return
          extras_start_step = keep_going
+
+         !Reset support structures
+         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
 
          if (var_mlt_alpha .eqv. .true.) then
             s% mixing_length_alpha = calculate_alpha(s)
@@ -1213,6 +1367,13 @@
             write(*,*) '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
             s% which_atm_option = s% job% extras_cpar(1)
          endif
+
+         if (s% dt > 0) then
+            if ((t_spindown / s% dt) .lt. 10) then
+               s% dt_next = s% dt * 0.5d0
+               write(*,*) "Warning: Torque too large. Decreasing timestep to ",s% dt_next
+            end if
+         end if         
       end function extras_finish_step
       
 	  
