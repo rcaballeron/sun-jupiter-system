@@ -74,7 +74,7 @@ global ngc_2516_table_filename = 'NGC_2516_J_A+A_659_A85_tableb6';
 global ges_dr5_all_oc_table_filename = 'ges_dr5_oc_li1_feh_teff_logg_age2.csv';
 global br_21 ='Br21';
 global br_22 ='Br22';
-global br_25 ='Br25';
+#global br_25 ='Br25';
 global br_30 ='Br30';
 global br_31 ='Br31';
 global br_32 ='Br32';
@@ -96,7 +96,7 @@ global haf_10 = 'Haf10';
 global ic_2391 = 'IC2391';
 global ic_2602 = 'IC2602';
 global ic_4665 = 'IC4665';
-global loden165 = 'Loden165';
+#global loden165 = 'Loden165';
 global m_67 = 'M67';
 global ngc_2141 = 'NGC2141';
 global ngc_2158 = 'NGC2158';
@@ -125,7 +125,7 @@ global ngc_6709 = 'NGC6709';
 global ngc_6802 = 'NGC6802';
 global pismis_15 = 'Pismis15';
 global pismis_18 = 'Pismis18';
-global rho_oph = 'Rho_Oph';
+#global rho_oph = 'Rho_Oph';
 global rup_134 = 'Rup134';
 global trumpler_14 = 'Trumpler14';
 global trumpler_20 = 'Trumpler20';
@@ -402,7 +402,7 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   global ges_dr5_all_oc_table_filename;
   global br_21;
   global br_22;
-  global br_25;
+  #global br_25;
   global br_30;
   global br_31;
   global br_32;
@@ -424,7 +424,7 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   global ic_2391;
   global ic_2602;
   global ic_4665;
-  global loden165;
+  #global loden165;
   global m_67;
   global ngc_2141;
   global ngc_2158;
@@ -453,7 +453,7 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   global ngc_6802;
   global pismis_15;
   global pismis_18;
-  global rho_oph;
+  #global rho_oph;
   global rup_134;
   global trumpler_14;
   global trumpler_20;
@@ -495,8 +495,8 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   full_path = strcat(tables_parent_folder, '/', br_22);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
-  full_path = strcat(tables_parent_folder, '/', br_25);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
+  #full_path = strcat(tables_parent_folder, '/', br_25);  
+  #plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', br_30);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
@@ -552,8 +552,8 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   full_path = strcat(tables_parent_folder, '/', ic_4665);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
   
-  full_path = strcat(tables_parent_folder, '/', loden165);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
+  #full_path = strcat(tables_parent_folder, '/', loden165);  
+  #plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', m_67);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
@@ -639,8 +639,8 @@ function [plot_path] = plot_clusters(A, color, width, ytick, axis_limits, aidx, 
   full_path = strcat(tables_parent_folder, '/', pismis_18);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
-  full_path = strcat(tables_parent_folder, '/', rho_oph);  
-  plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
+  #full_path = strcat(tables_parent_folder, '/', rho_oph);  
+  #plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
 
   full_path = strcat(tables_parent_folder, '/', rup_134);  
   plot_cluster(A, color, '+', width, ytick, axis_limits, full_path, aidx, subfolder);
@@ -689,6 +689,7 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   global clusters_log_g_col;
   global clusters_e_log_g_col;
   global clusters_fe_h_col
+  gigaYear = 1000000000; 
   delta_log_g = 0.05 %dex
   delta_teff = 50 %K
   delta_fe_h = 0.05 %dex
@@ -702,12 +703,18 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   
 
   %Get cluster age (in yrs) and limits
-  cluster_age = C(1, 8) * 1000000000;
+  cluster_age = C(1, 8) * gigaYear;
   %cluster_top_age = C(1, 4) + cluster_age;
   %cluster_low_age = C(1, 5) + cluster_age;
-  age_top_limit = cluster_age + ((cluster_age*0.1)/100);
-  age_low_limit = cluster_age - ((cluster_age*0.1)/100);
-
+  % Overall, the uncertainty on the determination of log t ranges from 0.15 to 0.25 
+  % for young clusters (<1Gyr) and from 0.1 to 0.2 for old clusters.
+  if (cluster_age >= gigaYear) 
+    age_top_limit = cluster_age + ((cluster_age*0.1)/100);
+    age_low_limit = cluster_age - ((cluster_age*0.1)/100);
+  else
+    age_top_limit = cluster_age + ((cluster_age*0.15)/100);
+    age_low_limit = cluster_age - ((cluster_age*0.15)/100);
+  endif
   
   %Find rows with age older than cluster_low_age and get: Teff, logg
   D = find(A(:,1) >= age_low_limit);
@@ -766,10 +773,10 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   
   
   
-  filter_setup = strcat("%Filter setup: $\\teff$ low=", num2str(teff_low_limit), " $\\teff$ top=", num2str(teff_top_limit),
-    " $\\gsurf$ low=", num2str(log_g_low_limit), " $\\gsurf$ top=", num2str(log_g_top_limit),
-    " $\\feh$ low=", num2str(fe_h_low_limit), " $\\feh$ top=", num2str(fe_h_top_limit),
-    " Age low=", num2str(age_low_limit/1000000000), " Age top=", num2str(age_top_limit/1000000000),
+  filter_setup = strcat("%Filter setup: $\\teff$ low=", num2str(teff_low_limit), ", $\\teff$ top=", num2str(teff_top_limit),
+    ", $\\gsurf$ low=", num2str(log_g_low_limit), ", $\\gsurf$ top=", num2str(log_g_top_limit),
+    ", $\\feh$ low=", num2str(fe_h_low_limit), ", $\\feh$ top=", num2str(fe_h_top_limit),
+    ", Age low=", num2str(age_low_limit/1000000000), ", Age top=", num2str(age_top_limit/1000000000),
     "\n");
     
   fputs (fid, filter_setup);
@@ -3388,75 +3395,75 @@ function paper2()
   plot_XG_var_vel(rot_vels7,3);
   #plot_XG_var_vel(rot_vels8,4);
   
-  #plot_age_vs_alpha_mlt_XG(rot_vels5,1);
+  plot_age_vs_alpha_mlt_XG(rot_vels5,1);
   #plot_age_vs_alpha_mlt_XG(rot_vels6,2);
-  #plot_age_vs_alpha_mlt_XG(rot_vels7,3);
+  plot_age_vs_alpha_mlt_XG(rot_vels7,3);
   #plot_age_vs_alpha_mlt_XG(rot_vels8,4);
   
-  #plot_vel_rot_XG_var_vel(rot_vels5,1);
+  plot_vel_rot_XG_var_vel(rot_vels5,1);
   #plot_vel_rot_XG_var_vel(rot_vels6,2);
-  #plot_vel_rot_XG_var_vel(rot_vels7,3);
+  plot_vel_rot_XG_var_vel(rot_vels7,3);
   #plot_vel_rot_XG_var_vel(rot_vels8,4);
   
-  #plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
+  plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
   #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
-  ##plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   #plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
   #plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
   
-  #plot_cz_size_XG_var_vel_z1(rot_vels5,1);
+  plot_cz_size_XG_var_vel_z1(rot_vels5,1);
   #plot_cz_size_XG_var_vel_z1(rot_vels6,2);
-  #plot_cz_size_XG_var_vel_z1(rot_vels7,3);
+  plot_cz_size_XG_var_vel_z1(rot_vels7,3);
   #plot_cz_size_XG_var_vel_z1(rot_vels8,4);
 
-  #plot_cz_size_XG_var_vel(rot_vels5,1);
+  plot_cz_size_XG_var_vel(rot_vels5,1);
   #plot_cz_size_XG_var_vel(rot_vels6,2);
-  #plot_cz_size_XG_var_vel(rot_vels7,3);
+  plot_cz_size_XG_var_vel(rot_vels7,3);
   #plot_cz_size_XG_var_vel(rot_vels8,4);
   
-  #plot_hr_XG_var_vel(rot_vels5,1);
+  plot_hr_XG_var_vel(rot_vels5,1);
   #plot_hr_XG_var_vel(rot_vels6,2);
-  #plot_hr_XG_var_vel(rot_vels7,3);
+  plot_hr_XG_var_vel(rot_vels7,3);
   #plot_hr_XG_var_vel(rot_vels8,4);
   
-  #plot_hr_XG_var_vel_z1(rot_vels5,[3.70, 3.73, -0.35, 0.0],1);
+  plot_hr_XG_var_vel_z1(rot_vels5,[3.70, 3.73, -0.35, 0.0],1);
   #plot_hr_XG_var_vel_z1(rot_vels6,[3.70, 3.73, -0.35, 0.0],2);
-  #plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
+  plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
   #plot_hr_XG_var_vel_z1(rot_vels8,[3.68, 3.71, -0.45, -0.15],4);
   
-  #plot_age_vs_mb_activation_XG(rot_vels5,1);
+  plot_age_vs_mb_activation_XG(rot_vels5,1);
   #plot_age_vs_mb_activation_XG(rot_vels6,2);
-  #plot_age_vs_mb_activation_XG(rot_vels7,3);
+  plot_age_vs_mb_activation_XG(rot_vels7,3);
   #plot_age_vs_mb_activation_XG(rot_vels8,4);
   
-  #plot_m_dot_XG_var_vel(rot_vels5,1);
+  plot_m_dot_XG_var_vel(rot_vels5,1);
   #plot_m_dot_XG_var_vel(rot_vels6,2);
-  #plot_m_dot_XG_var_vel(rot_vels7,3);
+  plot_m_dot_XG_var_vel(rot_vels7,3);
   #plot_m_dot_XG_var_vel(rot_vels8,4);
 
-  #plot_m_dot_XG_var_vel_z1(rot_vels5,1);
+  plot_m_dot_XG_var_vel_z1(rot_vels5,1);
   #plot_m_dot_XG_var_vel_z1(rot_vels6,2);
-  #plot_m_dot_XG_var_vel_z1(rot_vels7,3);
+  plot_m_dot_XG_var_vel_z1(rot_vels7,3);
   #plot_m_dot_XG_var_vel_z1(rot_vels8,4);
   
-  #plot_teff_vs_mag_field_XG(rot_vels5,1);
+  plot_teff_vs_mag_field_XG(rot_vels5,1);
   #plot_teff_vs_mag_field_XG(rot_vels6,2);
-  #plot_teff_vs_mag_field_XG(rot_vels7,3);
+  plot_teff_vs_mag_field_XG(rot_vels7,3);
   #plot_teff_vs_mag_field_XG(rot_vels8,4);
 
-  #plot_teff_vs_mag_field_XG_z1(rot_vels5,1);
+  plot_teff_vs_mag_field_XG_z1(rot_vels5,1);
   #plot_teff_vs_mag_field_XG(rot_vels6,2);
-  #plot_teff_vs_mag_field_XG_z1(rot_vels7,3);
+  plot_teff_vs_mag_field_XG_z1(rot_vels7,3);
   #plot_teff_vs_mag_field_XG(rot_vels8,4);
   
-  #plot_radius_vs_mag_field_XG(rot_vels5,1);
+  plot_radius_vs_mag_field_XG(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  #plot_radius_vs_mag_field_XG(rot_vels7,3);
+  plot_radius_vs_mag_field_XG(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
   
-  #plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
+  plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  #plot_radius_vs_mag_field_XG_z1(rot_vels7,3);
+  plot_radius_vs_mag_field_XG_z1(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
 
 end

@@ -53,6 +53,7 @@
 \usepackage{array}
 \usepackage[table]{xcolor}
 \usepackage{longtable}
+\usepackage{threeparttable}
 %\usepackage[firstpage]{draftwatermark}
 %\SetWatermarkText{DRAFT}
 
@@ -140,7 +141,7 @@ GES collected data are very handy for our research because they conform a large 
 \end{itemize}
 
 \section{Data} \label{sec_method}
-The datasets provided by the Gaia mission in GEDR3 and GDR3, as well as those published by GES in DR5.0 form the main references used in this work. In general, we focus on the observations made on OCs, and particularly on those analysed in the \cite{Bragaglia2022} and \cite{Randich2022} papers. On the basis of the results presented in these papers, a set of 65 OCs (see Table \ref{tab:oc_list}) are selected as the reference dataset for our work. 
+The data sets provided by the Gaia mission in GEDR3 and GDR3, as well as those published by GES in DR5.0 form the main references used in this work. In general, we focus on the observations made on OCs, and particularly on those analysed in the \cite{Bragaglia2022} and \cite{Randich2022} papers. On the basis of the results presented in these papers, a set of 64 OCs (see Table \ref{tab:oc_full_list}) are selected as the reference dataset for our work. 
 
 \begin{table*}
 	\centering
@@ -149,96 +150,30 @@ The datasets provided by the Gaia mission in GEDR3 and GDR3, as well as those pu
              & & & & & & & $\oomegac$ & & & & & $\oomegac$ & & \\
 		Open Cluster & GES\_FLD & Age (Gyr) & [Fe/H] & $N_*$ & 0.095 & 0.10 & 0.105 & 0.11 & 0.115 & 0.12 & 0.125 & 0.13 & 0.14 & 0.1425\\
 		\hline
-            25 Ori & 25\_Ori & 0.013 & 0 & 294 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            ASCC 50 & Assc50 & 0.011 & 0.02 & 1225 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             Berkeley 21 & Br21 & 2.138 & -0.21 & 744 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1\\
-            Berkeley 22 & Br22 & 2.455 & -0.26 & 395 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 25 & Br25 & 2.455 & -0.25 & 81 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 30 & Br30 & 0.295 & -0.13 & 332 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 31 & Br31 & 2.818 & -0.29 & 616 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 32 & Br32 & 4.898 & -0.31 & 438 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 36 & Br36 & 6.761 & -0.15 & 739 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             Berkeley 39 & Br39 & 5.623 & -0.14 & 899 & 1 & 1 & 1 & 1 & 1 & 1 & 2 & 2 & 2 & 2\\
-            Berkeley 44 & Br44 & 1.445 & 0.22 & 93 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 73 & Br73 & 1.413 & -0.26 & 77 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 75 & Br75 & 1.738 & -0.34 & 75 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Berkeley 81 & Br81 & 1.148 & 0.22 & 279 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Blanco 1 & Blanco1 & 0.105 & -0.03 & 463 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Chamaeleon I & Cha\_I & 0.001 & -0.03 & 709 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Collinder 197 & Col197 & 0.014 & 0.03 & 409 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Collinder 69 & lam\_Ori & 0.013 & -0.09 & 836 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Czernik 24 & Cz24 & 2.692 & -0.11 & 346 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Czernik 30 & Cz30 & 2.884 & -0.31 & 226 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            ESO 92-05 & ESO92\_05 & 4.467 & -0.29 & 212 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Haffner 10 & Haf10 & 3.802 & -0.1 & 562 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            IC 2391 & IC2391 & 0.029 & -0.06 & 434 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             IC 2602 & IC2602 & 0.036 & -0.06 & 1836 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0\\
-            \rowcolor{lightgray}
             IC 4665 & IC4665 & 0.033 & 0.01 & 567 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0\\
-            Loden 165 & Loden165 & 3 &  & 388 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             Messier 67 & M67 & 3.981 & -0.02 & 131 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6\\
-            \rowcolor{lightgray}
             NGC 2141 & NGC2141 & 1.862 & -0.04 & 853 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-            NGC 2158 & NGC2158 & 1.549 & -0.15 & 616 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 2232 & NGC2232 & 0.018 & -0.03 & 1866 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 2243 & NGC2243 & 4.365 & -0.45 & 661 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 2244 & NGC2244 & 0.004 & -0.04 & 452 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 2264 & NGC2264 & 0.003 & -0.1 & 1857 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 2355 & NGC2355 & 1 & -0.13 & 208 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-            \rowcolor{lightgray}
             NGC 2420 & NGC2420 & 1.698 & -0.15 & 562 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-            \rowcolor{lightgray}
             NGC 2425 & NGC2425 & 2.399 & -0.13 & 528 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-            \rowcolor{lightgray}
             NGC 2451 & NGC2451 & 0.035 & -0.08 & 1656 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 2 & 1\\
-            \rowcolor{lightgray}
             NGC 2516 & NGC2516 & 0.24 & -0.04 & 759 & 0 & 0 & 0 & 1 & 1 & 1 & 3 & 4 & 4 & 3\\
-            NGC 2547 & NGC2457 & 0.032 & -0.03 & 477 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 3293 & NGC3293 & 0.01 & -0.08 & 584 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 3532 & NGC3532 & 0.398 & -0.01 & 1145 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 1\\
-            NGC 3766 & NGC3766 & 0.023 & -0.12 & 399 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 4815 & NGC4815 & 0.372 & 0.08 & 218 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 6005 & NGC6005 & 1.259 & 0.22 & 560 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1\\
-            NGC 6067 & NGC6067 & 0.126 & 0.03 & 780 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 6253 & NGC6253 & 3.246 & 0.33 & 646 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 6259 & NGC6259 & 0.269 & 0.18 & 494 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
-            \rowcolor{lightgray}
             NGC 6281 & NGC6281 & 0.513 & -0.04 & 320 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
-            \rowcolor{lightgray}
             NGC 6405 & NGC6405 & 0.035 & -0.02 & 701 & 1 & 1 & 1 & 0 & 1 & 3 & 2 & 0 & 0 & 0\\
-            NGC 6530 & NGC6530 & 0.002 & -0.02 & 1983 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 6633 & NGC6633 & 0.692 & -0.03 & 1662 & 2 & 2 & 2 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
-            NGC 6649 & NGC6649 & 0.071 & -0.08 & 283 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            NGC 6705 & NGC6705 & 0.309 & 0.03 & 1066 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             NGC 6709 & NGC6709 & 0.191 & -0.02 & 730 & 2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
-            NGC 6802 & NGC6802 & 0.661 & 0.14 & 197 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Pismis 15 & Pismis15 & 0.871 & 0.02 & 333 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Pismis 18 & Pismis18 & 0.575 & 0.14 & 142 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Ruprecht 134 & Rup134 & 1.66 & 0.27 & 680 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Trumpler 14 & Trumpler14 & 0.003 & -0.01 & 1902 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            \rowcolor{lightgray}
             Trumpler 20 & Trumpler20 & 1.862 & 0.13 & 1213 & 3 & 3 & 3 & 2 & 2 & 2 & 2 & 2 & 2 & 2\\
-            Trumpler 23 & Trumpler23 & 0.708 & 0.2 & 165 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Trumpler 5 & Trumpler5 & 4.266 & -0.35 & 1138 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Gamma Vel & gamma2\_vel & 0.02 & -0.02 & 1269 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-            Rho Oph & Rho\_Oph & 0.001 & 0.03 & 311 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\           
             \hline
 	\end{tabular}
- 	\caption{List of selected OCs. For each OC, name, GES denomination, estimated age, metallicity and number of components are listed. The number of OC components selected by the different simulations are shown separately. This information is split into two groups, each corresponding to the set of simulations used in the figures shown in the following sections. Finally, those OCs that have been selected in any of the simulations are highlighted in grey.}
-  	\label{tab:oc_list}
+ 	\caption{List of selected OCs. For each OC, name, GES denomination, estimated age, metallicity and number of components are listed. The number of OC components selected by the different simulations are shown separately. This information is split into two groups, each corresponding to the set of simulations used in the figures shown in the following sections.}
+  	\label{tab:oc_reduced_list}
 \end{table*}
-
-
 
 \begin{table*}
 	\centering
@@ -254,8 +189,8 @@ The datasets provided by the Gaia mission in GEDR3 and GDR3, as well as those pu
             8520350\_1147480 & 5875 & 4.47 & -0.03 & 1.21 & 0.24 & 3.981\\ 
             \hline
 	\end{tabular}
- 	\caption{M64 - Filter setup: $\teff$ low=5789.184, $\teff$ top=5889.6435, $\gsurf$ low=4.3945, $\gsurf$ top=4.4939, $\feh$ low=-0.05, $\feh$ top=0.05, Age low=3.977, Age top=3.985}
-	\label{tab:oc_m64}
+ 	\caption{M67 - Filter setup: $\teff$(K) [5787.4892, 5887.6823], $\gsurf$(dex) [4.3979, 4.4977], $\feh$(dex) [-0.05, 0.05], Age(Gyr) [3.977, 3.985]}
+	\label{tab:oc_m67}
 \end{table*}
 
 \begin{table*}
@@ -264,13 +199,13 @@ The datasets provided by the Gaia mission in GEDR3 and GDR3, as well as those pu
 		\hline
             ObjectId & $\teff$(K) & $\gsurf$(dex) & FeH(dex) & ALi(dex) & eALi(dex) & Age(Gyr)\\
 		\hline
-            12392824-6041134 & 5831 & 4.54 & 0.01 & 2.66 & 0.08 & 1.862\\ 
-            12401318-6037507 & 5810 & 4.54 & 0 & 2.35 & 0.12 & 1.862\\ 
-            12402039-6042428 & 5824 & 4.48 & 0.02 & 2.05 & 0 & 1.862\\ 
+            7571111-6048156 & 5084 & 4.54 & 0 & 2.29 & 0.08 & 0.24\\ 
+            7595031-6044149 & 5108 & 4.52 & -0.05 & 1.92 & 0.08 & 0.24\\ 
+            7595280-6032498 & 5093 & 4.49 & -0.03 & 2.29 & 0.08 & 0.24\\ 
             \hline
 	\end{tabular}
- 	\caption{Trumpler20 - Filter setup: $\teff$ low=5731.2886, $\teff$ top=5831.2886, $\gsurf$ low=4.4518, $\gsurf$ top=4.5518, $\feh$ low=-0.05, $\feh$ top=0.05, Age low=1.8601, Age top=1.8639}
-	\label{tab:oc_trumpler20}
+ 	\caption{NGC2516 - Filter setup: $\teff$(K) [5010.0324, 5111.0095], $\gsurf$(dex) [4.4405, 4.5405], $\feh$(dex) [-0.05, 0.05], Age(Gyr) [0.23964, 0.24036]}
+	\label{tab:oc_ngc2516}
 
 \end{table*}
 
@@ -284,40 +219,76 @@ GES DR5.0 provides information on 114 324 stars, not all of which correspond to 
     \item AR\_SD\_OC: Archive observation, standard field OC
 \end{itemize}
 
-As a result of this first filtering, the number of selected records is reduced to 43 299. On this subset of data we perform another filtering, this time aimed at selecting those that offer information on the following attributes:
+As a result of this first filtering, the number of selected records is reduced to 43 299. On this subset of data we perform another filtering, this time aimed at selecting those that offer not null information on the following attributes:
 \begin{itemize}
     \item Metallicity
     \item Li abundance
     \item GES field identifier
     \item Effective temperature
     \item Surface gravity
+    \item Cluster membership probability (>= 0.95)
 \end{itemize}
 
-This second filtering reduces the population of stars to be considered to a total of 21 125 records. Finally, a third filtering is carried out to select those stars belonging to the OCs listed in Table \ref{tab:oc_list}, giving us a final study population of 20 913 stars distributed in 65 OCs.\par
+This second filtering reduces the population of stars to be considered to a total of 5 895 records which are distributed among the 58 OCs listed in Table \ref{tab:oc_full_list}.\par
 
 \subsection{The selection of closest solar siblings}
 Once we have pre-selected the stars belonging to the OCs listed in the previous chapter, our interest focus on identifying those that are most similar to our Sun i.e. solar siblings. Finding such solar twins is a difficult task since they are disseminated across our Galaxy. Finding them would help us to figure out the origin of our Sun and and gain information about what conditions prevailed in the OCs in which they were born.\par
 
 Several attempts have been made to find solar siblings in the past \citep[see][and references therein]{Adibekyan2018}. In most of them, the search method is oriented to search the candidates based on its kinematic properties and then their metallicities and chemical abundances are compared with those of our Sun.\par
 
-In our case we extend the selection criteria by adding additional constraints: the surface gravity and age of the star. These two new parameters represent a fine-tuning of the search process for sibling candidates to our Sun. We use the age of the OCs reported in Table \ref{tab:oc_list} and the data obtained from the set of simulations performed using Modules for Experiments in Stellar Astrophysics stellar evolution code \citep[MESA; ][]{Paxton2011, Paxton2013,Paxton2015, Paxton2018, Paxton2019}. Our models extend the investigations documented in \cite{Navarro2020} on the influence of rotation and magnetic braking on the star Li depletion during the pre-main sequence (PMS) and the main sequence (MS). The data obtained from the simulations are confronted by comparing different stellar parameters obtained by Gaia and GES. This allows us to analyse, validate and refine our models against a very large set of candidates. The end result of this process is to obtain a subset of candidate sibling stars of our Sun that help us to support (or refute) our line of investigation of how the Li abundance behaves throughout the evolution of solar-type stars.\par
+In our case we extend the selection criteria by adding additional constraints: the surface gravity and age of the star. These two new parameters represent a fine-tuning of the search process for sibling candidates to our Sun. We use the age of the OCs reported in Table \ref{tab:oc_reduced_list} and the data obtained from the set of simulations performed using Modules for Experiments in Stellar Astrophysics stellar evolution code \citep[MESA; ][]{Paxton2011, Paxton2013,Paxton2015, Paxton2018, Paxton2019}. Our models extend the investigations documented in \cite{Navarro2020} on the influence of rotation and magnetic braking on the star Li depletion during the pre-main sequence (PMS) and the main sequence (MS). The data obtained from the simulations are confronted by comparing different stellar parameters obtained by Gaia and GES. This allows us to analyse, validate and refine our models against a very large set of candidates. The end result of this process is to obtain a subset of candidate sibling stars of our Sun that help us to support (or refute) our line of investigation of how the Li abundance behaves throughout the evolution of solar-type stars.\par
 
-From the approximately 21 000 identified stars, we proceed to select those with metallicity ($\feh$), effective temperature ($\teff$), and surface gravity ($\gsurf$) within the following limits:
+
+From the approximately 5 900 identified stars, we proceed to select those with metallicity ($\feh$), effective temperature ($\teff$), and surface gravity ($\gsurf$) within the following limits:
 \begin{itemize}
     \item $0.05 \, \dex <= \feh <= 0.05 \, \dex$
     \item $50.0 \, \Kelvin <= \teff <= 50.0 \, \Kelvin$
     \item $0.05 \, \dex <= \gsurf <= 0.05 \, \dex$
 \end{itemize}
 
-Tables \ref{tab:oc_m64} and \ref{tab:oc_trumpler20} show the subset of components of OC M67 and Trumpler 20 selected during the simulations for models initialised with $\oomegac$ = 0.14. Each of the tables lists the GES identifier of the star and the $\teff$, $\gsurf$, $\feh$, A(Li) and estimated age ranges used in the simulation.
+The method of selection is as follows: Based on the values for $\teff$, $\gsurf$ and $\feh$ given by our simulations, we proceed to select in the different OCs those stars that have values within the established ranges. That is, for the estimated age of a particular cluster, we calculate an interval of $\pm$0.1 for young OCs (age < 1Gyr) and $\pm$0.15 for old OCs (age >= 1Gyr) \citep[see][and reference values therein]{Cantat-Gaudin2020}. This age interval is used to select in our simulations the time step that is closest to the lower and upper age limits. Once these two time steps are found, the associated limit values for $\teff$, $\gsurf$ and $\feh$ are gathered. With these value ranges we proceed then to select in each of the OCs those stars that have values for these same parameters within them. In this way, we finally obtain the candidate stars for relevant for being compared with the simulation results.\par
+
+Tables \ref{tab:oc_m67} and \ref{tab:oc_ngc2516} summarize the subset of components of OC M67 and NGC2516 selected during the simulations for models initialised with $\oomegac$ = 0.14. Each of the tables lists the GES identifier of the star and the $\teff$, $\gsurf$, $\feh$, A(Li) and estimated age ranges used in the simulation.
 
 \section{Method} \label{sec_method}
 The AML is considered to be governed by magnetically-coupled stellar winds which exert a braking force on the star that eventually causes a loss of angular momentum. In addition, throughout the star's evolution, directly observable parameters such as its rotational velocity, effective temperature, surface gravity or abundance of chemical elements undergo variations. These parameters have an influence, either directly or indirectly, on the angular momentum loss caused by the star's magnetic field. Therefore, assuming that the magnetic field strength of a star remains constant throughout its evolution is a necessary simplification in some scenarios but does not correspond to observations.\par
 
-In the remainder of this paper, we describe a semi-empirical approach for the calculation of the AML as a result of the braking caused by a magnetic field of varying strength. The magnetic field evolves according to the $\teff$ and angular velocity ($\Omega$) of the star. This has been implemented as an extension to MESA.
+In \cite{Gossage2021}, the authors also approach the problem of AML from a similar starting point to ours, but with some notable differences. In the Table \ref{tab:gassage_vs_navarro} we compare the most notable similarities and differences between the two studies. In both works the models consider rotation not only in the MS but also in the PMS, with the difference that in Gossage's work they take into account disk-locking. This aspect is not so important in our simulations since in our case we have focused on the A(Li) profiles. In contrast, Gossage's work focuses mainly on modelling rotation profiles of stars, which are significantly affected by disk-locking. Similarly, the effects of magnetic braking on angular momentum loss are also considered. In our case for stars with $\mstar$=1$\msun$ (solar-twins) and in their with 0.1$\msun$$\le$$\mstar$$\le$1.3$\msun$. Both models also use MLT but in our case the MLT alpha value is not pre-fixed but varies throughout the simulation. These two works complement each other as they are based on different formalisms. On the one hand, our work is based on the proposal of \cite{Gallet2013} whose most relevant parameters are Ro and the presence of a magnetic field of varying strength (B), and on the other hand Gossage presents two formalisms: \cite{Matt2015} and \cite{Garraffo2018}. The former is mainly characterised by $\rossby$ and the $\mstar$, while the latter by $\rossby$ and the complexity of the magnetic field ($\magfc$). As far as OCs observations are concerned, in this work we have had access to a larger number of them, and covered a wider range of ages [0.001-6.761] Gyr. Finally, both papers simulate their respective models in MESA.\par
+
+\begin{table}
+	\centering
+	\caption{Comparison with \cite{Gossage2021} work.}
+	\label{tab:gassage_vs_navarro}
+        \begin{threeparttable}
+	\begin{tabular}{lll} 
+		\hline
+		Parameter & This work & \cite{Gossage2021}\\
+		\hline
+            
+		Rotation & At PMS \& MS & At PMS \& MS\\
+  		Solar Mass & $\mstar$=1$\msun$ & 0.1$\msun$$\le$$\mstar$$\le$1.3$\msun$ \\
+		Convection & MLT variable $\alpha_{{\rm MLT}}$ & MLT fixed $\alpha_{{\rm MLT}}$\\
+		Magnetic Braking & \cite{Gallet2013} & \cite{Matt2015}, \\ Formalism & & \cite{Garraffo2018}\\
+            Magnetic Braking & $\rossbystar$ \& $\bstar$ & $\rossbystar$ \& $\mstar$, \\ Parameters & & $\rossbystar$ \& $\magfc$\tnote{(1)}\\
+		Magnetic Field & B(G) variable & Not used\\ Strength & & \\
+            Disk locking & Not present & Present\\
+            Number of OC's & 64 & 11 \\
+            Source of data & GDR3.0 GES DR5.0 & Several works \\
+            MESA version & r10398 & r11701\\
+		\hline
+	\end{tabular}
+        \end{threeparttable}
+        \begin{tablenotes}\footnotesize
+        \item (1) Magnetic field complexity
+        \end{tablenotes}
+\end{table}
+
+
+
+In the remainder of this paper, we describe a semi-empirical approach for the calculation of the AML as a result of the braking caused by a magnetic field of varying strength. The magnetic field evolves according to the $\teff$ and angular velocity ($\Omega$) of the star. This has been implemented as an extension to MESA.\par
 
 \subsection{Modelling magnetic intensity} \label{mod_mbi}
-The variable magnetic field strength modelling approach is supported by the papers \cite{Cranmer2011} and \cite{Gallet2013}. We start by enumerating the most relevant aspects and assumptions made in modelling the evolution of magnetic field intensity.\par 
+In our models we make the case that the magnetic field strength should vary over the lifetime of the star rather than remain fixed throughout its evolution. For this we rely on a formalism \citep{Gallet2013} that allows us to calculate a variable magnetic field strength. This model adopts a dynamo-type prescription that allows a relationship to be established between the $\Omega$ , $\teff$, and the strength of the magnetic field ($B$), as well as with the mass-loss ($\mwind$) rate caused by the stellar wind. We start by enumerating the most relevant aspects and assumptions made in modelling the evolution of magnetic field intensity. \\par 
 
 A relevant parameter to characterize the influence of a given magnetic field on the stellar wind is $\Omega$. Assuming that the magnetic field is generated by a dynamo, its strength is proportional to some power of $\Omega$,
 \begin{ceqn}
@@ -325,21 +296,21 @@ A relevant parameter to characterize the influence of a given magnetic field on 
     f_*B_* \propto \Omega_*^b \label{eq:mf_strenght}
 \end{equation}
 \end{ceqn}
-where $b$ is the dynamo exponent, $B_*$ is the strength of the magnetic filed, and $f_*$ is the filling factor, i.e. the fraction of the star surface which is magnetized \citep{Gallet2013}.
+where $f_*$ is the filling factor, i.e. the fraction of the star surface which is magnetized, $B_*$ is the strength of the magnetic filed, $\Omega_*$ is the star angular velocity at stellar surface, and $b$ is the dynamo exponent \citep{Gallet2013}. The multiplication of $f_*$ by $B_*$ will allow us to obtain the magnetic field strength. \par
 
-On the other hand, $B_*$ is proportional to the equipartition magnetic field strength,
+According to this approach, the magnetic field strength will vary proportionally to the effective temperature ($\teff$) of the star as follows: 
 \begin{ceqn}
 \begin{equation}
     B_* \approx 1.13 \Beq \label{eq:mf_bstar}
 \end{equation}
 \end{ceqn}
-where $\Beq$ is defined as 
+$B_*$ is proportional to the equipartition magnetic field strength, being $\Beq$ is defined as 
 \begin{ceqn}
 \begin{equation}
     \Beq = \sqrt{8\upi P_*} = \sqrt{\frac{8\upi\rho_* \boltzmann \teff}{\mu\massH}}\label{eq:mf_beq}    
 \end{equation}
 \end{ceqn}
-where $\rho_*$ is the photospheric density, $\boltzmann$ is Boltzmann's constant, $\massH$ is the mass of a hydrogen atom, and $\mu$ the mean atomic weight \citep{Cranmer2011}.
+where $P_*$ is the photospheric gas pressure, $\rho_*$ is the photospheric density, $\boltzmann$ is Boltzmann's constant, $\massH$ is the mass of a hydrogen atom, and $\mu$ the mean atomic weight \citep{Cranmer2011}.
 
 As indicated in \cite{Cranmer2011} $\mu$ can be estimated using the OPAL plasma equations of state\footnote{\url{https://opalopacity.llnl.gov/EOS_2005/}},
 \begin{ceqn}
@@ -349,7 +320,7 @@ As indicated in \cite{Cranmer2011} $\mu$ can be estimated using the OPAL plasma 
 \end{ceqn}
 Once we are in a position to calculate $\Beq$, we can calculate $B_*$.\par
 
-\cite{Cranmer2011} found that the magnetic field strength is mainly influenced by $f_*$ rather than by the rotation period of the star. That is, variations in the star's angular velocity do not significantly alter its magnetic field strength. In addition, $f_*$ has a strong dependence on the Rossby number ($\rossby$). In order to calculate $\rossby$ of a given star, it is necessary to know the turn over time ($\turnover$),
+On the other hand, \cite{Cranmer2011} found that the magnetic field strength is mainly influenced by $f_*$ rather than by the rotation period of the star. That is, variations in the star's angular velocity do not significantly alter its magnetic field strength. In addition, $f_*$ has a strong dependence on the Rossby number ($\rossby$). In order to calculate $\rossby$ of a given star, it is necessary to know the turn over time ($\turnover$),
 \begin{ceqn}
 \begin{equation}
     \rossby = \frac{\prot}{\turnover} \label{eq:mf_rossby}
@@ -369,7 +340,7 @@ Once we are in a position to calculate $\Beq$, we can calculate $B_*$.\par
 where x = $\rossby$/$\rossbysun$, and $\rossbysun$ = 1.96.
 
 
-Finally, we are able to calculate the filling factor for a star by applying the adjustment made by \cite{Gallet2013},
+Finally, we are able to calculate the filling factor for a star by applying the adjustment made by \cite{Gallet2013} which more closely reproduces the average filling factor of the present Sun ($\fsun$ = 0.001-0.01),
 \begin{ceqn}
 \begin{equation}
      \fstar = \frac{0.55}{(1+(x/0.16)^{2.3})^{1.22}} \label{eq:fstart}
@@ -385,7 +356,7 @@ Finally, we are able to calculate the filling factor for a star by applying the 
 With this formalism we are able to calculate the mean magnetic field as a time-dependent function of $\rho$, $\teff$, and $\Omega$. The time values for these three variables will be obtained from the different simulations carried out with the help of MESA.
 
 \subsection{Modelling magnetic braking} \label{mod_mb}
-Once we have characterised how the magnetic field strength evolves, we need to model how the loss of angular momentum occurs.  In \cite{Navarro2020} we use a model applicable to magnetic fields of non-variable intensity and of few Gauss ($1.0\,\Gauss \leq B \leq 10.0\,\Gauss$). As shown in Figure \ref{fig:mag_field_limits_var_vel_g3}, the simulations yield magnetic field values that show maximum intensities of around $1.0K\,\Gauss$, making the use of the model employed previously non viable.
+Once we have characterised how the magnetic field strength evolves, we need to model how the loss of angular momentum occurs.  In \cite{Navarro2020} we use a model applicable to magnetic fields of non-variable intensity and of few Gauss ($1.0\,\Gauss \leq B \leq 10.0\,\Gauss$). As shown in Figure \ref{fig:mag_field_limits_var_vel_g3}, the simulations yield magnetic field values that show maximum intensities of around $1.0K\,\Gauss$, making the use of the model employed previously non viable. \par
 
 Let's start by enumerating the most relevant aspects and assumptions made in modelling the evolution of rotation, magnetic braking and angular momentum. If we assume a spherical outflow, the torque applied by a magnetically-coupled stellar winds $\torquewind$ is dictated by,
 \begin{ceqn}
@@ -453,7 +424,7 @@ and $a_i$ are the resulting coefficients of the fitting function \ref{eq:alpha_m
 
 \section{Results} \label{sec_3}
 
-\subsection{Mesh Models} \label{sec_mesh}
+\subsection{Grid Models} \label{sec_grid}
 In the current work we have replaced two pre-set parameters (alpha and intensity) for the different simulations of our model. Not only have we eliminated the need to assign a value to them, but we allow their values to vary as the simulations evolve over time. The single free parameter of our implementation is $\Omega$. The numerical simulations traced the rotational history and $A(\isotope[7]{Li})$ of a $1\, \msun$ star for a variety of initial values for $\Omega$ (see also Table \ref{tab:phy_mesa}).\par
 
 \begin{table}
@@ -502,13 +473,13 @@ MESA assigns an $\Omega$ value for each cell $k$ ($\Omega_k$) which is adjusted 
 \end{align}
 \end{ceqn}
 
-The distribution is performed in two iterations. In the first iteration, each cell $k$ is assigned the maximum amount of $\Dot{J}_{k}$ that it can accommodate in the time step established by the simulation. The amounts of $\Dot{J}$ not accommodated by the cells are accumulated as residual angular moment ($\jres$). In a second pass, the aggregated residual $\jres$ value collected in the previous iteration is redistributed among those cells that can accommodate more torque. In this way we manage to conserve the angular momentum.\par
+ 
 
 \subsection{Li evolution without MB}
 As a baseline, we borrow from \cite{Navarro2020} the Figure \ref{fig:li_var_vel_0g} which shows the temporal evolution of surface Li abundance for several $1\msun$ models initialized with different rotational velocities. The simulations took into account the effects of rotation and AML caused by stellar winds but not those of MB. The purple star and square are the surface Li abundances for the present-day Sun \citep{Asplund2009} and for the Pleiades, respectively \citep{Sestito2005}. For more details, refer to the cited work.\par
 
 \begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip, width=\columnwidth]{figures/paper1/li_var_vel_0_0g.eps}
+	\includegraphics[trim = 25mm 10mm 15mm 10mm, clip, width=\columnwidth]{figures/paper1/li_var_vel_0_0g.pdf}
     \caption{The evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H}, as a function of time for several 1 $\msun$ models. The solid black line represents the reference model according to \citet{Choi2016}. The rest of lines are models which include PMS rotation with $\oomegac$ between 0.0084 and 0.0336, respectively. The purple star and square are surface Li abundances for the present-day Sun \citep{Asplund2009} and the average for the Pleiades cluster \citep{Sestito2005} respectively. The dashed vertical line makes reference to the ZAMS.}
     \label{fig:li_var_vel_0g}
 \end{figure}
@@ -516,20 +487,20 @@ As a baseline, we borrow from \cite{Navarro2020} the Figure \ref{fig:li_var_vel_
 The Li abundance in the star surface decreased over time for all simulated models. The solid black line represents the reference model that adopts the solar-calibrated envelope overshooting parameters as documented in \citet{Choi2016}. All models burned too much Li before the ZAMS and therefore did not match with the Pleiades average surface Li abundance. There were barely any differences between the different models in terms of the abundance of Li for much of the PMS. Only after one million years was Li destroyed to an accentuated degree, since the necessary temperature was not reached at BCZ before. Afterwards the different models destroyed the Li in a very similar way due to two main reasons. On the one hand, the convective zones that the models developed had very similar sizes. On the other hand, the differential rotation between the core and the convective zone did not begin to develop until it reached $ \approx 10^6$ years, achieving its maximum difference in the ZAMS about $ \approx 10^7$ years. It was at this moment that the combined effects of turbulence and rotational difference increase, leading to notable differences in the evolution of A(Li) (see Figure \ref{fig:li_var_vel_0g_z1}). Later, the reference model (black line) did not deplete Li efficiently on the MS. The other models were able to burn Li in a more realistic way. Among them only one (green line) was close to match the present-day Li abundance of the Sun but its rotational velocity was much higher (see Figure \ref{fig:rot_vel_0g}) than the $2\,\kms$ of the Sun \citep{Gill2012}. \par
 
 \begin{figure}
-	\includegraphics[trim = 25mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/li_var_vel_0_0g_z1.eps}
+	\includegraphics[trim = 25mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/li_var_vel_0_0g_z1.pdf}
     \caption {Similar to Figure \ref{fig:li_var_vel_0g} but zooming in on the ZAMS. The models with a higher initial rotational velocity reach already the ZAMS with a lower amount of Li measure on the star surface.}
     \label{fig:li_var_vel_0g_z1}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/rot_vel_var_vel_0_0g.eps}
+	\includegraphics[trim = 10mm 10mm 15mm 10mm clip,width=\columnwidth]{figures/paper1/rot_vel_var_vel_0_0g.pdf}
     \caption{The evolution of angular velocity at surface (solid line) and at the bottom (dotted line) limit of the uppermost convective zone, as a function of time for several 1 $\msun$ models. The models includes PMS rotation with $\oomegac$ values between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
     \label{fig:rot_vel_0g}
 \end{figure}
 
 
 \begin{figure}
-	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/paper1/hr_var_vel_0_0g_z1.eps}
+	\includegraphics[trim = 10mm 10mm 15mm 10mm, clip,width=\columnwidth]{figures/paper1/hr_var_vel_0_0g_z1.pdf}
     \caption{An example solar 1$\msun$ grid of stellar evolutionary track from PMS till TAMS covering a wide range of angular velocities. The rotation is activated in the models in the PMS and those models reach before the ZAMS and at a lower $\teff$ than the non-rotating one (solid black line). The luminosity is expressed in terms of $\lsun$.}
     \label{fig:hr_var_vel_0g}
 \end{figure}
@@ -672,10 +643,108 @@ The simulations used in this paper been executed with the MESA release 10398 \fo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
-
 \appendix
+\section{Full list of OC's}
+
+\begin{table*}
+	\centering
+	\begin{tabular}{|l l l l l || c c c c c | c c c c c|} 
+		\hline
+             & & & & & & & $\oomegac$ & & & & & $\oomegac$ & & \\
+		Open Cluster & GES\_FLD & Age (Gyr) & [Fe/H] & $N_*$ & 0.095 & 0.10 & 0.105 & 0.11 & 0.115 & 0.12 & 0.125 & 0.13 & 0.14 & 0.1425\\
+		\hline
+            25 Ori & 25\_Ori & 0.013 & 0 & 294 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            ASCC 50 & Assc50 & 0.011 & 0.02 & 1225 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            Berkeley 21 & Br21 & 2.138 & -0.21 & 744 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1\\
+            Berkeley 22 & Br22 & 2.455 & -0.26 & 395 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 25 & Br25 & 2.455 & -0.25 & 81 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 30 & Br30 & 0.295 & -0.13 & 332 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 31 & Br31 & 2.818 & -0.29 & 616 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 32 & Br32 & 4.898 & -0.31 & 438 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 36 & Br36 & 6.761 & -0.15 & 739 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            Berkeley 39 & Br39 & 5.623 & -0.14 & 899 & 1 & 1 & 1 & 1 & 1 & 1 & 2 & 2 & 2 & 2\\
+            Berkeley 44 & Br44 & 1.445 & 0.22 & 93 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 73 & Br73 & 1.413 & -0.26 & 77 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 75 & Br75 & 1.738 & -0.34 & 75 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Berkeley 81 & Br81 & 1.148 & 0.22 & 279 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Blanco 1 & Blanco1 & 0.105 & -0.03 & 463 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Chamaeleon I & Cha\_I & 0.001 & -0.03 & 709 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Collinder 197 & Col197 & 0.014 & 0.03 & 409 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Collinder 69 & lam\_Ori & 0.013 & -0.09 & 836 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Czernik 24 & Cz24 & 2.692 & -0.11 & 346 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Czernik 30 & Cz30 & 2.884 & -0.31 & 226 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            ESO 92-05 & ESO92\_05 & 4.467 & -0.29 & 212 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Haffner 10 & Haf10 & 3.802 & -0.1 & 562 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            IC 2391 & IC2391 & 0.029 & -0.06 & 434 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            IC 2602 & IC2602 & 0.036 & -0.06 & 1836 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0\\
+            \rowcolor{lightgray}
+            IC 4665 & IC4665 & 0.033 & 0.01 & 567 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0\\
+            Loden 165 & Loden165 & 3 &  & 388 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            Messier 67 & M67 & 3.981 & -0.02 & 131 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6\\
+            \rowcolor{lightgray}
+            NGC 2141 & NGC2141 & 1.862 & -0.04 & 853 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+            NGC 2158 & NGC2158 & 1.549 & -0.15 & 616 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 2232 & NGC2232 & 0.018 & -0.03 & 1866 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 2243 & NGC2243 & 4.365 & -0.45 & 661 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 2244 & NGC2244 & 0.004 & -0.04 & 452 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 2264 & NGC2264 & 0.003 & -0.1 & 1857 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 2355 & NGC2355 & 1 & -0.13 & 208 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+            \rowcolor{lightgray}
+            NGC 2420 & NGC2420 & 1.698 & -0.15 & 562 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+            \rowcolor{lightgray}
+            NGC 2425 & NGC2425 & 2.399 & -0.13 & 528 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+            \rowcolor{lightgray}
+            NGC 2451 & NGC2451 & 0.035 & -0.08 & 1656 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 2 & 1\\
+            \rowcolor{lightgray}
+            NGC 2516 & NGC2516 & 0.24 & -0.04 & 759 & 0 & 0 & 0 & 1 & 1 & 1 & 3 & 4 & 4 & 3\\
+            NGC 2547 & NGC2457 & 0.032 & -0.03 & 477 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 3293 & NGC3293 & 0.01 & -0.08 & 584 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 3532 & NGC3532 & 0.398 & -0.01 & 1145 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 1\\
+            NGC 3766 & NGC3766 & 0.023 & -0.12 & 399 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 4815 & NGC4815 & 0.372 & 0.08 & 218 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 6005 & NGC6005 & 1.259 & 0.22 & 560 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1\\
+            NGC 6067 & NGC6067 & 0.126 & 0.03 & 780 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 6253 & NGC6253 & 3.246 & 0.33 & 646 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 6259 & NGC6259 & 0.269 & 0.18 & 494 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
+            \rowcolor{lightgray}
+            NGC 6281 & NGC6281 & 0.513 & -0.04 & 320 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
+            \rowcolor{lightgray}
+            NGC 6405 & NGC6405 & 0.035 & -0.02 & 701 & 1 & 1 & 1 & 0 & 1 & 3 & 2 & 0 & 0 & 0\\
+            NGC 6530 & NGC6530 & 0.002 & -0.02 & 1983 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 6633 & NGC6633 & 0.692 & -0.03 & 1662 & 2 & 2 & 2 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
+            NGC 6649 & NGC6649 & 0.071 & -0.08 & 283 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            NGC 6705 & NGC6705 & 0.309 & 0.03 & 1066 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            NGC 6709 & NGC6709 & 0.191 & -0.02 & 730 & 2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
+            NGC 6802 & NGC6802 & 0.661 & 0.14 & 197 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Pismis 15 & Pismis15 & 0.871 & 0.02 & 333 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Pismis 18 & Pismis18 & 0.575 & 0.14 & 142 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Ruprecht 134 & Rup134 & 1.66 & 0.27 & 680 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Trumpler 14 & Trumpler14 & 0.003 & -0.01 & 1902 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            \rowcolor{lightgray}
+            Trumpler 20 & Trumpler20 & 1.862 & 0.13 & 1213 & 3 & 3 & 3 & 2 & 2 & 2 & 2 & 2 & 2 & 2\\
+            Trumpler 23 & Trumpler23 & 0.708 & 0.2 & 165 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Trumpler 5 & Trumpler5 & 4.266 & -0.35 & 1138 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Gamma Vel & gamma2\_vel & 0.02 & -0.02 & 1269 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+            Rho Oph & Rho\_Oph & 0.001 & 0.03 & 311 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\           
+            \hline
+	\end{tabular}
+ 	\caption{List of selected OCs. For each OC, name, GES denomination, estimated age, metallicity and number of components are listed. The number of OC components selected by the different simulations are shown separately. This information is split into two groups, each corresponding to the set of simulations used in the figures shown in the following sections. Finally, those OCs that have been selected in any of the simulations are highlighted in grey.}
+  	\label{tab:oc_full_list}
+\end{table*}
+
+
 \clearpage
-\section{Mesh models visualization}
+\section{Grid models visualization}
 The following figures comprise a series of grids as a function of time and for several 1 $\msun$ models in which on the one hand, the evolution of surface \isotope[7]{Li} abundance relative to \isotope[1]{H} for both variable magnetic field intensities and angular velocities and on the other hand, the evolution of surface rotational velocity are shown.
 
 \begin{figure*}
@@ -689,7 +758,7 @@ The following figures comprise a series of grids as a function of time and for s
     \label{fig:subim12}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/paper1/li_var_vel_0_0g.eps}
+    \includegraphics[trim = 25mm 10mm 15mm 10mm, clip,width=\textwidth]{figures/paper1/li_var_vel_0_0g.pdf}
     \label{fig:subim13}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
@@ -714,7 +783,7 @@ The following figures comprise a series of grids as a function of time and for s
     \label{fig:subim22}
     \end{subfigure}
     \begin{subfigure}[h]{0.47\textwidth}
-    \includegraphics[clip,width=\textwidth]{figures/paper1/rot_vel_var_vel_0_0g.eps}
+    \includegraphics[clip,width=\textwidth]{figures/paper1/rot_vel_var_vel_0_0g.pdf}
     \label{fig:subim23}
     \end{subfigure}    
     \begin{subfigure}[h]{0.47\textwidth}
@@ -738,7 +807,6 @@ The following figures comprise a series of grids as a function of time and for s
 \caption{Grid showing of the evolution of surface rotational velocity, as a function of time for several 1 $\msun$ models. Each figure shows a set of models in which the magnetic field with intensity has been fixed and $\oomegac$ varies between 0.0084 and 0.0336. The purple star is the surface angular velocity for the present-day Sun \citep{Gill2012}. The dashed vertical line makes reference to the ZAMS.}
 \label{fig:grid_rot_vel}
 \end{figure*}
-
 
 \appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
