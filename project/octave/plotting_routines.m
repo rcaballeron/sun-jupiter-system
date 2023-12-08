@@ -255,6 +255,9 @@ global title_font_size = 32;
 global axis_font_size = 32;
 global legend_font_size = 27;
 
+%For the axis
+global gigaYear = 1000000000;
+
 
 
 
@@ -692,7 +695,7 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   global clusters_log_g_col;
   global clusters_e_log_g_col;
   global clusters_fe_h_col
-  gigaYear = 1000000000;
+  global gigaYear;
   delta_log_g = 0.05 %dex
   delta_teff = 50 %K
   delta_fe_h = 0.05 %dex
@@ -819,7 +822,8 @@ end
 
 
 function plot_A_Li7(A, B, color, width, ytick, axis_limits)
-  global tick_font_size
+  global tick_font_size;
+  global gigaYear;
 
   %Plot values
   plot(A(:,1), B(:,1), color, 'linewidth', width);
@@ -836,7 +840,10 @@ function plot_A_Li7(A, B, color, width, ytick, axis_limits)
   %set(gca,'YTick',1.0:ytick:4.5);
 
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  %xlabels = arrayfun (@(x) sprintf ("%2.3f", x/gigaYear), xticks, "uniformoutput", false);
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
 
   yticks = get (gca, "ytick");
@@ -884,6 +891,8 @@ end
 
 function plot_vel_rot(A, color, width, ytick, axis_limits)
   global tick_font_size;
+  global gigaYear;
+
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
   %Don't show sup limit of CZ
@@ -907,7 +916,9 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
   axis(axis_limits);
   %axis([axis_limits(1), axis_limits(2), 0, 20]);
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.1e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.1e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
   %set(gca, "xminortick","on", "xminorgrid","off")
   yticks = get (gca, "ytick");
@@ -922,7 +933,8 @@ end
 
 function plot_omega(A, color, width, ytick, axis_limits)
   global tick_font_size;
-  global sun_omega
+  global sun_omega;
+  global gigaYear;
 
   %Plot values
   plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width);
@@ -938,7 +950,9 @@ function plot_omega(A, color, width, ytick, axis_limits)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
   yticks = get (gca, "ytick");
 
@@ -949,7 +963,9 @@ end
 
 function plot_teff(A, color, width, ytick, axis_limits)
   global tick_font_size;
-  global sun_omega
+  global sun_omega;
+  global gigaYear;
+
 
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -964,7 +980,9 @@ function plot_teff(A, color, width, ytick, axis_limits)
   axis(axis_limits);
 
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
 
   yticks = get (gca, "ytick");
@@ -979,7 +997,8 @@ end
 
 function plot_radius(A, color, width, ytick, axis_limits)
   global tick_font_size;
-  global sun_omega
+  global sun_omega;
+  global gigaYear;
 
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -993,7 +1012,9 @@ function plot_radius(A, color, width, ytick, axis_limits)
   axis(axis_limits);
 
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
 
   yticks = get (gca, "ytick");
@@ -1012,6 +1033,7 @@ end
 
 function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
   global tick_font_size;
+  global gigaYear;
 
   %Plot values
   %plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
@@ -1030,7 +1052,9 @@ function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   %Usar la siguiente instrucción si queremos fijar nosotros las marcas a mostrar
   %No está pensado usarlas para las gráficas de zoom
   %xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
@@ -1122,7 +1146,8 @@ function plot_m_l_r(A, color, width, ytick, axis_limits)
 end
 
 function plot_alpha_mlt(A, color, width, ytick, axis_limits)
-  global tick_font_size
+  global tick_font_size;
+  global gigaYear;
 
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -1141,7 +1166,9 @@ function plot_alpha_mlt(A, color, width, ytick, axis_limits)
   %set(gca,'YTick',1.0:ytick:4.5);
 
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
 
   yticks = get (gca, "ytick");
@@ -1154,7 +1181,8 @@ end
 
 function plot_mag_field(A, color, width, show_limits, ytick, axis_limits)
   global tick_font_size;
-  global sun_omega
+  global sun_omega;
+  global gigaYear;
 
   %Plot values
   %Omega
@@ -1180,7 +1208,9 @@ function plot_mag_field(A, color, width, show_limits, ytick, axis_limits)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.1e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.1e", x), xticks, "uniformoutput", false);
+  %User Ga for the age instead of scientific notation
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   set (gca, "xticklabel", xlabels) ;
   yticks = get (gca, "ytick");
   %ylabels = arrayfun (@(x) sprintf ("%2.1f", x), yticks, "uniformoutput", false);
@@ -1391,7 +1421,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('A(Li7)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -1463,7 +1493,7 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('Size conv. zone (radius CZ & Core/radius star)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -1533,7 +1563,7 @@ function age_vs_teff_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axi
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('T_{eff} & log g', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -1600,7 +1630,7 @@ function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, ytick, a
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('log (R/R_{sun})', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -1681,7 +1711,7 @@ function age_vs_cz_size_plots_special(rotational_vels, is_var_vel, ytick, axis_l
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('Size conv. zone (radius conv. zone/radius star)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -1746,8 +1776,8 @@ function age_vs_m_dot_plots(gauss_fields, rotational_vels, is_var_vel, ytick, ax
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
-  ylabel('Mass loss (log(solar mass/yr))', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
+  ylabel('Mass loss (log(M_{sun}/yr))', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -1986,7 +2016,7 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
   % Here we can properly assing the ymin and ymax values for all the plots
   % Each of them will potentially have a different one. We opt for fixing
   % the limits by hand.
-  line("xdata",[zams,zams], "ydata",[-10,400], "linewidth", 3, "linestyle", "--", "color", "k");
+  line("xdata",[zams,zams], "ydata",[-10,500], "linewidth", 3, "linestyle", "--", "color", "k");
 
 
   % Plot sun reference
@@ -1996,7 +2026,7 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
 
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('Rotational Vel (km/s)', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -2101,7 +2131,7 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
 
   set (l, "fontsize", legend_font_size);
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('Omega star/Omega Sun', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -2160,7 +2190,7 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   set(l, 'interpreter', 'tex');
 
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('\alpha_{MLT}', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -2220,7 +2250,7 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
 
       %Generate serie labels
 
-      labels = {labels{:}, ['\Omega/\Omega_{Sun} -', strtrim(rotational_vels(j,:))]};
+      labels = {labels{:}, ['\omega_{0} -', strtrim(rotational_vels(j,:))]};
       if (show_limits)
         labels = {labels{:}, ['B_{f_{min}} -', strtrim(rotational_vels(j,:))]};
         labels = {labels{:}, ['B_{f_{max}} -', strtrim(rotational_vels(j,:))]};
@@ -2243,8 +2273,8 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   set(l, "fontsize", legend_font_size);
   set(l, 'interpreter', 'tex');
   %legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
-  ylabel('Mean mag. field (G) & \Omega (rad)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
+  ylabel('Mean mag. field (G) & \Omega/\Omega_{Sun}', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -2385,7 +2415,8 @@ function plot_mb_activation(A, color, width, axis_limits)
   axis(axis_limits);
   xticks = get (gca, "xtick");
   %xlabels = arrayfun (@(x) sprintf ("%.e", x), xticks, "uniformoutput", false);
-  xlabels = [' ';'1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
+  %xlabels = [' ';'1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'10.00e+10'];
+  xlabels = [' ';'0.0000001';' ';'0.00001';' ';'0.001';' ';'0.1';' ';'10.0'];
   set (gca, "xticklabel", xlabels) ;
 
 
@@ -2508,7 +2539,7 @@ function age_vs_mb_activation(gauss_fields, rotational_vels, is_var_vel, leg_loc
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   legend boxoff
-  xlabel('star age (yrs)', 'fontsize', axis_font_size);
+  xlabel('star age (Ga)', 'fontsize', axis_font_size);
   ylabel('MB activation & Radiative vs. Convective core', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
@@ -2647,7 +2678,7 @@ function plot_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_li_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - var G & var. rotational velocity', 'li_var_vel_var_g_', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0.8,3.5], 'southwest', 'A(Li7) - var G & var. rotational velocity', 'li_var_vel_var_g_', num2str(idx));
 end
 
 
@@ -3419,27 +3450,27 @@ function paper2()
   #plot_XG_var_vel(rotational_vels([idx_1425crit],:),1);
   plot_0G_var_vel(rot_vels,0);
   #plot_0G_var_vel_z1(rot_vels,0);
-  #plot_XG_var_vel(rot_vels5,1);
+  plot_XG_var_vel(rot_vels5,1);
   #plot_XG_var_vel(rot_vels6,2);
-  #plot_XG_var_vel(rot_vels7,3);
+  plot_XG_var_vel(rot_vels7,3);
   #plot_XG_var_vel(rot_vels8,4);
 
-  #plot_age_vs_alpha_mlt_XG(rot_vels5,1);
+  plot_age_vs_alpha_mlt_XG(rot_vels5,1);
   #plot_age_vs_alpha_mlt_XG(rot_vels6,2);
-  #plot_age_vs_alpha_mlt_XG(rot_vels7,3);
+  plot_age_vs_alpha_mlt_XG(rot_vels7,3);
   #plot_age_vs_alpha_mlt_XG(rot_vels8,4);
 
-  #plot_vel_rot_0G_var_vel(rot_vels,0);
-  #plot_vel_rot_XG_var_vel(rot_vels5,1);
+  plot_vel_rot_0G_var_vel(rot_vels,0);
+  plot_vel_rot_XG_var_vel(rot_vels5,1);
   #plot_vel_rot_XG_var_vel(rot_vels6,2);
-  #plot_vel_rot_XG_var_vel(rot_vels7,3);
+  plot_vel_rot_XG_var_vel(rot_vels7,3);
   #plot_vel_rot_XG_var_vel(rot_vels8,4);
 
   #plot_omega_XG_var_vel(rot_vels8,3);
 
-  #plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
+  plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
   #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
-  #plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   #plot_omega_vs_mag_field_XG(rot_vels8, false, 4);
   #plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
 
@@ -3449,13 +3480,13 @@ function paper2()
   #plot_cz_size_XG_var_vel_z1(rot_vels7,3);
   #plot_cz_size_XG_var_vel_z1(rot_vels8,4);
 
-  #plot_cz_size_0G_var_vel(rot_vels,0);
-  #plot_cz_size_XG_var_vel(rot_vels5,1);
+  plot_cz_size_0G_var_vel(rot_vels,0);
+  plot_cz_size_XG_var_vel(rot_vels5,1);
   #plot_cz_size_XG_var_vel(rot_vels6,2);
-  #plot_cz_size_XG_var_vel(rot_vels7,3);
+  plot_cz_size_XG_var_vel(rot_vels7,3);
   #plot_cz_size_XG_var_vel(rot_vels8,4);
 
-  #plot_hr_0G_var_vel(rot_vels,0);
+  plot_hr_0G_var_vel(rot_vels,0);
   #plot_hr_XG_var_vel(rot_vels5,1);
   #plot_hr_XG_var_vel(rot_vels6,2);
   #plot_hr_XG_var_vel(rot_vels7,3);
@@ -3464,12 +3495,12 @@ function paper2()
   #plot_hr_0G_var_vel_z1(rot_vels,0);
   #plot_hr_XG_var_vel_z1(rot_vels5,[3.70, 3.73, -0.35, 0.0],1);
   #plot_hr_XG_var_vel_z1(rot_vels6,[3.70, 3.73, -0.35, 0.0],2);
-  #plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
+  plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
   #plot_hr_XG_var_vel_z1(rot_vels8,[3.68, 3.71, -0.45, -0.15],4);
 
   #plot_age_vs_mb_activation_XG(rot_vels5,1);
   #plot_age_vs_mb_activation_XG(rot_vels6,2);
-  #plot_age_vs_mb_activation_XG(rot_vels7,3);
+  plot_age_vs_mb_activation_XG(rot_vels7,3);
   #plot_age_vs_mb_activation_XG(rot_vels8,4);
 
   #plot_m_dot_XG_var_vel(rot_vels5,1);
@@ -3479,7 +3510,7 @@ function paper2()
 
   #plot_m_dot_XG_var_vel_z1(rot_vels5,1);
   #plot_m_dot_XG_var_vel_z1(rot_vels6,2);
-  #plot_m_dot_XG_var_vel_z1(rot_vels7,3);
+  plot_m_dot_XG_var_vel_z1(rot_vels7,3);
   #plot_m_dot_XG_var_vel_z1(rot_vels8,4);
 
   #plot_teff_vs_mag_field_XG(rot_vels5,1);
@@ -3494,7 +3525,7 @@ function paper2()
 
   #plot_radius_vs_mag_field_XG(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  #plot_radius_vs_mag_field_XG(rot_vels7,3);
+  plot_radius_vs_mag_field_XG(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
 
   #plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
