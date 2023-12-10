@@ -797,7 +797,7 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   %plot(C(:,6)*1000000000, C(:,4), marker, 'markersize', 8, 'color', color, 'markerfacecolor', color);
   %h = errorbar(C(:,6)*1000000000, C(:,4),C(:,5),"~d");
   h = errorbar(C(:,8)*1000000000, C(:,6),C(:,7),"~d");
-  set(h, 'markersize', 5, 'color', color, 'markerfacecolor', color);
+  set(h, 'markersize', 5, 'color', color, 'markerfacecolor', color, 'linewidth', 1.5);
 end
 
 % Calculate the Li abundancies. The format of the matrix must be:
@@ -1068,6 +1068,7 @@ end
 
 function plot_m_dot(A, color, width, ytick, axis_limits)
   global tick_font_size;
+  global gigaYear;
 
   %Plot values
   plot(A(:,1), A(:,2), color, 'linewidth', width);
@@ -1083,7 +1084,8 @@ function plot_m_dot(A, color, width, ytick, axis_limits)
   %Axis ticks
   axis(axis_limits);
   xticks = get (gca, "xtick");
-  xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  %xlabels = arrayfun (@(x) sprintf ("%.2e", x), xticks, "uniformoutput", false);
+  xlabels = arrayfun (@(x) sprintf ("%g", x/gigaYear), xticks, "uniformoutput", false);
   %xlabels = ['1.00e+02';' ';'1.00e+04';' ';'1.00e+06';' ';'1.00e+08';' ';'1.00e+10'];
   set (gca, "xticklabel", xlabels) ;
   yticks = get (gca, "ytick");
@@ -1411,7 +1413,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
 
   % Plot sun reference
   h = errorbar(sun_age, sun_A_Li7,sun_A_eLi7,"~d");
-  set(h, 'markersize', 5, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  set(h, 'markersize', 5, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8], 'linewidth', 1.5);
   plot(sun_age, sun_A_Li7, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
 
 
@@ -1559,6 +1561,12 @@ function age_vs_teff_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axi
   % Plot sun reference
   plot(sun_age, log10(sun_T_eff), '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
   plot(sun_age, sun_log_g, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+
+  % Plot reference marks
+  line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "-.", "color", [0.3,0.3,0.3]);
+  line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "-.", "color", [0.3,0.3,0.3]);
+  line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
+  line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
 
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
@@ -2152,6 +2160,9 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   global axis_font_size;
   global legend_font_size;
   global line_width;
+  global sun_age;
+  amlt_samadi_2006 = 1.76;
+  amlt_sonoi_2019 = 1.78;
 
   hold('on');
   labels = {};
@@ -2183,6 +2194,10 @@ function age_vs_alpha_mlt(gauss_fields, rotational_vels, is_var_vel, ytick, axis
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
   line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+
+  %Plot amlt
+  plot(sun_age, amlt_samadi_2006, 'd', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  plot(sun_age, amlt_sonoi_2019, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
 
   l = legend(labels, "location", leg_loc);
 
@@ -2390,8 +2405,9 @@ end
 function save_figure(f, title)
   %print(f,'-dpdflatexstandalone','-color',[title,'.pdf']);
   print(f,'-deps','-color',[title,'.eps']);
-  close;
+  %close;
   %print(f,'-dpng','-color',[title,'.png']);
+  %$ for i in *.eps; do ps2pdf $i $(basename -s .eps $i).pdf ; done
 end
 
 function plot_mb_activation(A, color, width, axis_limits)
@@ -3272,14 +3288,14 @@ function plot_omega_vs_mag_field_XG(rot_vels, show_limits, idx)
   omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 1, 3000], 'southwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g', num2str(idx));
 end
 
-function plot_teff_vs_mag_field_XG(rot_vels, idx)
+function plot_age_vs_teff_XG(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
   age_vs_teff_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5, 1.0e10, 2.5, 5],  'northwest', 'T_{eff}, log g  & var. rotational velocity', 'teff_logg_var_vel_g', num2str(idx));
 end
 
-function plot_teff_vs_mag_field_XG_z1(rot_vels, idx)
+function plot_age_vs_teff_XG_z1(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
@@ -3513,19 +3529,19 @@ function paper2()
   plot_m_dot_XG_var_vel_z1(rot_vels7,3);
   #plot_m_dot_XG_var_vel_z1(rot_vels8,4);
 
-  #plot_teff_vs_mag_field_XG(rot_vels5,1);
-  #plot_teff_vs_mag_field_XG(rot_vels6,2);
-  #plot_teff_vs_mag_field_XG(rot_vels7,3);
-  #plot_teff_vs_mag_field_XG(rot_vels8,4);
+  #plot_age_vs_teff_XG(rot_vels5,1);
+  #plot_age_vs_teff_XG(rot_vels6,2);
+  #plot_age_vs_teff_XG(rot_vels7,3);
+  #plot_age_vs_teff_XG(rot_vels8,4);
 
-  #plot_teff_vs_mag_field_XG_z1(rot_vels5,1);
-  #plot_teff_vs_mag_field_XG(rot_vels6,2);
-  #plot_teff_vs_mag_field_XG_z1(rot_vels7,3);
-  #plot_teff_vs_mag_field_XG(rot_vels8,4);
+  #plot_age_vs_teff_XG_z1(rot_vels5,1);
+  #plot_age_vs_teff_XG(rot_vels6,2);
+  #plot_age_vs_teff_XG_z1(rot_vels7,3);
+  #plot_age_vs_teff_XG(rot_vels8,4);
 
   #plot_radius_vs_mag_field_XG(rot_vels5,1);
   #plot_radius_vs_mag_field_XG(rot_vels6,2);
-  plot_radius_vs_mag_field_XG(rot_vels7,3);
+  #plot_radius_vs_mag_field_XG(rot_vels7,3);
   #plot_radius_vs_mag_field_XG(rot_vels8,4);
 
   #plot_radius_vs_mag_field_XG_z1(rot_vels5,1);
@@ -3608,6 +3624,7 @@ function main()
   rot_vels8 = rotational_vels([idx_13crit;idx_1325crit;idx_1375crit;idx_14crit;idx_1425crit],:);
   rot_vels9 = rotational_vels([idx_145crit;idx_1475crit;idx_15crit;idx_1525crit;idx_155crit],:);
   rot_vels10 = rotational_vels([idx_125crit;idx_13crit;idx_14crit;idx_1475crit;idx_155crit],:);
+  rot_vels11 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
 
 
 
@@ -3654,7 +3671,7 @@ function main()
   %plot_XG_var_vel(rot_vels10);
   %plot_XG_var_vel(rotational_vels([idx_135crit],:));
   %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
-  %plot_XG_var_vel(rotational_vels([idx_125crit],:));
+  plot_XG_var_vel(rotational_vels([idx_125crit],:), 1);
   %plot_XG_var_vel(rotational_vels([idx_1475crit],:));
 
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
@@ -3663,7 +3680,8 @@ function main()
   %plot_age_vs_alpha_mlt_XG(rot_vels6);
   %plot_age_vs_alpha_mlt_XG(rot_vels7);
   %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1025crit],:));
-  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1475crit],:));
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1475crit],:),1);
+  %plot_age_vs_teff_XG_z1(rot_vels11,1);
 
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
 
@@ -3755,6 +3773,7 @@ function main()
   %plot_m_dot_028vc_var_g_z1();
   %plot_m_dot_0G_var_vel();
   %plot_m_dot_3G_var_vel(rot_vels4);
+  %plot_m_dot_XG_var_vel(rotational_vels([idx_125crit],:),1)
   %plot_reimers_m_dot_0G_var_vel();
   %plot_m_l_r_0G_var_vel();
   %plot_m_l_r_0G_var_vel_z1();
@@ -3785,7 +3804,7 @@ function main()
   %plot_teff_vs_mag_field_XG(rotational_vels([idx_1475crit],:),1);
 
   %paper1();
-  paper2();
+  %paper2();
 end
 
 
