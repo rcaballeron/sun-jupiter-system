@@ -1,0 +1,577 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{AdLRB{\etalchar{+}}18}
+
+\bibitem[AAR{\etalchar{+}}99]{Angulo1999}
+C.~Angulo, M.~Arnould, M.~Rayet, P.~Descouvemont, D.~Baye, C.~Leclercq-Willain,
+  A.~Coc, S.~Barhoumi, P.~Aguer, C.~Rolfs, R.~Kunz, J.~W. Hammer, A.~Mayer,
+  T.~Paradellis, S.~Kossionides, C.~Chronidou, K.~Spyrou, S.~degl'Innocenti,
+  G.~Fiorentini, B.~Ricci, S.~Zavatarelli, C.~Providencia, H.~Wolters,
+  J.~Soares, C.~Grama, J.~Rahighi, A.~Shotter, M.~Lamehi Rachti, C.~Angulo,
+  M.~Arnould, M.~Rayet, P.~Descouvemont, D.~Baye, C.~Leclercq-Willain, A.~Coc,
+  S.~Barhoumi, P.~Aguer, C.~Rolfs, R.~Kunz, J.~W. Hammer, A.~Mayer,
+  T.~Paradellis, S.~Kossionides, C.~Chronidou, K.~Spyrou, S.~degl'Innocenti,
+  G.~Fiorentini, B.~Ricci, S.~Zavatarelli, C.~Providencia, H.~Wolters,
+  J.~Soares, C.~Grama, J.~Rahighi, A.~Shotter, y M.~Lamehi Rachti.
+\newblock A compilation of charged-particle induced thermonuclear reaction
+  rates.
+\newblock {\em NuPhA}, 656:3--183, 8 1999.
+
+\bibitem[AdLRB{\etalchar{+}}18]{Adibekyan2018}
+V.~Adibekyan, P.~de~Laverny, A.~Recio-Blanco, S.~G. Sousa, E.~Delgado-Mena,
+  G.~Kordopatis, A.~C.~S. Ferreira, N.~C. Santos, A.~A. Hakobyan, y
+  M.~Tsantaki.
+\newblock {The AMBRE project: searching for the closest solar siblings}.
+\newblock {\em Astron. Astrophys.}, 619:A130, nov 2018.
+
+\bibitem[AGSS09]{Asplund2009}
+Martin Asplund, Nicolas Grevesse, A.~Jacques Sauval, y Pat Scott.
+\newblock {The chemical composition of the Sun}.
+\newblock sep 2009.
+
+\bibitem[Asc14]{Aschwanden2014}
+Markus~J. Aschwanden.
+\newblock {The Sun}.
+\newblock {\em Encycl. Sol. Syst.}, páginas 235--259, jan 2014.
+
+\bibitem[AZ14]{Aigner2018}
+Martin Aigner y G\"{u}nter~M. Ziegler.
+\newblock {\em Proofs from {T}he {B}ook}.
+\newblock Springer-Verlag, Berlin, fifth edici\'on, 2014.
+\newblock Including illustrations by Karl H. Hofmann.
+
+\bibitem[BAB{\etalchar{+}}06]{Baglin2006}
+A.~Baglin, M.~Auvergne, L.~Boisnard, T.~Lam-Trong, P.~Barge, C.~Catala,
+  M.~Deleuil, E.~Michel, W.~Weiss, A.~Baglin, M.~Auvergne, L.~Boisnard,
+  T.~Lam-Trong, P.~Barge, C.~Catala, M.~Deleuil, E.~Michel, y W.~Weiss.
+\newblock {CoRoT: a high precision photometer for stellar ecolution and
+  exoplanet finding}.
+\newblock {\em cosp}, 36:3749, 2006.
+
+\bibitem[BADD{\etalchar{+}}18]{Bonfils2018}
+X.~Bonfils, N.~Astudillo-Defru, R.~D{\'{i}}az, J.~M. Almenara, T.~Forveille,
+  F.~Bouchy, X.~Delfosse, C.~Lovis, M.~Mayor, F.~Murgas, F.~Pepe, N.~C. Santos,
+  D.~S{\'{e}}gransan, S.~Udry, y A.~W{\"{u}}nsche.
+\newblock {A temperate exo-Earth around a quiet M dwarf at 3.4 parsec,}.
+\newblock {\em Astron. Astrophys.}, 613:A25, may 2018.
+
+\bibitem[Ban09]{Banisch2009}
+J{\"{u}}rgen Banisch.
+\newblock {\em {Die Sonne. Eine Einf{\"{u}}hrung f{\"{u}}r Hobby-Astronomen}},
+  volumen~1.
+\newblock 2009.
+
+\bibitem[BBM69]{Burgers1969}
+J.~M. Burgers, Burgers, y J.~M.
+\newblock Flow equations for composite gases.
+\newblock {\em fecg}, 1969.
+
+\bibitem[BBM{\etalchar{+}}18]{Bouvier2018}
+J~Bouvier, D~Barrado, E~Moraux, J~Stauffer, L~Rebull, L~Hillenbrand, A~Bayo,
+  I~Boisse, H~Bouy, E~Difolco, J~Lillo-Box, y M~{Morales Calder{\'{o}}n}.
+\newblock {Astronomy The lithium-rotation connection in the 125 Myr-old
+  Pleiades cluster}.
+\newblock {\em Astrophys. A{\&}A}, 613:63, 2018.
+
+\bibitem[BC10]{Baraffe2010}
+I.~Baraffe y G.~Chabrier.
+\newblock Effect of episodic accretion on the structure and the lithium
+  depletion of low-mass stars and planet-hosting stars.
+\newblock {\em Astronomy and Astrophysics}, 521:A44, 10 2010.
+
+\bibitem[BDS01]{BarradoyNavascues2001}
+David {Barrado y Navascues}, Constantine~P. Deliyannis, y John~R. Stauffer.
+\newblock {WIYN Open Cluster Study. V. Lithium Depletion and Metallicity in G
+  and K Dwarfs of the Open Cluster M35}.
+\newblock {\em Astrophys. J.}, 549(1):452--466, mar 2001.
+
+\bibitem[BKB{\etalchar{+}}10]{Borucki2010}
+William~J. Borucki, David Koch, Gibor Basri, Natalie Batalha, Timothy Brown,
+  Douglas Caldwell, John Caldwell, J{\o}rgen Christensen-Dalsgaard, William~D.
+  Cochran, Edna DeVore, Edward~W. Dunham, Andrea~K. Dupree, Thomas~N. Gautier,
+  John~C. Geary, Ronald Gilliland, Alan Gould, Steve~B. Howell, Jon~M. Jenkins,
+  Yoji Kondo, David~W. Latham, Geoffrey~W. Marcy, S{\o}ren Meibom, Hans
+  Kjeldsen, Jack~J. Lissauer, David~G. Monet, David Morrison, Dimitar Sasselov,
+  Jill Tarter, Alan Boss, Don Brownlee, Toby Owen, Derek Buzasi, David
+  Charbonneau, Laurance Doyle, Jonathan Fortney, Eric~B. Ford, Matthew~J.
+  Holman, Sara Seager, Jason~H. Steffen, William~F. Welsh, Jason Rowe, Howard
+  Anderson, Lars Buchhave, David Ciardi, Lucianne Walkowicz, William Sherry,
+  Elliott Horch, Howard Isaacson, Mark~E. Everett, Debra Fischer, Guillermo
+  Torres, John~Asher Johnson, Michael Endl, Phillip MacQueen, Stephen~T.
+  Bryson, Jessie Dotson, Michael Haas, Jeffrey Kolodziejczak, Jeffrey {Van
+  Cleve}, Hema Chandrasekaran, Joseph~D. Twicken, Elisa~V. Quintana, Bruce~D.
+  Clarke, Christopher Allen, Jie Li, Haley Wu, Peter Tenenbaum, Ekaterina
+  Verner, Frederick Bruhweiler, Jason Barnes, Andrej Prsa, William~J. Borucki,
+  David Koch, Gibor Basri, Natalie Batalha, Timothy Brown, Douglas Caldwell,
+  John Caldwell, J{\o}rgen Christensen-Dalsgaard, William~D. Cochran, Edna
+  DeVore, Edward~W. Dunham, Andrea~K. Dupree, Thomas~N. Gautier, John~C. Geary,
+  Ronald Gilliland, Alan Gould, Steve~B. Howell, Jon~M. Jenkins, Yoji Kondo,
+  David~W. Latham, Geoffrey~W. Marcy, S{\o}ren Meibom, Hans Kjeldsen, Jack~J.
+  Lissauer, David~G. Monet, David Morrison, Dimitar Sasselov, Jill Tarter, Alan
+  Boss, Don Brownlee, Toby Owen, Derek Buzasi, David Charbonneau, Laurance
+  Doyle, Jonathan Fortney, Eric~B. Ford, Matthew~J. Holman, Sara Seager,
+  Jason~H. Steffen, William~F. Welsh, Jason Rowe, Howard Anderson, Lars
+  Buchhave, David Ciardi, Lucianne Walkowicz, William Sherry, Elliott Horch,
+  Howard Isaacson, Mark~E. Everett, Debra Fischer, Guillermo Torres, John~Asher
+  Johnson, Michael Endl, Phillip MacQueen, Stephen~T. Bryson, Jessie Dotson,
+  Michael Haas, Jeffrey Kolodziejczak, Jeffrey {Van Cleve}, Hema
+  Chandrasekaran, Joseph~D. Twicken, Elisa~V. Quintana, Bruce~D. Clarke,
+  Christopher Allen, Jie Li, Haley Wu, Peter Tenenbaum, Ekaterina Verner,
+  Frederick Bruhweiler, Jason Barnes, y Andrej Prsa.
+\newblock {Kepler Planet-Detection Mission: Introduction and First Results}.
+\newblock {\em Sci}, 327(5968):977, feb 2010.
+
+\bibitem[BLV{\etalchar{+}}16]{Bouvier2016}
+J~Bouvier, A~C Lanzafame, L~Venuti, A~Klutsch, R~Jeffries, A~Frasca, E~Moraux,
+  K~Biazzo, S~Messina, G~Micela, S~Randich, J~Stauffer, A~M Cody, E~Flaccomio,
+  G~Gilmore, A~Bayo, T~Bensby, A~Bragaglia, G~Carraro, A~Casey, M~T Costado,
+  F~Damiani, E~{Delgado Mena}, P~Donati, E~Franciosini, A~Hourihane, S~Koposov,
+  C~Lardo, J~Lewis, L~Magrini, L~Monaco, L~Morbidelli, L~Prisinzano, G~Sacco,
+  L~Sbordone, S~G Sousa, A~Vallenari, C~C Worley, S~Zaggia, y T~Zwitter.
+\newblock {The Gaia-ESO Survey: A lithium-rotation connection at 5 Myr?}
+\newblock {\em Astron. Astrophys.}, 590:78, 2016.
+
+\bibitem[Bou08]{Bouvier2008}
+Jerome Bouvier.
+\newblock {Lithium depletion and the rotational history of exoplanet host
+  stars}.
+\newblock {\em Astron. Astrophys.}, aug 2008.
+
+\bibitem[BPG{\etalchar{+}}17]{Baraffe2017}
+I.~Baraffe, J.~Pratt, T.~Goffrey, T.~Constantino, D.~Folini, M.~V. Popov,
+  R.~Walder, y M.~Viallet.
+\newblock {Lithium depletion in solar-like stars: effect of overshooting based
+  on realistic multi-dimensional simulations}.
+\newblock {\em Astrophys. J.}, 845(1):L6, jul 2017.
+
+\bibitem[BRM{\etalchar{+}}10]{Baumann2010}
+P.~Baumann, I.~Ram{\'{i}}rez, J.~Mel{\'{e}}ndez, M.~Asplund, y K.~Lind.
+\newblock {Lithium depletion in solar-like stars: no planet connection}.
+\newblock {\em Astron. Astrophys.}, 519:A87, sep 2010.
+
+\bibitem[Car63]{Carrington1863}
+1826-1875. Carrington, Richard~Christopher.
+\newblock {\em {Observations of the spots of the sun from November 9, 1853 to
+  March 24, 1861, made at Redhill /}}.
+\newblock Williams and Norgate,, 1863.
+
+\bibitem[CDC{\etalchar{+}}16]{Choi2016}
+Jieun Choi, Aaron Dotter, Charlie Conroy, Matteo Cantiello, Bill Paxton, y
+  Benjamin~D. Johnson.
+\newblock {MESA Isochrones and Stellar Tracks (MIST). I: Solar-Scaled Models}.
+\newblock apr 2016.
+
+\bibitem[CFCF88]{Caughlan1988}
+Georgeann~R. Caughlan, William~A. Fowler, Georgeann~R. Caughlan, y William~A.
+  Fowler.
+\newblock Thermonuclear reaction rates v.
+\newblock {\em ADNDT}, 40:283, 1988.
+
+\bibitem[CG68]{Cox1968}
+J.~P. Cox y R.~T. Giuli.
+\newblock Principles of stellar structure.
+\newblock {\em pss}, 1968.
+
+\bibitem[CLB{\etalchar{+}}09]{Cantiello2009}
+M~Cantiello, N~Langer, I~Brott, A~{De Koter}, S~N Shore, J~S Vink, A~Voegler,
+  D~J Lennon, y S.-C Yoon.
+\newblock {Sub-surface convection zones in hot massive stars and their
+  observable consequences}.
+\newblock Technical report, 2009.
+
+\bibitem[CS11]{Cranmer2011}
+Steven~R. Cranmer y Steven~H. Saar.
+\newblock {Testing a predictive theoretical model for the mass loss rates of
+  cool stars}.
+\newblock {\em Astrophys. J.}, 741(1), aug 2011.
+
+\bibitem[CT05]{Charbonnel2005}
+Corinne Charbonnel y Suzanne Talon.
+\newblock {Influence of gravity waves on the internal rotation and Li abundance
+  of solar-type stars.}
+\newblock {\em Science}, 309(5744):2189--91, sep 2005.
+
+\bibitem[DIG{\etalchar{+}}14]{DelgadoMena2014}
+E.~{Delgado Mena}, G.~Israelian, J.~I. {Gonz{\'{a}}lez Hern{\'{a}}ndez}, S.~G.
+  Sousa, A.~Mortier, N.~C. Santos, V.~Zh. Adibekyan, J.~Fernandes, R.~Rebolo,
+  S.~Udry, y M.~Mayor.
+\newblock {Li depletion in solar analogues with exoplanets}.
+\newblock {\em Astron. Astrophys.}, 562:A92, feb 2014.
+
+\bibitem[DK14]{Dudorov2014}
+Alexander~E Dudorov y Sergey~A Khaibrakhmanov.
+\newblock {Theory of fossil magnetic field}.
+\newblock Technical report, 2014.
+
+\bibitem[DP07]{Denissenkov2007}
+Pavel~A. Denissenkov y Marc Pinsonneault.
+\newblock {A Revised Prescription for the Tayler‐Spruit Dynamo: Magnetic
+  Angular Momentum Transport in Stars}.
+\newblock {\em Astrophys. J.}, 655(2):1157--1165, feb 2007.
+
+\bibitem[DVM00]{DAntona2000}
+Francesca D'Antona, Paolo Ventura, y Italo Mazzitelli.
+\newblock {First Results on Pre–Main-Sequence Evolution, Including a Magnetic
+  Field}.
+\newblock {\em Astrophys. J.}, 543(1):L77--L80, nov 2000.
+
+\bibitem[EHMM12]{Eggenberger2012}
+P.~Eggenberger, L.~Haemmerl{\'{e}}, G.~Meynet, y A.~Maeder.
+\newblock {Impact of rotation and disc lifetime on pre-main sequence lithium
+  depletion of solar-type stars}.
+\newblock jul 2012.
+
+\bibitem[EMM09]{Eggenberger2009}
+P.~Eggenberger, A.~Maeder, y G.~Meynet.
+\newblock {Effects of rotation and magnetic fields on the structure and surface
+  abundances of solar-type stars}.
+\newblock {\em Proc. Int. Astron. Union}, 5(S268):381--386, nov 2009.
+
+\bibitem[EMM10]{Eggenberger2010}
+P.~Eggenberger, A.~Maeder, y G.~Meynet.
+\newblock {Effects of rotation and magnetic fields on the lithium abundance and
+  asteroseismic properties of exoplanet-host stars}.
+\newblock {\em Astron. Astrophys.}, 519:L2, oct 2010.
+
+\bibitem[Eul82]{Euler1982}
+Leonhard Euler.
+\newblock {\em Commentationes mechanicae ad theoriam machinarum pertinentes.
+  {V}ol. {III}}.
+\newblock Leonhardi Euleri Opera Omnia, Series Secunda: Opera Mechanica et
+  Astronomica, XVII. Orell F\"{u}ssli, Z\"{u}rich, 1982.
+\newblock Edición y prefacio por Charles Blanc y Pierre de Haller.
+
+\bibitem[Eul84]{Euler1984}
+Leonhard Euler.
+\newblock {\em Elements of algebra}.
+\newblock Springer-Verlag, New York, 1984.
+\newblock Translated from the German by John Hewlett, Reimpresión de la
+  edición de 1840, con introducción de C. Truesdell.
+
+\bibitem[Eul85]{Euler1985}
+Leonhard Euler.
+\newblock An essay on continued fractions.
+\newblock {\em Math. Systems Theory}, 18(4):295--328, 1985.
+\newblock Translated from the Latin by B. F. Wyman and M. F. Wyman.
+
+\bibitem[FBMM15]{Fu2015}
+Xiaoting Fu, Alessandro Bressan, Paolo Molaro, y Paola Marigo.
+\newblock {Lithium evolution in metal-poor stars: from Pre-Main Sequence to the
+  Spite plateau}.
+\newblock {\em Mon. Not. R. Astron. Soc.}, 452(3):3256--3265, jun 2015.
+
+\bibitem[FFDM{\etalchar{+}}14]{Figueira2014}
+P.~Figueira, J.~P. Faria, E.~Delgado-Mena, V.~Zh Adibekyan, S.~G. Sousa, N.~C.
+  Santos, y G.~Israelian.
+\newblock {Exoplanet hosts reveal lithium depletion - Results from a
+  homogeneous statistical analysis}.
+\newblock {\em Astron. Astrophys.}, 570:A21, oct 2014.
+
+\bibitem[GAS07]{Grevesse2007}
+N.~Grevesse, M.~Asplund, y A.~J. Sauval.
+\newblock {The solar chemical composition}.
+\newblock {\em Space Sci. Rev.}, 130(1-4):105--114, jun 2007.
+
+\bibitem[GB13]{Gallet2013}
+Florian Gallet y J{\'{e}}r{\^{o}}me Bouvier.
+\newblock {Improved angular momentum evolution model for solar-like stars}.
+\newblock {\em Astron. Astrophys.}, 556:A36, jun 2013.
+
+\bibitem[GDRB{\etalchar{+}}16]{Guiglion2016}
+G.~Guiglion, P.~{De Laverny}, A.~Recio-Blanco, C.~C. Worley, M.~{De Pascale},
+  T.~Masseron, N.~Prantzos, y Mikolaitis.
+\newblock {The AMBRE project: Constraining the lithium evolution in the Milky
+  Way}.
+\newblock {\em Astron. Astrophys.}, 595:A18, nov 2016.
+
+\bibitem[Gil12]{Gill2012}
+Robert~M Gill.
+\newblock {Rotation Period of the Sun-Gill The Rotational Period of the Sun
+  Using the Doppler Shift of the Hydrogen alpha Spectral Line}.
+\newblock Technical report, 2012.
+
+\bibitem[GSd{\etalchar{+}}16]{Guerrero2016}
+G.~Guerrero, P.~K. Smolarkiewicz, E.~M. {de Gouveia Dal Pino}, A.~G.
+  Kosovichev, N.~N. Mansour, E~M {De Gouveia}, Dal Pino, A.~G. Kosovichev, y
+  N.~N. Mansour.
+\newblock {ON THE ROLE OF TACHOCLINES IN SOLAR AND STELLAR DYNAMOS}.
+\newblock {\em Astrophys. J.}, 819(2):104, mar 2016.
+
+\bibitem[HA14]{Hussain2014}
+Gaitee A.~J. Hussain y Evelyne Alecian.
+\newblock {The role of magnetic fields in pre-main sequence stars}.
+\newblock feb 2014.
+
+\bibitem[Ibe65]{Iben1965}
+Icko Iben.
+\newblock {Stellar Evolution. I. The Approach to the Main Sequence.}
+\newblock {\em Astrophys. J.}, 141:993, apr 1965.
+
+\bibitem[IMS{\etalchar{+}}09]{Israelian2009}
+Garik Israelian, Elisa~Delgado Mena, Nuno~C. Santos, Sergio~G. Sousa, Michel
+  Mayor, Stephane Udry, Carolina~Dom{\'{i}}nguez Cerdea, Rafael Rebolo, y Sofia
+  Randich.
+\newblock {Enhanced lithium depletion in Sun-like stars with orbiting planets}.
+\newblock {\em Nat. 2009 4627270}, 462(7270):189--191, nov 2009.
+
+\bibitem[Jef04]{Jeffries2004}
+R.~D. Jeffries.
+\newblock {Pre-main-sequence Lithium Depletion}.
+\newblock nov 2004.
+
+\bibitem[JK07]{Johns-Krull2007}
+Christopher~M Johns-Krull.
+\newblock {The Magnetic Fields of Classical T Tauri Stars}.
+\newblock Technical report, 2007.
+
+\bibitem[Lan12]{Langer2012}
+N.~Langer.
+\newblock {Pre-Supernova Evolution of Massive Single and Binary Stars}.
+\newblock jun 2012.
+
+\bibitem[LC00]{Lamers2000}
+Henny J. G. L.~M. Lamers y Joseph~P. Cassinelli.
+\newblock {\em {Introduction to stellar winds}}.
+\newblock Cambridge University Press, 2000.
+
+\bibitem[Lod03]{Lodders2003}
+Katharina Lodders.
+\newblock {Solar System Abundances and Condensation Temperatures of the
+  Elements}.
+\newblock {\em Astrophys. J.}, 591(2):1220--1247, jul 2003.
+
+\bibitem[MEM10]{Meynet2010}
+Georges Meynet, Patrick Eggenberger, y Andre Maeder.
+\newblock {Massive star models with magnetic braking}.
+\newblock nov 2010.
+
+\bibitem[MG06]{Mathys2006}
+Gautier Mathys y Gautier.
+\newblock {Global stellar magnetic fields: the crossover from fossils to
+  dynamos}.
+\newblock {\em Proc. Int. Astron. Union}, 2(14):285--286, aug 2006.
+
+\bibitem[MIG{\etalchar{+}}11]{Mena2011}
+E.~Delgado Mena, G.~Israelian, J.~I. {Gonz{\'{a}}lez Hern{\'{a}}ndez}, N.~C.
+  Santos, y R.~Rebolo.
+\newblock {Measuring be depletion in cool stars with exoplanets}.
+\newblock {\em Astrophys. J.}, 728(2):148, feb 2011.
+
+\bibitem[MM97]{Meynet1997}
+Georges Meynet y Andr{\'{e}} Maeder.
+\newblock {Stellar evolution with rotation I. The computational method and the
+  inhibiting effect of the µ-gradient}.
+\newblock Technical report, 1997.
+
+\bibitem[MM03]{Maeder2003a}
+Andr{\'{e}} Maeder y Georges Meynet.
+\newblock {Stellar evolution with rotation and magnetic fields: I. The relative
+  importance of rotational and magnetic effects}.
+\newblock Technical report, 2003.
+
+\bibitem[MMPG12]{Matt2012}
+Sean~P. Matt, Keith~B. MacGregor, Marc~H. Pinsonneault, y Thomas~P. Greene.
+\newblock Magnetic braking formulation for sun-like stars: Dependence on dipole
+  field strength and rotation rate.
+\newblock {\em The Astrophysical Journal Letters}, 754:L26, 7 2012.
+
+\bibitem[Mor12]{Morin2012}
+J~Morin.
+\newblock {Title : will be set by the publisher MAGNETIC FIELDS FROM LOW MASS
+  STARS TO BROWN DWARFS}.
+\newblock Technical report, 2012.
+
+\bibitem[MPT{\etalchar{+}}15]{Mamajek2015}
+E.~E. Mamajek, A.~Prsa, G.~Torres, P.~Harmanec, M.~Asplund, P.~D. Bennett,
+  N.~Capitaine, J.~Christensen-Dalsgaard, E.~Depagne, W.~M. Folkner,
+  M.~Haberreiter, S.~Hekker, J.~L. Hilton, V.~Kostov, D.~W. Kurtz, J.~Laskar,
+  B.~D. Mason, E.~F. Milone, M.~M. Montgomery, M.~T. Richards, J.~Schou, y
+  S.~G. Stewart.
+\newblock {IAU 2015 Resolution B3 on Recommended Nominal Conversion Constants
+  for Selected Solar and Planetary Properties}.
+\newblock oct 2015.
+
+\bibitem[MQ95]{Mayor1995}
+Michel Mayor y Didier Queloz.
+\newblock {A Jupiter-mass companion to a solar-type star}.
+\newblock {\em Nat. 1995 3786555}, 378(6555):355--359, nov 1995.
+
+\bibitem[NHAS20]{Navarro2020}
+R.~Caballero Navarro, A.~Garc{\'{i}}a Hern{\'{a}}ndez, A.~Ayala, y J.~C.
+  Su{\'{a}}rez.
+\newblock {Study of the effects of magnetic braking on the lithium abundances
+  of the Sun and solar-type stars}.
+\newblock jun 2020.
+
+\bibitem[Noe08]{Noerdlinger2008}
+Peter~D. Noerdlinger.
+\newblock {Solar Mass Loss, the Astronomical Unit, and the Scale of the Solar
+  System}.
+\newblock jan 2008.
+
+\bibitem[NS02]{Niedzielski2002}
+A.~Niedzielski y W.~Sk{\'{o}}rzynski.
+\newblock {Kinematical Structure of Wolf-Rayet Winds}.
+\newblock Technical report, 2002.
+
+\bibitem[PBD{\etalchar{+}}10]{Paxton2011}
+Bill Paxton, Lars Bildsten, Aaron Dotter, Falk Herwig, Pierre Lesaffre, y Frank
+  Timmes.
+\newblock {MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA)}.
+\newblock {\em Astrophys. J. Suppl. Vol. 192, Issue 1, Artic. id. 3, 35 pp.
+  (2011).}, 192:3--35, sep 2010.
+
+\bibitem[PBG16]{Pincon2016}
+C.~Pinçon, K.~Belkacem, y M.~J. Goupil.
+\newblock Generation of internal gravity waves by penetrative convection.
+\newblock {\em Astronomy and Astrophysics}, 588:A122, 4 2016.
+
+\bibitem[PCCG14]{Pasetto2014}
+S.~Pasetto, C.~Chiosi, M.~Cropper, y E.~K. Grebel.
+\newblock Theory of stellar convection: Removing the mixing-length parameter.
+\newblock 3 2014.
+
+\bibitem[Pin97]{Pinsonneault1997}
+M.~Pinsonneault.
+\newblock {MIXING IN STARS}.
+\newblock {\em Annu. Rev. Astron. Astrophys.}, 35(1):557--605, sep 1997.
+
+\bibitem[PMS{\etalchar{+}}15]{Paxton2015}
+Bill Paxton, Pablo Marchant, Josiah Schwab, Evan~B Bauer, Lars Bildsten, Matteo
+  Cantiello, Luc Dessart, R~Farmer, H~Hu, N~Langer, R~H~D Townsend, Dean~M
+  Townsley, y F~X Timmes.
+\newblock {MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA): BINARIES,
+  PULSATIONS, AND EXPLOSIONS}.
+\newblock 2015.
+
+\bibitem[Rei75]{Reimers1975}
+Dieter Reimers.
+\newblock {Circumstellar Envelopes and Mass Loss of Red Giant Stars}.
+\newblock En {\em Probl. Stellar Atmos. Envel.}, páginas 229--256. Springer
+  Berlin Heidelberg, 1975.
+
+\bibitem[RFLA12]{Ramirez2012}
+I.~Ram{\'{i}}rez, J.~R. Fish, D.~L. Lambert, y C.~{Allende Prieto}.
+\newblock {LITHIUM ABUNDANCES IN NEARBY FGK DWARF AND SUBGIANT STARS: INTERNAL
+  DESTRUCTION, GALACTIC CHEMICAL EVOLUTION, AND EXOPLANETS}.
+\newblock {\em Astrophys. J.}, 756(1):46, aug 2012.
+
+\bibitem[RMR04]{Richard2004}
+Olivier Richard, Georges Michaud, y Jacques Richer.
+\newblock {Implications of WMAP observations on Li abundance and stellar
+  evolution models}.
+\newblock {\em ApJ}, 619(1):538--548, sep 2004.
+
+\bibitem[RP06]{Randich2006}
+Sofia Randich y Luca Pasquini.
+\newblock {\em {Chemical Abundances and Mixing in Stars in the Milky Way and
+  its Satellites}}.
+\newblock ESO ASTROPHYSICS SYMPOSIA. Springer Berlin Heidelberg, Berlin,
+  Heidelberg, 2006.
+
+\bibitem[RTLP03]{Reddy2003}
+Bacham~E. Reddy, Jocelyn Tomkin, David~L. Lambert, y Carlos~Allende Prieto.
+\newblock {The chemical compositions of Galactic disc F and G dwarfs}.
+\newblock {\em Mon. Not. R. Astron. Soc.}, 340(1):304--340, mar 2003.
+
+\bibitem[Sch18]{Scholz2018}
+Mathias Scholz.
+\newblock Die physik der sterne.
+\newblock {\em Die Physik der Sterne}, 2018.
+
+\bibitem[Sku72]{Skumanich1972}
+A.~Skumanich.
+\newblock {Time Scales for CA II Emission Decay, Rotational Braking, and
+  Lithium Depletion}.
+\newblock {\em Astrophys. J.}, 171, feb 1972.
+
+\bibitem[SLD{\etalchar{+}}19]{Sonoi2018}
+T.~Sonoi, H.~G. Ludwig, M.~A. Dupret, J.~Montalbán, R.~Samadi, K.~Belkacem,
+  E.~Caffau, y M.~J. Goupil.
+\newblock Calibration of mixing-length parameter $\alpha$ for mlt and fst
+  models by matching with co 5 bold models.
+\newblock {\em Astronomy and Astrophysics}, 621, 11 2019.
+
+\bibitem[SP14]{Somers2014}
+Garrett Somers y Marc Pinsonneault.
+\newblock {A Tale of Two Anomalies: Depletion, Dispersion, and the Connection
+  Between the Stellar Lithium Spread and Inflated Radii on the Pre-Main
+  Sequence}.
+\newblock {\em Astrophys. J.}, 790(25pp):72, feb 2014.
+
+\bibitem[SR05]{Sestito2005}
+P.~Sestito y S.~Randich.
+\newblock {Time scales of Li evolution: a homogeneous analysis of open clusters
+  from ZAMS to late-MS}.
+\newblock {\em Astron. Astrophys. Vol. 442, Issue 2, Novemb. I 2005,
+  pp.615-627}, 442:615--627, jul 2005.
+
+\bibitem[SRP06]{Sestito2006}
+P.~Sestito, S.~Randich, y R.~Pallavicini.
+\newblock {Lithium and metallicity in the intermediate age open cluster NGC
+  752}.
+\newblock {\em ESO Astrophys. Symp.}, 2006:179--180, 2006.
+
+\bibitem[SSSS82]{Spite1982}
+F.~Spite, M.~Spite, F.~Spite, y M.~Spite.
+\newblock {Abundance of lithium in unevolved stars and old disk stars :
+  Interpretation and consequences.}
+\newblock {\em A{\&}A}, 115:357--366, 1982.
+
+\bibitem[SSW83]{Stahler1983}
+S.~W. Stahler, Stahler, y S.~W.
+\newblock {The birthline for low-mass stars.}
+\newblock {\em ApJ}, 274:822--829, nov 1983.
+
+\bibitem[Sta14]{Stanley2014}
+Sabine Stanley.
+\newblock {Magnetic Field Generation in Planets}.
+\newblock {\em Encycl. Sol. Syst.}, páginas 121--136, jan 2014.
+
+\bibitem[SVP{\etalchar{+}}03]{Spergel2003}
+D.~N. Spergel, L.~Verde, H.~V. Peiris, E.~Komatsu, M.~R. Nolta, C.~L. Bennett,
+  M.~Halpern, G.~Hinshaw, N.~Jarosik, A.~Kogut, M.~Limon, S.~S. Meyer, L.~Page,
+  G.~S. Tucker, J.~L. Weiland, E.~Wollack, y E.~L. Wright.
+\newblock { First‐Year Wilkinson Microwave Anisotropy Probe ( WMAP )
+  Observations: Determination of Cosmological Parameters }.
+\newblock {\em Astrophys. J. Suppl. Ser.}, 148(1):175--194, sep 2003.
+
+\bibitem[TBL93]{Thoul1993}
+Anne~A. Thoul, John~N. Bahcall, y Abraham Loeb.
+\newblock {Element Diffusion in the Solar Interior}.
+\newblock {\em ApJ}, 421:828, apr 1993.
+
+\bibitem[TR01]{Tschape2001}
+R.~Tsch{\"{a}}pe y G.~R{\"{u}}diger.
+\newblock {Rotation-induced lithium depletion of solar-type stars in open
+  stellar clusters}.
+\newblock {\em Astron. Astrophys.}, 377(1):84--89, oct 2001.
+
+\bibitem[UDO02]{UdDoula2002}
+Asif Ud-Doula y Stanley~P. Owocki.
+\newblock {Dynamical Simulations of Magnetically Channeled Line‐driven
+  Stellar Winds. I. Isothermal, Nonrotating, Radially Driven Flow}.
+\newblock {\em Astrophys. J.}, 576(1):413--428, sep 2002.
+
+\bibitem[UDOT08]{Ud-Doula2008}
+Asif Ud-Doula, Stanley~P. Owocki, y Richard H.~D. Townsend.
+\newblock {Dynamical Simulations of Magnetically Channeled Line-Driven Stellar
+  Winds: III. Angular Momentum Loss and Rotational Spindown}.
+\newblock oct 2008.
+
+\bibitem[WD67]{Weber1967}
+Edmund~J Weber y Leverett Davis.
+\newblock {THE ANGULAR MOMENTUM OF THE SOLAR WIND*}.
+\newblock Technical report, 1967.
+
+\bibitem[WGM{\etalchar{+}}10]{Wade2010}
+G~A Wade, J~H Grunhut, W~L~F Marcolino, F~Martins, I~Howarth, Y~Naz{\'{e}}, y
+  N~Walborn.
+\newblock {Of ?p stars: A class of slowly rotating magnetic massive stars}.
+\newblock Technical Report 272, 2010.
+
+\bibitem[ZZR72]{Zappala1972}
+R.~R. Zappala, Zappala, y R.~R.
+\newblock {Lithium Abundances of Stars in Open Clusters.}
+\newblock {\em ApJ}, 172:57, feb 1972.
+
+\end{thebibliography}

@@ -1,0 +1,103 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\nonumberline Agradecimientos}{\es@scroman {ix}}{chapter*.7}%
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\nonumberline Summary}{\es@scroman {xi}}{chapter*.8}%
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\nonumberline Introducción}{\es@scroman {xiii}}{chapter*.9}%
+\contentsline {part}{\numberline {I}El Ciclo del Litio}{1}{part.10}%
+\contentsline {chapter}{\numberline {1}¿Por qué el Litio?}{3}{chapter.11}%
+\contentsline {section}{\numberline {1.1}Introducción}{3}{section.12}%
+\contentsline {chapter}{\numberline {2}El ciclo del litio}{5}{chapter.13}%
+\contentsline {section}{\numberline {2.1}Introducción}{5}{section.14}%
+\contentsline {section}{\numberline {2.2}El Li primordial}{6}{section.15}%
+\contentsline {section}{\numberline {2.3}Evolución del Li en la presecuencia principal (PMS)}{7}{section.18}%
+\contentsline {section}{\numberline {2.4}Evolución del Li en la secuencia principal (MS)}{9}{section.21}%
+\contentsline {section}{\numberline {2.5}Mecanismos de destrucción de Li}{10}{section.23}%
+\contentsline {subsection}{\numberline {2.5.1}Li y metalicidad}{10}{subsection.24}%
+\contentsline {subsection}{\numberline {2.5.2}Li y convección}{11}{subsection.26}%
+\contentsline {subsection}{\numberline {2.5.3}Li y difusión}{11}{subsection.27}%
+\contentsline {subsection}{\numberline {2.5.4}Li y exoplanetas}{12}{subsection.28}%
+\contentsline {subsection}{\numberline {2.5.5}Li y rotación}{14}{subsection.30}%
+\contentsline {subsection}{\numberline {2.5.6}A qué se debe esta merma de Li}{14}{subsection.31}%
+\contentsline {section}{\numberline {2.6}El litio y las reacciones nucleares}{15}{section.32}%
+\contentsline {part}{\numberline {II}Ciencia de datos}{19}{part.37}%
+\contentsline {chapter}{\numberline {3}Ciencia de datos}{21}{chapter.38}%
+\contentsline {section}{\numberline {3.1}Introducción}{21}{section.39}%
+\contentsline {section}{\numberline {3.2}Proceso de la ciencia de datos}{21}{section.40}%
+\contentsline {section}{\numberline {3.3}Herramientas}{23}{section.50}%
+\contentsline {subsection}{\numberline {3.3.1}Octave}{23}{subsection.51}%
+\contentsline {subsection}{\numberline {3.3.2}TOPCAT}{23}{subsection.52}%
+\contentsline {section}{\numberline {3.4}Catálogos de datos}{24}{section.53}%
+\contentsline {subsection}{\numberline {3.4.1}Gaia}{24}{subsection.54}%
+\contentsline {subsection}{\numberline {3.4.2}Gaia-ESO Spectroscopic Survey (GES)}{25}{subsection.55}%
+\contentsline {subsection}{\numberline {3.4.3}Combinando Gaia y GES}{25}{subsection.56}%
+\contentsline {part}{\numberline {III}Rotación y campos magnéticos de intensidad fija}{29}{part.57}%
+\contentsline {chapter}{\numberline {4}Rotación y campos magnéticos de intensidad constante}{31}{chapter.58}%
+\contentsline {section}{\numberline {4.1}Introducción}{31}{section.59}%
+\contentsline {section}{\numberline {4.2}El Sol y la rotación}{33}{section.63}%
+\contentsline {section}{\numberline {4.3}Efectos de los campos magnéticos}{35}{section.68}%
+\contentsline {subsubsection}{\numberline {4.3.0.1}El mecanismo de dinamo}{36}{subsubsection.69}%
+\contentsline {subsubsection}{\numberline {4.3.0.2}Campos magnéticos internos}{36}{subsubsection.70}%
+\contentsline {subsubsection}{\numberline {4.3.0.3}Campos magnéticos superficiales}{36}{subsubsection.72}%
+\contentsline {section}{\numberline {4.4}Efectos del frenado magnético}{37}{section.73}%
+\contentsline {subsection}{\numberline {4.4.1}Formalismos de frenado magnético}{38}{subsection.76}%
+\contentsline {subsubsection}{\numberline {4.4.1.1}Frenado magnético de intesidad fija según Ud-Doula \& Owocki (2002)}{38}{subsubsection.77}%
+\contentsline {section}{\numberline {4.5}Efectos de la distrubución de AML}{41}{section.92}%
+\contentsline {subsection}{\numberline {4.5.1}Formalismo para la distribución de AML}{41}{subsection.93}%
+\contentsline {chapter}{\numberline {5}Modules for Experiments in Stellar Astrophysics - MESA}{43}{chapter.95}%
+\contentsline {section}{\numberline {5.1}Introducción}{43}{section.96}%
+\contentsline {subsection}{\numberline {5.1.1}El proyecto MESA}{44}{subsection.97}%
+\contentsline {section}{\numberline {5.2}¿Cómo trabajar con MESA?}{45}{section.98}%
+\contentsline {subsubsection}{\numberline {5.2.0.1}Fichero de configuración}{45}{subsubsection.99}%
+\contentsline {subsubsection}{\numberline {5.2.0.2}Controlando la salida}{46}{subsubsection.101}%
+\contentsline {subsection}{\numberline {5.2.1}¿Cómo extender MESA?}{47}{subsection.102}%
+\contentsline {subsubsection}{\numberline {5.2.1.1}Activación de capacidades extras}{47}{subsubsection.103}%
+\contentsline {subsubsection}{\numberline {5.2.1.2}Extensión mediante hooks}{47}{subsubsection.104}%
+\contentsline {subsubsection}{\numberline {5.2.1.3}Extensión ficheros de salida}{50}{subsubsection.193}%
+\contentsline {subsection}{\numberline {5.2.2}Módulos de interés de MESA}{50}{subsection.195}%
+\contentsline {subsubsection}{\numberline {5.2.2.1}Módulo químico - chem}{50}{subsubsection.196}%
+\contentsline {subsubsection}{\numberline {5.2.2.2}Reacciones termonucleares – rates}{51}{subsubsection.197}%
+\contentsline {subsubsection}{\numberline {5.2.2.3}Reacciones nucleares – net}{51}{subsubsection.198}%
+\contentsline {subsubsection}{\numberline {5.2.2.4}Teoría de longitud de mezcla – mlt}{51}{subsubsection.199}%
+\contentsline {subsubsection}{\numberline {5.2.2.5}Módulo de difusión – diffusion}{51}{subsubsection.200}%
+\contentsline {subsubsection}{\numberline {5.2.2.6}Otros parámetros de interés}{52}{subsubsection.201}%
+\contentsline {section}{\numberline {5.3}¿Cómo visualizar los resultados de MESA?}{52}{section.202}%
+\contentsline {subsection}{\numberline {5.3.1}Visualización con pgstart}{52}{subsection.203}%
+\contentsline {subsection}{\numberline {5.3.2}Visualización con terceras herramientas}{52}{subsection.204}%
+\contentsline {section}{\numberline {5.4}Extendiendo MESA - Parte I}{52}{section.205}%
+\contentsline {subsection}{\numberline {5.4.1}Simulaciones acordes al marco teórico estándar de MESA}{53}{subsection.206}%
+\contentsline {subsection}{\numberline {5.4.2}Simulaciones extendiendo el marco teórico estándar de MESA}{57}{subsection.293}%
+\contentsline {subsection}{\numberline {5.4.3}Rutina de inicialización para las simulaciones}{58}{subsection.294}%
+\contentsline {subsection}{\numberline {5.4.4}Rutina de par de torsión}{59}{subsection.349}%
+\contentsline {subsection}{\numberline {5.4.5}Rutina de frenado magnético}{60}{subsection.372}%
+\contentsline {subsubsection}{\numberline {5.4.5.1}Rutina de frenado magnético de intensidad constante}{62}{subsubsection.474}%
+\contentsline {subsection}{\numberline {5.4.6}Rutina de distribución de pérdida de momento angular}{62}{subsection.503}%
+\contentsline {chapter}{\numberline {6}Resultados de frenado magnético de intensidad fija}{65}{chapter.528}%
+\contentsline {section}{\numberline {6.1}Configuración de los modelos}{65}{section.529}%
+\contentsline {section}{\numberline {6.2}Modelos de evolución estelar}{65}{section.530}%
+\contentsline {subsection}{\numberline {6.2.1}Evolución de Li sin MB}{68}{subsection.532}%
+\contentsline {subsection}{\numberline {6.2.2}Evolución del Li con MB de intensidad fija}{70}{subsection.537}%
+\contentsline {subsection}{\numberline {6.2.3}Evolución alternativa del Li con MB}{75}{subsection.547}%
+\contentsline {section}{\numberline {6.3}Conclusiones}{79}{section.551}%
+\contentsline {part}{\numberline {IV}Rotación y campos magnéticos de intensidad variable}{81}{part.557}%
+\contentsline {chapter}{\numberline {7}Rotación y campos magnéticos de intensidad variable}{83}{chapter.558}%
+\contentsline {section}{\numberline {7.1}Introducción}{83}{section.559}%
+\contentsline {section}{\numberline {7.2}Frenado magnético según Gallet \& Bouvier (2013)}{83}{section.560}%
+\contentsline {section}{\numberline {7.3}Efectos de la longitud de mezcla}{86}{section.577}%
+\contentsline {subsection}{\numberline {7.3.1}MLT $\alpha $ variable según Sonoi et al. (2019)}{87}{subsection.579}%
+\contentsline {section}{\numberline {7.4}Extendiendo MESA - Parte II}{87}{section.583}%
+\contentsline {subsection}{\numberline {7.4.1}Rutina de frenado magnético de intensidad variable}{87}{subsection.584}%
+\contentsline {subsection}{\numberline {7.4.2}Rutina de cálculo de intensidad de campo magnético}{88}{subsection.617}%
+\contentsline {subsection}{\numberline {7.4.3}Rutina de $\alpha _{\mathrm {MLT}}$ variable}{89}{subsection.675}%
+\contentsline {chapter}{\numberline {8}Resultados de frenado magnético de intensidad variable}{91}{chapter.716}%
+\contentsline {section}{\numberline {8.1}Configuración de los modelos}{91}{section.717}%
+\contentsline {section}{\numberline {8.2}Modelos de evolución estelar}{91}{section.718}%
+\contentsline {subsection}{\numberline {8.2.1}Evolución del Li con MB de intensidad variable}{91}{subsection.719}%
+\contentsline {subsection}{\numberline {8.2.2}Evolución del Li con MB de intensidad y $\alpha _{\mathrm {MLT}}$ variables}{91}{subsection.720}%
+\contentsline {section}{\numberline {8.3}Comparativa MB intensidad fija vs variable}{91}{section.721}%
+\contentsline {section}{\numberline {8.4}Conclusiones finales}{91}{section.722}%
+\contentsline {chapter}{\numberline {A}Primer apéndice}{93}{appendix.723}%
+\contentsline {chapter}{Acrónimos}{95}{section*.724}%
+\contentsline {chapter}{Glosario}{97}{section*.726}%
+\contentsline {chapter}{\nonumberline Bibliograf\'{\i }a}{99}{chapter*.728}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

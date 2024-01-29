@@ -1,0 +1,118 @@
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% Plantilla, basada en la clase `scrbook` del paquete KOMA-script,  para la elaboración de un TFG siguiendo las directrices del la comisión del Grado en Matemáticas de la Universidad de Granada.
+
+% Francisco Torralbo Torralbo
+
+\documentclass[print, color]{ugrTFG}
+
+% VERSIÓN ELECTRÓNICA PARA TABLETA
+% Cambiando la opción "print" por "tablet" generaremos un pdf adaptado para leerlo en tabletas de 9 pulgadas.
+
+% -------------------------------------------------------------------
+% INFORMACIÓN DEL TFG Y EL AUTOR
+% -------------------------------------------------------------------
+
+\newcommand{\miTitulo}{Título del trabajo\xspace}
+\newcommand{\miNombre}{Roque Caballero Navarro\xspace}
+\newcommand{\miGrado}{Programa de Doctorado en Física y Ciencias del Espacio}
+\newcommand{\miFacultad}{Escuela de Doctorado de Ciencias, Tecnologías e Ingeniería}
+\newcommand{\miUniversidad}{Universidad de Granada}
+
+% Añadir tantos tutores como sea necesario separando cada uno de ellos mediante el comando `\medskip` y una línea en blanco
+\newcommand{\miTutor}{
+  A. Garc\'ia Hern\'andez \\ \emph{Dept. Theoretical Physics and Cosmology} 
+
+  % Añadir tantos tutores como sea necesario. 
+
+  \medskip
+  J.~C. Su\'arez \\ \emph{Dept. Theoretical Physics and Cosmology}
+}
+\newcommand{\miCurso}{2023-2024\xspace}
+
+\hypersetup{
+	pdftitle={\miTitulo},
+	pdfauthor={\textcopyright\ \miNombre, \miFacultad, \miUniversidad}
+}
+\usepackage{parskip}
+\usepackage[acronym, toc]{glossaries}
+\makeglossaries
+\input glossary.tex
+\begin{document}
+\pagenumbering{roman}
+\maketitle
+
+
+% -------------------------------------------------------------------
+% FRONTMATTER
+% -------------------------------------------------------------------
+\frontmatter % Desactiva la numeración de capítulos y usa numeración romana para las páginas
+\input definitions.tex
+\input{preliminares/declaracion-originalidad}   
+\input{preliminares/dedicatoria}                % Opcional
+\input{preliminares/tablacontenidos}            
+\input{preliminares/agradecimientos}            % Opcional
+
+\input{preliminares/summary}                    
+\input{preliminares/introduccion}               
+
+% -------------------------------------------------------------------
+% MAINMATTER
+% -------------------------------------------------------------------
+\mainmatter % activa la numeración de capítulos, resetea la numeración de las páginas y usa números arábigos
+
+\part{El Ciclo del Litio} % Dividir un libro en partes OPCIONAL
+\input{capitulos/capitulo01}
+\input{capitulos/capitulo02}
+
+\cleardoublepage
+\part{Ciencia de datos}
+\input{capitulos/capitulo08}
+
+
+\cleardoublepage
+\part{Rotación y campos magnéticos de intensidad fija}
+\input{capitulos/capitulo03}
+\input{capitulos/capitulo04}
+\input{capitulos/capitulo05}
+
+\cleardoublepage
+\part{Rotación y campos magnéticos de intensidad variable}
+\input{capitulos/capitulo06}
+\input{capitulos/capitulo07}
+
+% -------------------------------------------------------------------
+% APPENDIX: Opcional
+% -------------------------------------------------------------------
+\appendix % Reinicia la numeración de los capítulos y usa letras para numerarlos
+\pdfbookmark[-1]{Apéndices}{appendix} % Alternativamente podemos agrupar los apéndices con un nuevo \part{Apéndices}
+
+\input{apendices/apendice01}
+% Añadir tantos apéndices como sea necesario 
+
+% -------------------------------------------------------------------
+% GLOSARIO: Opcional
+% -------------------------------------------------------------------
+\printglossary[type=\acronymtype, title=Acrónimos, toctitle=Acrónimos]
+\printglossary[title=Glosario, toctitle=Glosario]
+
+%\input{glosario} 
+
+% -------------------------------------------------------------------
+% BACKMATTER
+% -------------------------------------------------------------------
+
+\backmatter % Desactiva la numeración de los capítulos
+\pdfbookmark[-1]{Referencias}{BM-Referencias}
+
+% BIBLIOGRAFÍA
+%-------------------------------------------------------------------
+
+\bibliographystyle{alpha-es.bst} 
+\begin{small} 
+  \bibliography{library.bib}
+\end{small}
+
+
+\end{document}
