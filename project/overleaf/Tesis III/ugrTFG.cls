@@ -48,6 +48,10 @@
 \RequirePackage{mathtools}
 \RequirePackage{isotope}
 \RequirePackage{chngcntr}
+\RequirePackage[table]{xcolor}
+\RequirePackage{longtable}
+\RequirePackage{threeparttable}
+
 %\RequirePackage{natbib}
 \counterwithout{equation}{chapter}
 
@@ -90,6 +94,7 @@
   \renewcommand{\sfdefault}{iwona} 
 }
 \RequirePackage{inconsolata}
+%\RequirePackage{zi4}
 
 \RequirePackage{setspace}
 \RequirePackage{xspace} % Para problemas de espaciado al definir comandos

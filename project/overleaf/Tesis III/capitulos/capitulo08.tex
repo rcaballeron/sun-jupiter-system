@@ -56,6 +56,81 @@ Cuando se trata de extraer datos de diferentes catálogos astronómicos, TOPCAT 
 
 En resumen, TOPCAT es una herramienta integral que proporciona capacidades robustas para trabajar con el VO y extraer datos de varios catálogos astronómicos. Está diseñado para facilitar la manipulación de tablas, para que los usuarios puedan concentrarse en hacer ciencia.\par
 
+
+\begin{lstlisting}[language=SQL, caption={Consulta TOPCAT sobre el catálogo GES DR5 para obtener los componentes de los cúmulos abiertos para los cuales se ha determinado una pertenecia mínima del 0.95\%. Las columnas obtenidas informan sobre la identificador de la estrella, $\teff$, $\gsurf$, $\feh$, A(Li) y sus errores asociados, y el identificador del cúmulo al que pertenece.}, label={lst:consulta}]
+	SELECT object,teff,e_teff,logg,e_logg,feh,e_feh,li1,e_li1,ges_fld
+	FROM ges_dr5 
+	WHERE ges_fld IN (
+		SELECT DISTINCT ges_fld
+		FROM ges_dr5 
+		WHERE ges_type 
+		LIKE 'GE_CL%' 
+			OR ges_type LIKE 'GE_SD_OC%' 
+			OR ges_type LIKE 'AR_CL%' 
+			OR ges_type LIKE 'AR_SD_OC' )
+	AND mem3d >= 0.95
+	AND li1 IS NOT NULL
+	AND feh IS NOT NULL
+	AND ges_fld IS NOT NULL
+	AND teff IS NOT NULL
+	AND logg IS NOT NULL
+	AND nn_teff IS NOT NULL
+	AND nn_logg IS NOT NULL
+	AND nn_feh IS NOT NULL
+	ORDER BY ges_fld
+\end{lstlisting}
+
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_query.pdf}
+	\caption{PDF}
+	\label{fig:tap_query}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_ges_service.pdf}
+	\caption{PDF}
+	\label{fig:tap_ges_service}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_multi_sources.pdf}
+	\caption{PDF}
+	\label{fig:tap_multi_services}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_schema.pdf}
+	\caption{PDF}
+	\label{fig:tap_schema}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_schema_detail.pdf}
+	\caption{PDF}
+	\label{fig:tap_schema_detail}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/tap_service.pdf}
+	\caption{PDF}
+	\label{fig:tap_service}
+\end{figure}
+
+
+
+
+
+
 \section{Catálogos de datos}
 Una etapa fundamental de toda investigación es la de la confrontación de los datos arrojados con los modelos contra los disponibles en la literatura ya existente,
 
@@ -77,6 +152,13 @@ Otra fuente de información valiosa para nuestra investigación procedente de am
 
 Como acabamos de adelantar, la investigación de los campos magnéticos en estrellas similares al Sol. y en particular de aquéllas que se encuentran en cúmulos abiertos, se beneficia enormemente de los datos proporcionados por ambos catálogos. Los campos magnéticos juegan un papel importante en todas las etapas de la evolución estelar. En estrellas similares al Sol, se generan en las capas convectivas exteriores. Estudiar los campos magnéticos a gran escala de estas estrellas puede mejorar nuestra comprensión sobre los mismos y proporcionar restricciones observacionales para los modelos que estudian cómo se generan, la topología que presentan y sus intensidades. Los datos de los catálogos nos asisten a la hora de identificar y estudiar las estrellas con alta actividad magnética, lo que puede proporcionar pistas sobre la dinámica interna de las estrellas y su evolución. Combinando esta información con la velocidad angular, nos puede proporcionar con indicios de cómo se interrelacionan ambos fenómenos. Adicionalmente, cruzando estos datos con la información de los cúmulos abiertos, obtenemos una visión más clara de cómo los campos magnéticos varían entre las estrellas de la misma edad y composición química.\par
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/tesis/open_cluster_sample.pdf}
+	\caption{Tabla obtenida de \cite{Bragaglia2022}. Las columnas 1 a 7 listan la denominación del cúmulo, las coordenadas de ascensión recta y declinación, la edad estimada del cúmulo, la distancia en parsecs (módulo de distancia convertido), la posición Z en coordenadas cartesianas galácticas, y la distancia desde el centro galáctico suponiendo que el Sol está a 8340pc. Las columnas 8 y 9 enumeran el número de espectros y objetivos, mientras que la media de [Fe/H] y la desviación estándar se dan en la columna 10.}
+	\label{fig:open_cluster_sample}
+\end{figure}
+
 
 
 
@@ -86,7 +168,7 @@ Además, en estrellas jóvenes y de baja masa, la presencia de fuertes campos ma
 
 Por lo tanto, al estudiar las abundancias de Litio en las estrellas, los astrónomos pueden obtener pistas sobre la intensidad de los campos magnéticos en el interior de las estrellas. Sin embargo, la interpretación de las abundancias de
 
-Los campos magnéticos en las estrellas pueden tener un impacto significativo en la abundancia de Litio presente en ellas. El Litio se quema fácilmente a una temperatura relativamente baja (2.5 x 10^6 K) en el interior estelar³. Por lo tanto, es un diagnóstico extraordinariamente sensible de la estructura y evolución estelar³.
+Los campos magnéticos en las estrellas pueden tener un impacto significativo en la abundancia de Litio presente en ellas. El Litio se quema fácilmente a una temperatura relativamente baja (2.5 x $10^6$ K) en el interior estelar³. Por lo tanto, es un diagnóstico extraordinariamente sensible de la estructura y evolución estelar³.
 
 La abundancia de Litio puede proporcionar información valiosa sobre la edad y la historia de las estrellas. En particular, puede ayudar a rastrear la mezcla convectiva en el interior de las estrellas, que está influenciada por la rotación estelar. La rotación, a su vez, puede ser modulada por la presencia de campos magnéticos a través del frenado magnético.
 
