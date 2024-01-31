@@ -1563,10 +1563,10 @@ function age_vs_teff_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axi
   plot(sun_age, sun_log_g, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
 
   % Plot reference marks
-  line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
-  line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
-  line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
-  line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", [0.3,0.3,0.3]);
+  line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
+  line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
 
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
@@ -2633,18 +2633,18 @@ function plot_3_5G_var_vel(rot_vels)
   age_vs_li_plots(gauss_fields(idx_3_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 3.5G & var. rotational velocity', 'li_var_vel_3_5g');
 end
 
-function plot_4_0G_var_vel(rot_vels)
+function plot_4_0G_var_vel(rot_vels,idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 4.0G & var. rotational velocity', 'li_var_vel_4_0g');
+  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_4_0g', num2str(idx));
 end
 
-function plot_4_0G_var_vel_st(rot_vels)
+function plot_4_0G_var_vel_st(rot_vels,idx)
   global gauss_fields;
   global idx_4_0G;
   rotational_vels = ['0196crit'; '0196crit_st'];
-  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 4.0G & var. rotational velocity', 'li_var_vel_4_0g');
+  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_4_0g', num2str(idx));
 end
 
 function plot_4_0G_var_vel_vc5(rot_vels)
@@ -2794,11 +2794,11 @@ function plot_vel_rot_3_5G_var_vel(rot_vels)
   age_vs_vel_plots(gauss_fields(idx_3_5G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - 3.5G & var. rotational velocity', 'rot_vel_var_vel_3_5g');
 end
 
-function plot_vel_rot_4G_var_vel(rot_vels)
+function plot_vel_rot_4G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_vel_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g');
+  age_vs_vel_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', '', 'rot_vel_var_vel_4_0g', num2str(idx));
 end
 
 function plot_vel_rot_4G_var_vel_vc5_md5(rot_vels)
@@ -2810,11 +2810,11 @@ function plot_vel_rot_4G_var_vel_vc5_md5(rot_vels)
 end
 
 
-function plot_vel_rot_4G_var_vel_z1(rot_vels)
+function plot_vel_rot_4G_var_vel_z1(rot_vels, idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_vel_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 2, [3.0e9, 1.0e10], 'northeast', 'Rotational velocity - 4.0G & var. rotational velocity', 'rot_vel_var_vel_4_0g_z1');
+  age_vs_vel_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 2, [3.0e9, 1.0e10], 'northeast', '', 'rot_vel_var_vel_4_0g_z1', num2str(idx));
 end
 
 function plot_vel_rot_4G_var_vel_z1_vc5_md5(rot_vels)
@@ -3465,6 +3465,7 @@ function paper2()
 
   #plot_XG_var_vel(rotational_vels([idx_1425crit],:),1);
   plot_0G_var_vel(rot_vels,0);
+  plot_4_0G_var_vel(rot_vels,4);
   #plot_0G_var_vel_z1(rot_vels,0);
   plot_XG_var_vel(rot_vels5,1);
   #plot_XG_var_vel(rot_vels6,2);
@@ -3802,7 +3803,13 @@ function main()
   %plot_0G_var_vel(rot_vels,0);
   %plot_hr_0G_var_vel(rot_vels,0);
   %plot_vel_rot_0G_var_vel(rot_vels,0);
-  plot_hr_0G_var_vel_z1(rot_vels,0);
+  %plot_hr_0G_var_vel_z1(rot_vels,0);
+  plot_age_vs_teff_XG(rot_vels11,3);
+  %plot_age_vs_teff_XG_z1(rot_vels7,3);
+  %plot_4_0G_var_vel(rot_vels,4);
+  %plot_vel_rot_4G_var_vel(rot_vels,4);
+  %plot_vel_rot_4G_var_vel_z1(rot_vels,4);
+  %plot_omega_vs_mag_field_XG(rot_vels11, false, 3);
 
   %filename  = "/home/rcaballeron/MESA/workspace/sun-jupiter-system/Docs/runs/run_paper/4g_12kms/1M_photosphere_history.data";
   %calculate_ZAMS(filename);

@@ -33,6 +33,19 @@ Dentro del proceso de datos podemos enumerar una serie de etapas encaminadas a e
 
 Como hemos adelantado, los pasos anteriores no de dejan de ser un marco de trabajo genérico que debe de ser adaptado a nuestras necesidades específicas. En nuestro caso en particular, no hemos recurrido al uso de herramientas de aprendizaje automático, por lo que la correspondiente etapa no ha formado parte de nuestro proceso de ciencia de datos. Del mismo modo, nuestro modelo no ha sido incorporado, integrado con ningún sistema. De momento este no ha sido el caso pero no sería una insensatez pensar que pudiese pasar a incorporarse como una extensión a la herramienta que hemos utilizado para nuestras simulaciones, si lo autores de la misma lo considerasen oportuno.
 
+
+\section{Catálogos de datos}
+Una etapa fundamental de toda investigación es la de la confrontación de los datos arrojados con los modelos contra los disponibles en la literatura ya existente,
+
+\subsection{Gaia}
+El catálogo Gaia es un mapa tridimensional completo de la Vía Láctea, creado utilizando datos del telescopio espacial Gaia. Éste contiene datos de alrededor de 1.46 mil millones de estrellas, entre los que se encuentra sus posiciones en el cielo, paralaje y movimiento propio. Además, incluye sus magnitudes en diferentes bandas espectrales para una gran cantidad de ellas. El catálogo Gaia es particularmente útil para estudiar estrellas similares al Sol, ya que proporciona un censo único de estrellas dentro de 100 pc de nuestro Sol. Esto lo convierte en un recurso invaluable para los astrónomos y astrofísicos que buscan comprender mejor las propiedades y la evolución de estas estrellas.\par
+
+\subsection{Gaia-ESO Spectroscopic Survey (GES)}
+El Gaia-ESO Survey (GES) \cite{Gilmore2012,Randich2013,Randich2022} es un catálogo público enfocado al análisis espectroscópico de un número importante de estrellas recogidas en el catálogo Gaia. Se llevó a cabo con el instrumento Espectrógrafo Multielemento de Fibra de Gran Conjunto (FLAMES) y el Espectrógrafo Echelle UV-Visual (UVES) en el VLT. Su objetivo es proporcionar una visión homogénea de las distribuciones de cinemática y abundancias elementales en la Vía Láctea, en el campo y en cúmulos abiertos (OC), hasta magnitud 19.\par 
+
+Dentro de la iniciativa GES se han observado más de 110 000 estrellas, proporcionando velocidades radiales y rotacionales proyectadas, parámetros estelares tales como: temperatura efectiva, gravedad superficial y metalicidad, abundancias de varios elementos, entre los que se encuentra el Litio, para aproximadamente 1/3 de la muestra, y parámetros específicos para rastrear la acreción y actividad en estrellas jóvenes. El catálogo GES es único en lo que se refiere a la observación de estrellas de todos los tipos espectrales con análisis dedicados y especializados, lo que la hace particularmente útil para estudiar estrellas similares al Sol.\par
+
+
 \section{Herramientas}
 \subsection{Modules for Experiments in Stellar Astrophysics - (MESA)}
 Para la realización de este tesis doctoral nos hemos apoyado en la herramienta de evolución estelar \textit{Modules for Experiments in Stellar Astrophysics} (MESA). MESA ha jugado un papel fundamental en nuestra investigación y por ello, debido a su importancia, le hemos dedicado un capítulo en exclusiva en el que entramos a fondo en sus características, estructura, módulos que lo componen, y muy especialmente en cómo extender la física que incorpora sus modelos mediante la programación de nuestras propias rutinas.\par
@@ -61,13 +74,13 @@ En resumen, TOPCAT es una herramienta integral que proporciona capacidades robus
 	SELECT object,teff,e_teff,logg,e_logg,feh,e_feh,li1,e_li1,ges_fld
 	FROM ges_dr5 
 	WHERE ges_fld IN (
-		SELECT DISTINCT ges_fld
-		FROM ges_dr5 
-		WHERE ges_type 
-		LIKE 'GE_CL%' 
-			OR ges_type LIKE 'GE_SD_OC%' 
-			OR ges_type LIKE 'AR_CL%' 
-			OR ges_type LIKE 'AR_SD_OC' )
+	SELECT DISTINCT ges_fld
+	FROM ges_dr5 
+	WHERE ges_type 
+	LIKE 'GE_CL%' 
+	OR ges_type LIKE 'GE_SD_OC%' 
+	OR ges_type LIKE 'AR_CL%' 
+	OR ges_type LIKE 'AR_SD_OC' )
 	AND mem3d >= 0.95
 	AND li1 IS NOT NULL
 	AND feh IS NOT NULL
@@ -126,20 +139,7 @@ En resumen, TOPCAT es una herramienta integral que proporciona capacidades robus
 	\label{fig:tap_service}
 \end{figure}
 
-
-
-
-
-
-\section{Catálogos de datos}
-Una etapa fundamental de toda investigación es la de la confrontación de los datos arrojados con los modelos contra los disponibles en la literatura ya existente,
-
-\subsection{Gaia}
-El catálogo Gaia es un mapa tridimensional completo de la Vía Láctea, creado utilizando datos del telescopio espacial Gaia. Éste contiene datos de alrededor de 1.46 mil millones de estrellas, entre los que se encuentra sus posiciones en el cielo, paralaje y movimiento propio. Además, incluye sus magnitudes en diferentes bandas espectrales para una gran cantidad de ellas. El catálogo Gaia es particularmente útil para estudiar estrellas similares al Sol, ya que proporciona un censo único de estrellas dentro de 100 pc de nuestro Sol. Esto lo convierte en un recurso invaluable para los astrónomos y astrofísicos que buscan comprender mejor las propiedades y la evolución de estas estrellas.\par
-
-\subsection{Gaia-ESO Spectroscopic Survey (GES)}
-GES es un catálogo público enfocado al análisis espectroscópico de un número importante de estrellas recogidas en el catálogo Gaia. Se llevó a cabo con el instrumento FLAMES en el VLT. Su objetivo es proporcionar una visión homogénea de las distribuciones de cinemática y abundancias elementales en la Vía Láctea. Dentro de la iniciativa GES se han observado más de 100 000 estrellas, proporcionando velocidades radiales y rotacionales proyectadas, parámetros estelares tales como: temperatura efectiva, gravedad superficial y metalicidad, abundancias de varios elementos, entre los que se encuentra el Litio, y parámetros específicos para rastrear la acreción y actividad en estrellas jóvenes. El catálog GES es único en lo que se refiere a la observación de estrellas de todos los tipos espectrales con análisis dedicados y especializados, lo que la hace particularmente útil para estudiar estrellas similares al Sol.\par
-
+\section{Selección de datos}
 \subsection{Combinando Gaia y GES}
 
 La combinación de los datos de los catálogos Gaia y GES puede proporcionar una visión completa de las propiedades y evolución de las estrellas similares al Sol. El catálogo Gaia proporciona datos de posición precisos y paralajes, mientras que la GES ofrece información espectroscópica detallada. Esta combinación permite una comprensión más completa de estas estrellas, incluyendo su cinemática, composiciones químicas y potencial para albergar planetas. Al proporcionar una visión más completa y detallada de estas estrellas, podemos obtener una comprensión más profunda de las propiedades y evolución de las estrellas similares al Sol, lo que representa una fuente de información que se antoja invaluable para la investigación en astrofísica. Estamos ante un conjunto de herramientas poderoso para cualquier astrofísico que estudie estrellas similares al Sol.\par
@@ -151,6 +151,139 @@ Por otra parte, tenemos información precisa sobre la velocidad angular de las e
 Otra fuente de información valiosa para nuestra investigación procedente de ambos catálogos es la referida a los cúmulos abiertos. Los cúmulos abiertos son grupos de estrellas que se formaron a partir de la misma nube de gas y polvo. Por lo tanto, todas las estrellas de un cúmulo abierto tienen aproximadamente la misma edad y composición química inicial. Esto los convierte en laboratorios naturales para estudiar la evolución de las estrellas a través de sus diferentes etapas. Gaia ha observado una gran cantidad de cúmulos abiertos, proporcionando datos detallados sobre sus miembros. En paralelo, GES también ha observado un gran número de ellos en un rango amplio de edades. La combinación de ambas fuentes permite estudiar la estructura y dinámica de este tipo de cúmulos, y usarlos para restringir y mejorar los modelos de evolución estelar, algo que hemos puesto en práctica en nuestra investigación.\par
 
 Como acabamos de adelantar, la investigación de los campos magnéticos en estrellas similares al Sol. y en particular de aquéllas que se encuentran en cúmulos abiertos, se beneficia enormemente de los datos proporcionados por ambos catálogos. Los campos magnéticos juegan un papel importante en todas las etapas de la evolución estelar. En estrellas similares al Sol, se generan en las capas convectivas exteriores. Estudiar los campos magnéticos a gran escala de estas estrellas puede mejorar nuestra comprensión sobre los mismos y proporcionar restricciones observacionales para los modelos que estudian cómo se generan, la topología que presentan y sus intensidades. Los datos de los catálogos nos asisten a la hora de identificar y estudiar las estrellas con alta actividad magnética, lo que puede proporcionar pistas sobre la dinámica interna de las estrellas y su evolución. Combinando esta información con la velocidad angular, nos puede proporcionar con indicios de cómo se interrelacionan ambos fenómenos. Adicionalmente, cruzando estos datos con la información de los cúmulos abiertos, obtenemos una visión más clara de cómo los campos magnéticos varían entre las estrellas de la misma edad y composición química.\par
+
+Como indica su nombre, GES pretende complementar los datos sobre paralajes y movimientos propios del satélite Gaia \cite{Mignard2005} con información extremadamente precisa sobre velocidades radiales (RVs), Li y química en general. La primera publicación de datos de Gaia (GDR1) \cite{Brown2016} data de 2016 y contiene información sobre los primeros 14 meses de funcionamiento. La segunda publicación de datos de Gaia (GDR2), \cite{Brown2018}, publicada en 2018, contenía posiciones, paralajes y movimientos propios de unos 1.300 millones de fuentes, junto con fotometría. La tercera publicación de datos de Gaia, la Gaia early data release 3 (GEDR3) \cite{Brown2021} y la Gaia data release 3 (GDR3) \cite{Brown2022}, transmiten medidas actualizadas y más precisas. GES las mejora y en su última versión (DR5.0) incluye todos los parámetros astrofísicos derivados por el consorcio Gaia-ESO \cite{Gilmore2022}. De interés para nuestra línea de investigación son:
+\begin{itemize}
+	\item Velocidades radiales y proyectadas
+	\item Parámetros estelares (temperatura efectiva, gravedad superficial y metalicidad)
+	\item Abundancias de varios elementos, entre ellos el Li
+	\item Parámetros específicos para rastrear la acreción y la actividad en estrellas jóvenes
+	\item Probabilidad de pertenencia a cúmulos
+\end{itemize}
+
+
+\subsection{Selección de cúmulos abiertos}
+GES DR5.0 proporciona información sobre 114 324 estrellas correspondientes a OCs, véase \cite{Gilmore2022} para más detalles. Seleccionamos aquellos registros que cumplen alguna de las condiciones:
+
+\begin{itemize}
+	\item GE\_CL: observado por GES, campo del programa OC
+	\item GE\_SD\_OC: observado por GES, campo estándar OC
+	\item AR\_CL: Observación del Archivo ESO, campo de programa OC
+	\item AR\_SD\_OC: Observación de archivo, campo estándar OC
+\end{itemize}
+	
+Como resultado de este primer filtrado, el número de registros seleccionados se reduce a 43.299. Sobre este subconjunto de datos realizamos otro filtrado, esta vez dirigido a seleccionar aquellos que ofrecen información no nula sobre los siguientes atributos:
+\begin{itemize}
+	\item Metalicidad
+	\item Abundancia de Li
+	\item Identificador de campo GES
+	\item Temperatura efectiva
+	\item Gravedad superficial
+	\item Probabilidad de pertenencia a un cúmulo (>= 0.95\%)
+\end{itemize}
+
+Este segundo filtrado reduce la población de estrellas a considerar a un total de 5.895 registros que se distribuyen entre los 64 OCs listados en la Tabla \ref{tab:oc_full_list}.\par
+
+Como datos de referencia tomamos un subconjunto de las observaciones obtenidas por GES. Este subconjunto consiste en aquellas estrellas que pertenecen a OCs, y entre ellas se encuentran potenciales gemelas "ocultas" de nuestro Sol. Para identificar estos últimos, se realiza una selección adicional, esta vez utilizando los valores dados por nuestros modelos durante las simulaciones para la metalicidad ($\feh$), la temperatura efectiva ($\teff$) y la gravedad superficial ($\gsurf$). Por último, nos quedan las estrellas para las que las observaciones del GES han medido valores congruentes con los resultados de nuestros modelos, a partir de los cuales obtenemos sus abundancias de Li.\par
+
+\subsection{La selección de los gemelos solares más cercanos}
+Una vez preseleccionadas las estrellas pertenecientes a los OC, nuestro interés se centra en identificar las más parecidas a nuestro Sol, es decir, las gemelas solares. Esto nos lleva a preguntarnos qué parámetros estelares debemos tener en cuenta para clasificar una estrella como gemela solar. Encontrarlos nos ayudaría a averiguar el origen de nuestro Sol y a obtener información sobre las condiciones que prevalecían en los OC en los que nacieron.\par
+
+Ya se han hecho varios intentos de encontrar hermanos y gemelos solares. Los primeros se refieren a estrellas que se formaron en el mismo cúmulo que el Sol y, por tanto, deberían tener edades y abundancias químicas muy similares a las del Sol \cite{Adibekyan2018}[ver][y referencias en él]. Por otro lado, según \cite{Strobel1996} se consideran gemelos solares las estrellas que poseen parámetros físicos fundamentales como $\teff$, $\gsurf$, $\feh$, propiedades fotométricas, composición química, edad, luminosidad, rotación y campos magnéticos son similares, si no idénticos, a los del Sol. Localizar estos gemelos solares supone un reto formidable debido a los estrictos criterios y a su dispersión por toda la Vía Láctea.\par 
+
+No es raro que, los métodos de búsqueda aplicados se orienten a encontrar las candidatas basándose en sus propiedades cinemáticas, y luego se comparan sus temperaturas, metalicidades y abundancias químicas con las de nuestro Sol. En nuestro estudio, ampliamos los criterios de selección añadiendo la gravedad superficial y la edad de la estrella. Estos dos nuevos parámetros representan un ajuste fino del proceso de búsqueda de candidatos a gemelos. Utilizamos la edad de los OC indicada en la tabla \ref{tab:oc_reduced_list} y los datos obtenidos a partir del conjunto de simulaciones MESA iniciadas con diferentes $\omegaini$, donde $\omegaini = \oomegac$, $\Omega$ es la velocidad angular de la estrella en la superficie estelar, y $\omegac$ es la velocidad superficial en el ecuador de una estrella en rotación donde la fuerza centrífuga equilibra la gravedad newtoniana. La edad derivada de estas simulaciones proporciona un parámetro crucial para nuestro análisis. Esta información nos permite determinar los demás parámetros de simulación, que posteriormente utilizaremos para compararlos con los valores asociados a las estrellas pertenecientes a los OC preseleccionados.\par
+
+\begin{table}
+	\centering
+	\begin{tabular}{ll} 
+		\hline
+		Parámetro estelar & Intervalo de selección\\
+		\hline
+		OC Age & $\pm0.1\%$ \, for age < 1 Ga \\
+		& $\pm0.15\%$ \, for age $\geq$ 1 Ga \\
+		$\teff$ & $\pm 50.0 \, \Kelvin$\\
+		$\gsurf$ & $\pm 0.05 \, \dex$\\
+		$\feh$ & $\pm 0.05 \, \dex$\\
+		\hline
+	\end{tabular}
+	\caption{Parámetros e intervalos de selección aplicados durante el proceso de triaje sobre los componentes del OC.}
+	\label{tab:sel_params}
+\end{table}
+
+De las aproximadamente 5 900 estrellas identificadas, seleccionamos aquellas cuyos valores de $\feh$, $\teff$ y $\gsurf$ se encuentran en los intervalos correspondientes definidos en la Tabla \ref{tab:sel_params} y según el siguiente proceso de filtrado: a partir de los valores dados por nuestras simulaciones para los parámetros listados en la Tabla \ref{tab:sel_params}, procedemos a seleccionar de los distintos OC aquellas estrellas que tienen valores dentro de los intervalos establecidos. En concreto, para la edad estimada de un determinado cúmulo, establecemos un intervalo de $\pm$0,1 para OCs jóvenes (edad < 1 Ga) y $\pm$0.15 para contrapartes más viejas (edad >= 1 Ga) \cite{Cantat-Gaudin2020}[refer to][for comprehensive reference values]{Cantat-Gaudin2020}. Este intervalo dependiente de la edad sirve como base para seleccionar los pasos de tiempo de simulación que se alinean con los límites de edad inferior y superior de cada grupo. Una vez encontrados estos dos pasos temporales, se reúnen los valores límite asociados para $\teff$, $\gsurf$ y $\feh$. Con estos rangos de valores procedemos entonces a seleccionar en cada uno de los OC aquellas estrellas que tienen valores para estos mismos parámetros dentro de ellos. De esta forma obtenemos finalmente las estrellas candidatas a ser comparadas con los resultados de la simulación.\par
+
+\begin{table}
+	\centering
+	\begin{tabular}{l l l l l l l} 
+		\hline
+		ObjectId & $\teff$(K) & $\gsurf$(dex) & FeH(dex) & ALi(dex) & eALi(dex) & Age(Ga)\\
+		\hline
+		8510914-1157003 & 5843 & 4.42 & -0.03 & 1.8 & 0.08 & 3.981\\ 
+		8510991-1146169 & 5797 & 4.4 & -0.01 & 1.65 & 0.08 & 3.981\\ 
+		8512177-1144050 & 5818 & 4.46 & 0 & 1.99 & 0.06 & 3.981\\ 
+		8513941-1200571 & 5792 & 4.41 & -0.02 & 1.49 & 0.13 & 3.981\\ 
+		8515559-1148381 & 5794 & 4.43 & -0.04 & 1.56 & 0.1 & 3.981\\ 
+		8520350-1147480 & 5875 & 4.47 & -0.03 & 1.21 & 0.24 & 3.981\\ 
+		\hline
+	\end{tabular}
+	\caption{M67 - Configuración de filtro: Identificador estelar GES, $\teff$(K) [5787.4892, 5887.6823], $\gsurf$(dex) [4.3979, 4.4977], $\feh$(dex) [-0.05, 0.05], Edad(Ga) [3.977, 3.985]}
+	\label{tab:oc_m67}
+\end{table}
+
+\begin{table}
+	\centering
+	\begin{tabular}{l l l l l l l} 
+		\hline
+		ObjectId & $\teff$(K) & $\gsurf$(dex) & FeH(dex) & ALi(dex) & eALi(dex) & Age(Ga)\\
+		\hline
+		7571111-6048156 & 5084 & 4.54 & 0 & 2.29 & 0.08 & 0.24\\ 
+		7595031-6044149 & 5108 & 4.52 & -0.05 & 1.92 & 0.08 & 0.24\\ 
+		7595280-6032498 & 5093 & 4.49 & -0.03 & 2.29 & 0.08 & 0.24\\ 
+		\hline
+	\end{tabular}
+	\caption{NGC2516 - Configuración de filtro: Identificador estelar GES, $\teff$(K) [5010.0324, 5111.0095], $\gsurf$(dex) [4.4405, 4.5405], $\feh$(dex) [-0.05, 0.05], Age(Ga) [0.23964, 0.24036]}
+	\label{tab:oc_ngc2516}
+\end{table}
+
+Las tablas \ref{tab:oc_m67} y \ref{tab:oc_ngc2516} resumen el subconjunto de componentes de los OC M67 y NGC2516 seleccionados durante las simulaciones para modelos inicializados con $\omegaini = 0.14$. Cada una de las tablas enumera el identificador GES de la estrella y los rangos de $\teff$, $\gsurf$, $\feh$, A(Li) y edad estimada utilizados en la simulación.
+
+
+\newpage
+\KOMAoptions{paper=landscape,pagesize}
+\recalctypearea
+
+\begin{longtable}[c]{|l l l l || c c c c c c c c c c|}
+	\hline
+	& & & & & & & & $\omegaini$ & & & & & \\
+	Open Cluster & Age (Gyr) & [Fe/H] & $N_*$ & 0.095 & 0.10 & 0.105 & 0.11 & 0.115 & 0.12 & 0.125 & 0.13 & 0.14 & 0.1425\\
+	\hline
+	Berkeley 21 & 2.138 & -0.21 & 744 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1\\
+	Berkeley 39 & 5.623 & -0.14 & 899 & 1 & 1 & 1 & 1 & 1 & 1 & 2 & 2 & 2 & 2\\
+	IC 2602 & 0.036 & -0.06 & 1836 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0\\
+	IC 4665 & 0.033 & 0.01 & 567 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0\\
+	Messier 67 & 3.981 & -0.02 & 131 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 6\\
+	NGC 2141 & 1.862 & -0.04 & 853 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+	NGC 2355 & 1 & -0.13 & 208 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+	NGC 2420 & 1.698 & -0.15 & 562 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+	NGC 2425 & 2.399 & -0.13 & 528 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+	NGC 2451 & 0.035 & -0.08 & 1656 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 2 & 1\\
+	NGC 2516 & 0.24 & -0.04 & 759 & 0 & 0 & 0 & 1 & 1 & 1 & 3 & 4 & 4 & 3\\
+	NGC 3532 & 0.398 & -0.01 & 1145 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 1\\
+	NGC 6005 & 1.259 & 0.22 & 560 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1\\
+	NGC 6259 & 0.269 & 0.18 & 494 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
+	NGC 6281 & 0.513 & -0.04 & 320 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
+	NGC 6405 & 0.035 & -0.02 & 701 & 1 & 1 & 1 & 0 & 1 & 3 & 2 & 0 & 0 & 0\\
+	NGC 6633 & 0.692 & -0.03 & 1662 & 2 & 2 & 2 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
+	NGC 6709 & 0.191 & -0.02 & 730 & 2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1\\
+	Trumpler 20 & 1.862 & 0.13 & 1213 & 3 & 3 & 3 & 2 & 2 & 2 & 2 & 2 & 2 & 2\\
+	\hline
+	\caption{Lista de los OC seleccionados. Para cada OC se indica el nombre, la edad estimada, la metalicidad y el número de componentes. Además, se muestran los diferentes $\omegaini$ utilizados en las distintas simulaciones, donde $\omegaini = \oomegac$, $\Omega$ es la velocidad angular de la estrella en la superficie estelar, y $\omegac$ es la velocidad superficial en el ecuador de una estrella en rotación donde la fuerza centrífuga equilibra la gravedad newtoniana. Para cada entrada del OC, se informa por $\omegaini$ de cuántos componentes del OC cuyos parámetros estelares, tras compararlos con los equivalentes calculados por las simulaciones, se seleccionan. Los componentes OC seleccionados se utilizan como referencia en las imágenes que se muestran en las secciones siguientes.}
+	\label{tab:oc_reduced_list}	
+\end{longtable}
+\newpage
+\KOMAoptions{paper=portrait,pagesize}
+\recalctypearea
+
 
 \begin{figure}
 	\centering
@@ -210,7 +343,6 @@ undefined. https://doi.org/10.1017/S1743921314002026.
 Membership of stars in open clusters using random forest with gaia data .... https://link.springer.com/article/10.1140/epjs/s11734-021-00205-x.
 Evidence of New Magnetic Transitions in Sun-like Stars from Gaia Data. https://www.spacedaily.com/reports/Evidence of New Magnetic Transitions in Sun like Stars from Gaia Data 999.html.
 undefined. https://doi.org/10.48550/arXiv.1310.5562.
-
 
 
 \endinput
