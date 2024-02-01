@@ -629,67 +629,6 @@ EXPLICAR QUE LOS DOS TIPOS DE RUTINAS: INTESIDAD FIJA, INTENSIDAD VARIABLE
       end subroutine other_torque_mag_brk
 \end{lstlisting}
 
-\subsubsection{Rutina de frenado magnético de intensidad constante}
-EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
-\begin{lstlisting}[language=Fortran, caption={Rutina de par de torsión.}, label={lst:jdot_cantiello}]
-      real function calculate_jdot_rate_cantiello(s, bf_star) result(new_j_dot)
-         use const_def
-         type (star_info), pointer, intent(in) :: s
-         real(dp), intent(in) :: bf_star
-
-         real(dp) :: r_st, m_st, i_st, alfven_r
-         real(dp) :: omega_surf, m_dot, eta_surf, v_inf, v_esc
-
-         !Star data
-         r_st = s% r(1)
-         m_st = s% m(1)
-         omega_surf = s% omega(1)
-         !omega_surf = s% omega_avg_surf
-
-         ! escape and infinite velocities
-         ! 100000 transform from km/s to cm/s
-         v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000
-         v_inf = 1.92 * v_esc
-
-         !m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
-         m_dot = s% mstar_dot !This in g/s
-
-         eta_surf = ((r_st * bf_star)**2)/(abs(m_dot) * v_inf)
-
-         !Formula 2.3 Cantiello's MESA assigment
-         new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
-    end function
-\end{lstlisting}
-
-
-\subsection{Rutina de distribución de pérdida de momento angular}
-EXPLICAR QUE LOS DOS TIPOS DE RUTINAS: INTESIDAD FIJA, INTENSIDAD VARIABLE
-\begin{lstlisting}[language=Fortran, caption={Rutina de distribución de pérdida de momento angular.}, label={lst:dis_jdot}]
-      subroutine distribute_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
-         type (star_info), pointer, intent(in) :: s
-         real(dp), intent(in) :: total_j_dot
-         type (star_zone_info), pointer, intent(in) :: sz_info
-         real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
-         integer :: k
-         real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
-
-         !By default, no lost of angular moment
-         mb_jdot_list(:) = 0.0
-      
-         do k = sz_info% top_zone, sz_info% bot_zone, 1
-            !Here the jdot distribution strategy is defined
-            !Simple rule of three distribution loss of angular momentum based on the 
-            !angular momentum of the zone vs total angular momentum of the convective zone
-
-            !IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
-            mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
-                  (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
-
-         end do
-      end subroutine distribute_j_dot
-
-\end{lstlisting}
-
 \endinput
 %--------------------------------------------------------------------
 % FIN DEL CAPÍTULO. 

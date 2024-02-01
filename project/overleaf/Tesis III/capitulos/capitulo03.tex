@@ -75,7 +75,7 @@ La masa de las estrellas juega un papel determinante en la existencia o no de un
 
 En el Sol, la materia que lo compone se encuentra en su mayoría presente en forma de plasma. Es este estado, la envoltura electrónica se encuentra desacoplada del núcleo atómico y bajo ciertas condiciones físicas pueden moverse libremente, por lo que pueden poner en movimiento una carga electrónica. Bajo estas condiciones, la materia solar puede alcanzar la conductividad del cobre \cite{Banisch2009}.\par
 
-\subsubsection{El mecanismo de dinamo}
+\subsection{El mecanismo de dinamo}
 Una dinamo es el proceso por el cual la energía mecánica se convierte
 convierte en energía electromagnética por inducción. La energía mecánica se debe al movimiento de los fluidos y la energía electromagnética resultante produce los campos magnéticos observados. Para que una estrella tenga un campo magnético generado por dinamo, debe contener una región fluida conductora de electricidad que experimente movimientos para generar inducción. Sin embargo, existen otras condiciones necesarias para el vigor y la morfología de los movimientos que se derivan del hecho de que el campo magnético no debe decaer debido a la disipación óhmica. La necesidad básica para mantener un mecanismo de dinamo es una región fluida eléctricamente conductora en el interior de la estrella.
 
@@ -83,7 +83,7 @@ El Sol se rige por un fuerte campo magnético que se genera con una intensidad d
 que obedece al criterio de Schwarzschild) y emergen en la superficie solar en las regiones activas, donde forman manchas solares con intensidades de campo magnético de B z 10 3 G y bucles coronales con intensidades de campo de B z 10 2 G en los puntos de apoyo fotosféricos, y de B z 10 G en las mayores alturas coronales. Se cree que la rotación diferencial en la superficie solar enrolla el campo magnético superficial, que se fragmenta bajo la tensión magnética, circula meridionalmente hacia los polos y se reorienta desde el estado de tensión toroidal (con líneas de campo orientadas en dirección este-oeste) en el máximo solar a un campo dipolar poloidal (que conecta el polo norte con el polo sur) en el mínimo solar.
 mínimo solar.
 
-\subsubsection{Campos magnéticos internos}
+\subsection{Campos magnéticos internos}
 Nuestro Sol es una estrella activa en lo que se refiere al campo magnético. Según los modelos teóricos este campo magnético es generado por una dinamo en la tacoclina y con una intensidad en torno a $B\approx10^{5}\,\Gauss$ \cite{Maeder2003a,Dudorov2014}. En el momento de su generación, las líneas de ese campo magnético tendrán una orientación poloidal y se verán afectadas por la rotación diferencial y obligadas a adoptar una tipología toroidal (el efecto $\omega$). Por otro lado, también puede darse el caso contrario, partiendo de un campo magnético toroidal obtener una configuración poloidal. Esto sería posible gracias a los movimientos convectivos de material que se producen en el CZ de la estrella y suponer que este material se comporta como un conductor perfecto. Esta segunda condición permite suponer que las líneas de campo magnético están "congeladas" en el fluido conductor y por tanto deben moverse solidariamente con él (efecto $\alpha$) \cite{Stanley2014}.\par
 
 \begin{figure}
@@ -94,11 +94,11 @@ Nuestro Sol es una estrella activa en lo que se refiere al campo magnético. Seg
 \end{figure}
 
 
-\subsubsection{Campos magnéticos superficiales} \label{surf_mf}
+\subsection{Campos magnéticos superficiales} \label{surf_mf}
 La intensidad del campo magnético medida en la superficie del Sol es de aproximadamente $B\approx1\,\Gauss$ \cite{Weber1967,DAntona2000,Morin2012}, el doble del valor del de la Tierra. Además su topología es variada y compleja. El modelo de dinamo establece que el campo magnético producido en el interior de la estrella alcanza la superficie con la ayuda de procesos convectivos que tienen lugar en la CZ y da lugar a regiones magnéticamente activas en la superficie solar. Además, las estrellas en rotación que exponen una CZ exterior significativa pueden producir campos magnéticos superficiales a través de un mecanismo de dinamo \cite[v.g.][]{Brandenburg2004,Charbonneau2010,Brun2017}. Sea cual sea el origen de los campos magnéticos superficiales, se predice un acoplamiento con el viento estelar, provocando así una pérdida de masa y, si ésta es lo suficientemente fuerte, produzcan MB \cite[v.g.][]{UdDoula2002,Ud-Doula2007,Ud-Doula2008,Meynet2010}.\par
 
 
-\section{Efectos del frenado magnético}
+\section{Efectos del frenado magnético - Parte I}
 En su enfoque más aceptado, el MB está vinculado al trabajo de Skumanich \cite{Skumanich1972} en el que desarrolla una ley empírica de su evolución en paralelo a la edad de la estrella. Para calibrar esta ley, Skumanich se basó en datos obtenidos de estrellas de tipo G encontradas en la MS. La influencia del MB en la evolución de la estrella está estrechamente relacionada con el transporte del AM. Según \cite{Meynet2010}, se distinguen dos mecanismos principales atendiendo a cómo se produce el transporte del AM:
 
 \begin{enumerate}
@@ -111,7 +111,7 @@ El AML causado por MB depende directamente de la cantidad de masa perdida por la
 Además, a lo largo de la evolución de la estrella, parámetros directamente observables como su velocidad de rotación, temperatura efectiva, gravedad superficial o abundancia de elementos químicos sufren variaciones. Estos parámetros influyen, directa o indirectamente, en la pérdida de momento angular causada por el campo magnético de la estrella.\par
 
 
-\subsection{Formalismos de frenado magnético} \label{mod_mb}
+\subsection{Formalismo de frenado magnético de intesidad fija} \label{mod_mb}
 Comenzamos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular en MESA. Estos serán considerados para el cálculo del AML como resultado del par aplicado por un viento estelar acoplado magnéticamente.\par 
 
 En presencia de pérdida de masa, el material del viento estelar elimina el AM, lo que provoca un efecto de giro a la baja. Esto es muy importante, por ejemplo, en las estrellas masivas, que se sabe que rotan rápidamente y tienen fuertes vientos estelares. También se ha observado que las estrellas de masa intermedia fuertemente magnéticas suelen tener tasas de rotación mucho más lentas que otras estrellas de su población parental \cite{Mathys2006}. En esas estrellas, la presencia de dicho campo magnético interactuará con la pérdida de masa y el radio Alfv'{e}n ($R_{A}$) juega un papel importante en esta interacción.\par
@@ -224,7 +224,6 @@ que es una expresión más conveniente para ser implementada en MESA porque se b
 
 
 
-
 \section{Efectos de la distrubución de AML}
 \subsection{Formalismo para la distribución de AML} \label{mod_aml}
 Como expresa la Eq.~\ref{eq:mb_torque}, la cantidad de AML depende de $\ralfven$, $\Omega$ y $\Dot{M}$. Para valores grandes de $\ralfven$, la estrella sufre una desaceleración significativa. El valor de $\ralfven$ depende de los siguientes parámetros variables: intensidad del campo magnético ($B$), $\teff$ y $\Omega$. Con respecto a $\Dot{M}$ y como se indica en la tabla \ref{tab:phy_mesa}, para calcular la pérdida de masa se utilizó la fórmula empírica desarrollada por Reimers \cite{Reimers1975} para estrellas en la rama gigante asintótica (AGB). Para una estrella de tipo solar el $\Dot{M}$ durante la EM es relativamente pequeño, alrededor de $10^{-14}\msun \, yr^{-1}$ \cite{Noerdlinger2008}. \par
@@ -232,12 +231,80 @@ Como expresa la Eq.~\ref{eq:mb_torque}, la cantidad de AML depende de $\ralfven$
 MESA asigna un valor $\Omega$ para cada celda $k$ ($\Omega_k$) que se ajusta para que el momento angular resultante se conserve tras calcular la nueva masa de la celda $k$ ($m_k$) y su distancia al centro de la estrella ($r_k$). A continuación, se asigna un valor de AM a cada celda $k$ ($J_k$). En este punto, nuestro MB se activa, modificando $J_k$. Para ello, se proporciona una contribución adicional ($\Dot{J}_{k}$). Esta contribución es el resultado del par externo ejercido por el campo magnético una vez que se ha distribuido entre las diferentes capas que componen la CZ según dicta la Eq.~\ref{eq:k_jdot}:\par
 
 \begin{ceqn}
-\begin{align}
-    \Dot{J}_{k} &= \Dot{J}_*\;\frac{m^{}_{k} r^2_{k}}{m^{}_* r_*^2} \label{eq:k_jdot}
-\end{align}
+	\begin{align}
+		\Dot{J}_{k} &= \Dot{J}_*\;\frac{m^{}_{k} r^2_{k}}{m^{}_* r_*^2} \label{eq:k_jdot}
+	\end{align}
 \end{ceqn}
 
 La distribución se realiza en dos iteraciones. En la primera iteración, a cada celda $k$ se le asigna la cantidad máxima de $\Dot{J}_{k}$ que puede acomodar en el paso de tiempo establecido por la simulación. Las cantidades de $\Dot{J}_{k}$ no acomodadas por las celdas se acumulan como momento angular residual ($\jres$). En una segunda pasada, el valor $\jres$ residual acumulado recogido en la iteración anterior se redistribuye entre aquellas celdas que pueden acomodar más par. De esta forma conseguimos conservar el momento angular.\par
+
+
+\section{Extendiendo MESA - Parte II}
+
+\subsection{Rutina de frenado magnético de intensidad constante}
+EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
+\begin{lstlisting}[language=Fortran, caption={Rutina de par de torsión.}, label={lst:jdot_cantiello}]
+	real function calculate_jdot_rate_cantiello(s, bf_star) result(new_j_dot)
+	use const_def
+	type (star_info), pointer, intent(in) :: s
+	real(dp), intent(in) :: bf_star
+	
+	real(dp) :: r_st, m_st, i_st, alfven_r
+	real(dp) :: omega_surf, m_dot, eta_surf, v_inf, v_esc
+	
+	!Star data
+	r_st = s% r(1)
+	m_st = s% m(1)
+	omega_surf = s% omega(1)
+	!omega_surf = s% omega_avg_surf
+	
+	! escape and infinite velocities
+	! 100000 transform from km/s to cm/s
+	v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000
+	v_inf = 1.92 * v_esc
+	
+	!m_dot = s% star_mdot !This gives the mass loss rate in Mstar/year
+	m_dot = s% mstar_dot !This in g/s
+	
+	eta_surf = ((r_st * bf_star)**2)/(abs(m_dot) * v_inf)
+	
+	!Formula 2.3 Cantiello's MESA assigment
+	new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
+	end function
+\end{lstlisting}
+
+
+\subsection{Rutina de distribución de pérdida de momento angular}
+EXPLICAR QUE LOS DOS TIPOS DE RUTINAS: INTESIDAD FIJA, INTENSIDAD VARIABLE
+\begin{lstlisting}[language=Fortran, caption={Rutina de distribución de pérdida de momento angular.}, label={lst:dis_jdot}]
+	subroutine distribute_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
+	type (star_info), pointer, intent(in) :: s
+	real(dp), intent(in) :: total_j_dot
+	type (star_zone_info), pointer, intent(in) :: sz_info
+	real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+	integer :: k
+	real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
+	
+	!By default, no lost of angular moment
+	mb_jdot_list(:) = 0.0
+	
+	do k = sz_info% top_zone, sz_info% bot_zone, 1
+	!Here the jdot distribution strategy is defined
+	!Simple rule of three distribution loss of angular momentum based on the 
+	!angular momentum of the zone vs total angular momentum of the convective zone
+	
+	!IMPORTANT: Don't forget to divide by dm(k) in order to get an "specific" jdot
+	mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+	(sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
+	
+	end do
+	end subroutine distribute_j_dot
+	
+\end{lstlisting}
+
+
+
+
 
 \endinput
 %--------------------------------------------------------------------

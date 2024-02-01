@@ -3,7 +3,11 @@
 \section{Introducción}
 --EXPLICAR POR QUÉ OPTAMOS POR LA INTENSIDAD VARIABLE
 
-\section{Frenado magnético según Gallet \& Bouvier (2013)}
+\section{Efectos del frenado magnético - Parte II}
+
+\subsection{Formalismo de frenado magnético de intesidad fija} 
+
+\subsubsection{Frenado magnético según Gallet \& Bouvier (2013)}
 Suponer que la intensidad del campo magnético de una estrella permanece constante a lo largo de su evolución es una simplificación necesaria en algunos escenarios, pero no se corresponde con las observaciones (INDICAR LAS REFERENCIAS). \par
 
 De acuerdo a \cite{Gallet2013} la intensidad del campo magnético debería variar a lo largo de la vida de la estrella en lugar de permanecer fija durante toda su evolución. Para ello nos basamos en un formalismo que nos permite calcular una intensidad de campo magnético variable. Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre $\Omega$ , $\teff$, y la intensidad del campo magnético ($B$), así como con la tasa de pérdida de masa ($\mwind$) causada por el viento estelar. Comenzaremos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la intensidad del campo magnético.\par 
@@ -43,7 +47,7 @@ Como se indica en \cite{Cranmer2011} $\mu$ puede estimarse utilizando las ecuaci
 	\end{equation}
 \end{ceqn}
 
-Una vez que estemos en condiciones de calcular $\Beq$, podremos calcular $B_*$.\par
+Finalmente, estamos en condiciones de calcular $\Beq$ y $B_*$.\par
 
 Por otro lado, \cite{Cranmer2011} descubrió que la intensidad del campo magnético está influida principalmente por $f_*$ y no por el periodo de rotación de la estrella. Es decir, las variaciones en la velocidad angular de la estrella no alteran significativamente la intensidad de su campo magnético. Además, $f_*$ depende en gran medida del número de Rossby ($\rossby$). Para calcular $\rossby$ de una estrella determinada, es necesario conocer el tiempo de vuelta ($\turnover$),
 
@@ -67,7 +71,7 @@ Por otro lado, \cite{Cranmer2011} descubrió que la intensidad del campo magnét
 
 donde x = $\rossby$/$\rossbysun$, y $\rossbysun$ = 1.96. \par
 
-Por último, podemos calcular el factor de llenado de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de llenado medio del Sol actual ($\fsun$ = 0.001-0.01),
+Por último, podemos calcular el factor de llenado de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de llenado medio del Sol actual ($\fsun$ = [0.001-0.01]) ver \cite{Cranmer2011},
 
 \begin{ceqn}
 	\begin{equation}
@@ -78,13 +82,17 @@ Por último, podemos calcular el factor de llenado de una estrella aplicando el 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{img/paper2/mag_field_limits_var_vel_g3.pdf}
-	\caption{La evolución de la intensidad del campo magnético y sus límites superior e inferior, en función del tiempo y $\oomegac$ para varios modelos de 1 $\msun$. El modelo incluye rotación PMS con $\oomegac$ = 0,1425. Las líneas continuas representan la intensidad del campo magnético, mientras que las líneas discontinuas representan la evolución angular de la estrella. La línea vertical discontinua hace referencia a la ZAMS.}
+	\caption{La evolución de la intensidad del campo magnético y sus límites superior e inferior, en función del tiempo y $\oomegac$ para varios modelos de 1 $\msun$. El modelo incluye rotación PMS con $\oomegac$ = 0.1425. Las líneas continuas representan la intensidad del campo magnético, mientras que las líneas discontinuas representan la evolución angular de la estrella. La línea vertical discontinua hace referencia a la ZAMS.}
 	\label{fig:mag_field_limits_var_vel_g3}
 \end{figure}
 
 Con este formalismo podemos calcular el campo magnético medio como una función dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$. Los valores temporales de estas tres variables se obtendrán a partir de las distintas simulaciones realizadas con ayuda de MESA. \par
 
 Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnético, necesitamos modelizar cómo se produce la pérdida de momento angular.  En el formalismo anterior utilizamos un modelo aplicable a campos magnéticos de intensidad no variable y de baja intensidad ($1,0\,\Gauss \leq B \leq 10,0\,\Gauss$). Como se muestra en la Figura \ref{fig:mag_field_limits_var_vel_g3}, las simulaciones con el presente formalismo arrojan valores de campo magnético que muestran intensidades máximas en torno a $1,0K\,\Gauss$, lo que hace inviable el uso del modelo empleado anteriormente. \par
+
+
+Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnético, necesitamos modelar cómo se produce la pérdida de momento angular. A medida que la estrella se contrae durante la fase de pre-secuencia principal (PMS) hacia el comienzo de la secuencia principal (ZAMS), su velocidad angular aumenta, lo que conduce a un aumento gradual del campo magnético medio. En nuestro análisis, observamos intensidades máximas de hasta $1.0,\mathrm{kG}$, como se muestra en la figura \ref{fig:mag_field_limits_var_vel_g3}. A continuación, entra en una fase de saturación (aunque con una tendencia descendente) hasta $1.0$ Ga, y finalmente disminuye bruscamente como resultado de la menor velocidad angular de la estrella. En el formalismo anterior utilizamos un modelo aplicable a campos magnéticos de intensidad no variable y de baja intensidad que oscilan entre unos pocos Gauss ($1.0,\mathrm{G} \leq B \leq 10.0,\mathrm{G}$). Las intensidades significativamente mayores requeridas en el presente formalismo hacen inadecuado el modelo empleado anteriormente.\par
+
 
 Comencemos por enumerar los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular. Si suponemos un flujo de salida esférico, el par aplicado por un viento estelar $\torquewind$ acoplado magnéticamente viene dictado por,
 
@@ -114,12 +122,13 @@ Se ha observado que las estrellas de masa intermedia fuertemente magnéticas sue
 	\end{equation}
 \end{ceqn}
 
-donde $\Bp$ es la intensidad del campo magnético en la superficie estelar, $\vesc$ es la velocidad de escape, $m = 0,1675$, $K_1 = 1,30$ y $K_2 = 0,0506$ \cite{Gallet2013}.
+donde $\Bp$ es la intensidad del campo magnético en la superficie estelar, $\vesc$ es la velocidad de escape, $m = 0.1675$, $K_1 = 1.30$ y $K_2 = 0.0506$ \cite{Gallet2013}.
 
 \begin{ceqn}
-	\begin{equation}
-		\vesc = \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc}
-	\end{equation}
+	\begin{align}
+		\Bp &= f_*B_* \label{eq:bp}\\
+		\vesc &= \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc}
+	\end{align}
 \end{ceqn}
 
 Por último, tenemos que el AML puede calcularse del siguiente modo:
@@ -143,19 +152,21 @@ La teoría de la longitud de mezcla (MLT) introducida por Böhm-Vitense (BV) ha 
 
 donde $H_p$ es la altura de la escala de presión, y $\alpha$ un parámetro libre que se determina de antemano y se mantiene fijo durante las simulaciones de evolución estelar. \par
 
-La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de Li. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En \cite{Navarro2020} mostramos cómo una parametrización MLT alternativa podría producir resultados en línea con las observaciones. El ajuste del sobreimpulso (over-shooting) de MLT y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de Li en los OC's.\par
+La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de Li. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En \cite{Navarro2020} mostramos cómo una parametrización alternativa de la longitud de mezcla (ML) podría producir resultados en línea con las observaciones. El ajuste del sobreimpulso (over-shooting) de ML y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de Li en los OC's.\par
 
 De manera similar a la intensidad del campo magnético, un formalismo que nos permita evolucionar a lo largo del tiempo el valor de $\amlt$ en función de determinados parámetros de la estrella, es un planteamiento razonable a la hora de eliminar una restricción relativamente arbitraria impuesta en nuestros modelos.
 
 \subsection{MLT $\alpha$ variable según Sonoi et al. (2019)}
-En \cite{Sonoi2018}, los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor aumenta al aumentar $\gsurf$ o disminuir $\teff$,
+En \cite{Sonoi2018}, los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor aumenta al aumentar $\gsurf$ o disminuir $\teff$. Calibraron valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \cite{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
 
 \begin{ceqn}
 	\begin{equation}
 		f(x,y) = a_0 + (a_1 + (a_3 + a_5x +a_6y)x + a_4y)x + a_2y\label{eq:alpha_ml}
 	\end{equation}
 \end{ceqn}
+
 donde
+
 \begin{ceqn}
 	\begin{align}
 		x &= \frac{\teff-5777}{1000} \label{eq:eq:alpha_x}\\
@@ -163,12 +174,12 @@ donde
 	\end{align}
 \end{ceqn}
 
-y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT-BV \cite{Sonoi2018}: $a_0=1,790295$, $a_1=-0,14954$, $a_2=0,069574$, $a_3=-0,00829$, $a_4=0,013165$, $a_5=0,080333$, $a_6=-0,03306$. \par
+y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT \cite{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$. \par
 --COMENTAR MÁS EN DETALLE CÓMO POR EJEMPLO SE HACE VARIAR EN MESA. TAMBIÉN ALGO MÁS DEL FORMALISMO--
 
 
 
-\section{Extendiendo MESA - Parte II}
+\section{Extendiendo MESA - Parte III}
 \subsection{Rutina de frenado magnético de intensidad variable}
 EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
 \begin{lstlisting}[language=Fortran, caption={Rutina de par de torsión.}, label={lst:jdot_gb}]
