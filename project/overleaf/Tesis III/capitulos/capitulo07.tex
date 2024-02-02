@@ -3,7 +3,44 @@
 
 
 \chapter{Resultados de frenado magnético de intensidad variable}\label{ch:septimo-capitulo}
-\section{Configuración de los modelos} \label{marco_teorico}
+\section{Configuración de los modelos} \label{marco_teorico_ii}
+Como venimos exponiendo en el capítulo anterior, con la consideración de campos magnéticos de intensidad variable ($B$) dependientes de los parámetros estelares $\Omega$ y $\teff$ llevamos nuestra línea de trabajo un paso más allá. La parametrización base utilizada es básicamente la misma que hemos utilizado al abordar los campos magnéticos de intensidad fija. La innovación fundamental radica en la introducción de una intensidad de campo magnético variable ($B$) y un parámetro $\amlt$ variable. En cuanto al tratamiento de la mezcla convectiva con sobreimpulso (overshooting), es evidente una desviación del modelo anterior; desactivamos deliberadamente esta característica en nuestro modelo actual. Esto aísla el impacto de una variable $\amlt$ en A(Li) de los efectos asociados con el sobreimpulso convectivo. En particular, la mezcla convectiva con sobreimpulso se aborda habitualmente mediante extensiones ad hoc de la Teoría de la Longitud de Mezcla (MLT), introduciendo así un parámetro libre adicional. La Tabla \ref{tab:phy_mesa_ii} enumera las similitudes y diferencias en la configuración de los modelos utilizados en \cite{Caballero2020} y en este trabajo.\par
+
+\begin{table}
+	\begin{threeparttable}
+		\centering
+		\begin{tabular}{ll} 
+			\hline
+			Parámetro & Prescripciones y valores adoptados\\
+			\hline
+			Abundancia Solar & $X_{\odot}=0.7154, Y_{\odot}=0.2703, Z_{\odot}=0.0142$\\
+			Ecuación de estado & OPAL+SCVH+MacDonald+HELM+PC\\
+			Opacidad & OPAL Tipo I para log T $\geq$ 4 \\ & Ferguson para logT $<$ 4\\
+			Tasas de Reacción & JINA REACLIB\\
+			Condiciones de Contorno & ATLAS12; $\tau$=100 tablas + fotoesfera\\
+			Difusión & Rastreo de \isotope[1]{H}, \isotope[2]{He}, \isotope[7]{Li}, \isotope[7]{Be}\\
+			Esquema de Rotación & Rotación diferencial en PMS \& MS\\ & Incluye SH\tnote{1}  , ES\tnote{2}  , GSF\tnote{3}  , SSI\tnote{4}  , DSI\tnote{5}\\
+			Termohalina & $\alpha_{\textrm{th}}=666$\\
+			\textbf{Convección} & $\alpha_{\textrm{MLT}}$ variable dependiente de $\teff$\\ & \& $\gsurf$ + Ledoux\\
+			Semiconvección & $\alpha_{\textrm{sc}}=0.1$\\
+			\textbf{Sobreimpulso} & $f_{\textrm{ov,core}}=0.0$, \& $f_{\textrm{ov,sh}}=0.0$\\
+			\textbf{Campo Magnético} & B(G) variable, dependiente de $\rho$, $\teff$ \&  $\Omega$\\
+			Pérdida de Masa & $\Dot{M}_{\textrm{max}} = 10^{-3} \: \msun \: yr^{-1}$\\
+			Périda de Momento Angular & $\Dot{J} = \Omega_* \; \mwind \; \ralfven^2$\\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}\footnotesize
+			\item (1) Solberg-Hoiland, (2) Eddington–Sweet
+			\item (3) Goldreich–Schubert–Fricke, (4) Secular Shear Instability
+			\item (5) Dynamical Shear Instability
+		\end{tablenotes}
+	\end{threeparttable}
+	\caption{Resumen de la física adoptada en MESA \cite{Choi2016,Caballero2020}[basado en][]. Resaltados en negrita los parámetros con diferente configuración de los trabajos referenciados.}
+	\label{tab:phy_mesa_ii}
+	
+\end{table}
+
+
 A COMENTAR
 Parametrización de los modelos
 Rango de valores a asignar a los parámetros libres
