@@ -1038,7 +1038,7 @@ function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
   %Plot values
   %plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
   plot(A(:,1), A(:,3) .- A(:,4) .+ offset , color, 'linewidth', width, 'linestyle', linestyle);
-  plot(A(:,1), A(:,5) .- A(:,6) .+ offset , color, 'linewidth', width, 'linestyle', '--');
+  %plot(A(:,1), A(:,5) .- A(:,6) .+ offset , color, 'linewidth', width, 'linestyle', '--');
   %plot(A(:,1), 10 .** A(:,2), color, 'linewidth', width, 'linestyle', '--');
 
   %Axis scales
@@ -1475,11 +1475,11 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
       %Generate serie labels
       if (is_var_vel)
         labels = {labels{:}, ['CZ_{rad}-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['Core_{rad}-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['Core_{rad}-', strtrim(rotational_vels(j,:))]};
         %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['CZ_{rad}-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['Core_{rad}-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['Core_{rad}-', strtrim(gauss_fields(i,:))]};
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
     end
@@ -1496,7 +1496,7 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
   set (l, "fontsize", legend_font_size);
   %legend boxoff
   xlabel('star age (Ga)', 'fontsize', axis_font_size);
-  ylabel('Size conv. zone (radius CZ & Core/radius star)', 'fontsize', axis_font_size);
+  ylabel('Size conv. zone (R_{cz}/R_{sun})', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -3552,6 +3552,7 @@ function paper2()
 
 end
 
+
 function main()
   global gauss_fields;
   global rotational_vels;
@@ -3804,7 +3805,7 @@ function main()
   %plot_hr_0G_var_vel(rot_vels,0);
   %plot_vel_rot_0G_var_vel(rot_vels,0);
   %plot_hr_0G_var_vel_z1(rot_vels,0);
-  plot_age_vs_teff_XG(rot_vels11,3);
+  %plot_age_vs_teff_XG(rot_vels11,3);
   %plot_age_vs_teff_XG_z1(rot_vels7,3);
   %plot_4_0G_var_vel(rot_vels,4);
   %plot_vel_rot_4G_var_vel(rot_vels,4);
@@ -3817,7 +3818,7 @@ function main()
   %plot_teff_vs_mag_field_XG(rotational_vels([idx_1475crit],:),1);
 
   %paper1();
-  %paper2();
+  paper2();
 end
 
 
