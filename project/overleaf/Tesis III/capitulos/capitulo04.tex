@@ -132,28 +132,11 @@ subroutine run1_star(...)
       if (result == keep_going) 
         exit step_loop
 
-      ! redo, retry, or backup must be done 
-      ! inside the step_loop
-      if (result == redo) then
-        result = star_prepare_to_redo(...)
-      end if
-      if (result == retry) then
-        result = star_prepare_to_retry(...)
-      end if
-      if (result == backup) then
-        result = star_do1_backup(...)
-        just_did_backup = .true.
-      else
-        just_did_backup = .false.
-      end if
       if (result == terminate) then
         continue_evolve_loop = .false.
         exit step_loop
       end if
     end do step_loop
-
-    ! once we get here, the only options
-    ! are keep_going or terminate.
 
     ! after_step_loop calls:
     !   extras_finish_step
@@ -177,7 +160,6 @@ subroutine run1_star(...)
    ! after_evolve_loop calls:
    !   extras_after_evolve
    call after_evolve_loop(...)
-
 end subroutine run1_star
 \end{lstlisting}
 
@@ -360,25 +342,22 @@ Como estamos interesados en observar cómo actúan esos procesos y parámetros f
 
 La composición química del Sol, incluyendo su metalicidad y masa inicial del modelo queda fijada por medio de los siguientes parámetros (Listado \ref{lst:ini_params}) de MESA:
 
-\begin{lstlisting}[language=Fortran, float, caption={Parametrización de la masa inicial de la estrella}, label={lst:ini_params}]
-&star_job
-  ! Solar composition, 
-  ! check the following file:
-  ! $MESA_DIR/star/test_suite/
-  ! example_solar_model/inlist_solar_model
-  set_uniform_initial_composition = .true.
-  initial_h1 = 7.0001067228923031D-01
-  initial_h2 = 0
-  initial_he3 = 2.7955281905284692D-05
-  initial_he4 = 2.7952486377094160D-01
+\begin{lstlisting}[language=Fortran, float, caption={Parametrización de la metalicidad y masa inicial de la estrella}, label={lst:ini_params}]
+  &star_job
+    ! Solar composition, 
+    set_uniform_initial_composition = .true.
+    initial_h1 = 0.715399992
+    initial_h2 = 1.430799984e-05
+    initial_he3 = 4.48623528494e-05
+    initial_he4 = 0.270255137647
 
-  ! set metal fractions z fractions
-  initial_zfracs = 3 !GS98
+    ! set metal fractions z fractions
+    initial_zfracs = 6 ! AGSS09_zfracs
 
-&controls
-  ! starting specifications
-  ! or 1.0d0 in Msun units
-  initial_mass = 0.8d0 
+  &controls
+    ! starting specifications
+    ! or 1.0d0 in Msun units
+    initial_mass = 1.0d0 
 \end{lstlisting}
 
 Posteriormente necesitamos indicar la condición de parada en la TAMS. Este momento en la evolución de una estrella queda asociado a la etapa en la que la estrella abandona la MS al haber agotado prácticamente todo el H que se encontraba en su núcleo. MESA nos ofrece la posibilidad establecer una condición de parada cuando las abundancias de ciertos elementos en el núcleo de la estrella alcanzan un cierto valor máximo o mínimo. En nuestro caso, utilizamos esta opción para indicar que cuando la abundancia del isótopo \isotope[1]{H} caiga por debajo de 0.000000001, la simulación se detenga (ver Listado \ref{lst:stop_params}).\par
@@ -528,33 +507,95 @@ En el Listado \ref{lst:li_evol} mostramos la configuración adicional a añadir 
 
 Llegado este punto, hemos conseguido obtener una configuración de proyecto base que recoge las características esenciales de la estrella a simular en MESA: pone en marcha los procesos físicos relacionados con la evolución del litio y es capaz de informar, tanto a través de los ficheros de salida estándar como de las representaciones gráficas, sobre las abundancias de este elemento a lo largo de la evolución de la estrella en sus etapas de PMS y MS. Esta configuración de proyecto y los valores arrojados por la simulación que lo utiliza, nos servirán para establecer el marco de referencia contra el que comparar los valores obtenidos en las nuevas simulaciones que extienden la funcionalidad de MESA.\par
 
---CONTINUAR POR AQUI--
 
 \subsection{Simulaciones extendiendo el marco teórico estándar de MESA}
-Una vez que hemos llegado a un punto en el que tenemos una configuración de proyecto que nos permite obtener las abundancias de Li de forma detallada, y además hemos conseguido activar los procesos de difusión y rotación superficial en nuestro modelo, damos paso a una segunda línea de trabajo consistente en extender el funcionamiento de MESA para incorporar nuestras propias rutinas de extensión al simulador. Las consideraciones previas a tener en cuenta son las siguientes:
+Una vez que hemos llegado a un punto en el que tenemos una configuración de proyecto que nos permite obtener las abundancias de litio de forma detallada, y además hemos conseguido activar los procesos de difusión y rotación superficial en nuestro modelo, damos paso a una segunda línea de trabajo consistente en extender el funcionamiento de MESA para incorporar nuestras propias rutinas de al simulador. Las consideraciones previas a tener en cuenta son las siguientes:
 
---INCLUIR AQUÍ ENUMERACIÓN DE PASOS A GRANDES RASGOS--
 \begin{itemize}
-    \item Entender el ciclo de control aplicado a los pasos de simulación
-    \item Extender la rutina de inicialización para incorporar nuestros parámetros
-    \item Extender 
+	\item Definir el formalismo matemático que soporta el proceso a incorporar a MESA
+	\item Identificar los parámetros fijos y variables del formalismo
+	\item Mapear los parámetros variables a sus equivalentes en MESA
+	\item Identificar el \textit{hook} de MESA adecuado para incluir la rutina
+	\item Implementar la rutina y asegurar su compatibilidad con MESA
+	\item Identificar los parámetros de configuración
+	\item Mapear los parámetros de configuración en el fichero \textit{inlist}
+	\item Realizar las simulaciones
 \end{itemize}
 
-El planteamiento teórico no es especialmente difícil, lo complicado del mismo es la parte que afecta a MESA. En concreto, localizar las secciones concretas de código en las que se calcula el valor de la gravedad local que afecta a cada elemento de masa que tiene en cuenta la simulación. A esto hay que sumarle el hecho de que MESA está construido de una forma modular, así que es de esperar que no tengamos una única sección de código en el programa donde se calcule este valor de gravedad, sino que cada módulo que, de algún u otro modo, contribuya a la difusión química de los elementos tiene que ser revisado.\par
+Los puntos 1 a 4 y 7 del listado anterior serán extensivamente documentados en las partes \ref{parte1} y \ref{parte2}. En lo que atañe a los puntos 5 y 6, dado que es algo común a ambas partes, lo comentaremos en este apartado.\par
 
-Con diferencia, el localizar dónde invocar a nuestra rutina de código es la parte más complicada de todo el presente trabajo. Tenemos que detectar los módulos implicados en la difusión de los elementos, con el riesgo que implica que nos dejemos alguno por identificar, analizar su código fuente en detalle para llegar a entender su funcionamiento y realizar la invocación en el punto exacto a nuestra rutina, para alterar así el valor de gravedad calculado por MESA para un determinado diferencial de masa. Adicionalmente, se hace totalmente necesario el revisar la bibliografía en la que se basa la implementación de las rutinas presentes en cada módulo para dotar de contexto y significado a las líneas de código. De otro modo, es casi imposible extraer el trasfondo científico que se encuentra en ellas codificado.\par
+Los parámetros de configuración son valores o ajustes que se utilizan para personalizar el comportamiento del simulador MESA, y por extensión, de nuestras rutinas. MESA ofrece una gran cantidad de de estos parámetros. La manera de especificarlos es mediante su inclusión en el fichero \textit{inlist}. Este mecanismo se hace también extensivo a las rutinas que se añaden al simulador. En el Listado \ref{lst:config_inlist} mostramos parte del contenido del fichero \textit{inlist}. Lo primero es indicar al simulador que debe utilizar nuestra rutina de par de torsión en lugar de la que trae por defecto MESA. Es a través de este \textit{hook} la forma de implementar nuestras rutinas de frenado magnético. A continuación listamos los diferentes parámetros de configuración para las diferentes rutinas. Estos se indican a través de las variables \textit{x\_ctrl}, \textit{x\_integer\_ctrl} y \textit{x\_logical\_ctrl} según estos parámetros sean valores reales, enteros o lógicos respectivamente.\par 
 
---REVISAR PARA ELIMINAR REFERENCIAS A GRAVEDAD. HACERLO GENÉRICO--
+\begin{lstlisting}[language=Fortran, float, caption={Parámetros de configuración para las rutinas incorporadas al simulador MESA.}, label={lst:config_inlist}]
+  ...
+  !HOOKs
+  ! make use of 'hooks'
+  use_other_torque = .true.
 
-Inicialmente teníamos dos módulos candidatos por los que empezar a estudiar su implementación, el de difusión y el de mlt. Por tener éste último un menor número de líneas de código (aproximadamente unas 1800) y encontrarse la implementación restringida a un solo módulo, empezamos por él. Tras una revisión a fondo del mismo se llegó a generar una versión modificada del mismo que calculaba un nuevo valor de gravedad local relacionado con el elemento de masa diferencial. Este nuevo valor tenía en cuenta tanto la masa del planeta, como su distancia a la estrella.\par
+  ! **********************************
+  ! Magnetic braking input parameters
+  ! **********************************
+  ! B - magnetic field torque (G).
+  ! If set to -1, a variable magnetic field strengh is calculated
+  !x_ctrl(1) = 4.0d0  
+  x_ctrl(1) = -1 
+  
+  ! eps thhreshold use for detecting nuclear reactions in the core (erg/g/s)
+  x_ctrl(2) = 0.1d-1 
 
-Seguidamente pasamos a analizar el código fuente del módulo de difusión que, como mencionábamos, se basa en la implementación de las ecuaciones propuestas en el trabajo de Thoul, et al. (1994). Ya desde los primeros momentos nos dimos cuenta de que el esfuerzo de localizar dónde deberíamos de invocar a nuestra rutina se iba a complicar. La implementación de este módulo es bastante más laboriosa, larga (más de 3500 líneas) y se encuentra repartida entre varios módulos que, a diferencia de lo que ocurría con el de mlt, algunos de ellos no ofrecían la posibilidad de ser extendidos de una manera cómoda. Además de esto, la implementación que se sigue en MESA acaba generando una matriz de coeficientes de difusión en los que el efecto de la gravedad está representado de manera implícita, es decir, no se calcula un valor de gravedad local asociada a un elemento diferencial de masa en un paso previo, de forma análoga a como ocurre en el módulo de mlt, para finalmente acabar derivando el valor del coeficiente de difusión. En este caso se resuelve el sistema de ecuaciones y la contribución de la gravedad sobre el elemento de masa queda recogida en las soluciones al mismo. A la propia dificultad de entender la implementación del código, se sumaba el hecho de tener que deshacer el cálculo de los coeficientes para poder incluir el efecto de nuestra rutina, y esto era algo que se antojaba harto complicado al no disponerse del conocimiento necesario. Estábamos en un punto muerto.
+  ! How to redistribute the loss of angular momentum
+  ! 0 = Only among the zones of outmost convective zone
+  ! 1 = till the outmost zone, r(1)
+  x_integer_ctrl(1) = 0 
 
---REVISAR PARA ELIMINAR REFERENCIAS A GRAVEDAD--
+  ! Controls if the mb routine is executed only when a radiative core is develop
+  ! .false. = don't wait, 
+  ! .true. = wait
+  x_logical_ctrl(5) = .true.
+  !keep_on_rad_core
+  x_logical_ctrl(6) = .true.  
+
+  ! **********************************
+  ! Variable MLT alpha
+  ! **********************************
+  ! (de)activate variable MLT alpha routine
+  x_logical_ctrl(10) = .true.
+  
+  ! **********************************
+  ! Disk locking input parameters
+  ! **********************************
+  ! disk lifetime in years. Set to -1=deactivated
+  !x_ctrl(3) = 3.0d6 
+  x_ctrl(3) = -1
+  ! disk omega in rad/s
+  x_ctrl(4) = 9.090256e-6 
+  
+  ! **********************************
+  ! Debug flags
+  ! **********************************
+  ! debug flag for use_other_torque routine
+  x_logical_ctrl(1) = .false. 
+  ! debug flag for reset_other_torque, if true, jdot is discarded
+  x_logical_ctrl(2) = .false.
+  ! debug flag for get_convective_info
+  x_logical_ctrl(3) = .false. 
+  ! debug flag for get_core_info
+  x_logical_ctrl(4) = .false.  
+  ! debug flag for new_alpha
+  x_logical_ctrl(7) = .false.  
+  ! debug flag for calculate_mag_field_intensity
+  x_logical_ctrl(8) = .false.
+  ! debug flag for calculate_jdot_rate  
+  x_logical_ctrl(9) = .false.  
+  ...
+    
+\end{lstlisting}
+
 
 \subsection{Rutina de inicialización para las simulaciones}
-EXPLICAR EL CONJUNTO DE PARÁMETROS QUE SE LEEN DEL INLIST, Y SIGNIFICADO. TAMBIÉN LOS FLAGS DE DEPURACIÓN
-\begin{lstlisting}[language=Fortran, caption={Rutina de inicialización de las simulacions.}, label={lst:extras_ctrl}]
+Una vez el fichero \textit{inlist} contiene los parámetros de configuración para nuestra(s) rutina(s) hay que proceder a leerlos para ponerlos a disposición del código de las mismas. Como se indica en el listado de control \ref{lst:bucle_ctrl}, antes de proceder a ejecutar los pasos de la simulación, MESA procede a invocar la rutina \textit{extras\_ctrl}. En el Listado \ref{lst:extras_ctrl} se muestra la forma de proceder para obtener los valores indicados en el fichero de configuración. Estos valores se asignan a variables que quedan a disposición al código de las diferentes rutinas.
+
+\begin{lstlisting}[language=Fortran, float, caption={Rutina de inicialización de las simulacions.}, label={lst:extras_ctrl}]
       subroutine extras_controls(id, ierr)
          integer, intent(in) :: id
          integer, intent(out) :: ierr
@@ -611,8 +652,11 @@ EXPLICAR EL CONJUNTO DE PARÁMETROS QUE SE LEEN DEL INLIST, Y SIGNIFICADO. TAMBI
 \end{lstlisting}
 
 \subsection{Rutina de par de torsión}
-EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
-\begin{lstlisting}[language=Fortran, caption={Rutina de par de torsión.}, label={lst:torque_hook}]
+El par de torsión, también conocido como torque o momento de torsión, es una magnitud física que describe la capacidad de una fuerza para provocar un giro o rotación en un objeto. El par de torsión y el momento angular están estrechamente relacionados en el contexto del movimiento de rotación. El momento angular es una cantidad física que describe la tendencia de un objeto giratorio a seguir girando. Cuando se aplica un par de torsión a un objeto giratorio, si se hace en la misma dirección en la que el objeto ya gira, aumenta su velocidad angular. Por el contrario, si se aplica en la dirección opuesta al giro del objeto, disminuye su velocidad angular. En nuestro caso, el frenado magnético producirá una disminución, una toque en sentido contrario al giro de la estrella, provocando en ésta una pérdida de momento angular.\par
+
+En el Listado \ref{lst:torque_hook} se muestra como reemplazar la rutina por defecto de MESA para el cálculo del par de torsión para la nuestra, en la que implementaremos el frenado magnético. 
+ 
+\begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión.}, label={lst:torque_hook}]
       subroutine other_torque_hook(id, ierr)
          use const_def
          integer, intent(in) :: id
@@ -637,108 +681,89 @@ EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
 \end{lstlisting}
 
 \subsection{Rutina de frenado magnético}
-EXPLICAR QUE LOS DOS TIPOS DE RUTINAS: INTESIDAD FIJA, INTENSIDAD VARIABLE
-\begin{lstlisting}[language=Fortran, caption={Rutina de frenado magnético.}, label={lst:torque_mb_hook}]
-      ! This routine implements a magnetic braking effect.
-      ! It distributes among the zones which conforms the convective shell the
-      ! loss of angular momentum
-      subroutine other_torque_mag_brk(id, ierr)
-         use const_def
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         integer :: k
-         real(dp) :: B, j_dot, r_st
-         type (star_zone_info), target :: sz_info, core_info
-         type (star_zone_info), pointer :: sz_info_ptr, core_info_ptr
-         real(dp), dimension(:), pointer :: mag_brk_jdot
-         integer :: jdot_routine !how to distribute the j_dot
-         !controls if jdot distribution must only affect the convective zone
-         logical :: only_cz
-         !controls if jdot distribution must wait till a radiative core is develop
-         logical :: wait_rad_core          
-         integer :: activated !signals when the jdot routine is activated
+Si entrar en detalles por el momento (los mismos se abordarán en los siguientes capítulos), la pérdida de momento angular causada por el frenado magnético depende directamente de la velocidad de rotación de la estrella, de la cantidad de masa perdida por la misma debido a los vientos estelares y de la intensidad del campo magnético. Está pérdida, una vez computada, es distribuida entre las diferentes capas que componen la zona convectiva superficial de la estrella.\par
+
+Por otro lado, nuestro Sol es una estrella activa en lo que se refiere al campo magnético. Según los modelos teóricos éste es generado por una dinamo en la tacoclina. Ésta se define como la región de transición que se encuentra entre la zona interior radiactiva del Sol y la zona de convección que la rodea. En ella se produce un cambio significativo en el comportamiento de la rotación solar. En la zona interior radiactiva, la rotación es similar a la de un sólido rígido. Esto podría deberse a la influencia de un campo magnético fósil.
+En la zona exterior convectiva, la rotación es diferencial, con los polos rotando más lentamente que las regiones ecuatoriales. Es en esta región que presenta un cambio brusco de las velocidades de rotación donde, según los estudios, se genera el campo magnético del Sol. Éste alcanza la superficie con la ayuda de procesos convectivos que tienen lugar en la zona convectiva y da lugar a regiones magnéticamente activas en la superficie solar.\par
+
+
+Como hemos acabo de enumerar, existen una serie de condiciones para que se produzca el efecto de frenado magnético:
+
+\begin{enumerate}
+	\item La estrella rota
+	\item La estrella pierde masa debido a los vientos estelares
+	\item La estrella tiene un nucleo radiativo
+	\item La estrella tiene una zona convectiva que alcanza su superficie
+\end{enumerate}
+
+El Listado \ref{lst:torque_mb_hook} muestra como nuestra rutina de par de momento tiene en cuenta las diferentes condiciones listadas para influenciar o no en el momento angular de la estrella. En el caso de que lo haga, provocará una pérdida de momento en función las variables mencionadas, pérdida que será distribuida entre las diferentes capas de la capa convectiva exterior.
+
+\begin{lstlisting}[language=Fortran, float, caption={Rutina de frenado magnético.}, label={lst:torque_mb_hook}]
+  subroutine other_torque_mag_brk(id, ierr) 
+     !controls if jdot distribution must only affect the convective zone
+     logical :: only_cz
+     !controls if jdot distribution must wait till a radiative core is develop
+     logical :: wait_rad_core
+     !signals when the jdot routine is activated          
+     integer :: activated 
+     ...
+       
+     activated = 0
+     ...
+     
+     !Wait till radiative core is develop?
+     wait_rad_core = s% x_logical_ctrl(5)
+
+     !Loss of angular momentum distribution method
+     jdot_routine = s% x_integer_ctrl(1)
+     only_cz = .true.
+     ...
+
+     !Get information about the convective zone
+     if (only_cz) then
+       !Get information about the outter convective zone
+       call get_convective_info(s, sz_info_ptr)
+     else
+       !Get information about the outter convective zone till star surface
+       call get_convective_to_surf_info(s, sz_info_ptr)
+     end if
+
+     !Get information about the core
+     call get_core_info(s, core_info_ptr)
+
+     !Calculate amount of loss of angular moment
+     !Magnetic field intensity
+     B = s% x_ctrl(1)
+     if (B < 0) then
+       B = calculate_mag_field_intensity_gb(s)
+       j_dot = calculate_jdot_rate_gb(s, B)
+     else
+       j_dot = calculate_jdot_rate_cantiello(s, B)
+     end if
          
-         !Pointer to structure which conveys information about the convectice
-         !and core zones
-         sz_info_ptr => sz_info
-         core_info_ptr => core_info
-
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
-
-
-         !Reset support structures
-         allocate(mag_brk_jdot(s% nz))
-         s% extra_jdot(:) = 0
-         s% extra_omegadot(:) = 0
-         activated = 0
-         call reset_x_ctrl(s, idx_low_x_ctrl, idx_high_x_ctrl)
-         call reset_core_info(core_info_ptr)
-         call reset_convective_info(sz_info_ptr)
-
-         !Wait till radiative core is develop?
-         wait_rad_core = s% x_logical_ctrl(5)
-
-         !Loss of angular momentum distribution method
-         jdot_routine = s% x_integer_ctrl(1)
-         only_cz = .true.
-         if (jdot_routine /= 0) then
-               only_cz = .false.
-         end if
-
-         !Get information about the convective zone
-         if (only_cz) then
-            !Get information about the outter convective zone
-            call get_convective_info(s, sz_info_ptr)
-         else
-            !Get information about the outter convective zone till star surface
-            call get_convective_to_surf_info(s, sz_info_ptr)
-         end if
-
-         !Get information about the core
-         call get_core_info(s, core_info_ptr)
-
-
-         !Calculate amount of loss of angular moment
-         !Magentic field intensity
-         B = s% x_ctrl(1)
-         if (B < 0) then
-            B = calculate_mag_field_intensity_gb(s)
-            j_dot = calculate_jdot_rate_gb(s, B)
-         else
-            j_dot = calculate_jdot_rate_cantiello(s, B)
-         end if
-         
-
-         ! The MB routine is activated under the following conditions:
-         ! - use_other_torque flag is activated in inlist
-         ! AND
-         ! - the star is losing mass
-         ! AND
-         ! - the magnetic field intensitive is bigger than 0.0 (allow to 
-         ! execute the routine if use_other_torque=.true.)
-         ! AND
-         ! (
-         !   - a radiative core developed isn't required (configured in inlist)
-         !   OR
-         !   - a radiative core is required AND this was developed
-         !)
-         if ((s% use_other_torque) .and. (s% mstar_dot<0.0) .and. (B>0.0) .and. &
-            (.not. wait_rad_core .or. (wait_rad_core .and. is_core_rad(s)))) then
-
-            activated = 1
-
-            !Distribute the loss of angular momentum
-            call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
-
-            !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot
-            !is just defined
-            !for s% nz elements
-            s% extra_jdot(1:s% nz) = mag_brk_jdot
-         end if
-      end subroutine other_torque_mag_brk
+     ! The MB routine is activated under the following conditions:
+     ! - use_other_torque flag is activated in inlist
+     ! AND
+     ! - the star is losing mass
+     ! AND
+     ! - the magnetic field intensitive is bigger than 0.0 (allow to 
+     ! execute the routine if use_other_torque=.true.)
+     ! AND
+     ! (
+     !   - a radiative core developed isn't required (configured in inlist)
+     !   OR
+     !   - a radiative core is required AND this was developed
+     !)
+     if ((s% use_other_torque) .and. (s% mstar_dot<0.0) .and. (B>0.0) .and. &
+         (.not. wait_rad_core .or. (wait_rad_core .and. is_core_rad(s)))) then
+       activated = 1
+       !Distribute the loss of angular momentum
+       call distribute_j_dot(s, j_dot, sz_info_ptr, mag_brk_jdot)
+       !It happens that s% extra_jdot is longer than s% nz but mag_brk_jdot
+       !is just defined for s% nz elements
+       s% extra_jdot(1:s% nz) = mag_brk_jdot
+     end if
+  end subroutine other_torque_mag_brk
 \end{lstlisting}
 
 \endinput
