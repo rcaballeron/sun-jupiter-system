@@ -1636,6 +1636,13 @@ function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, ytick, a
   % Plot sun reference
   plot(sun_age, 0, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
 
+  % Plot reference marks
+  line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
+  line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
+
+
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
@@ -3629,6 +3636,10 @@ function main()
   rot_vels10 = rotational_vels([idx_125crit;idx_13crit;idx_14crit;idx_1475crit;idx_155crit],:);
   rot_vels11 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
 
+  %paper2
+  p2_rot_vels7 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
+
+
 
 
 
@@ -3818,8 +3829,10 @@ function main()
 
   %plot_teff_vs_mag_field_XG(rotational_vels([idx_1475crit],:),1);
 
-  paper1();
+  %paper1();
   %paper2();
+  %plot_radius_vs_mag_field_XG_z1(p2_rot_vels7,3);
+  plot_age_vs_teff_XG_z1(rot_vels7,3);
 end
 
 
