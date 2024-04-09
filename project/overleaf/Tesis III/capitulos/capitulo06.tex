@@ -144,7 +144,7 @@ La influencia de los parámetros libres, relativamente arbitrarios, asociados a 
 De manera similar a la intensidad del campo magnético, un formalismo que nos permita evolucionar a lo largo del tiempo el valor de $\amlt$ en función de determinados parámetros de la estrella, es un planteamiento razonable a la hora de eliminar una restricción relativamente arbitraria impuesta en nuestros modelos.
 
 \subsection{MLT $\alpha$ variable según Sonoi et al. (2019)}
-En \cite{Sonoi2018}, los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor directamente proporcional a la $\gsurf$, e inversamente proporcional a la $\teff$. --CREAN UN SIMPLE EXCEL MOSTRANDO ESTO-- Calibraron diferentes valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \citep{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
+En \cite{Sonoi2018}, los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor directamente proporcional a la $\gsurf$, e inversamente proporcional a la $\teff$. --CREAN UN SIMPLE EXCEL MOSTRANDO ESTO. MIRAR EN FICHERO MESA EL RANGO TEMP Y GSURF PARA CREAR LA GRÁFICA-- Calibraron diferentes valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \citep{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
 
 \begin{equation}
 	f(x,y) = a_0 + (a_1 + (a_3 + a_5x +a_6y)x + a_4y)x + a_2y\label{eq:alpha_ml}
@@ -197,7 +197,7 @@ En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva 
 \end{lstlisting}
 
 \subsection{Rutina de cálculo de intensidad de campo magnético}
-La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo}. Esta intensidad es funcionalmente dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA.\par
+La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo}. Esta intensidad es funcionalmente dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA (ver Listado \ref{lst:jdot_mf_intensity}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de cálculo de intensidad de campo magnético.}, label={lst:jdot_mf_intensity}]
   real function calculate_mag_field_intensity_gb(s) result(new_b)
@@ -252,7 +252,7 @@ La incorporación del formalismo para calcular una intensidad de campo magnétic
 \end{lstlisting}
 
 \subsection{Rutina de $\amlt$ variable}
-Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular, para cada paso temporal de la simulación de MESA, un valor de $\amlt$, eliminando así la necesidad de prefijar su valor para toda la simulación.\par  
+Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular, para cada paso temporal de la simulación de MESA, un valor de $\amlt$, eliminando así la necesidad de prefijar su valor para toda la simulación (ver Listado \ref{lst:var_amlt}).\par  
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de $\amlt$ variable.}, label={lst:var_amlt}]
   real function calculate_alpha(s) result(new_alpha)
@@ -277,7 +277,8 @@ Adicionalmente, y en línea con el objetivo de reducir el número de parámetros
 	
 \end{lstlisting}
 
-MESA no proporciona un \textit{hook} particular para modificar la rutina por defecto que trae el simulador. Para poder hacer evolucionar el valor de $\amlt$ recurrimos a incorporar nuestra rutina en la que MESA ejecuta al final de cada paso de simulación. De este modo conseguimos que en la siguiente iteración, utilice el valor que hemos calculado.
+MESA no proporciona un \textit{hook} particular para modificar la rutina por defecto que trae el simulador. Para poder hacer evolucionar el valor de $\amlt$ recurrimos a incorporar nuestra rutina en la que MESA ejecuta al final de cada paso de simulación (ver Listado \ref{lst:extra_start_step}). De este modo conseguimos que en la siguiente iteración, utilice el valor que hemos calculado.\par
+
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de MESA para ejecutar lógica adicional tras la ejecución de un paso de simulación.}, label={lst:extra_start_step}]
   integer function extras_start_step(id, id_extra)
 	integer, intent(in) :: id, id_extra
