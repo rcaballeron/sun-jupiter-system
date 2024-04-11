@@ -128,8 +128,6 @@ Por último, tenemos que el AML puede calcularse del siguiente modo:
 
 donde $\mwind$ es la tasa de pérdida de masa. Esta expresión se implementa en MESA a partir de los valores expuestos directamente durante las simulaciones.
 
---HASTA AQUÍ--
-
 \section{Efectos de la longitud de mezcla}
 La teoría de la longitud de mezcla (Mixing Length Theory, MLT) introducida por \citet{BohmVit58} ha sido comúnmente adoptada para modelar la convección estelar en códigos de evolución estelar, incluyendo MESA. El parámetro libre más importante en esta teoría es la longitud de mezcla $l$ que se define como:
 
@@ -139,7 +137,7 @@ La teoría de la longitud de mezcla (Mixing Length Theory, MLT) introducida por 
 
 donde $H_p$ es la altura de la escala de presión, y $\alpha$ un parámetro libre que se determina de antemano y se mantiene fijo durante las simulaciones de evolución estelar. \par
 
-La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de Li. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En la Sección \ref{sec:alt_mlt} mostramos cómo una parametrización alternativa de la longitud de mezcla (ML) podría producir resultados en línea con las observaciones. El ajuste del overshooting de ML y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de litio en los OC's.\par
+La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de litio. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En la Sección \ref{sec:alt_mlt} mostramos cómo una parametrización alternativa de la longitud de mezcla (ML) podría producir resultados en línea con las observaciones. El ajuste del rebasamiento (overshooting) de ML y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de litio en los OC's.\par
 
 De manera similar a la intensidad del campo magnético, un formalismo que nos permita evolucionar a lo largo del tiempo el valor de $\amlt$ en función de determinados parámetros de la estrella, es un planteamiento razonable a la hora de eliminar una restricción relativamente arbitraria impuesta en nuestros modelos.
 
@@ -158,11 +156,10 @@ donde
 \end{align}
 
 y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT \citep{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$. \par
---COMENTAR MÁS EN DETALLE CÓMO, POR EJEMPLO, SE HACE VARIAR EN MESA. TAMBIÉN ALGO MÁS DEL FORMALISMO--
-
 
 
 \section{Extendiendo MESA - Parte III}
+
 \subsection{Rutina de frenado magnético de intensidad variable} \label{sec:mb_var_b}
 En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva el AM entre las diferentes celdas $k$ y les asigna un valor de AM $J_k$. Este mecanismo sigue siendo el mismo para esta nueva rutina. En este nuevo escenario la diferencia radica en la nueva rutina de MB (ver Listado \ref{lst:jdot_gb}), concretamente en la implementación de la misma según el nuevo formalismo que hemos introducido para campos magnéticos de intensidad variable, y especialmente en la rutina que calcula la intensidad del campo magnético, devolviendo (potencialmente) un valor diferente a cada paso de la simulación (ver Listado \ref{lst:jdot_mf_intensity}).\par
 

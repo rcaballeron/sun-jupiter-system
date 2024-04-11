@@ -184,12 +184,13 @@ donde $\Dot{M}$ es la tasa de pérdida de masa, $\Omega$ la velocidad angular en
 
 
 
-\section{Efectos de la distrubución de AML}
+\section{Efectos de la distribución de AML}
 \subsection{Formalismo para la distribución de AML} \label{mod_aml}
-Como expresa la Eq.~\ref{eq:j_dot1}, la cantidad de AML depende de $\ralfven$, $\Omega$ y $\Dot{M}$. Para valores grandes de $\ralfven$, la estrella sufre una desaceleración significativa. El valor de $\ralfven$ depende de los siguientes parámetros variables: intensidad del campo magnético ($B$), $\teff$ y $\Omega$. (----TENEMOS FÓRMULA?----) Con respecto a $\Dot{M}$ y como se indica en la tabla \ref{tab:phy_mesa}, para calcular la pérdida de masa se utiliza la fórmula empírica desarrollada por Reimers \citep{Reimers1975} para estrellas en su fase AGB. Para una estrella de tipo solar la $\Dot{M}$ durante la EM (-----MS???? MIRAR EN PAPER-----) es relativamente pequeña, alrededor de $10^{-14}\msun \, yr^{-1}$ \citep{Noerdlinger2008}. \par
+Como expresa la Eq.~\ref{eq:j_dot1}, la cantidad de AML depende de $\ralfven$, $\Omega$ y $\Dot{M}$. Para valores grandes de $\ralfven$, la estrella sufre una desaceleración significativa. El valor de $\ralfven$ depende de los siguientes parámetros variables: intensidad del campo magnético ($B$), $\teff$ y $\Omega$ \citep{Gallet2015}. Con respecto a $\Dot{M}$ y como se indica en la tabla \ref{tab:phy_mesa}, para calcular la pérdida de masa se utiliza la fórmula empírica desarrollada por Reimers \citep{Reimers1975} para estrellas en su fase AGB. Para una estrella de tipo solar la $\Dot{M}$ durante la MS es relativamente pequeña, alrededor de $10^{-14}\msun \, yr^{-1}$ \citep{Noerdlinger2008}. \par
 
 
 \section{Extendiendo MESA - Parte II}
+Una vez tenemos definidos los diferentes formalismos que nos permiten calcular los efectos que producirían la presencia de un campo magnético de intensidad fija sobre el momento angular de una estrella similar al Sol, procedemos a codificar los mismos en rutinas compatibles con el simulador MESA. Comenzaremos con la introducción de la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, y luego procederemos con la rutina que realiza la distribución de esa pérdida entre las diferentes celdas que conforman la zona convectiva exterior de la estrella. Ambas rutinas son invocadas como parte del \textit{hook} introducido en la Sección \ref{sec:mb_routine}. \par
 
 \subsection{Rutina de frenado magnético de intensidad constante} \label{sec:mb_cte_b}
 En lo que MESA atañe, el simulador asigna un valor $\Omega$ para cada celda $k$ ($\Omega_k$) que se ajusta para que el AM resultante se conserve tras calcular la nueva masa de la celda $k$ ($m_k$) y su distancia al centro de la estrella ($r_k$). A continuación, le asigna un valor de AM a cada celda $k$ ($J_k$). En este punto, nuestra rutina de MB se activa, modificando $J_k$. Para ello, se proporciona una contribución adicional ($\Dot{J}_{k}$), también de signo negativo porque estamos ante una pérdida. Ésta es el resultado del par externo ejercido por el campo magnético una vez que se ha distribuido entre las diferentes capas que componen la CZ según dicta la Ec.~\ref{eq:k_jdot}:\par
@@ -198,13 +199,12 @@ En lo que MESA atañe, el simulador asigna un valor $\Omega$ para cada celda $k$
 	\Dot{J}_{k} &= \Dot{J}_*\;\frac{m^{}_{k} r^2_{k}}{m^{}_* r_*^2} \label{eq:k_jdot}
 \end{align}
 
+En el Listado \ref{lst:jdot_cantiello} podemos observar el código de la rutina. Es importante destacar que MESA utiliza la sistema cgs (centímetros, gramos, segundos) por lo que hay que asegurarse que los parámetros y variables utilizadas en los cálculos están en las unidades correctas.\par
 
-
-EXPLICAR QUE SUSTITUIMOS LA RUTINA POR DEFECTO CON LA NUESTRA
 \begin{lstlisting}[language=Fortran, caption={Rutina de par de torsión para un campo magnético de intensidad fija.}, label={lst:jdot_cantiello}]
   real function calculate_jdot_rate_cantiello(s, bf_star) result(new_j_dot)
-	use const_def
-	type (star_info), pointer, intent(in) :: s
+    use const_def
+    type (star_info), pointer, intent(in) :: s
 	real(dp), intent(in) :: bf_star
 	
 	real(dp) :: r_st, m_st, i_st, alfven_r
