@@ -156,9 +156,10 @@ y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_
 
 
 \section{Extendiendo MESA - Parte III}
+De forma similar a como hicimos en el capítulo \ref{ch:tercer-capitulo}, y una vez introducidos los formalismos para campos magnéticos de intensidad y $\amlt$ variables, estamos en posición de incorporar las rutinas a MESA. Introduciremos primeramente la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, para seguir con la que computa la intensidad del campo magnético a cada paso de la simulación. En lo que se refiere a la rutina de distribución de la pérdida de momento angular en la zona convectiva, utilizaremos la misma rutina ya introducida (ver Sección \ref{sec:dist_aml1}). Finalmente, acometeremos la rutina encargada de calcular un valor $\amlt$ variable.\par
 
 \subsection{Rutina de frenado magnético de intensidad variable} \label{sec:mb_var_b}
-En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva el AM entre las diferentes celdas $k$ y les asigna un valor de AM $J_k$. Este mecanismo sigue siendo el mismo para esta nueva rutina. En este nuevo escenario la diferencia radica en la nueva rutina de MB (ver Listado \ref{lst:jdot_gb}), concretamente en la implementación de la misma según el nuevo formalismo que hemos introducido para campos magnéticos de intensidad variable, y especialmente en la rutina que calcula la intensidad del campo magnético, devolviendo (potencialmente) un valor diferente a cada paso de la simulación (ver Listado \ref{lst:jdot_mf_intensity}).\par
+En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva el AM entre las diferentes celdas $k$ y les asigna un valor de AM $J_k$. Este mecanismo sigue siendo el mismo para esta nueva rutina. En este nuevo escenario la diferencia radica en la nueva rutina de MB (ver Listado \ref{lst:jdot_gb}), concretamente en la implementación de la misma según el nuevo formalismo que hemos introducido para campos magnéticos de intensidad variable, dependiente del tiempo, de $\Omega$, $\mstar$, $ralfven$, y especialmente en la rutina que calcula la intensidad del campo magnético, devolviendo (potencialmente) un valor diferente a cada paso de la simulación (ver Listado \ref{lst:jdot_mf_intensity}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión para un campo magnético de intensidad variable.}, label={lst:jdot_gb}]
   real function calculate_jdot_rate_gb(s, bf_star) result(new_j_dot)
@@ -191,103 +192,100 @@ En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva 
 \end{lstlisting}
 
 \subsection{Rutina de cálculo de intensidad de campo magnético}
-La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo}. Esta intensidad es funcionalmente dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA (ver Listado \ref{lst:jdot_mf_intensity}).\par
+La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo} ya que no es realista establecer que éste no varía su intensidad, incluso morfología a lo largo de la vida de la estrella. Esta intensidad es funcionalmente dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA (ver Listado \ref{lst:jdot_mf_intensity}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de cálculo de intensidad de campo magnético.}, label={lst:jdot_mf_intensity}]
   real function calculate_mag_field_intensity_gb(s) result(new_b)
-	use const_def
-	type (star_info), pointer, intent(in) :: s
-	
-	! rossby_sun = 1.96, Eq 9 [1]
-	real(dp) :: r_st, rossby_sun = 1.96, rossby, rossby_norm, m_hydrogen
-	real(dp) :: p_rot, p_rot_sun = 25.38 !Carrington solar  rotation
-	real(dp) :: tau_c_sun, tau_c, f_star, f_min, f_max, b_star
-	real(dp) :: bf_min, bf_max, bf_star, b_equi, mu_avg
-	real(dp) :: p_gas_photo, p_photo, p_rad_photo, p_photo2
-	
-	!tau_c -> convective turnover time (d)
-	!exp ->  natural exponential function
-	tau_c = 314.241*exp(-s% Teff/1952.5)*exp(-(s% Teff/6250)**18) + 0.002 
-	tau_c_sun = 314.241*exp(-teffsun/1952.5)*exp(-(teffsun/6250)**18) + 0.002
-	
-	!Star data
-	r_st = s% r(1)
-	p_rot = (2*pi*r_st) / (s% v_rot_avg_surf * 86400) ! day
-	
-	!Rossby number = p_rot / tau_c
-	rossby = p_rot / tau_c
-	rossby_sun = p_rot_sun / tau_c_sun
-	rossby_norm = rossby / rossby_sun
-	
-	!magnetic filling factor fmin & fmax
-	f_min = 0.5 / (1. + (rossby_norm / 0.16)**2.6)**1.3 
-	f_max = 1 / (1. + (rossby_norm / 0.31)**2.5)
-	f_star = 0.55 / (1. + (rossby_norm / 0.16)**2.3)**1.22
-	
-	!Eq 3 [2]
-	!mean atomic weight
-	mu_avg = 1.75 + 0.5 * tanh((3500. - s% Teff) / 600.)
-	!photospheric pressure 
-	m_hydrogen = mp !proton mass       
-	p_photo = s%rho(s% photosphere_cell_k)*boltzm*s% Teff/(mu_avg*m_hydrogen)
-	!Equipartition magnetic filed strength
-	b_equi = sqrt(8.* pi * p_photo)
-	
-	!Eq 7 [1], magnetic field strength b_star is proportional to the
-	!equipartition magnetic field strength b_equi
-	b_star = 1.13 * b_equi
-	bf_min = f_min * b_star
-	bf_max = f_max * b_star
-	bf_star = f_star * b_star
-	
-	!return the min value, as it does the paper
-	new_b = bf_star
+    use const_def
+    type (star_info), pointer, intent(in) :: s
+    
+    ! rossby_sun = 1.96, Eq 9 [1]
+    real(dp) :: r_st, rossby_sun = 1.96, rossby, rossby_norm, m_hydrogen
+    real(dp) :: p_rot, p_rot_sun = 25.38 !Carrington solar  rotation
+    real(dp) :: tau_c_sun, tau_c, f_star, f_min, f_max, b_star
+    real(dp) :: bf_min, bf_max, bf_star, b_equi, mu_avg
+    real(dp) :: p_gas_photo, p_photo, p_rad_photo, p_photo2
+    
+    !tau_c -> convective turnover time (d)
+    !exp ->  natural exponential function
+    tau_c = 314.241*exp(-s% Teff/1952.5)*exp(-(s% Teff/6250)**18) + 0.002 
+    tau_c_sun = 314.241*exp(-teffsun/1952.5)*exp(-(teffsun/6250)**18) + 0.002
+    
+    !Star data
+    r_st = s% r(1)
+    p_rot = (2*pi*r_st) / (s% v_rot_avg_surf * 86400) ! day
+    
+    !Rossby number = p_rot / tau_c
+    rossby = p_rot / tau_c
+    rossby_sun = p_rot_sun / tau_c_sun
+    rossby_norm = rossby / rossby_sun
+    
+    !magnetic filling factor fmin & fmax
+    f_min = 0.5 / (1. + (rossby_norm / 0.16)**2.6)**1.3 
+    f_max = 1 / (1. + (rossby_norm / 0.31)**2.5)
+    f_star = 0.55 / (1. + (rossby_norm / 0.16)**2.3)**1.22
+    
+    !Eq 3 [2]
+    !mean atomic weight
+    mu_avg = 1.75 + 0.5 * tanh((3500. - s% Teff) / 600.)
+    !photospheric pressure 
+    m_hydrogen = mp !proton mass
+    p_photo = s%rho(s% photosphere_cell_k)*boltzm*s% Teff/(mu_avg*m_hydrogen)
+    !Equipartition magnetic filed strength
+    b_equi = sqrt(8.* pi * p_photo)
+    
+    !Eq 7 [1], magnetic field strength b_star is proportional to the
+    !equipartition magnetic field strength b_equi
+    b_star = 1.13 * b_equi
+    bf_min = f_min * b_star
+    bf_max = f_max * b_star
+    bf_star = f_star * b_star
+    
+    !return the min value, as it does the paper
+    new_b = bf_star
   end function	
 \end{lstlisting}
 
 \subsection{Rutina de $\amlt$ variable}
-Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular, para cada paso temporal de la simulación de MESA, un valor de $\amlt$, eliminando así la necesidad de prefijar su valor para toda la simulación (ver Listado \ref{lst:var_amlt}).\par  
+Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular, para cada paso temporal de la simulación de MESA, un valor de $\amlt$ dependiente del tiempo, $\teff$ y $\gsurf$, eliminando así la necesidad de prefijar su valor para toda la simulación (ver Listado \ref{lst:var_amlt}).\par  
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de $\amlt$ variable.}, label={lst:var_amlt}]
   real function calculate_alpha(s) result(new_alpha)
-	type (star_info), pointer, intent(in) :: s
-	
-	!Parameters taken from Table 2 - MTL(BV) Eddington
-	
-	real(dp) :: a0 = 1.790295, a1 = -0.149542, a2 = 0.069574, a3 = -0.008292
-	real(dp) :: a4 = 0.013165, a5 = 0.080333, a6 = -0.033066
-	real(dp) :: x, y
-	
-	!f(x, y) = a0 + (a1 + (a3 + a5x + a6y)x + a4y)x + a2y
-	!where x = (Teff-5777)/1000 and y = log g-4.44
-	!Namely, x and y represent deviation from the solar effective 
-	!temperature and surface gravity, respectively.
-	x = (s% Teff - 5777) / 1000
-	y = s% log_surface_gravity - 4.44
-	
-	new_alpha = a0 + (a1 + (a3 + a5*x + a6*y)*x + a4*y)*x + a2*y
-	s% x_ctrl(47) = new_alpha
+    type (star_info), pointer, intent(in) :: s
+    
+    !Parameters taken from Table 2 - MTL(BV) Eddington
+    real(dp) :: a0 = 1.790295, a1 = -0.149542, a2 = 0.069574, a3 = -0.008292
+    real(dp) :: a4 = 0.013165, a5 = 0.080333, a6 = -0.033066
+    real(dp) :: x, y
+    
+    !f(x, y) = a0 + (a1 + (a3 + a5x + a6y)x + a4y)x + a2y
+    !where x = (Teff-5777)/1000 and y = log g-4.44
+    !Namely, x and y represent deviation from the solar effective 
+    !temperature and surface gravity, respectively.
+    x = (s% Teff - 5777) / 1000
+    y = s% log_surface_gravity - 4.44
+    
+    new_alpha = a0 + (a1 + (a3 + a5*x + a6*y)*x + a4*y)*x + a2*y
+    s% x_ctrl(47) = new_alpha
   end function
-	
 \end{lstlisting}
 
 MESA no proporciona un \textit{hook} particular para modificar la rutina por defecto que trae el simulador. Para poder hacer evolucionar el valor de $\amlt$ recurrimos a incorporar nuestra rutina en la que MESA ejecuta al final de cada paso de simulación (ver Listado \ref{lst:extra_start_step}). De este modo conseguimos que en la siguiente iteración, utilice el valor que hemos calculado.\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de MESA para ejecutar lógica adicional tras la ejecución de un paso de simulación.}, label={lst:extra_start_step}]
   integer function extras_start_step(id, id_extra)
-	integer, intent(in) :: id, id_extra
-	integer :: ierr
-	real(dp) :: x, y, new_alpha
-	type (star_info), pointer :: s
-	ierr = 0
-	call star_ptr(id, s, ierr)
-	if (ierr /= 0) return
-	extras_start_step = keep_going
-	
-	if (var_mlt_alpha .eqv. .true.) then
-	s% mixing_length_alpha = calculate_alpha(s)
-	end if
-	
+    integer, intent(in) :: id, id_extra
+    integer :: ierr
+    real(dp) :: x, y, new_alpha
+    type (star_info), pointer :: s
+    ierr = 0
+    call star_ptr(id, s, ierr)
+    if (ierr /= 0) return
+    extras_start_step = keep_going
+    
+    if (var_mlt_alpha .eqv. .true.) then
+      s% mixing_length_alpha = calculate_alpha(s)
+    end if
   end function extras_start_step
 \end{lstlisting}
 
