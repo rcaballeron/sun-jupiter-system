@@ -51,6 +51,8 @@
 \RequirePackage[table]{xcolor}
 \RequirePackage{longtable}
 \RequirePackage{threeparttable}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
 
 %\RequirePackage{natbib}
 \counterwithout{equation}{chapter}
