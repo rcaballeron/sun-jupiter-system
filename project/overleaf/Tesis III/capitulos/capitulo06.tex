@@ -4,11 +4,7 @@
 \chapter{Rotación y campos magnéticos de intensidad variable}\label{ch:sexto-capitulo}
 
 \section{Introducción}
-A lo largo de la evolución de la estrella, parámetros directamente observables como su velocidad de rotación, temperatura efectiva, gravedad superficial o abundancia de elementos químicos sufren variaciones. Estos parámetros ejercen una influencia, directa o indirecta, en AML causada por el campo magnético de la estrella. Además, nos encontramos con los movimientos de convección estelar, que en la mayoría de los modelos de evolución estelar, se describen mediante la teoría de la longitud de mezcla (MLT). La MLT utiliza la escala de longitud de mezcla, que es proporcional a la altura de la escala de presión local y al parámetro de longitud de mezcla ($\amlt$). Este parámetro, $\amlt$, se considera un parámetro fijo libre y debe determinarse comparando los modelos estelares con alguna referencia, en la mayoría de los casos nuestro Sol. Por lo tanto, suponer que la intensidad del campo magnético ($B$) y $\amlt$ permanecen constantes a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios, pero no se corresponde con la realidad.\par
-
-En los últimos años, se ha estudiado la evolución rotacional de estrellas de masa baja e intermedia gracias a varias campañas observacionales \citep{Hartman2010, Gallet2013, Bouvier2016}. Algunas investigaciones específicas, como las de \citet{Ud-Doula2008, Cranmer2011, Gallet2015, Amard2016}, se centran en modelar los efectos del MB y su acoplamiento con los vientos estelares en la evolución rotacional de las estrellas. Estos modelos se basan en una serie de parámetros que son fijos, entre ellos la intensidad del campo magnético $B$. Este enfoque ha demostrado no ser suficiente para explicar los datos observacionales, y es necesaria la interacción con otros procesos en la evolución de la velocidad angular de las estrellas de baja masa: por ejemplo la distribución de AML en el interior de la estrella a lo largo de la PMS y MS \citep{Charbonnel2005, Eggenberger2008, Eggenberger2009, Caballero2020}, y la interacción estrella-disco protoestelar durante la PMS \citep{Bouvier2008,Gallet2013,Eggenberger2012,Zanni2012,Bouvier2016}.\par
-
-Atendiendo a este contexto, extendemos nuestra línea de investigación en la dirección de explorar cómo contribuyen los modelos estelares evolutivos en los que tanto $B$ como $\amlt$ varían con el tiempo en función de parámetros estelares específicos al MB y a la evolución del Li en el Sol, y otras estrellas de tipo solar.\par
+Suponer que el parámetro de longitud de mezcla ($\amlt$) y/o la intensidad del campo magnético ($B$) permanecen constantes a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios, pero no se corresponde con la realidad. Por un lado,  la MLT utiliza la escala de longitud de mezcla, que es proporcional a la altura de la escala de presión local y a $\amlt$. En la mayoría de los formalismos $\amlt$ se considera un parámetro fijo libre y debe determinarse comparando los modelos estelares con alguna referencia, en la mayoría de los casos nuestro Sol. Pero como hemos visto en la sección \ref{sec:alt_mlt}, tiene una influencia directa en cómo se destruye el litio a lo largo de la evolución de la estrella. Parece razonable, que como ocurre con otros parámetros estelares directamente observables como la velocidad de rotación, temperatura efectiva o gravedad superficial, cuyos valores sufren variaciones, el valor $\amlt$ también evolucione a lo largo del tiempo. Por otro lado, un planteamiento similar es aplicable al valor de $B$. Investigaciones como las de \citet{Ud-Doula2008, Cranmer2011, Gallet2015, Amard2016}, se centran en modelar los efectos del MB. Todo estos modelos fijan una intensidad del campo magnético. Este enfoque ha demostrado no ser suficiente para explicar los datos observacionales. Atendiendo a este contexto, extendemos nuestra línea de investigación en la dirección de explorar cómo contribuyen los modelos estelares evolutivos en los que tanto $B$ como $\amlt$ varían con el tiempo en función de parámetros estelares específicos al MB y a la evolución del litio en el Sol, y otras estrellas de tipo solar.\par
 
 
 \section{Efectos del frenado magnético - Parte II}
@@ -19,22 +15,24 @@ De acuerdo a \cite{Gallet2013} la intensidad del campo magnético debería varia
 \subsubsection{Frenado magnético según Gallet \& Bouvier (2013)}
 Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre $\Omega$ , $\teff$, y la intensidad del campo magnético ($B$), así como con la tasa de pérdida de masa ($\mwind$) causada por el viento estelar. Comenzaremos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la intensidad del campo magnético.\par 
 
-Un parámetro relevante para caracterizar la influencia de un campo magnético dado en el viento estelar es $\Omega$. Suponiendo que el campo magnético es generado por una dinamo, su fuerza es proporcional a alguna potencia de $\Omega$,
+Un parámetro relevante para caracterizar la influencia de un campo magnético dado en el viento estelar es $\Omega$.  Suponiendo que el campo magnético superficial medio ($\Bp$) es generado por una dinamo, su fuerza es proporcional a alguna potencia de $\Omega$,
 
 \begin{equation}
-	f_*B_* \propto \Omega_*^b \label{eq:mf_strenght}
+	\Bp \propto \Omega_*^b \label{eq:mf_strenght}
+\end{equation}
+y $\Bp$ queda definido por,
+\begin{equation}
+	\Bp = f_*B_* \label{eq:bp}
 \end{equation}
 
-donde $f_*$ es el factor de llenado, es decir, la fracción de la superficie estelar que está magnetizada, $B_*$ es la fuerza del campo magnético, $\Omega_*$ es la velocidad angular de la estrella en la superficie estelar, y $b$ es el exponente de la dinamo \citep{Gallet2013}. El producto de $f_*$ por $B_*$ nos permitirá obtener la intensidad del campo magnético. \par
+donde $f_*$ es el factor de relleno, es decir, la fracción de la superficie estelar que está magnetizada, $B_*$ es la fuerza del campo magnético, $\Omega_*$ es la velocidad angular de la estrella en la superficie estelar, y $b$ es el exponente de la dinamo \citep{Gallet2013}.\par
 
-Según este enfoque, la intensidad del campo magnético variará proporcionalmente a la temperatura efectiva ($\teff$) de la estrella de la siguiente manera: 
-\begin{ceqn}
-	\begin{equation}
-		B_* \approx 1.13 \Beq \label{eq:mf_bstar}
-	\end{equation}
-\end{ceqn}
-
-donde $B_*$ es proporcional a la intensidad del campo magnético de equipartición, quedando $\Beq$ definido como 
+Según este enfoque, la intensidad de campo magnético será proporcional a la intensidad de campo magnético de equipartición, $\Beq$, de la siguiente manera:
+ 
+\begin{equation}
+	B_* \approx 1.13 \Beq \label{eq:mf_bstar}
+\end{equation}
+donde $\Beq$ se define, y por tanto se relaciona con $\teff$, como:
 
 \begin{equation}
 	\Beq = \sqrt{8\pi P_*} = \sqrt{\frac{8\pi\rho_* \boltzmann \teff}{\mu\massH}}\label{eq:mf_beq}    
@@ -48,9 +46,9 @@ Como se indica en \cite{Cranmer2011} $\mu$ puede estimarse utilizando las ecuaci
 	\mu \approx \frac{7}{4} + \frac{1}{2} \; \textrm{tanh}\Bigg(\frac{3500-\teff}{600}\;\Bigg) \label{eq:mf_atom_weight}
 \end{equation}
 
-Finalmente, estamos en condiciones de calcular $\Beq$ y $B_*$.\par
+Así, $B_*$ puede calcularse con los parámetros estelares en cualquier estado evolutivo de una estrella.\par
 
-Por otro lado, \cite{Cranmer2011} descubrió que la intensidad del campo magnético está influida principalmente por $f_*$ y no por el periodo de rotación de la estrella. Es decir, las variaciones en la velocidad angular de la estrella no alteran significativamente la intensidad de su campo magnético. Además, $f_*$ depende en gran medida del número de Rossby ($\rossby$). Para calcular $\rossby$ de una estrella determinada, es necesario conocer el tiempo de vuelta ($\turnover$),
+Además, \citet{Cranmer2011} argumentó que el periodo de rotación de la estrella ($\prot$) influye más en $f_*$ que en $B_*$. Es decir, las variaciones en la velocidad angular de la estrella no alteran significativamente la intensidad del campo magnético. Por otra parte, se ha observado que $f_*$ depende en gran medida del número de Rossby ($\rossby$). Para calcular $\rossby$ de una estrella determinada, es necesario conocer el tiempo de giro ($\turnover$),
 
 \begin{equation}
 	\rossby = \frac{\prot}{\turnover} \label{eq:mf_rossby}
@@ -59,7 +57,7 @@ Por otro lado, \cite{Cranmer2011} descubrió que la intensidad del campo magnét
 	\turnover = 314.24\;exp\left[-\Bigg(\frac{\teff}{1952.5}\Bigg)-\Bigg(\frac{\teff}{6250}\Bigg)^{18} \;\right]+0.002 \label{eq:mf_turnover}
 \end{equation}
 
-\cite{Cranmer2011} proporciona dos ajustes diferentes para $f_*$ que definen respectivamente los límites superior e inferior para la intensidad media del campo magnético superficial ($f_*B_*$),
+\cite{Cranmer2011} proporciona dos ajustes diferentes para $f_*$ que definen respectivamente los límites superior e inferior de $\Bp$,
 
 \begin{align}
 	\fmin &= \frac{0.5}{(1+(x/0.16)^{2.6})^{1.3}} \label{eq:fmin}\\
@@ -68,24 +66,21 @@ Por otro lado, \cite{Cranmer2011} descubrió que la intensidad del campo magnét
 
 donde x = $\rossby$/$\rossbysun$, y $\rossbysun$ = 1.96. \par
 
-Por último, podemos calcular el factor de llenado de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de llenado medio del Sol actual ($\fsun$ = [0.001-0.01], ver \citep{Cranmer2011}),
+Por último, podemos calcular el factor de relleno de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de relleno del Sol $\fsun$ ([0.001-0.01], ver \citep{Cranmer2011}),
+
+\begin{equation}
+	\fstar = \frac{0.55}{(1+(x/0.16)^{2.3})^{1.22}} \label{eq:fstart}
+\end{equation}
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{img/paper2/mag_field_limits_var_vel_g3.pdf}
-	\caption{La evolución de la intensidad del campo magnético y sus límites superior e inferior, en función del tiempo y $\oomegac$ para varios modelos de 1 $\msun$. El modelo incluye rotación PMS con $\oomegac$ = 0.1425. Las líneas continuas representan la intensidad del campo magnético, mientras que las líneas discontinuas representan la evolución angular de la estrella. La línea vertical discontinua hace referencia a la ZAMS.}
-	\label{fig:mag_field_limits_var_vel_g3}
-\end{figure}
-
-Con este formalismo podemos calcular el campo magnético medio como una función dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$. Los valores temporales de estas tres variables se obtendrán a partir de las distintas simulaciones realizadas con ayuda de MESA. \par
 
 
---QUIZAS SACARLO A UNA SECCIÓN PROPIA DE AML --
-Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnético, necesitamos modelar cómo se produce la pérdida de momento angular. A medida que la estrella se contrae durante la fase de PMS hacia el comienzo de la ZAMS, su velocidad angular aumenta, lo que conduce a un aumento gradual del campo magnético medio. En nuestro análisis, observamos intensidades máximas de hasta $1.0,\mathrm{kG}$, como se muestra en la figura \ref{fig:mag_field_limits_var_vel_g3}. A continuación, entra en una fase de saturación (aunque con una tendencia descendente) hasta $1.0$ Ga, y finalmente disminuye bruscamente como resultado de la menor velocidad angular de la estrella. En el formalismo anterior utilizamos un modelo aplicable a campos magnéticos de intensidad no variable y de baja intensidad que oscilan entre unos pocos Gauss ($1.0,\mathrm{G} \leq B \leq 10.0,\mathrm{G}$). Las intensidades significativamente mayores requeridas en el presente formalismo hacen inadecuado el modelo empleado anteriormente.\par
+Con este formalismo podemos calcular $\Bp$ como una función dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$. Los valores temporales de estas tres variables se obtendrán a partir de las distintas simulaciones realizadas con ayuda de MESA. \par
 
 
-Comencemos por enumerar los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular. Si suponemos un flujo de salida esférico, el par aplicado por un viento estelar $\torquewind$ acoplado magnéticamente viene dictado por,
+\subsubsection{Pérdida de momento angular según Gallet \& Bouvier (2013)}
+
+Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnético, necesitamos modelar cómo se produce la pérdida de momento angular. Comencemos por enumerar los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular. Si suponemos un flujo de salida esférico, el par aplicado por un viento estelar $\torquewind$ acoplado magnéticamente viene dictado por,
 
 \begin{equation}
 	\torquewind \propto \Omega_* \; \mwind \; \ralfven^{2} \label{eq:mb_torque}
@@ -102,9 +97,6 @@ Las estrellas con masas iniciales similares, pero con diferentes ratios de pérd
 \end{ceqn}
 
 donde $r$ es el radio estelar, $\rho$ la densidad de masa, y $\nu$ la velocidad del viento estelar.
-
---BLOQUE REPETIDO. HACER REFERENCIA A LA SECCIÓN ANTERIOR, INDICANDO QUE A DIFERENCIA DE ELLA, AQUÍ UTILIZAMOS R-ALVEN--
-Se ha observado que las estrellas de masa intermedia fuertemente magnéticas suelen tener tasas de rotación mucho más lentas que otras estrellas de su población parental \cite{Mathys2006}. En esas estrellas, los campos magnéticos interactúan con la pérdida de masa, donde el radio Alfv'{e}n juega un papel importante. $\ralfven$ se define como el punto en el que la densidad de energía del campo magnético y la densidad de energía cinética están equilibradas. En caso de que $\ralfven$ sea mayor que el radio estelar, entonces el flujo del viento tendrá que seguir el campo magnético. Como consecuencia, el material abandona la superficie estelar con una mayor AM específica, ya que el radio de co-rotación ha aumentado y corresponde aproximadamente a $\ralfven$ que puede expresarse como \cite{Matt2012}
 
 \begin{equation}
 	\ralfven = K_1\left[\frac{\Bp^{2}\;R_*^{2}}{\mwind\;\sqrt{K_2^2\vesc^2 + \Omega_*^2R_*^{2}}\ }\right]^{m}R_*  \label{eq:mb_ralfven}
