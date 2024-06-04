@@ -4,6 +4,9 @@
 \chapter{Conclusiones finales}\label{ch:septimo-capitulo}
 
 \section{Introducción}
+Llegado este punto, nos parece razonable y adecuado comentar cuáles han sido las líneas maestras de nuestra investigación, qué conclusiones principales hemos obtenido en nuestro estudio y finalmente, apuntar diferentes opciones de hacia dónde orientar nuestros siguientes pasos. El objetivo primordial de esta tesis ha estado enfocado en entender los mecanismos que regulan el ciclo de vida del litio en estrellas análogas a nuestro Sol, con especial interés ante la influencia de campos magnéticos. Para ello, nuestros primeros pasos estuvieron orientados al estudio de esos mecanismos, la simulación de los mismos en MESA y la comparación de los resultados obtenidos con los de trabajos anteriores realizados por otros investigadores. Esto nos permitió fijar y establecer una línea base, de referencia, que evolucionaría y sería extendida con nuestras contribuciones.  
+
+  Nuestra línea de investigación A lo largo de nuestra línea de investigación hemos ido evolucionando 
 Comentar cómo vamos a estructurar el documento. Hacer un brevísimo repaso cómo ha ido evolucionando la línea de investigación: desde el estudio del lítio, los mecanismos de destrucción, simulaciones con: sin rotación, con rotación, frenado magnético de intensidad fija, frenado magnético con intensidad variable y finalmente, inclusión de amlt variable.
 
 \section{Comparativa MB intensidad fija vs variable}
@@ -17,15 +20,13 @@ En \cite{Caballero2020} ya abordamos el estudio de la abundancia superficial de 
 			Parámetro & Intensidad Variable & Intensidad fija\\
 			\hline
 			Convección & MLT variable $\alpha_{\textrm{MLT}}$ & MLT prefijado $\alpha_{\textrm{MLT}}=1.82$\\
-			Sobreimpulso & desactivado & $f_{\textrm{ov,core}}=0.0160$,\\ & & $f_{\textrm{ov,sh}}=0.0174$\\
+			Overshooting & desactivado & $f_{\textrm{ov,core}}=0.0160$,\\ & & $f_{\textrm{ov,sh}}=0.0174$\\
 			Formalismo Frenado & \cite{Gallet2013} & \cite{Ud-Doula2008} \\ Magnético & & \\
 			Intensidad Campo & B(G) variable & B(G) prefijado [3.0G-5.0G]\\ Magnético & & \\
-			Number of OC's & 64 & 1 \\
-			Conjuntos de datos & GDR3.0 GES DR5.0 & \cite{Sestito2005} \\
 			\hline
 		\end{tabular}
 	\end{threeparttable}
-	\caption{Comparación con el trabajo \cite{Caballero2020}.} \label{tab:caballero2023_2020}
+	\caption{Comparación entre campos magnéticos de intensidad fija vs. variable.} \label{tab:caballero2023_2020}
 \end{table}
 
 La Figura \ref{fig:li_var_vel_4_0g4} muestra la evolución de la abundancia de Li para $\omegaini$ entre 0.0084 y 0.0336 en presencia de un campo magnético con una intensidad de 4G. Hemos aumentado la versión original con el mismo conjunto de datos OCs recogidos ----REVISAR aplicados en este nuevo trabajo, de forma que sea posible una comparación consistente entre ambos formalismos.---- Si centramos nuestra atención en la simulación con $\omegaini$ = 0.0336, la simulación reproduce A(Li) = 1.024 dex, valor que está en línea tanto con el del Sol (1.1 $\pm$ 0.1 dex) como con los valores obtenidos en la Figura \ref{fig:li_var_vel_var_g_3} del presente trabajo (1.133 dex) para $\omegaini$ = 0.14 y 0.1425. Aunque en este último caso los modelos se inicializaron con valores de $\omegaini$ más altos que en el primero, lo que resulta en $B$ hasta 3 órdenes de magnitud más intensivos ($\approx$ 1KG frente a 4G) la simulación en ambos trabajos acaba produciendo valores muy similares tanto para la velocidad rotacional como para el A(Li). Esto se explica en parte porque una mayor intensidad de campo magnético implica un efecto MB más intenso (véanse las figuras \ref{fig:rot_vel_var_vel_var_g3} y \ref{fig:rot_vel_var_g3}). \& \ref{fig:rot_vel_var_vel_4_0g4}). En el primer caso, el efecto de desaceleración es más agudo que en el segundo, por lo que deja de destruir Li antes.\par
@@ -39,14 +40,14 @@ A la vista de los valores obtenidos, podemos concluir que el nuevo modelo introd
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\textwidth]{img/paper2/li_var_vel_4_0g4.pdf}
-	\caption{La evolución de la abundancia superficial del \isotope[7]{Li} en relación con el \isotope[1]{H}, en función del tiempo para varios modelos de 1 $\msun$. Los modelos incluyen un campo magnético con una intensidad de 4G. La línea negra continua representa el modelo de referencia según \cite{Choi2016}. El resto de líneas son modelos que incluyen rotación inicial con $\omegaini$ entre 0.0084 y 0.0336, respectivamente. La estrella morada son las abundancias superficiales de Li para el Sol actual \cite{Asplund2009}. La línea vertical discontinua hace referencia a la ZAMS.}
+	\caption{La evolución de la abundancia superficial del \isotope[7]{Li} en relación con el \isotope[1]{H}, en función del tiempo para varios modelos de $1 \msun$. Los modelos incluyen un campo magnético con una intensidad de 4G. La línea negra continua representa el modelo de referencia según \cite{Choi2016}. El resto de líneas son modelos que incluyen rotación inicial con $\omegaini$ entre 0.0084 y 0.0336, respectivamente. La estrella morada son las abundancias superficiales de Li para el Sol actual \cite{Asplund2009}. La línea vertical discontinua hace referencia a la ZAMS.}
 	\label{fig:li_var_vel_4_0g4}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\textwidth]{img/paper2/rot_vel_var_vel_4_0g4.pdf}
-	\caption{La evolución de la velocidad de rotación de la superficie, en función del tiempo para varios modelos de 1 $\msun$. Los modelos incluyen un campo magnético con una intensidad de 4G, rotación inicial con $\omegaini$ entre 0.0084 y 0.0336, respectivamente y MB. La estrella púrpura es la velocidad angular superficial para el Sol actual \cite{Gill2012}. La línea vertical discontinua hace referencia a la ZAMS.}
+	\caption{La evolución de la velocidad de rotación de la superficie, en función del tiempo para varios modelos de $1 \msun$. Los modelos incluyen un campo magnético con una intensidad de 4G, rotación inicial con $\omegaini$ entre 0.0084 y 0.0336, respectivamente y MB. La estrella púrpura es la velocidad angular superficial para el Sol actual \cite{Gill2012}. La línea vertical discontinua hace referencia a la ZAMS.}
 	\label{fig:rot_vel_var_vel_4_0g4}
 \end{figure}
 
