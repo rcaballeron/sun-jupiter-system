@@ -2613,7 +2613,7 @@ function plot_3_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_3_0G;
 
-  age_vs_li_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 3.0G & var. rotational velocity', 'li_var_vel_3_0g', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_3_0g', num2str(idx));
 end
 
 function plot_3_0G_0314vc(rot_vels, idx)
@@ -2638,7 +2638,7 @@ function plot_3_5G_var_vel(rot_vels, idx)
   global idx_3_5G;
   %rotational_vels2 = ['029crit';'031crit';'033crit'];
 
-  age_vs_li_plots(gauss_fields(idx_3_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 3.5G & var. rotational velocity', 'li_var_vel_3_5g', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_3_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_3_5g', num2str(idx));
 end
 
 function plot_4_0G_var_vel(rot_vels,idx)
@@ -2673,7 +2673,7 @@ function plot_4_5G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_4_5G;
 
-  age_vs_li_plots(gauss_fields(idx_4_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 4.5G & var. rotational velocity', 'li_var_vel_4_5g', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_4_5G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_4_5g', num2str(idx));
 end
 
 function plot_4_5G_var_vel_special(rot_vels, idx)
@@ -2688,7 +2688,7 @@ function plot_5_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_5_0G;
 
-  age_vs_li_plots(gauss_fields(idx_5_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', 'A(Li7) - 5.0G & var. rotational velocity', 'li_var_vel_5_0g', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_5_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_5_0g', num2str(idx));
 end
 
 function plot_5_5G_var_vel(rot_vels, idx)
@@ -3628,9 +3628,9 @@ function main()
   %rot_vels3 = rotational_vels([idx_030crit;idx_031crit;idx_0312crit;idx_0314crit;idx_032crit],:);
   rot_vels3 = rotational_vels([idx_0314crit],:);
   rot_vels4 = rotational_vels([idx_028crit;idx_0314crit],:);
-  rot_vels5 = rotational_vels([idx_0925crit;idx_095crit;idx_0975crit;idx_10crit;idx_1025crit],:);
-  rot_vels6 = rotational_vels([idx_105crit;idx_1075crit;idx_11crit;idx_1125crit;idx_115crit],:);
-  rot_vels7 = rotational_vels([idx_1175crit;idx_12crit;idx_1225crit;idx_125crit;idx_1275crit],:);
+  rot_vels5 = rotational_vels([idx_095crit;idx_10crit;idx_105crit;idx_11crit;idx_115crit],:);
+  rot_vels6 = rotational_vels([idx_11crit;idx_115crit;idx_12crit],:);
+  rot_vels7 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
   rot_vels8 = rotational_vels([idx_13crit;idx_1325crit;idx_1375crit;idx_14crit;idx_1425crit],:);
   rot_vels9 = rotational_vels([idx_145crit;idx_1475crit;idx_15crit;idx_1525crit;idx_155crit],:);
   rot_vels10 = rotational_vels([idx_125crit;idx_13crit;idx_14crit;idx_1475crit;idx_155crit],:);
@@ -3838,9 +3838,16 @@ function main()
   %plot_m_dot_028vc_var_g(mag_fields, 028);
   %plot_m_dot_028vc_var_g_z1(mag_fields, 028);
   %plot_age_vs_mb_activation_028vc(mag_fields2, 028);
-  plot_3_0G_0314vc(rot_vels3, 3);
+  %plot_3_0G_0314vc(rot_vels3, 3);
   %plot_vel_rot_3_0G_0314vc(rot_vels3, 3);
-
+  %plot_3_0G_var_vel(rot_vels2, 3);
+  %plot_3_5G_var_vel(rot_vels2, 35);
+  %plot_4_5G_var_vel(rot_vels2, 45);
+  %plot_5_0G_var_vel(rot_vels2, 5);
+  %plot_XG_var_vel(rot_vels5,1);
+  %plot_XG_var_vel(rot_vels7,3);
+  plot_vel_rot_XG_var_vel(rot_vels5,1);
+  plot_vel_rot_XG_var_vel(rot_vels7,3);
 end
 
 
