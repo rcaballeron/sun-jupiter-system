@@ -3,7 +3,7 @@
 
 \chapter{Modules for Experiments in Stellar Astrophysics - MESA}\label{ch:cuarto-capitulo}
 \section{Introducción}
-La herramienta de evolución estelar MESA ha sido utilizada extensivamente en nuestra línea de investigación. Este simulador incorpora módulos que se actualizan de manera periódica en base a los avances derivados de los trabajos más novedosos sobre ecuaciones de estado, opacidad, velocidades de reacción nuclear, datos de difusión de elementos y condiciones de límite atmosférico. Es una herramienta muy versátil a la hora de poder contrastar las valores obtenidos con los resultados esperados por un determinado modelo, o para realizar predicciones a partir de nuevos modelos y contrastar sus pronósticos con los datos disponibles de otros trabajos de investigación.\par
+La herramienta de evolución estelar MESA ha sido utilizada extensivamente en nuestra línea de investigación. Este simulador incorpora módulos que se actualizan de manera periódica en base a los avances derivados de los trabajos más novedosos sobre ecuaciones de estado, opacidad, velocidades de reacción nuclear, datos de difusión de elementos y condiciones de límite atmosférico. Es una herramienta muy versátil a la hora de poder contrastar las valores obtenidos con los resultados esperados para un determinado modelo, o para realizar predicciones a partir de nuevos modelos y contrastar sus pronósticos con los datos disponibles de otros trabajos de investigación.\par
 
 En el caso particular de nuestra línea de investigación estamos interesados en estudiar los mecanismos que intervienen en la destrucción del litio en estrellas similares a nuestro Sol, y particularmente en ella. Resaltar nuevamente el hecho de que a día de hoy no existe una opinión unánime en la comunidad científica, más allá de que los modelos de evolución estelar no producen resultados coherentes con las observaciones, sobre cuáles son los mecanismos que gobiernan el proceso de agotamiento del litio estelar, y de cuándo se ponen en marcha o se detienen. Existen diversos planteamientos de procesos que intentan dar una respuesta a este enigma.\par 
 
@@ -11,9 +11,9 @@ En nuestra investigación nos centramos en cómo influyen en modelos de estrella
 
 Adicionalmente, los modelos simulados se basan en la teoría de la longitud de mezcla (Mixing Length Theory, MLT) para modelar la convección estelar. Este formalismo depende del parámetro libre longitud de mezcla ($\amlt$), parámetro al que normalmente se le asigna un valor preestablecido y fijo durante toda la simulación. En nuestro trabajo, realizaremos simulaciones manteniendo estable el valor de $\amlt$ pero también introduciremos la posibilidad novedosa de hacerlo evolucionar temporalmente en función de otros parámetros estelares.\par
 
-Una vez hemos definido el los objetivos principales a alcanzar, el siguiente paso lógico es definir una estrategia para poder alcanzarlos, y esta pasa por hacer uso de MESA. Al estudiar en detalle la funcionalidad que MESA\footnote{\url{http://mesa.sourceforge.net/release/2018/03/21/r10398.html}} ofrece por defecto, se constata que el simulador no ofrece capacidades ni para la incorporación de campos magnéticos, ni para la variabilidad temporal del valor $\amlt$. Esto implica que, como parte de nuestra línea de investigación, debemos añadir como un nuevo objetivo la ampliación de las capacidades técnicas del simulador MESA.\par
+Una vez hemos definido el los objetivos principales a alcanzar, el siguiente paso lógico es definir una estrategia para poder alcanzarlos, y esta pasa por hacer uso de MESA. Al estudiar en detalle la funcionalidad que MESA\footnote{\url{http://mesa.sourceforge.net/release/2018/03/21/r10398.html}} ofrece por defecto, se constata que el simulador no ofrece capacidades ni para la incorporación de campos magnéticos, ni para la variabilidad temporal del valor $\amlt$. Esto implica que, como parte de nuestra línea de investigación, debemos añadir como un objetivo adicional la ampliación de las capacidades técnicas del simulador MESA.\par
 
-El primer desafío a solventar es el de entender cómo incorporar las extensiones necesarias al simulador MESA. Al mismo tiempo, hay que respetar su estructura modular de manera que no provoquemos efectos colaterales indeseables en otros módulos y/o el resto de parámetros utilizados por el simulador. Para dar solución a este punto tenemos que basarnos en los planteamientos teóricos documentados en el capítulo \ref{ch:tercer-capitulo} e implementarlos, en forma de rutinas en código Fortran, para que puedan ser utilizadas en conjunto con el resto de módulos de MESA. Por otra parte, se hace también necesario el comprender los diferentes parámetros y procesos que MESA utiliza a la hora de calcular las abundancias de los diferentes elementos que podemos encontrar en una estrella a lo largo de su evolución, tanto en su interior como en su atmósfera. Por tanto, aquí tenemos otra área de estudio que pasa por conocer las diferentes capacidades ya disponibles en el simulador que tengan impacto sobre el agotamiento del litio, entender cuándo pasan a ser relevantes en el proceso evolutivo de la estrella, cuáles son los parámetros que gobiernan su funcionamiento, las relaciones que guardan entre ellos y, por último, qué valores son los más recomendables para dar soporte al escenario de simulación que acabamos de plantear.\par
+El primer desafío a solventar es el de entender cómo incorporar las extensiones necesarias al simulador MESA. Al mismo tiempo, hay que respetar su estructura modular de manera que no provoquemos efectos colaterales indeseables en otros módulos y/o el resto de parámetros utilizados por el simulador. Para dar solución a este punto tenemos que basarnos en los planteamientos teóricos documentados en los capítulos \ref{ch:tercer-capitulo} y \ref{ch:sexto-capitulo} e implementarlos, en forma de rutinas en código Fortran, para que puedan ser utilizadas en conjunto con el resto de módulos de MESA. Por otra parte, se hace también necesario el comprender los diferentes parámetros y procesos que MESA utiliza a la hora de calcular las abundancias de los diferentes elementos que podemos encontrar en una estrella a lo largo de su evolución, tanto en su interior como en su atmósfera. Por tanto, aquí tenemos otra área de estudio que pasa por conocer las diferentes capacidades ya disponibles en el simulador que tengan impacto sobre el agotamiento del litio, entender cuándo pasan a ser relevantes en el proceso evolutivo de la estrella, cuáles son los parámetros que gobiernan su funcionamiento, las relaciones que guardan entre ellos y, por último, qué valores son los más recomendables para dar soporte al escenario de simulación que acabamos de plantear.\par
 
 Una vez tengamos la parametrización adecuada para nuestro planteamiento teórico, pasaremos a simular de manera sistemática, haciendo uso de nuestras nuevas rutinas y de un conjunto de modelos con diferentes valores para sus parámetros relevantes: velocidad angular, intensidad del campo magnético y valor de $\amlt$. Los resultados de abundancia de litio que obtengamos en cada uno de los escenarios planteados los enfrentaremos con los que arroja MESA sin hacer uso de nuestra rutina. Esta comparación de resultados nos deberá de dar un primer indicio de si nuestro planteamiento realmente tiene algún efecto notable sobre la abundancia litio calculada por el simulador con y sin nuestras rutinas. Finalmente, en base a los valores obtenidos, analizaremos las consecuencias que nuestras rutinas han tenido sobre ellos y presentaremos una serie de conclusiones de por qué obtenemos estos datos y cómo se interpretan los mismos en base a los estudios teóricos y observaciones obtenidas por otras líneas de investigación.\par
 
@@ -27,7 +27,7 @@ MESA se basa en el principio de código abierto: cualquiera puede descargar el c
 \section{¿Cómo trabajar con MESA?}
 Cuando se descarga e instala MESA (en el presente documento no entramos al detalle de cómo hacer esto) veremos que bajo el directorio de instalación existe una serie amplia de subdirectorios adicionales. La mayoría de ellos contienen el código para los diferentes módulos que componen MESA y que proporciona alguna funcionalidad específica. De todos ellos, el módulo más importante es \textit{star}, ya que es éste el módulo que interacciona y controla la ejecución de los demás. Adicionalmente, es también el módulo encargado de gestionar el estado interno de la estrella y de calcular el paso temporal a utilizar en cada iteración durante el proceso de simulación.\par
 
-Por otra parte, MESA se apoya en ficheros de proyecto en los que se fijan los diferentes parámetros iniciales, bajo qué condiciones tiene que evolucionar la estrella, opciones de paradas y representación gráfica que deben utilizarse durante la simulación. MESA ofrece en su distribución un buen número de proyectos pre configurados para diferentes escenarios de evolución estelar.\par
+Por otra parte, MESA se apoya en ficheros de proyecto en los que se fijan los diferentes parámetros iniciales, bajo qué condiciones tiene que evolucionar la estrella, opciones de parada y representación gráfica que deben utilizarse durante la simulación. MESA ofrece en su distribución un buen número de proyectos pre configurados para diferentes escenarios de evolución estelar.\par
 
 \subsection{Fichero de configuración}
 MESA utiliza el fichero \textit{inlist} como el punto de configuración y entrada para las simulaciones. Este fichero está compuesto de tres secciones principales. Cada una de ellas contiene un conjunto de opciones que controlan diferentes aspectos de MESA:
@@ -74,7 +74,7 @@ MESA genera por defecto una cantidad ingente de información. Existen dos tipos 
 
 Los ficheros anteriores contienen las configuraciones por defecto que ofrece MESA. Si necesitamos modificar alguna de las opciones que aparece en ellos, lo recomendable es no hacerlo directamente sobre estos ficheros, sino hacer una copia de los mismos en nuestro directorio de trabajo y realizar las modificaciones oportunas en ellos.\par
 
-Adicionalmente, si se diese la situación (como ha sido en nuestro caso) de que se quieran mostrar valores de propiedades diferentes a los que aparecen por defecto en alguno de estos dos ficheros, cabe la posibilidad de añadirlos haciendo uso, como veremos más adelante, del fichero \textit{run\_star\_extras.f}.\par
+Adicionalmente, si se diese la situación (como ha sido en nuestro caso) de que se quieran mostrar valores de propiedades diferentes a los que aparecen por defecto en alguno de estos dos ficheros, cabe la posibilidad de añadirlos haciendo uso del fichero \textit{run\_star\_extras.f}.\par
 
 \section{¿Cómo extender MESA?}
 A veces se hace necesario extender la funcionalidad de MESA porque la que viene por defecto en el simulador no cumple con las necesidades del problema que queremos abordar. Para estas situaciones MESA ofrece la opción de ampliar su funcionalidad de un modo relativamente sencillo y elegante, y sin necesidad de tener que modificar el código fuente del simulador en sí. Con esto se garantiza que el mismo no queda alterado en su funcionamiento estándar a raíz de una alteración del código base, a la vez que permite que otros usuarios de MESA no tengan que modificar sus instalaciones para poder ejecutar simulaciones que hacen uso de funcionalidades no estándar. \par
@@ -85,7 +85,7 @@ MESA proporciona el archivo \textit{run\_star\_extras.f} que ofrece una variedad
 El primer paso para hacer uso de las capacidades extendidas de MESA es el de proceder a activarlas. Para ello debemos editar el fichero \textit{run\_star\_extras.f}. Veremos que el contenido del mismo es bastante simple, se limita a incluir otro fichero que es el que contiene el conjunto de rutinas predeterminadas que se entrega con MESA. Las rutinas definidas en ese fichero son las candidatas a ser personalizadas, pero lo haremos sin afectar a las versiones originales. Para ello, procederemos a reemplazar esta declaración de inclusión por el contenido del archivo referenciado, consiguiendo de este modo tener nuestra propia copia local y personal.\par
 
 \subsection{Extensión mediante hooks}
-MESA proporciona una forma de sustituir la mayoría de las rutinas físicas que ofrece por defecto sin la necesidad de, como apuntábamos anteriormente, tener que modificar el código original del programa mediante el uso de los denominados \textit{hooks} o puntos de extensión. Para ello se necesitan seguir los siguientes pasos:
+MESA proporciona una forma de sustituir la mayoría de las rutinas físicas que ofrece por defecto sin la necesidad de tener que modificar el código original del programa mediante el uso de los denominados \textit{hooks} o puntos de extensión. Para ello se necesitan seguir los siguientes pasos:
 
 \begin{enumerate}
     \item Activar el \textit{hook} deseado en el fichero \textit{run\_star\_extra.f} situado en el directorio \textit{src} del proyecto en el que estamos trabajando.
@@ -182,7 +182,7 @@ Además de todo lo que hemos comentado hasta ahora, MESA también pone a nuestra
 \subsection{Extensión ficheros de salida}
 Anteriormente hacíamos referencia a cómo controlar la información estándar que MESA ofrece a través de los dos tipos de fichero de salida: \textit{history} y \textit{profile} (ver sección \ref{sec:ctrl_salida}). Adicionalmente a esta opción, tenemos la posibilidad de enviar a alguno de estos dos ficheros información que, o bien la calcula ya de por sí MESA pero no está pensada para ser volcada en estos ficheros, o bien puede representar valores que vienen derivados de nuestras rutinas y que, por lo tanto, no forman parte de la parametrización estándar de MESA.\par
 
-Para cualquiera de los dos casos comentados existen un par de rutinas dentro del fichero \textit{run\_star\_extras.f} que nos permiten, mediante sencillas modificaciones en los métodos \textit{how\_many\_extra\_history\_columns} y \textit{data\_for\_extra\_history\_columns}, añadir cuántos parámetros queramos\footnote{En realidad, existe un máximo de 100 parámetros adicionales.} (ver listado \ref{lst:extra_columns}). Para ello, simplemente hay que indicar la cantidad de nuevos parámetros en los que estamos interesados, el nombre de los mismos (ver listado \ref{lst:extra_name_columns}) y de dónde obtener sus valores.\par
+Para cualquiera de los dos casos comentados existen un par de rutinas dentro del fichero \textit{run\_star\_extras.f} que nos permiten, mediante sencillas modificaciones en los métodos \textit{how\_many\_extra\_history\_columns} y \textit{data\_for\_extra\_history\_columns}, añadir cuántos parámetros queramos\footnote{En realidad, existe un máximo de 100 parámetros adicionales.} (ver listado \ref{lst:extra_columns}). Para ello, simplemente hay que indicar la cantidad de nuevos parámetros en los que estamos interesados, qué nombres les sereán asignados a los mismos (ver listado \ref{lst:extra_name_columns}) y de dónde se obtendrán sus valores (ver listado \ref{lst:extra_values}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Configuración del número de parámetros adicionales a incluir en el fichero de salida.}, label={lst:extra_columns}]
 integer function how_many_extra_history_columns(id, id_extra)
@@ -229,7 +229,7 @@ end subroutine data_for_extra_history_columns
 
 \end{lstlisting}
 
-\begin{lstlisting}[language=Fortran, float, caption={Ejemplo de asignación de valores calculados para la zona convectiva a los parámetros extras definidos.}, label={lst:extra_name_columns}]
+\begin{lstlisting}[language=Fortran, float, caption={Ejemplo de asignación de valores calculados para la zona convectiva a los parámetros extras definidos.}, label={lst:extra_values}]
 subroutine other_torque_mag_brk(id, ierr)	
   ...
   
@@ -271,18 +271,18 @@ Como indicaremos más detalladamente cuando analicemos la configuración final d
 El módulo \textit{mlt} implementa la teoría de longitud de mezcla estándar (MLT) \citep{Paxton2011}. En la dinámica de fluidos, MLT es una parametrización que intenta describir la transferencia de calor y material causado por una inestabilidad convectiva en el seno de un fluido. Este modelo ha sido utilizado en numerosos campos, incluyendo la ciencia atmosférica, oceanografía y estructura estelar, que es el caso que nos atañe. La longitud de mezcla se define como la distancia recorrida por una celda o burbuja de material sometida a una inestabilidad térmica convectiva.\par
 
 \subsection{Módulo de difusión – diffusion} \label{subsec_diffusion}
-El módulo \textit{diffusion} lo utiliza MESA para calcular la difusión de partículas y la sedimentación gravitacional resolviendo las ecuaciones de Burger \citep{Burgers1969} a través del método propuesto por \cite{Thoul1993}. El módulo de difusión trata los elementos presentes en el modelo estelar como pertenecientes a clases definidas por el usuario en términos de rangos de masas atómicas. Para cada clase, el usuario especifica un isótopo representativo y todos los miembros de esa clase son tratados idénticamente, con sus velocidades de difusión determinadas por el isótopo representativo. La rutina utiliza la fracción de masa de la clase correspondiente para obtener su coeficiente de difusión \citep{Paxton2015}. Como detallaremos más adelante, esta opción por defecto del módulo no es la más adecuada para obtener las abundancias de litio.\par
+El módulo \textit{diffusion} lo utiliza MESA para calcular la difusión de partículas y la sedimentación gravitacional resolviendo las ecuaciones de Burger \citep{Burgers1969} a través del método propuesto por \cite{Thoul1993}. El módulo de difusión trata los elementos presentes en el modelo estelar como pertenecientes a clases definidas por el usuario en términos de rangos de masas atómicas. Para cada clase, el usuario especifica un isótopo representativo y todos los miembros de esa clase son tratados idénticamente, con sus velocidades de difusión determinadas por el isótopo de referencia. La rutina utiliza la fracción de masa de la clase correspondiente para obtener su coeficiente de difusión \citep{Paxton2015}. Como detallaremos más adelante, esta opción por defecto del módulo no es la más adecuada para obtener las abundancias de litio.\par
 
 El cálculo de la difusión puede restringirse a zonas en las que la temperatura es superior a un valor mínimo o en las que la fracción de masa del elemento indicado es superior a cierto umbral.\par
 
 \subsection{Otros parámetros de interés}
-Además de los módulos listados anteriormente existen otra serie de parámetros que ofrece MESA que están relacionados también con el planteamiento teórico de nuestra investigación. En concreto nos estamos refiriendo a los parámetros de masa estelar, contenido de \isotope[1]{H}, \isotope[3]{He} y \isotope[4]{He} presente en la nube protoestelar, así como la metalicidad de la misma.\par
+Además de los módulos listados anteriormente existen otra serie de parámetros que ofrece MESA que están relacionados también con el planteamiento teórico de nuestra investigación. En concreto nos estamos refiriendo a los parámetros de masa estelar, contenido de \isotope[1]{H}, \isotope[3]{He} y \isotope[4]{He} presente en la nube protoestelar, así como a la metalicidad de la misma.\par
  
-Finalmente, también tendremos en cuenta la rotación superficial de la estrella, ya que, como se ha venido comentando, este fenómeno físico es considerado un factor que influye en el agotamiento del litio, tanto potenciándolo, como llegando a inhibirlo.\par
+Finalmente, también tendremos en cuenta la rotación superficial de la estrella, ya que este fenómeno físico es considerado un factor que influye en el agotamiento del litio, tanto potenciándolo, como llegando a inhibirlo.\par
 
 \section{¿Cómo visualizar los resultados de MESA?}
 \subsection{Visualización con pgstar}
-Observar y analizar el resultado de las simulaciones atendiendo únicamente a los valores numéricos recogidos en los ficheros de salida no es la mejor opción a la hora de hacernos una idea de cómo están yendo nuestras simulaciones. Al menos, este es el caso en las etapas iniciales donde nuestra atención está más en saber si las simulaciones se están comportando de la manera esperada, o si por al contrario muestra una evolución no esperada. En este contexto, \textit{pgstar} es una herramienta extremadamente útil.
+Observar y analizar el resultado de las simulaciones atendiendo únicamente a los valores numéricos recogidos en los ficheros de salida no es la mejor opción a la hora de hacernos una idea de cómo están yendo nuestras simulaciones. Al menos, este es el caso en las etapas iniciales donde nuestra atención está más en saber si las simulaciones se están comportando de la manera esperada, o si por al contrario muestra una evolución anómala. En este contexto, \textit{pgstar} es una herramienta extremadamente útil.
 
 La herramienta \textit{pgstar} se encuentra integrada dentro de MESA y permite, a la vez que nuestra simulación se está ejecutando, la representación visual de un buen número de gráficas\footnote{Visitar https://docs.mesastar.org/en/latest/using\_mesa/using\_pgstar.html para obtener información complementaria.} generadas a partir de los datos de perfiles y valores temporales que se van produciendo. Entre éstas se encuentran diagramas HR, de abundacia de elementos químicos o de gravedad superficial vs. temperatura efectiva, por citar algunas de las posibilidades. La herramienta ofrece una gran flexibilidad a la hora de especificar tamaños de gráfica, número de ellas, fuentes, colores, leyendas y un sin fin de opciones adicionales. En el listado \ref{lst:pg_star_config} se muestra un ejemplo de configuración de la herramienta para producir la gráfica de abundancia mostrada en la figura \ref{fig:abundances}.
 
@@ -309,7 +309,7 @@ La herramienta \textit{pgstar} se encuentra integrada dentro de MESA y permite, 
 
 
 \subsection{Visualización con terceras herramientas}
-En determinadas ocasiones, las opciones de visualización ofrecidas por MESA no son las más adecuadas o convenientes para nuestros propósitos. Quizás porque no muestra el parámetro en el que estamos interesados, o si lo hace, deseamos otro tipo de formato de visualización. Aunque en la mayoría de los casos, la necesidad de recurrir a terceras herramientas para la visualización se debe a que necesitamos realizar algún tipo de preprocesamiento (sección \ref{sec:gemelos_solares}) sobre los mismos antes de proceder a su representación e interpretación final.\par
+En determinadas ocasiones las opciones de visualización ofrecidas por MESA no son las más adecuadas o convenientes para nuestros propósitos. Quizás porque no muestra el parámetro en el que estamos interesados, o si lo hace, deseamos otro tipo de formato de visualización. Aunque en la mayoría de los casos la necesidad de recurrir a terceras herramientas para la visualización se debe a que necesitamos realizar algún tipo de preprocesamiento (sección \ref{sec:gemelos_solares}) sobre los mismos antes de proceder a su representación e interpretación final.\par
 
 En nuestra investigación hemos recurrido a la herramientas Octave (sección \ref{sec:tool_octave}) para la extracción, transformación, filtrado, enriquecimiento y visualización de los datos. En Octave establecemos un flujo de trabajo sobre los ficheros de salida de MESA, cuyas etapas más relevantes son:
 \begin{enumerate}
@@ -329,7 +329,7 @@ Una vez obtenida una visión relativamente aceptable de las capacidades del simu
 
 \begin{itemize}
     \item Obtener la soltura suficiente con la herramienta, en lo que se refiere a su funcionamiento y parametrización, con el fin de obtener un punto de partida que nos sirva de referencia a la hora de comprobar los resultados obtenidos al incorporar nuestras rutinas.
-    \item Extender la funcionalidad del simulador MESA para que éste sea capaz de simular la presencia de campos magnéticos, tanto de intensidad fija como variable, el frenado magnético que estos producen, así como la evolución del parámetro $\amlt$ en la evolución de su estrella anfitriona.
+    \item Extender la funcionalidad del simulador MESA para que éste sea capaz de simular la presencia de campos magnéticos, tanto de intensidad fija como variable, el frenado magnético que estos producen, así como la variabilidad del parámetro $\amlt$ durante la evolución de su estrella anfitriona.
 \end{itemize}
 
 Con estos dos objetivos principales en mente, la concepción de los diferentes escenarios de simulación se realizó de forma condicionada al planteamiento teórico que introduciremos en los partes \ref{parte1} y \ref{parte2}. En particular, estos escenarios soportan los siguientes procesos/características que intervienen, de alguna u otra forma, en la evolución de las abundancias de litio:
@@ -362,7 +362,7 @@ Como estamos interesados en observar cómo actúan esos procesos y parámetros f
     \item Obtener las abundancias para los elementos H, He, Li.
 \end{enumerate}
 
-La composición química del Sol, incluyendo su metalicidad y masa inicial del modelo queda fijada por medio de los siguientes parámetros presentes en el listado \ref{lst:ini_params}).
+La composición química del Sol, incluyendo su metalicidad y masa inicial del modelo queda fijada por medio de los siguientes parámetros presentes en el listado \ref{lst:ini_params}.
 
 \begin{lstlisting}[language=Fortran, float, caption={Parametrización de la metalicidad y masa inicial de la estrella.}, label={lst:ini_params}]
   &star_job
@@ -397,7 +397,7 @@ Para poder obtener las abundancias de litio al final de la TAMS, primeramente ne
 
 Por tanto, ya tenemos identificas la red de reacciones a activar en la configuración de MESA. Es en este punto donde volvemos a hacer referencia al módulo \textit{net} (sección  \ref{reac_nuc}). Si recordamos, se indicaba que MESA viene pre configurado con una red de reacciones nucleares en las que sólo trata con 8 isótopos. Si queremos incluir más, debemos modificar la red inicial por otra que los incluya.\par
 
-Con los parámetros anteriores incluidos en el proyecto, indicamos a MESA que sustituimos la red de reacciones nucleares por defecto por una nueva denominada \textit{mesa\_49.net} (listado \ref{lst:mesa49}). Las redes son simples ficheros de texto en los que se indica al simulador las reacciones nucleares que debe tener en cuenta y cuál es el aspecto de éstas. En concreto, en la elegida se soportan, entre otras, las reacciones protón-protón en sus variantes I, II, III.\par
+Con los parámetros anteriores incluidos en el proyecto indicamos a MESA que sustituimos la red de reacciones nucleares por defecto por una nueva denominada \textit{mesa\_49.net} (listado \ref{lst:mesa49}). Las redes son simples ficheros de texto en los que se indica al simulador las reacciones nucleares que debe tener en cuenta y cuál es el aspecto de éstas. En concreto, en la elegida se soportan, entre otras, las reacciones protón-protón en sus variantes I, II, III.\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Red de reacciones mesa\_49.net. Esta red incluye un tratamiento detallado de la para los elementos ligeros H, He, Li y Be.}, label={lst:mesa49}]
   add_isos_and_reactions(
@@ -435,7 +435,7 @@ Continuando con el marco físico a simular, pasamos a centrarnos en la activaci�
     \item Proceso de rotación.
 \end{itemize}
 
-Como introducía en el apartado \ref{subsec_diffusion}:
+Como se introducía en el apartado \ref{subsec_diffusion}:
 \begin{center}
     \begin{minipage}{0.9\linewidth}
         \vspace{5pt}%margen superior de minipage
@@ -446,11 +446,11 @@ Como introducía en el apartado \ref{subsec_diffusion}:
     \end{minipage}
 \end{center}
 
-Activando la difusión en MESA también activamos la sedimentación gravitacional. De manera indirecta, queda también involucrado el módulo \textit{mlt}. Recordamos que este módulo es el encargado de calcular los coeficientes de difusión que entran en juego en el proceso de mezclado producido a consecuencia de los movimientos convectivos que se produce en el interior de la estrella.\par
+Activando la difusión en MESA también activamos la sedimentación gravitacional. De manera indirecta queda también involucrado el módulo \textit{mlt}. Recordamos que este módulo es el encargado de calcular los coeficientes de difusión que entran en juego en el proceso de mezclado producido a consecuencia de los movimientos convectivos que se produce en el interior de la estrella.\par
 
 Cabe también mencionar el tratamiento por clases que realiza MESA. Los isótopos presentes en nuestra red de reacciones nucleares que tienen un peso atómico similar son tratados de forma conjunta por la rutina de difusión en lo que se refiere a su velocidad de difusión. Ésta queda determinada por el isótopo representativo de la clase. La agrupación en clases tiene la ventaja de que las simulaciones se ejecutan de una manera más rápida ya que se ahorran cálculos. Por otra parte, tiene el inconveniente de que los resultados pueden llegar a ser menos exactos. Nosotros hemos optado por desactivar la agrupación en clases a costa de aumentar los tiempos de simulación.\par
 
-Una vez activada la nueva red de reacciones nucleares en nuestro fichero de proyecto MESA, conseguimos obtener las abundancias para el litio, las cuales son informadas en los ficheros de salida estándar que genera MESA. Adicionalmente estamos interesados en obtener el perfil de evolución de estos elementos a lo largo del tiempo de evolución de la estrella y en función del radio de la estrella (figura \ref{fig:abundances}). Para ello recurrimos a utilizar las capacidades gráficas de MESA y mostramos la abundancia de este elemento.\par
+Una vez activada la nueva red de reacciones nucleares en nuestro fichero de proyecto MESA, conseguimos obtener las abundancias para el litio, las cuales son informadas en los ficheros de salida estándar que genera MESA. Adicionalmente estamos interesados en obtener el perfil de evolución de estos elementos a lo largo del tiempo de evolución de la estrella y en función del radio de la misma (figura \ref{fig:abundances}). Para ello recurrimos a utilizar las capacidades gráficas de MESA y mostramos la abundancia de este elemento.\par
 
 Adicionalmente, configuramos MESA para que, a cada paso en la simulación y para cada celda, tenga en cuenta si se producen o dejan de existir isótopos a consecuencia de las reacciones nucleares que están teniendo lugar. Dados los valores de abundancias tan pequeños que se obtienen para el litio, del orden de -20 respecto al logaritmo de la masa total de la estrella, optamos por activar el tratamiento de las reacciones nucleares sea lo más riguroso y exacto posible.\par
 
@@ -462,7 +462,7 @@ Adicionalmente, configuramos MESA para que, a cada paso en la simulación y para
 \end{figure}
 
 
-En lo que se refiere a la rotación de las capas superficiales de la estrella, MESA permite especificar una velocidad en km/s, que en nuestro caso ha quedado fijada en 20 km/s. En el Listado \ref{lst:li_evol} mostramos la configuración adicional a añadir al proyecto de MESA para poder simular los conceptos teóricos discutidos hasta este momento.
+En lo que se refiere a la rotación de las capas superficiales de la estrella, MESA permite especificar una velocidad en $\kms$, que en nuestro caso ha quedado fijada en 20 $\kms$. En el Listado \ref{lst:li_evol} mostramos la configuración adicional a añadir al proyecto de MESA para poder simular los conceptos teóricos discutidos hasta este momento.
 
 \begin{lstlisting}[language=Fortran, float, caption={Parametrización de los procesos relacionados con el tratamiento del litio y su evolución temporal.}, label={lst:li_evol}]
 &star_job
@@ -526,7 +526,7 @@ En lo que se refiere a la rotación de las capas superficiales de la estrella, M
   Abundance_log_mass_frac_min = -30
 \end{lstlisting}
 
-Hasta aquí, hemos conseguido obtener una configuración de proyecto base que recoge las características esenciales de la estrella a simular en MESA: pone en marcha los procesos físicos relacionados con la evolución del litio y es capaz de informar, tanto a través de los ficheros de salida estándar como de las representaciones gráficas, sobre las abundancias de este elemento a lo largo de la evolución de la estrella en sus etapas de PMS y MS. Esta configuración de proyecto y los valores arrojados por la simulación que lo utiliza, nos servirán para establecer el marco de referencia contra el que comparar los valores obtenidos en las nuevas simulaciones que extienden la funcionalidad de MESA.\par
+Hasta aquí, hemos conseguido obtener una configuración de proyecto base que recoge las características esenciales de la estrella a simular en MESA: pone en marcha los procesos físicos relacionados con la evolución del litio y es capaz de informar, tanto a través de los ficheros de salida estándar como de las representaciones gráficas, sobre las abundancias de este elemento a lo largo de la evolución de la estrella en sus etapas de PMS y MS. Esta configuración de proyecto y los valores arrojados por la simulación que lo utiliza nos servirán para establecer el marco de referencia contra el que comparar los valores obtenidos en las nuevas simulaciones que extienden la funcionalidad de MESA.\par
 
 
 \subsection{Simulaciones extendiendo el marco teórico estándar de MESA}
@@ -537,7 +537,7 @@ Una vez que hemos llegado a un punto en el que tenemos una configuración de pro
 	\item Identificar los parámetros fijos y variables del formalismo.
 	\item Mapear los parámetros variables a sus equivalentes en MESA.
 	\item Identificar el \textit{hook} de MESA adecuado para incluir la rutina.
-	\item Implementar la rutina y asegurar su compatibilidad con MESA.
+	\item Implementar las rutinas y asegurar su compatibilidad con MESA.
 	\item Identificar los parámetros de configuración.
 	\item Mapear los parámetros de configuración en el fichero \textit{inlist}.
 	\item Realizar las simulaciones.
@@ -545,7 +545,7 @@ Una vez que hemos llegado a un punto en el que tenemos una configuración de pro
 
 Los puntos 1 a 4, 7 y 8 del listado anterior serán extensivamente documentados en las partes \ref{parte1} y \ref{parte2}. En lo que atañe a los puntos 5 y 6, dado que es algo común a ambas partes, los comentaremos a continuación.\par
 
-Los parámetros de configuración son valores o ajustes que se utilizan para personalizar el comportamiento del simulador MESA y por extensión, de nuestras rutinas. MESA ofrece una gran cantidad de de estos parámetros. La manera de especificarlos es mediante su inclusión en el fichero \textit{inlist}. Este mecanismo se hace también extensivo a las rutinas que se añaden al simulador. En el listado \ref{lst:config_inlist} mostramos parte del contenido del fichero \textit{inlist}. Lo primero es indicar al simulador que debe utilizar nuestra rutina de par de torsión en lugar de la que trae por defecto MESA. Es a través de este \textit{hook} como procedemos a implementar nuestra(s) rutina(s) de frenado magnético. A continuación listamos los diferentes parámetros de configuración para las diferentes rutinas. Estos se indican a través de las variables \textit{x\_ctrl}, \textit{x\_integer\_ctrl} y \textit{x\_logical\_ctrl} según estos parámetros sean valores reales, enteros o lógicos respectivamente.\par 
+Los parámetros de configuración son valores o ajustes que se utilizan para personalizar el comportamiento del simulador MESA y por extensión, de nuestras rutinas. MESA ofrece una gran cantidad de estos parámetros. La manera de especificarlos es mediante su inclusión en el fichero \textit{inlist}. Este mecanismo se hace también extensivo a las rutinas que se añaden al simulador. En el listado \ref{lst:config_inlist} mostramos parte del contenido del fichero \textit{inlist}. Lo primero es indicar al simulador que debe utilizar nuestra rutina de par de torsión en lugar de la que trae por defecto MESA. Es a través de este \textit{hook} como procedemos a implementar nuestra(s) rutina(s) de frenado magnético. A continuación listamos los diferentes parámetros de configuración para las diferentes rutinas. Estos se indican a través de las variables \textit{x\_ctrl}, \textit{x\_integer\_ctrl} y \textit{x\_logical\_ctrl} según estos parámetros sean valores reales, enteros o lógicos respectivamente.\par 
 
 \begin{lstlisting}[language=Fortran, float, caption={Parámetros de configuración para las rutinas incorporadas al simulador MESA.}, label={lst:config_inlist}]
   ...
@@ -617,88 +617,88 @@ Los parámetros de configuración son valores o ajustes que se utilizan para per
 Una vez el fichero \textit{inlist} contiene los parámetros de configuración para nuestra(s) rutina(s) hay que proceder a leerlos para ponerlos a disposición del código de las mismas. Como se indica en el listado de control \ref{lst:bucle_ctrl}, antes de proceder a ejecutar los pasos de la simulación, MESA procede a invocar la rutina \textit{extras\_ctrl}. En el listado \ref{lst:extras_ctrl} se muestra la forma de proceder para obtener los valores indicados en el fichero de configuración. Estos valores se asignan a variables que quedan a disposición al código de las diferentes rutinas.
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de inicialización de las simulaciones.}, label={lst:extras_ctrl}]
-      subroutine extras_controls(id, ierr)
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
+  subroutine extras_controls(id, ierr)
+     integer, intent(in) :: id
+     integer, intent(out) :: ierr
+     type (star_info), pointer :: s
+     ierr = 0
+     call star_ptr(id, s, ierr)
+     if (ierr /= 0) return
          
-         original_diffusion_dt_limit = s% diffusion_dt_limit
-         s% other_wind => Reimers_then_Blocker
-         ! inject our torque routine
-         s% other_torque => other_torque_hook
+     original_diffusion_dt_limit = s% diffusion_dt_limit
+     s% other_wind => Reimers_then_Blocker
+     ! inject our torque routine
+     s% other_torque => other_torque_hook
 
-         !debug flags
-         debug_use_other_torque = s% x_logical_ctrl(1)
-         debug_reset_other_torque = s% x_logical_ctrl(2)
-         debug_get_cz_info = s% x_logical_ctrl(3)
-         debug_get_core_info = s% x_logical_ctrl(4)
-         debug_new_alpha = s% x_logical_ctrl(7)
-         debug_mag_field = s% x_logical_ctrl(8)
-         debug_j_dot = s% x_logical_ctrl(9)
+     !debug flags
+     debug_use_other_torque = s% x_logical_ctrl(1)
+     debug_reset_other_torque = s% x_logical_ctrl(2)
+     debug_get_cz_info = s% x_logical_ctrl(3)
+     debug_get_core_info = s% x_logical_ctrl(4)
+     debug_new_alpha = s% x_logical_ctrl(7)
+     debug_mag_field = s% x_logical_ctrl(8)
+     debug_j_dot = s% x_logical_ctrl(9)
 
-         !If true, once the radiative core is developed, report always true
-         !in is_radiative_core function
-         keep_on_rad_core = s% x_logical_ctrl(6)
+     !If true, once the radiative core is developed, report always true
+     !in is_radiative_core function
+     keep_on_rad_core = s% x_logical_ctrl(6)
 
-         !eps thershold
-         eps_threshold = s% x_ctrl(2)
+     !eps thershold
+     eps_threshold = s% x_ctrl(2)
 
-         !disk locking
-         disk_lt = s% x_ctrl(3)
-         disk_omega = s% x_ctrl(4)
+     !disk locking
+     disk_lt = s% x_ctrl(3)
+     disk_omega = s% x_ctrl(4)
 
-         !Variable MLT alpha
-         var_mlt_alpha = s% x_logical_ctrl(10)
+     !Variable MLT alpha
+     var_mlt_alpha = s% x_logical_ctrl(10)
       
-         ! Once you have set the function pointers you want,
-         ! then uncomment this (or set it in your star_job inlist)
-         ! to disable the printed warning message,
-         ! Uncomment these lines if you wish to use the functions in this file,
-         ! otherwise we use a null_ version which does nothing.
-         s% extras_startup => extras_startup
-         s% extras_start_step => extras_start_step
-         s% extras_check_model => extras_check_model         
-         s% extras_finish_step => extras_finish_step
-         s% extras_after_evolve => extras_after_evolve
-         s% how_many_extra_history_columns => how_many_extra_history_columns
-         s% data_for_extra_history_columns => data_for_extra_history_columns
-         s% how_many_extra_profile_columns => how_many_extra_profile_columns
-         s% data_for_extra_profile_columns => data_for_extra_profile_columns  
+     ! Once you have set the function pointers you want,
+     ! then uncomment this (or set it in your star_job inlist)
+     ! to disable the printed warning message,
+     ! Uncomment these lines if you wish to use the functions in this file,
+     ! otherwise we use a null_ version which does nothing.
+     s% extras_startup => extras_startup
+     s% extras_start_step => extras_start_step
+     s% extras_check_model => extras_check_model         
+     s% extras_finish_step => extras_finish_step
+     s% extras_after_evolve => extras_after_evolve
+     s% how_many_extra_history_columns => how_many_extra_history_columns
+     s% data_for_extra_history_columns => data_for_extra_history_columns
+     s% how_many_extra_profile_columns => how_many_extra_profile_columns
+     s% data_for_extra_profile_columns => data_for_extra_profile_columns  
          
-         s% job% warn_run_star_extras =.false.             
-      end subroutine extras_controls
+     s% job% warn_run_star_extras =.false.             
+  end subroutine extras_controls
 \end{lstlisting}
 
 \subsection{Rutina de par de torsión}
 El par de torsión, también conocido como torque o momento de torsión, es una magnitud física que describe la capacidad de una fuerza para provocar un giro o rotación en un objeto. El par de torsión y el momento angular están estrechamente relacionados en el contexto del movimiento de rotación. El momento angular es una cantidad física que describe la tendencia de un objeto giratorio a seguir girando. Cuando se aplica un par de torsión a un objeto giratorio, si se hace en la misma dirección en la que el objeto ya gira, aumenta su velocidad angular. Por el contrario, si se aplica en la dirección opuesta al giro del objeto, disminuye su velocidad angular. En nuestro caso, el frenado magnético producirá una disminución, una torque en sentido contrario al giro de la estrella, provocando en ésta una pérdida de momento angular.\par
 
-En el listado \ref{lst:torque_hook} se muestra como reemplazar la rutina por defecto de MESA para el cálculo del par de torsión para la nuestra, en la que implementaremos el frenado magnético. 
+En el listado \ref{lst:torque_hook} se muestra como reemplazar la rutina por defecto de MESA para el cálculo del par de torsión por la nuestra. En ella implementaremos el frenado magnético. 
  
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión.}, label={lst:torque_hook}]
-      subroutine other_torque_hook(id, ierr)
-         use const_def
-         integer, intent(in) :: id
-         integer, intent(out) :: ierr
-         type (star_info), pointer :: s
+  subroutine other_torque_hook(id, ierr)
+     use const_def
+     integer, intent(in) :: id
+     integer, intent(out) :: ierr
+     type (star_info), pointer :: s
 
-         ierr = 0
-         call star_ptr(id, s, ierr)
-         if (ierr /= 0) return
+     ierr = 0
+     call star_ptr(id, s, ierr)
+     if (ierr /= 0) return
 
 
-         !If disk locking is actived & the star is younger that disk 
-         !locking period &
-         !star rotates faster than disk locking rotational velocitiy
-         if((disk_lt>0).and.(s%star_age<disk_lt).and.(s%omega(1)>disk_omega)) then
-            call other_torque_disk_lock(id, ierr)
-         else
-            call other_torque_mag_brk(id, ierr)
-         endif
+     !If disk locking is actived & the star is younger that disk 
+     !locking period &
+     !star rotates faster than disk locking rotational velocitiy
+     if((disk_lt>0).and.(s%star_age<disk_lt).and.(s%omega(1)>disk_omega)) then
+        call other_torque_disk_lock(id, ierr)
+     else
+        call other_torque_mag_brk(id, ierr)
+     endif
          
-      end subroutine other_torque_hook
+  end subroutine other_torque_hook
 \end{lstlisting}
 
 \subsection{Rutina de frenado magnético} \label{sec:mb_routine}

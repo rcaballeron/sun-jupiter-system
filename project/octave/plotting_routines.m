@@ -995,13 +995,17 @@ function plot_teff(A, color, width, ytick, axis_limits)
 end
 
 
-function plot_radius(A, color, width, ytick, axis_limits)
+function plot_radius(A, nolog, color, width, ytick, axis_limits)
   global tick_font_size;
   global sun_omega;
   global gigaYear;
 
   %Plot values
-  plot(A(:,1), A(:,2), color, 'linewidth', width);
+  if (nolog == 0)
+    plot(A(:,1), A(:,2), color, 'linewidth', width);
+  else
+    plot(A(:,1), power(10, A(:,2)), color, 'linewidth', width);
+  endif;
 
   %Axis scales
   set(gca, 'XScale', 'log');
@@ -1027,17 +1031,23 @@ end
 
 
 
-function plot_size_cz(A, color, width, ytick, axis_limits)
-  plot_size_cz2(A, color, width, ytick, axis_limits, 0, '-');
+function plot_size_cz(A, nolog, color, width, ytick, axis_limits)
+  plot_size_cz2(A, nolog, color, width, ytick, axis_limits, 0, '-');
 end
 
-function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
+function plot_size_cz2(A, nolog, color, width, ytick, axis_limits, offset, linestyle)
   global tick_font_size;
   global gigaYear;
 
   %Plot values
   %plot(A(:,1), A(:,3) .- A(:,4), color, 'linewidth', width);
-  plot(A(:,1), A(:,3) .- A(:,4) .+ offset , color, 'linewidth', width, 'linestyle', linestyle);
+  if (nolog == 0)
+    plot(A(:,1), A(:,3) .- A(:,4) .+ offset , color, 'linewidth', width, 'linestyle', linestyle);
+  else
+    plot(A(:,1), power(10, A(:,2)) .+ offset , color, 'linewidth', width, 'linestyle', linestyle);
+    plot(A(:,1), (A(:,3) .- A(:,4)) .* power(10, A(:,2)) .+ offset , color, 'linewidth', width, 'linestyle', '--');
+  endif;
+
   %plot(A(:,1), A(:,5) .- A(:,6) .+ offset , color, 'linewidth', width, 'linestyle', '--');
   %plot(A(:,1), 10 .** A(:,2), color, 'linewidth', width, 'linestyle', '--');
 
@@ -1045,7 +1055,8 @@ function plot_size_cz2(A, color, width, ytick, axis_limits, offset, linestyle)
   set(gca, 'XScale', 'log');
 
   %Axis limits
-  set(gca,'YTick',0:ytick:1.0);
+  %set(gca,'YTick',0:ytick:1.0);
+  set(gca,'YTick',axis_limits(3):ytick:axis_limits(4));
   grid on;
   set(gca,'xminorgrid','off');
 
@@ -1434,7 +1445,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
 
 end
 
-function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
+function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, nolog, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
   global tables_parent_folder;
   global filename;
@@ -1467,21 +1478,33 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
 
       A = read_matrix_from_file(full_path, fmt, header_lines, 6);
 
-      plot_size_cz(A, colors(i*j,:), line_width, ytick, axis_limits);
+      plot_size_cz(A, nolog, colors(i*j,:), line_width, ytick, axis_limits);
 
       % Plot ZAMS reference
       %zams = calculate_ZAMS(full_path);
       %line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", "--", "color", colors(i*j,:))
 
       %Generate serie labels
-      if (is_var_vel)
-        labels = {labels{:}, ['CZ_{rad}-', strtrim(rotational_vels(j,:))]};
-        %labels = {labels{:}, ['Core_{rad}-', strtrim(rotational_vels(j,:))]};
-        %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+      if (nolog == 0)
+        if (is_var_vel)
+          labels = {labels{:}, ['CZ_{rad}-', strtrim(rotational_vels(j,:))]};
+          %labels = {labels{:}, ['Core_{rad}-', strtrim(rotational_vels(j,:))]};
+          %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        else
+          labels = {labels{:}, ['CZ_{rad}-', strtrim(gauss_fields(i,:))]};
+          %labels = {labels{:}, ['Core_{rad}-', strtrim(gauss_fields(i,:))]};
+          %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        endif
       else
-        labels = {labels{:}, ['CZ_{rad}-', strtrim(gauss_fields(i,:))]};
-        %labels = {labels{:}, ['Core_{rad}-', strtrim(gauss_fields(i,:))]};
-        %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        if (is_var_vel)
+          labels = {labels{:}, ['Star_{rad}-', strtrim(rotational_vels(j,:))]};
+          labels = {labels{:}, ['CZ_{rad}-', strtrim(rotational_vels(j,:))]};
+          %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
+        else
+          labels = {labels{:}, ['Star_{rad}-', strtrim(gauss_fields(i,:))]};
+          labels = {labels{:}, ['CZ_{rad}-', strtrim(gauss_fields(i,:))]};
+          %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
+        endif
       endif
     end
   end
@@ -1497,7 +1520,12 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, ytick, 
   set (l, "fontsize", legend_font_size);
   %legend boxoff
   xlabel('star age (Ga)', 'fontsize', axis_font_size);
-  ylabel('Size conv. zone (R_{cz}/R_{sun})', 'fontsize', axis_font_size);
+  if (nolog == 0)
+    ylabel('Size conv. zone (R_{cz}/R_{sun})', 'fontsize', axis_font_size);
+  else
+    ylabel('Size star radius & conv. zone (R_{sun})', 'fontsize', axis_font_size);
+  endif;
+
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -1583,7 +1611,7 @@ function age_vs_teff_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axi
 end
 
 
-function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
+function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, nolog, ytick, axis_limits, leg_loc, atitle, afilename, aidx)
   global data_parent_folder;
   global tables_parent_folder;
   global filename;
@@ -1615,7 +1643,7 @@ function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, ytick, a
 
       A = read_matrix_from_file(full_path, fmt, header_lines, 2);
 
-      plot_radius(A, colors(i*j,:), line_width, ytick, axis_limits);
+      plot_radius(A, nolog, colors(i*j,:), line_width, ytick, axis_limits);
 
 
       %Generate serie labels
@@ -1634,20 +1662,28 @@ function age_vs_radius_plots(gauss_fields, rotational_vels, is_var_vel, ytick, a
   line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
 
   % Plot sun reference
-  plot(sun_age, 0, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  if (nolog == 0)
+    plot(sun_age, 0, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  else
+    plot(sun_age, 1, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
+  endif;
 
   % Plot reference marks
-  line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
-  line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
-  line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
-  line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
+  %line("xdata",[2.5e7,2.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  %line("xdata",[3.5e7,3.5e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "cyan");
+  %line("xdata",[5.4e7,5.4e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
+  %line("xdata",[11.2e7,11.2e7], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 2, "linestyle", ":", "color", "magenta");
 
 
   l = legend(labels, "location", leg_loc);
   set (l, "fontsize", legend_font_size);
   %legend boxoff
   xlabel('star age (Ga)', 'fontsize', axis_font_size);
-  ylabel('log (R/R_{sun})', 'fontsize', axis_font_size);
+  if (nolog == 0)
+    ylabel('log (R/R_{sun})', 'fontsize', axis_font_size);
+  else
+    ylabel('R (R_{sun})', 'fontsize', axis_font_size);
+  endif;
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -3010,13 +3046,28 @@ function plot_cz_size_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_var_vel_var_g', num2str(idx));
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_var_vel_var_g', num2str(idx));
 end
+
+function plot_cz_size_nolog_XG_var_vel(rot_vels, idx)
+  global gauss_fields;
+  global idx_X_G;
+
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 1, 0.5, [1.0e5, 1.0e10, 0.0, 6], 'northeast', '', 'cz_var_vel_nolog_var_g', num2str(idx));
+end
+
 
 function plot_cz_size_XG_var_vel_z1(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
-  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.01, [1.0e7, 1.0e10, 0.25, 0.40], 'northeastoutside', '', 'cz_var_vel_var_g_z1', num2str(idx));
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0, 0.01, [1.0e7, 1.0e10, 0.25, 0.40], 'northeast', '', 'cz_var_vel_var_g_z1', num2str(idx));
+end
+
+function plot_cz_size_nolog_XG_var_vel_z1(rot_vels, idx)
+  global gauss_fields;
+  global idx_X_G;
+
+  age_vs_cz_size_plots(gauss_fields(idx_X_G,:), rot_vels, true, 1, 0.5, [1.0e7, 1.0e10, 0.0, 2], 'northeast', '', 'cz_var_vel_nolog_var_g_z1', num2str(idx));
 end
 
 
@@ -3055,8 +3106,16 @@ function plot_cz_size_4_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_cz_size_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', 'Convective zone size - 4.0G & var. rotational velocity', 'cz_var_vel_4_0g', num2str(idx));
+  age_vs_cz_size_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_var_vel_4_0g', num2str(idx));
 end
+
+function plot_cz_size_nolog_4_0G_var_vel(rot_vels, idx)
+  global gauss_fields;
+  global idx_4_0G;
+
+  age_vs_cz_size_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 1, 0.5, [1.0e5, 1.0e10, 0.0, 6.0], 'northeast', '', 'cz_var_vel_nolog_4_0g', num2str(idx));
+end
+
 
 function plot_cz_size_4_5G_var_vel(rot_vels, idx)
   global gauss_fields;
@@ -3090,22 +3149,38 @@ function plot_cz_size_028vc_var_g(mag_fields, idx)
   global rotational_vels;
   global idx_028crit;
 
-  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_vc_028_var_g', num2str(idx));
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_vc_028_var_g', num2str(idx));
 end
 
 function plot_cz_size_028vc_var_g_z1(mag_fields, idx)
   global rotational_vels;
   global idx_028crit;
 
-  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', '','cz_vc_028_var_g_z1', num2str(idx));
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', '','cz_vc_028_var_g_z1', num2str(idx));
 end
 
 function plot_cz_size_028vc_var_g_z1_special(mag_fields, idx)
   global rotational_vels;
   global idx_028crit;
 
-  age_vs_cz_size_plots_special(rotational_vels(idx_028crit,:), false, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', '','cz_vc_028_var_g_z1', num2str(idx));
+  age_vs_cz_size_plots_special(rotational_vels(idx_028crit,:), false, 0, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', '','cz_vc_028_var_g_z1', num2str(idx));
 end
+
+function plot_cz_size_0336vc_var_g(mag_fields, idx)
+  global rotational_vels;
+  global idx_0336crit;
+
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_vc_0036_var_g', num2str(idx));
+end
+
+
+function plot_cz_size_0336vc_var_g_z1(mag_fields, idx)
+  global rotational_vels;
+  global idx_0336crit;
+
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0, 0.01, [1.0e7, 1.0e10, 0.25, 0.30], 'north', '','cz_vc_0036_var_g_z1', num2str(idx));
+end
+
 
 function plot_cz_size_0G_var_vel_z1(rot_vels,idx)
   global gauss_fields;
@@ -3244,6 +3319,29 @@ function plot_age_vs_mb_activation_5_5G(rot_vels, idx)
   age_vs_mb_activation(gauss_fields(idx_5_5G,:), rot_vels, true, 'eastoutside', 'Magnetic braking activation & core nature - 5.5G & var. rotational velocity', 'mb_act_var_vel_5_5g', num2str(idx));
 end
 
+function plot_radius_4_0G(rot_vels, idx)
+  global gauss_fields;
+  global idx_4_0G;
+
+  age_vs_radius_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0, 0.2, [1.0e5, 1.0e10, -0.2, 0.6],  'northwest', '', 'lograd_var_vel_4_0g', num2str(idx));
+end
+
+function plot_radius_nolog_4_0G(rot_vels, idx)
+  global gauss_fields;
+  global idx_4_0G;
+
+  age_vs_radius_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 1, 0.2, [1.0e5, 1.0e10, 0, 6],  'southwest', '', 'rad_var_vel_4_0g', num2str(idx));
+end
+
+function plot_radius_nolog_4_0G_z1(rot_vels, idx)
+  global gauss_fields;
+  global idx_4_0G;
+
+  age_vs_radius_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 1, 0.05, [1.0e6, 1.0e9, 0, 2],  'southwest', '', 'rad_var_vel_4_0g_z1', num2str(idx));
+end
+
+
+
 function plot_age_vs_mb_activation_XG(rot_vels,idx)
   global gauss_fields;
   global idx_X_G;
@@ -3314,15 +3412,31 @@ function plot_radius_vs_mag_field_XG(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.2, [1.0e5, 1.0e10, -0.2, 0.6],  'northwest', '', 'lograd_var_vel_g', num2str(idx));
+  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0, 0.2, [1.0e5, 1.0e10, -0.2, 0.6],  'northwest', '', 'lograd_var_vel_g', num2str(idx));
 end
+
+function plot_radius_nolog_vs_mag_field_XG(rot_vels, idx)
+  global gauss_fields;
+  global idx_X_G;
+
+  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 1, 0.2, [1.0e5, 1.0e10, 0, 6],  'southwest', '', 'rad_var_vel_g', num2str(idx));
+end
+
 
 function plot_radius_vs_mag_field_XG_z1(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.05, [1.0e6, 1.0e9, -0.1, 0.1],  'northwest', '', 'lograd_var_vel_g_z1', num2str(idx));
+  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0, 0.05, [1.0e6, 1.0e9, -0.1, 0.1],  'northwest', '', 'lograd_var_vel_g_z1', num2str(idx));
 end
+
+function plot_radius_nolog_vs_mag_field_XG_z1(rot_vels, idx)
+  global gauss_fields;
+  global idx_X_G;
+
+  age_vs_radius_plots(gauss_fields(idx_X_G,:), rot_vels, true, 1, 0.05, [1.0e6, 1.0e9, 0, 2],  'southwest', '', 'rad_var_vel_g_z1', num2str(idx));
+end
+
 
 
 
@@ -3846,8 +3960,23 @@ function main()
   %plot_5_0G_var_vel(rot_vels2, 5);
   %plot_XG_var_vel(rot_vels5,1);
   %plot_XG_var_vel(rot_vels7,3);
-  plot_vel_rot_XG_var_vel(rot_vels5,1);
-  plot_vel_rot_XG_var_vel(rot_vels7,3);
+  %plot_vel_rot_XG_var_vel(rot_vels5,1);
+  %plot_vel_rot_XG_var_vel(rot_vels7,3);
+  %plot_radius_vs_mag_field_XG(rot_vels7,3);
+  %plot_radius_nolog_vs_mag_field_XG(rot_vels7,3);
+  %plot_radius_nolog_vs_mag_field_XG_z1(rot_vels7,3);
+  %plot_radius_4_0G(rot_vels,4);
+  %plot_radius_nolog_4_0G(rot_vels,4);
+  %plot_radius_nolog_4_0G_z1(rot_vels,4);
+  %plot_cz_size_XG_var_vel(rot_vels7,3);
+  %plot_cz_size_XG_var_vel_z1(rot_vels7,3);
+  %plot_cz_size_nolog_XG_var_vel(rot_vels7,3);
+  %plot_cz_size_nolog_XG_var_vel_z1(rot_vels7,3);
+  %plot_cz_size_nolog_4_0G_var_vel(rot_vels,4);
+  %plot_cz_size_4_0G_var_vel(rot_vels,4);
+  %plot_cz_size_0336vc_var_g(mag_fields, 336);
+  plot_cz_size_028vc_var_g_z1(mag_fields, 28);
+  plot_cz_size_0336vc_var_g_z1(mag_fields, 336);
 end
 
 

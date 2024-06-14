@@ -4,7 +4,9 @@
 \chapter{Rotación y campos magnéticos de intensidad variable}\label{ch:sexto-capitulo}
 
 \section{Introducción}
-Suponer que el parámetro de longitud de mezcla ($\amlt$) y/o la intensidad del campo magnético ($B$) permanecen constantes a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios, pero no se corresponde con la realidad. Por un lado,  la MLT utiliza la escala de longitud de mezcla, que es proporcional a la altura de la escala de presión local y a $\amlt$. En la mayoría de los formalismos $\amlt$ se considera un parámetro fijo libre y debe determinarse comparando los modelos estelares con alguna referencia, en la mayoría de los casos nuestro Sol. Pero como hemos visto en la sección \ref{sec:alt_mlt}, tiene una influencia directa en cómo se destruye el litio a lo largo de la evolución de la estrella. Parece razonable, que como ocurre con otros parámetros estelares directamente observables como la velocidad de rotación, temperatura efectiva o gravedad superficial, cuyos valores sufren variaciones, el valor $\amlt$ también evolucione a lo largo del tiempo. Por otro lado, un planteamiento similar es aplicable al valor de $B$. Investigaciones como las de \citet{Ud-Doula2008, Cranmer2011, Gallet2015, Amard2016}, se centran en modelar los efectos del MB. Todo estos modelos fijan una intensidad del campo magnético. Este enfoque ha demostrado no ser suficiente para explicar los datos observacionales. Atendiendo a este contexto, extendemos nuestra línea de investigación en la dirección de explorar cómo contribuyen los modelos estelares evolutivos en los que tanto $B$ como $\amlt$ varían con el tiempo en función de parámetros estelares específicos al MB y a la evolución del litio en el Sol, y otras estrellas de tipo solar.\par
+Suponer que el parámetro de longitud de mezcla ($\amlt$) y/o la intensidad del campo magnético ($B$) permanecen constantes a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios y que hemos puesto a prueba durante la primera parte de nuestra investigación, pero no se corresponde con la realidad. Por un lado,  la MLT utiliza la escala de longitud de mezcla, que es proporcional a la altura de la escala de presión local y a $\amlt$. En la mayoría de los formalismos $\amlt$ se considera un parámetro fijo libre y debe determinarse comparando los modelos estelares con alguna referencia, en la mayoría de los casos con nuestro Sol. Pero como hemos visto en la sección \ref{sec:alt_mlt}, este parámetro tiene una influencia directa en cómo se destruye el litio a lo largo de la evolución de la estrella. Parece razonable, que como ocurre con otros parámetros estelares directamente observables como la velocidad de rotación, temperatura efectiva o gravedad superficial, cuyos valores sufren variaciones, el valor $\amlt$ también evolucione a lo largo del tiempo.\par
+
+Por otro lado, un planteamiento similar es aplicable al valor de $B$. Investigaciones como las de \citet{Ud-Doula2008, Cranmer2011, Gallet2015, Amard2016} se centran en modelar los efectos del MB. Todo estos modelos fijan una intensidad del campo magnético. Este enfoque ha demostrado no ser suficiente para explicar los datos observacionales. Atendiendo a este contexto, extendemos nuestra línea de investigación en la dirección de explorar cómo contribuyen los modelos estelares evolutivos, en los que tanto $B$ como $\amlt$ varían con el tiempo en función de ciertos parámetros estelares, al MB y a la evolución del litio en el Sol y estrellas similares.\par
 
 
 \section{Efectos del frenado magnético - Parte II}
@@ -13,7 +15,7 @@ Suponer que el parámetro de longitud de mezcla ($\amlt$) y/o la intensidad del 
 De acuerdo a \cite{Gallet2013} la intensidad del campo magnético debería variar a lo largo de la vida de la estrella en lugar de permanecer fija durante toda su evolución. Para ello nos basamos en un formalismo que nos permite calcular una intensidad de campo magnético variable. 
 
 \subsubsection{Frenado magnético según Gallet \& Bouvier (2013)}
-Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre $\Omega$ , $\teff$, y la intensidad del campo magnético ($B$), así como con la tasa de pérdida de masa ($\mwind$) causada por el viento estelar. Comenzaremos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la intensidad del campo magnético.\par 
+Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre $\Omega$ , $\teff$, y $B$, así como con la tasa de pérdida de masa ($\mwind$) causada por el viento estelar. Comenzaremos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la intensidad del campo magnético.\par 
 
 Un parámetro relevante para caracterizar la influencia de un campo magnético dado en el viento estelar es $\Omega$.  Suponiendo que el campo magnético superficial medio ($\Bp$) es generado por una dinamo, su fuerza es proporcional a alguna potencia de $\Omega$,
 
@@ -27,7 +29,7 @@ y $\Bp$ queda definido por,
 
 donde $f_*$ es el factor de relleno, es decir, la fracción de la superficie estelar que está magnetizada, $B_*$ es la fuerza del campo magnético, $\Omega_*$ es la velocidad angular de la estrella en la superficie estelar, y $b$ es el exponente de la dinamo \citep{Gallet2013}.\par
 
-Según este enfoque, la intensidad de campo magnético será proporcional a la intensidad de campo magnético de equipartición, $\Beq$, de la siguiente manera:
+Según este enfoque, la intensidad de campo magnético será proporcional a la intensidad de campo magnético de equipartición ($\Beq$) de la siguiente manera:
  
 \begin{equation}
 	B_* \approx 1.13 \Beq \label{eq:mf_bstar}
@@ -66,7 +68,7 @@ Además, \citet{Cranmer2011} argumentó que el periodo de rotación de la estrel
 
 donde x = $\rossby$/$\rossbysun$, y $\rossbysun$ = 1.96. \par
 
-Por último, podemos calcular el factor de relleno de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de relleno del Sol $\fsun$ ([0.001-0.01], ver \citep{Cranmer2011}),
+Por último, podemos calcular el factor de relleno de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de relleno del Sol $\fsun$ ([0.001, 0.01], ver \cite{Cranmer2011}),
 
 \begin{equation}
 	\fstar = \frac{0.55}{(1+(x/0.16)^{2.3})^{1.22}} \label{eq:fstart}
@@ -74,8 +76,7 @@ Por último, podemos calcular el factor de relleno de una estrella aplicando el 
 
 
 
-
-Con este formalismo podemos calcular $\Bp$ como una función dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$. Los valores temporales de estas tres variables se obtendrán a partir de las distintas simulaciones realizadas con ayuda de MESA. \par
+Con este formalismo podemos calcular $\Bp$ como una función dependiente del tiempo, $\rho$, $\teff$, y $\Omega$. Los valores temporales de estas tres variables se obtendrán a partir de las distintas simulaciones realizadas con ayuda de MESA. \par
 
 
 \subsubsection{Pérdida de momento angular según Gallet \& Bouvier (2013)}
@@ -88,7 +89,7 @@ Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnét
 
 donde $\mwind$ es la tasa de pérdida de masa, y $\ralfven$ el valor medio del radio de Alfvén. \par
 
-Las estrellas con masas iniciales similares, pero con diferentes ratios de pérdida de masa ($\Dot{M}$), acabarán evolucionando de forma muy diferente. Las partículas ionizadas transportadas por el viento solar no sólo contribuyen a la pérdida de masa, sino también a la pérdida de energía cinética que se deposita en el medio interestelar. Dada una estrella con un viento esféricamente simétrico, $\mwind$ se caracteriza por la siguiente expresión:
+Las estrellas con masas iniciales similares, pero con diferentes ratios de pérdida de masa ($\mwind$), acabarán evolucionando de forma muy diferente. Las partículas ionizadas transportadas por el viento solar no sólo contribuyen a la pérdida de masa, sino también a la pérdida de energía cinética que se deposita en el medio interestelar. Dada una estrella con un viento esféricamente simétrico, $\mwind$ se caracteriza por la siguiente expresión:
 
 \begin{ceqn}
 	\begin{equation}
@@ -98,6 +99,8 @@ Las estrellas con masas iniciales similares, pero con diferentes ratios de pérd
 
 donde $r$ es el radio estelar, $\rho$ la densidad de masa, y $\nu$ la velocidad del viento estelar.
 
+Por otro lado, $\ralfven$ queda definido por:
+
 \begin{equation}
 	\ralfven = K_1\left[\frac{\Bp^{2}\;R_*^{2}}{\mwind\;\sqrt{K_2^2\vesc^2 + \Omega_*^2R_*^{2}}\ }\right]^{m}R_*  \label{eq:mb_ralfven}
 \end{equation}
@@ -105,7 +108,6 @@ donde $r$ es el radio estelar, $\rho$ la densidad de masa, y $\nu$ la velocidad 
 donde $\Bp$ es la intensidad del campo magnético en la superficie estelar, $\vesc$ es la velocidad de escape, $m = 0.1675$, $K_1 = 1.30$ y $K_2 = 0.0506$ \citep{Gallet2013}.
 
 \begin{align}
-	\Bp &= f_*B_* \label{eq:bp}\\
 	\vesc &= \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc2}
 \end{align}
 
@@ -115,23 +117,23 @@ Por último, tenemos que el AML puede calcularse del siguiente modo:
 	\Dot{J} = \Omega_* \; \mwind \; \ralfven^{2} \label{eq:j_dot}
 \end{equation}
 
-donde $\mwind$ es la tasa de pérdida de masa. Esta expresión se implementa en MESA a partir de los valores expuestos directamente durante las simulaciones.
+Esta expresión se implementa en MESA a partir de los valores expuestos directamente durante las simulaciones.
 
 \section{Efectos de la longitud de mezcla}
-La teoría de la longitud de mezcla (Mixing Length Theory, MLT) introducida por \citet{BohmVit58} ha sido comúnmente adoptada para modelar la convección estelar en códigos de evolución estelar, incluyendo MESA. El parámetro libre más importante en esta teoría es la longitud de mezcla $l$ que se define como:
+La MLT introducida por \citet{BohmVit58} ha sido comúnmente adoptada para modelar la convección estelar en códigos de evolución estelar, incluyendo MESA. El parámetro libre más importante en esta teoría es la longitud de mezcla $l$ que se define como:
 
 \begin{equation}
-	l = \alpha H_p\label{eq:mixlength}
+	l = \amlt H_p\label{eq:mixlength}
 \end{equation}
 
-donde $H_p$ es la altura de la escala de presión, y $\alpha$ un parámetro libre que se determina de antemano y se mantiene fijo durante las simulaciones de evolución estelar. \par
+donde $H_p$ es la altura de la escala de presión, y $\amlt$ un parámetro libre que se determina de antemano y se mantiene fijo durante las simulaciones de evolución estelar. \par
 
-La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de litio. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En la Sección \ref{sec:alt_mlt} mostramos cómo una parametrización alternativa de la longitud de mezcla (ML) podría producir resultados en línea con las observaciones. El ajuste del rebasamiento (overshooting) de ML y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de litio en los OC's.\par
+La influencia de los parámetros libres, relativamente arbitrarios, asociados a MLT condiciona significativamente la evolución de la abundancia de litio. Además, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. En la sección \ref{sec:alt_mlt} mostramos cómo una parametrización alternativa de la MLT podría producir resultados en línea con las observaciones. El ajuste del overshooting y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de litio en los OCs.\par
 
 De manera similar a la intensidad del campo magnético, un formalismo que nos permita evolucionar a lo largo del tiempo el valor de $\amlt$ en función de determinados parámetros de la estrella, es un planteamiento razonable a la hora de eliminar una restricción relativamente arbitraria impuesta en nuestros modelos.
 
 \subsection{MLT $\alpha$ variable según Sonoi et al. (2019)}
-En \cite{Sonoi2018}, los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor directamente proporcional a la $\gsurf$, e inversamente proporcional a la $\teff$ (ver figura \ref{fig:grid_var_amlt}). Calibraron diferentes valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \citep{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
+En \cite{Sonoi2018} los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor directamente proporcional a la $\gsurf$, e inversamente proporcional a la $\teff$ (ver figura \ref{fig:grid_var_amlt}). Calibraron diferentes valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \citep{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
 
 \begin{equation}
 	f(x,y) = a_0 + (a_1 + (a_3 + a_5x +a_6y)x + a_4y)x + a_2y\label{eq:alpha_ml}
@@ -144,7 +146,7 @@ donde
 	y &= \gsurf-4.44 \label{eq:eq:alpha_y}
 \end{align}
 
-y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT \citep{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$. \par
+y $a_i$ son los coeficientes resultantes de la función de ajuste de la ec. \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT \citep{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$. \par
 
 \begin{figure*}
 	\centering
@@ -160,43 +162,43 @@ y $a_i$ son los coeficientes resultantes de la función de ajuste \ref{eq:alpha_
 
 
 \section{Extendiendo MESA - Parte III}
-De forma similar a como hicimos en el capítulo \ref{ch:tercer-capitulo}, y una vez introducidos los formalismos para campos magnéticos de intensidad y $\amlt$ variables, estamos en posición de incorporar las rutinas a MESA. Introduciremos primeramente la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, para seguir con la que computa la intensidad del campo magnético a cada paso de la simulación. En lo que se refiere a la rutina de distribución de la pérdida de momento angular en la zona convectiva, utilizaremos la misma rutina ya introducida (ver Sección \ref{sec:dist_aml1}). Finalmente, acometeremos la rutina encargada de calcular un valor $\amlt$ variable.\par
+De forma similar a como hicimos en el capítulo \ref{ch:tercer-capitulo}, y una vez introducidos los formalismos para campos magnéticos de intensidad y $\amlt$ variables, estamos en posición de incorporar las rutinas a MESA. Introduciremos primeramente la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, para seguir con la que computa la intensidad del campo magnético a cada paso de la simulación. En lo que se refiere a la rutina de distribución de la pérdida de momento angular en la zona convectiva, utilizaremos una versión mejorada de la rutina ya introducida (ver sección \ref{sec:dist_aml1}). Finalmente, acometeremos la rutina encargada de calcular un valor $\amlt$ variable.\par
 
 \subsection{Rutina de frenado magnético de intensidad variable} \label{sec:mb_var_b}
-En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva el AM entre las diferentes celdas $k$ y les asigna un valor de AM $J_k$. Este mecanismo sigue siendo el mismo para esta nueva rutina. En este nuevo escenario la diferencia radica en la nueva rutina de MB (ver Listado \ref{lst:jdot_gb}), concretamente en la implementación de la misma según el nuevo formalismo que hemos introducido para campos magnéticos de intensidad variable, dependiente del tiempo, de $\Omega$, $\mstar$, $ralfven$, y especialmente en la rutina que calcula la intensidad del campo magnético, devolviendo (potencialmente) un valor diferente a cada paso de la simulación (ver Listado \ref{lst:jdot_mf_intensity}).\par
+En la Sección \ref{sec:mb_cte_b} comentamos los detalles de como MESA conserva el AM entre las diferentes celdas $k$ y les asigna un valor de AM $J_k$. Este mecanismo sigue siendo el mismo para esta nueva rutina. En este nuevo escenario la diferencia radica en la nueva rutina de MB (ver listado \ref{lst:jdot_gb}), concretamente en la implementación de la misma según el nuevo formalismo que hemos introducido para campos magnéticos de intensidad variable, dependiente del tiempo, de $\Omega$, $\mstar$, $ralfven$, y especialmente en la rutina que calcula la intensidad del campo magnético, devolviendo (potencialmente) un valor diferente a cada paso de la simulación (ver listado \ref{lst:jdot_mf_intensity}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión para un campo magnético de intensidad variable.}, label={lst:jdot_gb}]
-  real function calculate_jdot_rate_gb(s, bf_star) result(new_j_dot)
-	use const_def
-	type (star_info), pointer, intent(in) :: s
-	real(dp), intent(in) :: bf_star
-	real(dp), parameter :: k1 = 1.30
-	real(dp), parameter :: k2 = 0.0506
-	real(dp), parameter :: m = 0.1675
-	real(dp), parameter :: omega_sun = 2.87d-6
-	real(dp) :: r_st, m_st, omega_surf, j_dot
-	real(dp) :: v_esc, m_dot, alfven_r, alfven_r_num, alfven_r_den
-	
-	!Star data
-	r_st = s% r(1)
-	m_st = s% m(1)
-	omega_surf = s% omega(1)
-	m_dot = abs(s% mstar_dot) !This in g/s
-	
-	v_esc = (2 * standard_cgrav * m_st / r_st)**0.5
-	
-	alfven_r_num = bf_star**2 * r_st**2
-	alfven_r_den = m_dot*((k2**2 * v_esc**2)+(omega_surf**2 * r_st**2))**0.5
-	alfven_r = k1 * (alfven_r_num / alfven_r_den)**m * r_st
-	
-	j_dot = omega_surf * m_dot * alfven_r**2
-	
-	new_j_dot = -j_dot
-  end function	
+	real function calculate_jdot_rate_gb(s, bf_star) result(new_j_dot)
+      use const_def
+      type (star_info), pointer, intent(in) :: s
+      real(dp), intent(in) :: bf_star
+      real(dp), parameter :: k1 = 1.30
+      real(dp), parameter :: k2 = 0.0506
+      real(dp), parameter :: m = 0.1675
+      real(dp), parameter :: omega_sun = 2.87d-6
+      real(dp) :: r_st, m_st, omega_surf, j_dot
+      real(dp) :: v_esc, m_dot, alfven_r, alfven_r_num, alfven_r_den
+      
+      !Star data
+      r_st = s% r(1)
+      m_st = s% m(1)
+      omega_surf = s% omega(1)
+      m_dot = abs(s% mstar_dot) !This in g/s
+      
+      v_esc = (2 * standard_cgrav * m_st / r_st)**0.5
+      
+      alfven_r_num = bf_star**2 * r_st**2
+      alfven_r_den = m_dot*((k2**2 * v_esc**2)+(omega_surf**2 * r_st**2))**0.5
+      alfven_r = k1 * (alfven_r_num / alfven_r_den)**m * r_st
+      
+      j_dot = omega_surf * m_dot * alfven_r**2
+      
+      new_j_dot = -j_dot
+    end function	
 \end{lstlisting}
 
 \subsection{Rutina de cálculo de intensidad de campo magnético}
-La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo} ya que no es realista establecer que éste no varía su intensidad, incluso morfología a lo largo de la vida de la estrella. Esta intensidad es funcionalmente dependiente del tiempo, de $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA (ver Listado \ref{lst:jdot_mf_intensity}).\par
+La incorporación del formalismo para calcular una intensidad de campo magnético variable representa una mejora sustancial al modelo presentado en el capítulo \ref{ch:tercer-capitulo} ya que no es realista establecer que éste no varía su intensidad, incluso morfología a lo largo de la vida de la estrella. Esta intensidad es funcionalmente dependiente del tiempo, $\rho$, $\teff$, y $\Omega$, valores que podemos obtener directamente de MESA (ver istado \ref{lst:jdot_mf_intensity}).\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de cálculo de intensidad de campo magnético.}, label={lst:jdot_mf_intensity}]
   real function calculate_mag_field_intensity_gb(s) result(new_b)
@@ -251,66 +253,67 @@ La incorporación del formalismo para calcular una intensidad de campo magnétic
 \end{lstlisting}
 
 \subsection{Rutina de distribución de pérdida de momento angular - II} \label{sec:dist_aml2}
---INTRODUCIR POR QUÉ SE UTILIZÓ ESTA NUEVA VERSIÓN. HACER REFERENCIA A LA FIGURA EN LA QUE SE MOSTRABAN LOS DIENTES DE SIERRA.
-La distribución de AML se realiza en dos iteraciones. En la primera, a cada celda $k$ se le asigna la cantidad máxima de $\Dot{J}_{k}$ que puede acomodar en el paso de tiempo establecido por la simulación. Las cantidades de $\Dot{J}_{k}$ no acomodadas por las celdas se acumulan como momento angular residual ($\jres$). En una segunda pasada, el valor $\jres$ residual acumulado recogido en la iteración anterior se redistribuye entre aquellas celdas que pueden acomodar más par. De esta forma conseguimos conservar el momento angular.\par
+En esta nueva versión de la rutina, la de distribución de AML se realiza en dos iteraciones en vez de en una sola. En la primera, a cada celda $k$ se le asigna la cantidad máxima de $\Dot{J}_{k}$ que puede acomodar en el paso de tiempo establecido por la simulación. Las cantidades de $\Dot{J}_{k}$ no acomodadas por las celdas se acumulan como momento angular residual ($\jres$). En una segunda pasada, el valor $\jres$ residual acumulado recogido en la iteración anterior se redistribuye entre aquellas celdas que pueden acomodar más par. De esta forma conseguimos conservar el momento angular.\par 
+
+Esta segunda iteración se hace necesaria para evitar ciertas situaciones obtenidas durante las simulaciones en las que estábamos asignando a ciertas celdas una cantidad de momento angular superior al que teóricamente podía asumir para un determinado intervalo de tiempo. Cuando ocurría esto, se constataron situaciones en los que la estrella comenzaba a rotar en sentido opuesto, a consecuencia de no distribuir de manera correcta la cantidad total de AML.\par
 
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de distribución de pérdida de momento angular.}, label={lst:dis_jdot_residual}]
   subroutine distribute_with_residual_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
-	type (star_info), pointer, intent(in) :: s
-	real(dp), intent(in) :: total_j_dot
-	type (star_zone_info), pointer, intent(in) :: sz_info
-	real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
-	integer :: k, j
-	real(dp) :: residual_jdot, final_residual_jdot, delta_residual_jdot
-	
-	!By default, no lost of angular moment
-	mb_jdot_list(:) = 0.0
-	residual_jdot = 0d0
-	final_residual_jdot = 0d0
-	delta_residual_jdot = 0d0
-	
-	!first iteration - allocate maximal amount of J_dot
-	do k = sz_info% top_zone, sz_info% bot_zone, 1
-	  !IMPORTANT: Don't forget to divide by dm(k) in order
-	  !to get an "specific" jdot
-	  !Paper Eq 11
-	  mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
-	  (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
-	  
-	  if (abs(mb_jdot_list(k)) .gt. abs(s% j_rot(k) / s% dt)) then
-	    ! Residual J_dot cm^2/s^2 * g
-	    residual_jdot = residual_jdot - (abs(mb_jdot_list(k)) - & 
-	    abs(s% j_rot(k) / s% dt)) * s% dm(k)
-	    ! Set torque = - s% j_rot(k)/ s% dt.
-	    ! Note this way we're not conserving angular momentum,
-	    !need to distribute residual torque
-	    mb_jdot_list(k) = - s% j_rot(k) / s% dt 
-	    j = j + 1;
-	  end if
-	end do
-	
-	!second iteration - Redistribute residual J_dot
-	!only to gridpoints that can accomodate more torque
-	if (abs(residual_jdot) .gt. 0d0) then
-	  do k = sz_info% top_zone, sz_info% bot_zone, 1
-	    if (abs(mb_jdot_list(k)) .lt. abs(s% j_rot(k) / s% dt)) then
-	      delta_residual_jdot = residual_jdot / ((sz_info% d_zone+1-j) * s% dm(k))
-	      if ((abs(mb_jdot_list(k) + delta_residual_jdot)) & 
-	      .gt. (abs(s% j_rot(k) / s% dt))) then
-	        final_residual_jdot = final_residual_jdot - (abs(mb_jdot_list(k)) / & 
-	        - abs(s% j_rot(k) / s% dt)) * s% dm(k);
-	        mb_jdot_list(k) = - s% j_rot(k) / s% dt
-	      end if
-	    end if
-	  end do
-	end if
+    type (star_info), pointer, intent(in) :: s
+    real(dp), intent(in) :: total_j_dot
+    type (star_zone_info), pointer, intent(in) :: sz_info
+    real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+    integer :: k, j
+    real(dp) :: residual_jdot, final_residual_jdot, delta_residual_jdot
+    
+    !By default, no lost of angular moment
+    mb_jdot_list(:) = 0.0
+    residual_jdot = 0d0
+    final_residual_jdot = 0d0
+    delta_residual_jdot = 0d0
+    
+    !first iteration - allocate maximal amount of J_dot
+    do k = sz_info% top_zone, sz_info% bot_zone, 1
+      !IMPORTANT: Don't forget to divide by dm(k) in order
+      !to get an "specific" jdot
+      !Paper Eq 11
+      mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+      (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
+      
+      if (abs(mb_jdot_list(k)) .gt. abs(s% j_rot(k) / s% dt)) then
+        ! Residual J_dot cm^2/s^2 * g
+        residual_jdot = residual_jdot - (abs(mb_jdot_list(k)) - & 
+        abs(s% j_rot(k) / s% dt)) * s% dm(k)
+        ! Set torque = - s% j_rot(k)/ s% dt.
+        ! Note this way we're not conserving angular momentum,
+        !need to distribute residual torque
+        mb_jdot_list(k) = - s% j_rot(k) / s% dt 
+        j = j + 1;
+      end if
+    end do
+    
+    !second iteration - Redistribute residual J_dot
+    !only to gridpoints that can accomodate more torque
+    if (abs(residual_jdot) .gt. 0d0) then
+      do k = sz_info% top_zone, sz_info% bot_zone, 1
+        if (abs(mb_jdot_list(k)) .lt. abs(s% j_rot(k) / s% dt)) then
+          delta_residual_jdot = residual_jdot / ((sz_info% d_zone+1-j) * s% dm(k))
+          if ((abs(mb_jdot_list(k) + delta_residual_jdot)) & 
+          .gt. (abs(s% j_rot(k) / s% dt))) then
+            final_residual_jdot = final_residual_jdot - (abs(mb_jdot_list(k)) / & 
+            - abs(s% j_rot(k) / s% dt)) * s% dm(k);
+            mb_jdot_list(k) = - s% j_rot(k) / s% dt
+          end if
+        end if
+      end do
+    end if
   end subroutine distribute_with_residual_j_dot
 \end{lstlisting}
 
 
 \subsection{Rutina de $\amlt$ variable}
-Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular, para cada paso temporal de la simulación de MESA, un valor de $\amlt$ dependiente del tiempo, $\teff$ y $\gsurf$, eliminando así la necesidad de prefijar su valor para toda la simulación (ver Listado \ref{lst:var_amlt}).\par  
+Adicionalmente, y en línea con el objetivo de reducir el número de parámetros fijos, hemos procedido a calcular para cada paso temporal de la simulación de MESA un valor de $\amlt$ dependiente del tiempo, $\teff$ y $\gsurf$, eliminando así la necesidad de prefijar su valor para toda la simulación (ver listado \ref{lst:var_amlt}).\par  
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de $\amlt$ variable.}, label={lst:var_amlt}]
   real function calculate_alpha(s) result(new_alpha)
@@ -333,7 +336,7 @@ Adicionalmente, y en línea con el objetivo de reducir el número de parámetros
   end function
 \end{lstlisting}
 
-MESA no proporciona un \textit{hook} particular para modificar la rutina por defecto que trae el simulador. Para poder hacer evolucionar el valor de $\amlt$ recurrimos a incorporar nuestra rutina en la que MESA ejecuta al final de cada paso de simulación (ver Listado \ref{lst:extra_start_step}). De este modo conseguimos que en la siguiente iteración, utilice el valor que hemos calculado.\par
+MESA no proporciona un \textit{hook} particular para modificar la rutina por defecto que trae el simulador. Para poder hacer evolucionar el valor de $\amlt$ recurrimos a incorporar nuestra rutina en la que MESA ejecuta al final de cada paso de simulación (ver listado \ref{lst:extra_start_step}). De este modo conseguimos que en la siguiente iteración, utilice el valor que hemos calculado.\par
 
 \begin{lstlisting}[language=Fortran, float, caption={Rutina de MESA para ejecutar lógica adicional tras la ejecución de un paso de simulación.}, label={lst:extra_start_step}]
   integer function extras_start_step(id, id_extra)
