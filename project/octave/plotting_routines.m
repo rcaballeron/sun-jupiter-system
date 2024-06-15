@@ -3975,8 +3975,14 @@ function main()
   %plot_cz_size_nolog_4_0G_var_vel(rot_vels,4);
   %plot_cz_size_4_0G_var_vel(rot_vels,4);
   %plot_cz_size_0336vc_var_g(mag_fields, 336);
-  plot_cz_size_028vc_var_g_z1(mag_fields, 28);
-  plot_cz_size_0336vc_var_g_z1(mag_fields, 336);
+  %plot_cz_size_028vc_var_g_z1(mag_fields, 28);
+  %plot_cz_size_0336vc_var_g_z1(mag_fields, 336);
+  %plot_hr_XG_var_vel(rot_vels7,3);
+  %plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
+  %plot_age_vs_alpha_mlt_XG(rot_vels7,3);
+  %plot_age_vs_mb_activation_XG(rot_vels7,3);
+  %plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
+  plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
 end
 
 
