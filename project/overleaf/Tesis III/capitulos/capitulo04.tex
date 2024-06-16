@@ -7,7 +7,7 @@ La herramienta de evolución estelar MESA ha sido utilizada extensivamente en nu
 
 En el caso particular de nuestra línea de investigación estamos interesados en estudiar los mecanismos que intervienen en la destrucción del litio en estrellas similares a nuestro Sol, y particularmente en ella. Resaltar nuevamente el hecho de que a día de hoy no existe una opinión unánime en la comunidad científica, más allá de que los modelos de evolución estelar no producen resultados coherentes con las observaciones, sobre cuáles son los mecanismos que gobiernan el proceso de agotamiento del litio estelar, y de cuándo se ponen en marcha o se detienen. Existen diversos planteamientos de procesos que intentan dar una respuesta a este enigma.\par 
 
-En nuestra investigación nos centramos en cómo influyen en modelos de estrellas de tipo solar, aquéllos con $1.0 \, \msun$ y con una metalicidad similar al Sol, los efectos de la rotación y de la pérdida de momento angular causada por la presencia de campos magnéticos que inducen un efecto de frenado magnético. Estos campos magnéticos tendrán, en una primera aproximación, una intensidad fija a lo largo de toda la evolución temporal del modelo. Posteriormente se extenderá el modelo para simular campos magnéticos de intensidad variable.\par
+En nuestra investigación nos centramos en cómo influyen en modelos de estrellas de tipo solar, aquéllos con 1.0 $\msun$ y con una metalicidad similar al Sol, los efectos de la rotación y de la pérdida de momento angular causada por la presencia de campos magnéticos que inducen un efecto de frenado magnético. Estos campos magnéticos tendrán, en una primera aproximación, una intensidad fija a lo largo de toda la evolución temporal del modelo. Posteriormente se extenderá el modelo para simular campos magnéticos de intensidad variable.\par
 
 Adicionalmente, los modelos simulados se basan en la teoría de la longitud de mezcla (Mixing Length Theory, MLT) para modelar la convección estelar. Este formalismo depende del parámetro libre longitud de mezcla ($\amlt$), parámetro al que normalmente se le asigna un valor preestablecido y fijo durante toda la simulación. En nuestro trabajo, realizaremos simulaciones manteniendo estable el valor de $\amlt$ pero también introduciremos la posibilidad novedosa de hacerlo evolucionar temporalmente en función de otros parámetros estelares.\par
 
@@ -462,7 +462,7 @@ Adicionalmente, configuramos MESA para que, a cada paso en la simulación y para
 \end{figure}
 
 
-En lo que se refiere a la rotación de las capas superficiales de la estrella, MESA permite especificar una velocidad en $\kms$, que en nuestro caso ha quedado fijada en 20 $\kms$. En el Listado \ref{lst:li_evol} mostramos la configuración adicional a añadir al proyecto de MESA para poder simular los conceptos teóricos discutidos hasta este momento.
+En lo que se refiere a la rotación de las capas superficiales de la estrella, MESA permite especificar una velocidad en $\kms$, que en nuestro caso ha quedado fijada en 20 $\kms$. En el listado \ref{lst:li_evol} mostramos la configuración adicional a añadir al proyecto de MESA para poder simular los conceptos teóricos discutidos hasta este momento.
 
 \begin{lstlisting}[language=Fortran, float, caption={Parametrización de los procesos relacionados con el tratamiento del litio y su evolución temporal.}, label={lst:li_evol}]
 &star_job
