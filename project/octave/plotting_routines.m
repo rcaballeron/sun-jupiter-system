@@ -901,6 +901,7 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
 
   %Axis scales
   set(gca, 'XScale', 'log');
+  set(gca, 'YScale', 'log');
   grid on;
   set(gca,'xminorgrid','off');
 
@@ -938,7 +939,7 @@ function plot_omega(A, color, width, ytick, axis_limits)
 
   %Plot values
   plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width);
-  plot(A(:,1), A(:,3) ./ sun_omega, 'linewidth', width, 'linestyle', ':');
+  %plot(A(:,1), A(:,5) ./ sun_omega, 'linewidth', width, 'linestyle', ':');
 
   %Axis scales
   set(gca, 'XScale', 'log');
@@ -2127,14 +2128,16 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
 
       %Calculate maximum for y axis
       %Get vel max value, divide it by ytick, plus 1, multiply by ytick
-      ymax = (idivide(max(A(ix_ini:ix_end,2)), int8(ytick), "fix") + 1) * ytick;
+      ymax = (idivide(max(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") + 1) * ytick;
+
       %ymax = ymax / sun_omega;
-      ymax = 400.0;
+      %ymax = 400.0;
 
       %Get vel max value, divide it by ytick, minus 1, multiply by ytick
-      ymin = (idivide(min(A(ix_ini:ix_end,2)), int8(ytick), "fix") - 1) * ytick;
-      ymin = ymin / sun_omega;
+      ymin = (idivide(min(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") - 1) * ytick;
+      %ymin = ymin / sun_omega;
       %ymin = 0.5;
+
 
       plot_omega(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
 
@@ -2151,14 +2154,14 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
         labels = {labels{:}, ['Surface-', strtrim(rotational_vels(j,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['Top core-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['Top core-', strtrim(rotational_vels(j,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['Surface-', strtrim(gauss_fields(i,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['Top core-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['Top core-', strtrim(gauss_fields(i,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
@@ -2173,18 +2176,18 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
   % Here we can properly assing the ymin and ymax values for all the plots
   % Each of them will potentially have a different one. We opt for fixing
   % the limits by hand.
-  line("xdata",[zams,zams], "ydata",[0.001,100], "linewidth", 3, "linestyle", "--", "color", "k");
+  line("xdata",[zams,zams], "ydata",[0.001,500], "linewidth", 3, "linestyle", "--", "color", "k");
 
 
   % Plot sun reference
-  plot(sun_age, sun_omega, '*', 'markersize', 15, 'linewidth', 2, 'color', [0.5,0.1,0.8]);
+  plot(sun_age, 1, '*', 'markersize', 15, 'linewidth', 2, 'color', [0.5,0.1,0.8]);
 
   l = legend(labels, "location", leg_loc);
 
   set (l, "fontsize", legend_font_size);
   %legend boxoff
   xlabel('star age (Ga)', 'fontsize', axis_font_size);
-  ylabel('Omega star/Omega Sun', 'fontsize', axis_font_size);
+  ylabel('\Omega_{star}/\Omega_{Sun}', 'fontsize', axis_font_size);
   title(atitle, 'fontsize', title_font_size);
 
   hold('off');
@@ -2948,7 +2951,7 @@ function plot_omega_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_omega_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', '', 'omega_var_vel_var_g', num2str(idx));
+  age_vs_omega_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', '', 'omega_var_vel_var_g', num2str(idx));
 end
 
 
@@ -3982,7 +3985,10 @@ function main()
   %plot_age_vs_alpha_mlt_XG(rot_vels7,3);
   %plot_age_vs_mb_activation_XG(rot_vels7,3);
   %plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
-  plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
+  plot_omega_0_0G_var_vel(rot_vels,0);
+  %plot_omega_XG_var_vel(rot_vels5,1);
+  %plot_omega_XG_var_vel(rot_vels7,3);
 end
 
 
