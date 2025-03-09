@@ -1,10 +1,10 @@
 % !TeX root = ../libro.tex
 % !TeX encoding = utf8
 
-\chapter{Rotación y campos magnéticos de intensidad constante}\label{ch:tercer-capitulo}
+\chapter{Rotación y campos magnéticos}\label{ch:tercer-capitulo}
 
 \section{Introducción}
-El impacto de la rotación tanto en la PMS como en el agotamiento del litio para las estrellas de tipo solar ha sido ampliamente debatido en el pasado \citep{Pinsonneault1997,Jeffries2004,Somers2014} y revisado más recientemente sobre la base de la disponibilidad de medidas más precisas \citep{Bouvier2016}. Sin embargo, estos estudios previos se centraron principalmente en los efectos hidrostáticos y no consideraron la influencia de un acoplamiento entre el campo magnético estelar y su posible efecto de desacelaración. Se considera que la pérdida de momento angular (Angular Moment Loss, AML) tiene una influencia directa en los procesos de mezcla que ocurren en el interior estelar y que el transporte de ese momento podría producirse por una serie de mecanismos tales como: pérdida de masa, campos magnéticos y ondas gravitatorias (modos g). Respecto a estos dos últimos mecanismos, las ondas gravitatorias \citep{Charbonnel2005, Pincon2016} y los campos magnéticos \citep{Eggenberger2009} tienen la propiedad de transmitir el momento angular (Angular Moment, AM) de forma mucho más eficaz que de inducir el mezclado en el interior estelar \citep{Denissenkov2007}. Como consecuencia de este incremento en la eficiencia del transporte del AM, se reduce la cantidad de rotación diferencial entre las zonas radiativa y convectiva de la estrella (se fomenta una rotación de cuerpo sólido), así como las inestabilidades rotacionales inducidas. Además, también se originarían campos magnéticos en los límites entre estas zonas, en las llamadas tacoclinas \citep{Aschwanden2014, Guerrero2016}, que interaccionarían con las partículas del viento solar que se verían obligadas a rotar en sincronía con el campo magnético imperante y por tanto, frenarían la rotación estrella. Esto es lo que se conoce como el efecto de frenado magnético (Magnetic Braking, MB). \par
+El impacto de la rotación tanto en la PMS como en el agotamiento del litio para las estrellas de tipo solar ha sido ampliamente debatido en el pasado \citep{Pinsonneault1997,Jeffries2004,Somers2014} y revisado más recientemente sobre la base de la disponibilidad de medidas más precisas \citep{Bouvier2016}. Sin embargo, estos estudios previos se centraron principalmente en los efectos hidrostáticos y no consideraron la influencia de un acoplamiento entre el campo magnético estelar y su posible efecto de desaceleración. Se considera que la pérdida de momento angular (Angular Moment Loss, AML) tiene una influencia directa en los procesos de mezcla que ocurren en el interior estelar y que el transporte de ese momento podría producirse por una serie de mecanismos tales como: pérdida de masa, campos magnéticos y ondas gravitatorias (modos g). Respecto a estos dos últimos mecanismos, las ondas gravitatorias \citep{Charbonnel2005, Pincon2016} y los campos magnéticos \citep{Eggenberger2009} tienen la propiedad de transmitir el momento angular (Angular Moment, AM) de forma mucho más eficaz que de inducir el mezclado en el interior estelar \citep{Denissenkov2007}. Como consecuencia de este incremento en la eficiencia del transporte del AM, se reduce la cantidad de rotación diferencial entre las zonas radiativa y convectiva de la estrella (se fomenta una rotación de cuerpo sólido), así como las inestabilidades rotacionales inducidas. Además, también se originarían campos magnéticos en los límites entre estas zonas, en las llamadas tacoclinas \citep{Aschwanden2014, Guerrero2016}, que interaccionarían con las partículas del viento solar que se verían obligadas a rotar en sincronía con el campo magnético imperante y, por tanto, frenarían la rotación de la estrella. Esto es lo que se conoce como el efecto de frenado magnético (Magnetic Braking, MB). \par
 
 \begin{figure}
     \centering
@@ -15,23 +15,21 @@ El impacto de la rotación tanto en la PMS como en el agotamiento del litio para
 
 A día de hoy, los modelos estándar no son capaces de reconciliar de forma satisfactoria los valores observados de abundancia de litio en las superficies estelares con las predicciones que estos modelos arrojan. Esta falta de concordancia nos hace pensar que ciertos mecanismos físicos que influyen en la destrucción del litio están siendo modelizados de forma inadecuada o simplemente no se están teniendo en cuenta, como por ejemplo el frenado magnético. A la vista de estos hallazgos, parece evidente que aún quedan cuestiones abiertas por resolver sobre el tema de los procesos que participan, directa o indirectamente, en los mecanismos de mezcla que no están incorporados en los modelos estelares estándar. Por ello, es imprescindible una adecuada consideración de las interacciones entre rotación y campos magnéticos a la hora de estudiar la distribución del AM. \par
 
-Es conocido que parte de la pérdida de litio se produce durante la PMS y que además ésta se acentúa según decrece la masa de la estrella y, a igualdad de masa, según aumenta la metalicidad de la misma. Para reproducir la dependencia entre la edad y masa de las estrellas con la merma de las concentraciones de litio, estos modelos necesitan de una combinación de procesos de mezclado cada vez más complejos, como overshooting, mezclado debido a procesos rotacionales o difusión microscópica. Para las estrellas de tipo solar, nos encontramos con dos factores que tienen que ser explicados desde el punto de vista de la abundancia de litio:
+Como hemos introducido, los modelos predicen que la mayor pérdida de litio se produzca durante la PMS, y que además ésta se acentúa según decrece la masa de la estrella y, a igualdad de masa, según aumenta la metalicidad de la misma \citep{Jeffries2014}. Para reproducir la dependencia entre la edad y masa de las estrellas con la merma de las concentraciones de litio, estos modelos necesitan de una combinación de procesos de mezclado cada vez más complejos, como el overshooting, mezclado debido a procesos rotacionales o difusión microscópica. Para las estrellas de tipo solar, nos encontramos con dos factores que tienen que ser explicados desde el punto de vista de la abundancia de litio:
 
 \begin{enumerate}
     \item La deficiencia generalizada de litio en el Sol y en estrellas de tipo tardío presentes en cúmulos a diferentes edades.
     \item La gran dispersión en abundancia de litio que existe en estrellas con una determinada temperatura efectiva detectada en los cúmulos abiertos.
 \end{enumerate}
 
-Existen datos observacionales que sugieren que las estrellas que giran más rápido preservan el litio mejor que las que lo hacen más lentamente. Este hecho se puede deber a que por encima de cierto umbral de velocidad de rotación, ésta impide de manera drástica la penetración vertical de penachos generados por movimientos convectivos (ver figura \ref{fig:grav_waves}) que, cuando están presentes, contribuyen a hacer más eficiente el proceso de destrucción de litio. En estas estrellas se produciría una inclinación en los penachos que favorecerían el mezclado horizontal a expensas del vertical, reduciendo así su penetración en la zona de destrucción del litio \citep{Baraffe2017}.\par
+Existen datos observacionales que sugieren que las estrellas que giran más rápido preservan el litio mejor que las que lo hacen más lentamente \citep{Eggenberger2009}. Este hecho se puede deber a que por encima de cierto umbral de velocidad de rotación, ésta impide de manera drástica la penetración vertical de penachos generados por movimientos convectivos (ver figura \ref{fig:grav_waves}) que, cuando están presentes, contribuyen a hacer más eficiente el proceso de destrucción de litio. En estas estrellas se produciría una inclinación en los penachos que favorecería el mezclado horizontal a expensas del vertical, reduciendo así su penetración en la zona de destrucción del litio \citep{Baraffe2017}.\par
 
-Adicionalmente y según el modelo de nucleosíntesis estándar para el Big Bang (Standard Big Bang Nucleosynthesis, SBBN) la abundancia de litio original estimada es de 2.6 dex \citep{Spergel2003} pero la abundancia de litio detectadas en meteoritos se conoce que está en el orden A(Li) = [3.26, 3.34] dex \citep{Randich2006, Grevesse2007}, lo que apunta hacia un enriquecimiento desde que se produjo el Big Bang. Por otro lado, la abundancia medida en las estrellas de tipo solar es del orden de A(Li) = 1.05 dex \citep{Grevesse2007} lo que implica la existencia de procesos de destrucción del litio en su interior. Esta discrepancia entre las abundancias medidas en meteoritos y en estrellas de tipo solar es lo que ha pasado a denominarse el "problema del litio".\par
-
-Continuando con la importancia del litio y teniendo en cuenta que tanto éste, como los demás elementos ligeros se queman a temperaturas relativamente bajas en interiores estelares, tenemos que estos elementos sólo sobreviven en las capas más externas de una estrella, donde la temperatura es menor que la necesaria para su destrucción. De este modo, su presencia es un trazador muy potente relacionado con los mecanismos de mezcla en funcionamiento en estructuras estelares, ya que nos puede aportar información acerca de qué tal eficientes son a la hora de transportar estos elementos a zonas más interiores donde serían destruidos.\par
+Continuando con la importancia del litio y teniendo en cuenta que tanto éste, como los demás elementos ligeros se queman a temperaturas relativamente bajas en interiores estelares, tenemos que estos elementos sólo sobreviven en las capas más externas de una estrella, donde la temperatura es menor que la necesaria para su destrucción. De este modo, su presencia es un trazador muy potente relacionado con los mecanismos de mezcla en funcionamiento en estructuras estelares, ya que nos puede aportar información acerca de qué tan eficientes son a la hora de transportar estos elementos a zonas más interiores donde serían destruidos.\par
 
 \section{Efectos de la rotación} \label{sec:efectos_rotacion}
 Nuestro Sol, como estrella que es y como ocurre con el resto de los cuerpos celestes, gira en torno a su eje. El tiempo que tarda en completar una revolución completa sobre éste es de aproximadamente 26 días. Decimos aproximadamente porque la duración del día solar es diferente dependiendo de la latitud que se tome como referencia. Esto ocurre porque, a diferencia de la Tierra, el Sol no es un cuerpo rígido. Por lo tanto, al estudiar la rotación del Sol, no se puede considerar como una estructura compacta.\par
 
-Si tomamos como referencia medidas de la rotación solar a lo largo de un período largo de tiempo podemos observar que, dependiendo de la latitud a la que se haya medido, la velocidad de rotación se va incrementando conforme la distancia al ecuador solar se reduce. Es decir, el Sol gira más rápidamente en el ecuador que en sus polos (ver figura \ref{fig:rot_solar_vs_latitud}). Este comportamiento, conocido como rotación diferencial, fue descrito por Richard Carrington (1826-1875) tras analizar el movimiento de las manchas solares \citep{Carrington1863}. Carrington dedujo la siguiente ley empírica donde $\Omega_*$ es la cantidad angular de la rotación diaria y $\phi$ es la latitud heliográfica, que corresponde a la latitud en la Tierra  \citep{Banisch2009}.\par
+Si tomamos como referencia medidas de la rotación solar a lo largo de un período largo de tiempo, podemos observar que, dependiendo de la latitud a la que se haya medido la velocidad de rotación, ésta se va incrementando conforme la distancia al ecuador solar se reduce. Es decir, el Sol gira más rápidamente en el ecuador que en sus polos (ver figura \ref{fig:rot_solar_vs_latitud}). Este comportamiento, conocido como rotación diferencial, fue descrito por Richard Carrington (1826-1875) tras analizar el movimiento de las manchas solares \citep{Carrington1863}. Carrington dedujo la siguiente ley empírica donde $\Omega_*$ es la cantidad angular de la rotación diaria y $\phi$ es la latitud heliográfica, que corresponde a la latitud en la Tierra  \citep{Banisch2009}.\par
 
 \begin{ceqn}
 \begin{equation}
@@ -61,21 +59,19 @@ En la región ecuatorial la rotación dura solo 25 días, mientras que en los po
     \label{fig:ang_solar_vs_latitud}
 \end{figure}
 
-Los efectos de la rotación también pueden observarse en el diagrama HR. La rotación implica la aparición de fuerzas centrífugas que afectan tanto a la estructura de la estrella, como a su temperatura y luminosidad. Dichas fuerzas, acentuadas en estrellas con mayor velocidad angular, refuerzan el oscurecimiento gravitatorio \cite[véase por ejemplo ][]{Eggenberger2012,Paxton2019,Gossage2021} haciendo que la estrella desplace su masa hacia fuera con respecto al eje de rotación, siendo el efecto más pronunciado en las regiones ecuatoriales que en los polos. La consecuencia es que la presión ($\gsurf$) a la que está sometido el gas es menor en las primeras que en las segundas. Este efecto hace que las estrellas que rotan a gran velocidad aparezcan menos densas ($\rho$), menos luminosas ($L$) y, por tanto, con una temperatura efectiva ($\teff$) más baja a medida que se acercan a la ZAMS.\par
+Los efectos de la rotación también pueden observarse en el diagrama Hertzsprung-Russell (HR). La rotación implica la aparición de fuerzas centrífugas que afectan tanto a la estructura de la estrella, como a su temperatura y luminosidad. Dichas fuerzas, acentuadas en estrellas con mayor velocidad angular, refuerzan el oscurecimiento gravitatorio \cite[véase por ejemplo ][]{Eggenberger2012,Paxton2019,Gossage2021} haciendo que la estrella desplace su masa hacia fuera con respecto al eje de rotación, siendo el efecto más pronunciado en las regiones ecuatoriales que en los polos. La consecuencia es que la presión ($\gsurf$) a la que está sometido el gas es menor en las primeras que en las segundas. Este efecto hace que las estrellas que rotan a gran velocidad aparezcan menos densas ($\rho$), menos luminosas ($L$) y, por tanto, con una temperatura efectiva ($\teff$) más baja a medida que se acercan a la ZAMS.\par
 
 
 \section{Efectos de los campos magnéticos}
 La masa de las estrellas juega un papel determinante en la existencia o no de una envoltura convectiva externa. A su vez, la presencia de esta región convectiva condiciona la evolución de los campos magnéticos. Las estrellas masivas no tienen zonas convectivas externas aunque pueden exponer un núcleo convectivo. En cambio, las estrellas menos masivas, como el Sol, tienen envolturas convectivas y un núcleo radiativo. En ambos tipos de estrellas se pueden generar fuertes campos magnéticos en la tacoclina pero con notables diferencias \citep{Chabrier2006,Charbonneau2010}.\par
 
-Aun así, a día de hoy aún no existen un consenso acerca de cuál es el origen de los campos magnéticos en las estrellas. Los campos magnéticos organizados detectados en algunas estrellas O \citep{Wade2010} podrían ser campos fósiles \citep{Dudorov2014}, pero también podrían deberse a campos producidos mediante un mecanismo de dinamo \citep{Cantiello2009}. Además, la presencia de campos magnéticos con intensidades del orden de kG \citep{Hussain2014} ha sido una condición sine qua non para tratar ciertos datos observados en estrellas de tipo T Tauri su fase de PMS \citep{Johns-Krull2007}.\par
+Aun así, a día de hoy aún no existe un consenso acerca de cuál es el origen de los campos magnéticos en las estrellas. Los campos magnéticos organizados detectados en algunas estrellas de tipo O \citep{Wade2010} podrían ser campos fósiles \citep{Dudorov2014}, pero también podrían deberse a campos producidos mediante un mecanismo de dinamo \citep{Cantiello2009}. Además, la presencia de campos magnéticos con intensidades del orden de kG \citep{Hussain2014} ha sido una condición sine qua non para tratar ciertos datos observados en estrellas de tipo T Tauri en su fase de PMS \citep{Johns-Krull2007}.\par
 
 \subsection{El mecanismo de dinamo}
-Una dinamo es el proceso por el cual la energía mecánica se convierte
-convierte en energía electromagnética por inducción. La energía mecánica se debe al movimiento de los fluidos y la energía electromagnética resultante produce los campos magnéticos observados. Para que una estrella tenga un campo magnético generado por dinamo debe contener una región fluida conductora de electricidad que experimente movimientos para generar inducción. En el Sol, la materia que lo compone se encuentra en su mayoría presente en forma de plasma. En este estado, la envoltura electrónica se encuentra desacoplada del núcleo atómico y bajo ciertas condiciones físicas pueden moverse libremente, por lo que pueden poner en movimiento una carga electrónica. Bajo estas condiciones, la materia solar puede alcanzar la conductividad del cobre \citep{Banisch2009}. La necesidad básica para mantener un mecanismo de dinamo es una región fluida eléctricamente conductora en el interior de la estrella. Aún así, deben de existir otras condiciones necesarias para que el vigor y la morfología no decaiga debido a la disipación óhmica. 
-\par
+Una dinamo es el proceso por el cual la energía mecánica se convierte en energía electromagnética por inducción. La energía mecánica se debe al movimiento de los fluidos y la energía electromagnética resultante produce los campos magnéticos observados. Para que una estrella tenga un campo magnético generado por dinamo debe contener una región fluida conductora de electricidad que experimente movimientos para generar inducción. En el Sol, la materia que lo compone se encuentra en su mayor parte presente en forma de plasma. En este estado, la envoltura electrónica se encuentra desacoplada del núcleo atómico y, bajo ciertas condiciones físicas, los electrones que la conforman pueden moverse libremente e inducir con ello una carga electrónica. Bajo estas condiciones, la materia solar puede alcanzar la conductividad del cobre \citep{Banisch2009}. La necesidad básica para mantener un mecanismo de dinamo es una región fluida eléctricamente conductora en el interior de la estrella. Aún así, deben existir otras condiciones necesarias para que su vigor y morfología no decaigan debido a la disipación óhmica. \par
 
 \subsection{Campos magnéticos internos}
-El Sol es una estrella activa en lo que se refiere al campo magnético. Según los modelos teóricos este campo magnético es generado por una dinamo en la tacoclina y con una intensidad en torno a B $\approx$ 10$^{5}\,\Gauss$ \citep{Maeder2003a,Dudorov2014}. En el momento de su generación, las líneas de ese campo magnético tendrán una orientación poloidal y se verán afectadas por la rotación diferencial y obligadas a adoptar una tipología toroidal (el efecto $\omega$). Por otro lado, también puede darse el caso contrario, partiendo de un campo magnético toroidal obtener una configuración poloidal. Esto sería posible gracias a los movimientos convectivos de material que se producen en la zona convectiva (Convective Zone, CZ) de la estrella y suponer que este material se comporta como un conductor perfecto. Esta segunda condición permite establecer que las líneas de campo magnético están congeladas en el fluido conductor y por tanto deben moverse solidariamente con él (efecto $\alpha$) \citep{Stanley2014}.\par
+El Sol es una estrella activa en lo que se refiere al campo magnético. Según los modelos teóricos, este campo magnético es generado por una dinamo en la tacoclina y con una intensidad en torno a B $\approx$ 10$^{5}\,\Gauss$ \citep{Maeder2003a,Dudorov2014}. En el momento de su generación, las líneas de ese campo magnético tendrán una orientación poloidal y se verán afectadas por la rotación diferencial y obligadas a adoptar una tipología toroidal (el efecto $\omega$). Por otro lado, también puede darse el caso contrario, partiendo de un campo magnético toroidal obtener una configuración poloidal. Esto sería posible gracias a los movimientos convectivos de material que se producen en la zona convectiva (Convective Zone, CZ) de la estrella y suponer que este material se comporta como un conductor perfecto. Esta segunda condición permite establecer que las líneas de campo magnético están congeladas en el fluido conductor y, por tanto, deben moverse solidariamente con él (efecto $\alpha$) \citep{Stanley2014}.\par
 
 \begin{figure}
     \centering
@@ -86,29 +82,27 @@ El Sol es una estrella activa en lo que se refiere al campo magnético. Según l
 
 
 \subsection{Campos magnéticos superficiales} \label{surf_mf}
-La intensidad del campo magnético medida en la superficie del Sol es de aproximadamente B $\approx$ 1 $\Gauss$ \citep{Weber1967,DAntona2000,Morin2012}, el doble del valor del de la Tierra. Además su topología es variada y compleja. El modelo de dinamo establece que el campo magnético producido en el interior de la estrella alcanza la superficie con la ayuda de procesos convectivos que tienen lugar en la CZ y da lugar a regiones magnéticamente activas en la superficie solar. Adicionalmente, las estrellas en rotación que exponen una CZ exterior significativa pueden producir campos magnéticos superficiales a través de un mecanismo de dinamo \citep{Brandenburg2004,Charbonneau2010,Brun2017}. Sea cual sea el origen de los campos magnéticos superficiales, se predice un acoplamiento con el viento estelar, provocando así una pérdida de masa y, si ésta es lo suficientemente fuerte, produciendo el MB \citep{UdDoula2002,Ud-Doula2007,Ud-Doula2008,Meynet2010}.\par
+La intensidad del campo magnético medida en la superficie del Sol es de aproximadamente $B$ $\approx$ 1 $\Gauss$ \citep{Weber1967,DAntona2000,Morin2012}, el doble del valor del de la Tierra. Además, su topología es variada y compleja. El modelo de dinamo establece que el campo magnético producido en el interior de la estrella alcanza la superficie con la ayuda de procesos convectivos que tienen lugar en la CZ y da lugar a regiones magnéticamente activas en la superficie solar. Adicionalmente, las estrellas en rotación que exponen una CZ exterior significativa pueden producir campos magnéticos superficiales a través de un mecanismo de dinamo \citep{Brandenburg2004,Charbonneau2010,Brun2017}. Sea cual sea el origen de los campos magnéticos superficiales, se predice un acoplamiento con el viento estelar, provocando así una pérdida de masa y, si ésta es lo suficientemente fuerte, produciendo el MB \citep{UdDoula2002,Ud-Doula2007,Ud-Doula2008,Meynet2010}.\par
 
 
-\section{Efectos del frenado magnético - Parte I}
-En su enfoque más aceptado, el MB está vinculado al trabajo de Skumanich \citep{Skumanich1972} en el que desarrolla una ley empírica de su evolución en paralelo a la edad de la estrella. Para calibrar esta ley, Skumanich se basó en datos obtenidos de estrellas de tipo G encontradas en la MS. La influencia del MB en la evolución de la estrella está estrechamente relacionada con el transporte del AM. Según \cite{Meynet2010}, se distinguen dos mecanismos principales atendiendo a cómo se produce el transporte del AM:
+
+\section{Efectos del frenado magnético}
+En su enfoque más aceptado, el MB está vinculado al trabajo de Skumanich \citep{Skumanich1972} en el que desarrolla una ley empírica de su evolución en paralelo a la edad de la estrella. Para calibrar esta ley, Skumanich se basó en datos obtenidos de estrellas de tipo G encontradas en la MS. En paralelo, la influencia del MB en la evolución de la estrella está estrechamente relacionada con el transporte del AM. Según \cite{Meynet2010}, se distinguen dos mecanismos principales atendiendo a cómo se produce el transporte del AM:
 
 \begin{enumerate}
     \item Rotación diferencial: el transporte de AM es impulsado por corrientes meridionales e inestabilidades de cizalla.
     \item Rotación de cuerpo sólido: cuando el transporte de AM es muy eficiente, la rotación de cuerpo sólido se mantiene durante toda la MS.
 \end{enumerate}
 
-La AML causada por el MB depende directamente de la cantidad de masa perdida por la estrella debido a los vientos estelares. El coeficiente de pérdida de masa estimado para una estrella de tipo solar es de aproximadamente 10$^{-14} \msun \; yr^{-1}$ \citep{Noerdlinger2008} y la AML resultante derivado de ese valor pueden considerarse relativamente modesto como para influir decisivamente en la evolución de la estrella. Además, el efecto combinado de los movimientos convectivos y la rotación diferencial conducen a la generación de campos magnéticos. Esos campos magnéticos acaban alcanzando la superficie de la estrella, de modo que el AML puede incrementarse en varios órdenes de magnitud \citep{Langer2012}. Ese incremento es consecuencia del campo magnético que obliga a las partículas ionizadas del viento estelar a girar con la misma velocidad angular, vientos que se extienden una distancia varias veces superior al radio de la estrella \citep{UdDoula2002,Ud-Doula2007,Ud-Doula2008}.\par
+La AML causada por el MB depende directamente de la cantidad de masa perdida por la estrella debido a los vientos estelares. El coeficiente de pérdida de masa estimado para una estrella de tipo solar es de aproximadamente 10$^{-14} \msun \; yr^{-1}$ \citep{Noerdlinger2008} y la AML resultante derivada de ese valor puede considerarse relativamente modesta como para influir decisivamente en la evolución de la estrella. En paralelo, el efecto combinado de los movimientos convectivos y la rotación diferencial conduce a la generación de campos magnéticos de una determinada intensidad $B$. Esos campos magnéticos acaban alcanzando la superficie de la estrella, de modo que la AML puede incrementarse en varios órdenes de magnitud \citep{Langer2012}. Ese incremento es consecuencia del campo magnético que obliga a las partículas ionizadas del viento estelar a girar con la misma velocidad angular, vientos que se extienden una distancia varias veces superior al radio de la estrella \citep{UdDoula2002,Ud-Doula2007,Ud-Doula2008}.\par
 
 Adicionalmente, a lo largo de la evolución de la estrella, parámetros directamente observables como su velocidad de rotación, temperatura efectiva, gravedad superficial o abundancia de elementos químicos sufren variaciones. Estos parámetros influyen, directa o indirectamente, en la AML causada por el campo magnético de la estrella.\par
 
 
-\subsection{Formalismo de frenado magnético de intesidad fija} \label{sec:mod_mb}
-Comenzamos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular (Angular Moment, AM) en MESA. Estos serán considerados para el cálculo de la AML como resultado del par aplicado por un viento estelar acoplado magnéticamente.\par 
+\subsection{Frenado magnético de intesidad fija según Ud-Doula \& Owocki (2002)} \label{sec:mod_mb}
+Comenzamos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la rotación, el frenado magnético y el momento angular. Estos serán considerados para el cálculo de la AML como resultado del par aplicado por un viento estelar acoplado magnéticamente.\par 
 
-En presencia de pérdida de masa, el material del viento estelar elimina el AM, lo que provoca un efecto de giro a la baja. Esto es muy importante, por ejemplo en las estrellas masivas, que se sabe que rotan rápidamente y tienen fuertes vientos estelares. En las siguientes secciones describimos dos enfoques semi-empíricos para el cálculo de la AML como resultado del par aplicado por un viento estelar acoplado magnéticamente.\par
-
-\subsubsection{Frenado magnético de intesidad fija según Ud-Doula \& Owocki (2002)}
-Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre la influencia de un campo magnético dado sobre el viento estelar a través del denominado parámetro magnético de confinamiento del viento ($\eta_*$). $\eta_*$ representa una relación energética (ec. \ref{eq:wind_conf}) y define un parámetro característico de la eficacia relativa de los campos magnéticos para circunscribir y/o canalizar el flujo de salida del viento \citep{UdDoula2002}.\par
+El modelo de \cite{UdDoula2002} adopta una prescripción de tipo dinamo que permite establecer una relación entre la influencia de un campo magnético dado sobre el viento estelar a través del denominado parámetro magnético de confinamiento del viento ($\eta_*$). $\eta_*$ representa una relación energética (ec. \ref{eq:wind_conf}) y define un parámetro característico de la eficacia relativa de los campos magnéticos para circunscribir y/o canalizar el flujo de salida del viento.\par
 
 
 \begin{ceqn}
@@ -119,11 +113,11 @@ Este modelo adopta una prescripción de tipo dinamo que permite establecer una r
 
 donde $B^{2}/8\pi$ es la densidad de energía del campo magnético, $\frac{1}{2}\rho\nu^{2}$ la densidad de energía cinética, $B$ la intensidad del campo magnético, $\rho$ la densidad de masa, y $\nu$ la velocidad del viento estelar.\par
 
-Por otra parte, \cite{Mathys2006} observaron en estrellas de masa intermedia con una fuerte actividad magnética una velocidad de rotación menor en comparación con otras nacidas en la misma nube parental. En esas estrellas, los campos magnéticos interactúan con la pérdida de masa que se producen en ellas, potenciando la AML. En este proceso el radio de Alfven ($\ralfven$) interpreta un rol importante: en el caso de que éste sea mayor que el radio de la estrella, entonces el flujo del viento tendrá que seguir el campo magnético. Como consecuencia, el material saldrá de la superficie estelar con un AM específico mayor, ya que el radio de co-rotación ha aumentado y corresponderá aproximadamente al ($\ralfven$), desencadenando así el efecto de MB.
+Por otra parte, \cite{Mathys2006} observaron en estrellas de masa intermedia con una fuerte actividad magnética una velocidad de rotación menor en comparación con otras nacidas en la misma nube parental. En esas estrellas, los campos magnéticos interactúan con la pérdida de masa que se produce en ellas, potenciando la AML. En este proceso, el radio de Alfven ($\ralfven$) interpreta un rol importante: en el caso de que este sea mayor que el radio de la estrella, entonces el flujo del viento tendrá que seguir el campo magnético. Como consecuencia, el material saldrá de la superficie estelar con un AM específico mayor, ya que el radio de co-rotación ha aumentado y corresponderá aproximadamente al ($\ralfven$), desencadenando así el efecto de MB.\par 
 
 Haciendo uso de $\eta_*$, el $\ralfven$ se define como el punto en el que se equilibran la densidad de energía del campo magnético, representada por $B$, y la densidad de energía cinética, definida por $\rho$ y $\nu$. Es decir, donde el coeficiente entre ambos es igual a 1.\par
 
-Adicionalmente, es conocido que las estrellas con masas iniciales similares pero diferentes relaciones de pérdida de masa ($\Dot{M}$) acabarán evolucionando de forma muy diferente. Las partículas ionizadas transportadas por el viento solar no sólo contribuyen a la pérdida de masa, sino también a la pérdida de energía cinética que se deposita en el medio interestelar. Dada una estrella con un viento esféricamente simétrico, $\Dot{M}$ se caracteriza por la siguiente expresión:
+Adicionalmente, es conocido que las estrellas con masas iniciales similares pero diferentes relaciones de pérdida de masa ($\Dot{M}$) acabarán evolucionando de forma muy diferente. Las partículas ionizadas transportadas por el viento solar no sólo contribuyen a la $\Dot{M}$, sino también a la pérdida de energía cinética que se deposita en el medio interestelar. Dada una estrella con un viento esféricamente simétrico, $\Dot{M}$ se caracteriza por la siguiente expresión:
 
 \begin{equation}
     \Dot{M} = 4\pi r^2\rho\nu \label{eq:mass_loss1}
@@ -140,7 +134,7 @@ A su vez, de las características observables del viento solar, nos importan esp
     \nu(r) = \nu_\infty (1-R_*/r) \label{eq:vel_law}
 \end{equation}
 
-donde $\nu_\infty$ es la velocidad terminal del viento definida como la velocidad que alcanza el viento, la materia que fluye a gran distancia de la estrella central, donde ya no es acelerada por la fuerza impulsora del viento, y su vez la desaceleración debida a la interacción con el medio interestelar (Inter-Stellar Medium, ISM) es despreciable \citep{Niedzielski2002}.\par
+donde $\nu_\infty$ es la velocidad terminal del viento definida como la velocidad que alcanza el viento, la materia que fluye a gran distancia de la estrella central, donde ya no es acelerada por la fuerza impulsora del viento y, a su vez, la desaceleración debida a la interacción con el medio interestelar (Inter-Stellar Medium, ISM) es despreciable \citep{Niedzielski2002}.\par
 
 Para el caso de estrellas OB masivas, se estima que los vientos impulsados por sus líneas de campo magnéticas tienen velocidades terminales que son directamente proporcionales a la velocidad de escape fotosférica \citep{Lamers2000} según:\par
 
@@ -159,94 +153,166 @@ Haciendo uso de la ec. \ref{eq:vesc}, $\nu_\infty$ puede reformularse como:
 \end{equation}
 donde ${\rsun}$ es el radio, y ${\msun}$ la masa del Sol, respectivamente. \par
 
+\subsection{Frenado magnético de intensidad variable según Gallet \& Bouver (2013)}
+Suponer que el valor $B$ permanece constante a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios. Parece razonable que, como ocurre con otros parámetros estelares directamente observables como la velocidad de rotación, temperatura efectiva o gravedad superficial, cuyos valores sufren variaciones, $B$ también evolucione a lo largo del tiempo. De acuerdo a \cite{Gallet2013} la intensidad del campo magnético debería variar a lo largo de la vida de la estrella en lugar de permanecer fija durante toda su evolución. Para ello nos basamos en un formalismo que nos permite calcular una intensidad de campo magnético variable.\par 
 
-\subsubsection{Pérdida de momento angular según Weber (1967)}
+Este modelo adopta una prescripción de tipo dinamo que permite establecer una relación entre $\Omega$, $\teff$, y $B$, así como con la tasa de pérdida de masa ($\mwind$) causada por el viento estelar. Comenzaremos enumerando los aspectos más relevantes y las suposiciones realizadas en la modelización de la evolución de la intensidad del campo magnético.\par 
 
-Dado que la versión de MESA utilizada en este trabajo no incluye el tratamiento de los campos magnéticos superficiales (sí tiene en cuenta el transporte por campos magnéticos internos de momento angular y elementos químicos) y por tanto, tampoco los efectos de frenado magnético, es necesario extender el simulador para incluir este fenómeno. En esta fase de la investigación hemos seguido el trabajo teórico sobre el AM en el Sol realizado por \cite{Weber1967}, haciendo uso de la ec. \ref{eq:j_dot1} para el cálculo de la AML:
-
-\begin{equation}
- \Dot{J} = \frac{2}{3} \Dot{M}\Omega R^{2}_{A} \label{eq:j_dot1}
-\end{equation}
-
-donde $\Dot{M}$ es la tasa de pérdida de masa, $\Omega$ la velocidad angular en la superficie de la estrella y $\ralfven$ el radio Alfven. Para valores grandes de $\ralfven$, la estrella sufre una desaceleración significativa. Su valor depende de los siguientes parámetros variables: B, $\teff$ y $\Omega$ \citep{Gallet2015}. Con respecto a $\Dot{M}$, para calcular la pérdida de masa se utiliza la fórmula empírica desarrollada por Reimers \citep{Reimers1975} para estrellas en su fase AGB.
-
-Finalmente, la ec. \ref{eq:j_dot1} se puede reescribir según \cite{Ud-Doula2008} de modo que dependa de $\eta_*$ en lugar de $R_A$, quedando así una expresión más conveniente para ser implementada en MESA porque se basa en valores directamente expuestos durante las simulaciones.
-
+Un parámetro relevante para caracterizar la influencia de un campo magnético dado en el viento estelar es $\Omega$. Suponiendo que el campo magnético superficial medio ($\Bp$) es generado por una dinamo, su fuerza es proporcional a alguna potencia de $\Omega$,
 
 \begin{equation}
- \Dot{J} = \frac{2}{3} \Dot{M}\Omega R^{2}_{*}\eta_* \label{eq:j_dot_mesa}
+	\Bp \propto \Omega_*^b \label{eq:mf_strenght}
+\end{equation}
+y $\Bp$ queda definido por,
+\begin{equation}
+	\Bp = f_*B_* \label{eq:bp}
 \end{equation}
 
+donde $f_*$ es el factor de relleno, es decir, la fracción de la superficie estelar que está magnetizada, $B_*$ representa la intensidad del campo magnético, $\Omega_*$ es la velocidad angular de la estrella en la superficie estelar, y $b$ es el exponente de la dinamo \citep{Gallet2013}.\par
 
-\section{Extendiendo MESA - Parte II}
-Una vez tenemos definidos los diferentes formalismos que nos permiten calcular los efectos que producirían la presencia de un campo magnético de intensidad fija sobre el momento angular de una estrella similar al Sol, procedemos a codificar los mismos en rutinas compatibles con el simulador MESA. Comenzaremos con la introducción de la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, y luego procederemos con la rutina que realiza la distribución de esa pérdida entre las diferentes celdas que conforman la zona convectiva exterior de la estrella. Ambas rutinas son invocadas como parte del \textit{hook} introducido en la sección \ref{sec:mb_routine}. \par
+Según este enfoque, la intensidad de campo magnético será proporcional a la intensidad de campo magnético de equipartición ($\Beq$) de la siguiente manera:
+ 
+\begin{equation}
+	B_* \approx 1.13 \Beq \label{eq:mf_bstar}
+\end{equation}
 
-\subsection{Rutina de frenado magnético de intensidad constante} \label{sec:mb_cte_b}
-Ante la presencia de un campo magnético de intensidad constante B, procedemos a calcular qué cantidad de AM es capaz de eliminar de la estrella. Para ello, a cada paso de la simulación se obtiene un $\Dot{J}$ global que viene a representar el par de torsión que ejerce el viento estelar atrapado dentro del campo magnético. Una vez obtenido este valor, posteriormente se distribuirá entre las diferentes celdas del modelo que representan a la estrella simulada.\par
+donde $\Beq$ se define, y por tanto se relaciona con $\teff$, como:
 
-En el listado \ref{lst:jdot_cantiello} podemos observar el código de la rutina. Es importante destacar que MESA utiliza la sistema cgs (centímetros, gramos, segundos) por lo que hay que asegurarse que los parámetros y variables utilizadas en los cálculos están en las unidades correctas.\par
+\begin{equation}
+	\Beq = \sqrt{8\pi P_*} = \sqrt{\frac{8\pi\rho_* \boltzmann \teff}{\mu\massH}}\label{eq:mf_beq}    
+\end{equation}
 
-\begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión para un campo magnético de intensidad fija.}, label={lst:jdot_cantiello}]
-real function calculate_jdot_rate_cantiello(s, b_star) result(new_j_dot)
-  use const_def
-  type (star_info), pointer, intent(in) :: s
-  real(dp), intent(in) :: b_star
-    
-  real(dp) :: r_st, m_st, i_st, alfven_r
-  real(dp) :: omega_surf, m_dot, eta_surf, v_inf, v_esc
-    
-  !Star data
-  r_st = s% r(1)
-  m_st = s% m(1)
-  omega_surf = s% omega(1)
-    
-  ! escape and infinite velocities
-  ! 100000 transform from km/s to cm/s
-  v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000
-  v_inf = 1.92 * v_esc
-    
-  m_dot = s% mstar_dot !This in g/s
-    
-  eta_surf = ((r_st * b_star)**2)/(abs(m_dot) * v_inf)
-    
-  !Formula 2.3 Cantiello's MESA assigment
-  new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
-end function
-\end{lstlisting}
+donde $P_*$ es la presión del gas fotosférico, $\rho_*$ es la densidad fotosférica, $\boltzmann$ es la constante de Boltzmann, $\massH$ es la masa de un átomo de hidrógeno, y $\mu$ el peso atómico medio \citep{Cranmer2011}. \par
 
+Como se indica en \cite{Cranmer2011}, $\mu$ puede estimarse utilizando las ecuaciones de estado del plasma OPAL \footnote{\url{https://opalopacity.llnl.gov/EOS_2005/}}
 
-\subsection{Rutina de distribución de pérdida de momento angular - I} \label{sec:dist_aml1}
-En lo que a MESA atañe, el simulador asigna un valor $\Omega$ para cada celda $k$ ($\Omega_k$) que es ajustado para que el AM resultante se conserve tras calcular la nueva masa de la celda $k$ ($m_k$) y su distancia al centro de la estrella ($r_k$). A continuación, le asigna un valor de AM a cada celda $k$ ($J_k$). En este punto, nuestra rutina de MB se activa, modificando $J_k$. Para ello, se proporciona una contribución adicional ($\Dot{J}_{k}$) de signo negativo porque estamos ante una pérdida. Ésta es el resultado del par externo ejercido por el campo magnético una vez que se ha distribuido entre las diferentes capas que componen la CZ según dicta la ec. \ref{eq:k_jdot}:\par
+\begin{equation}
+	\mu \approx \frac{7}{4} + \frac{1}{2} \; \textrm{tanh}\Bigg(\frac{3500-\teff}{600}\;\Bigg) \label{eq:mf_atom_weight}
+\end{equation}
+
+Así, $B_*$ puede calcularse con los parámetros estelares en cualquier estado evolutivo de una estrella.\par
+
+Además, \citet{Cranmer2011} argumentó que el período de rotación de la estrella ($\prot$) influye más en $f_*$ que en $B_*$. Es decir, las variaciones en la velocidad angular de la estrella no alteran significativamente la intensidad del campo magnético. Por otra parte, se ha observado que $f_*$ depende en gran medida del número de Rossby ($\rossby$). Para calcular $\rossby$ de una estrella determinada es necesario conocer su tiempo de giro ($\turnover$),
+
+\begin{equation}
+	\rossby = \frac{\prot}{\turnover} \label{eq:mf_rossby}
+\end{equation}
+\begin{equation}
+	\turnover = 314.24\;exp\left[-\Bigg(\frac{\teff}{1952.5}\Bigg)-\Bigg(\frac{\teff}{6250}\Bigg)^{18} \;\right]+0.002 \label{eq:mf_turnover}
+\end{equation}
+
+\cite{Cranmer2011} proporciona dos ajustes diferentes para $f_*$ que definen respectivamente los límites superior e inferior de $\Bp$,
 
 \begin{align}
-	\Dot{J}_{k} &= \Dot{J}_*\;\frac{m^{}_{k} r^2_{k}}{m^{}_* r_*^2} \label{eq:k_jdot}
+	\fmin &= \frac{0.5}{(1+(x/0.16)^{2.6})^{1.3}} \label{eq:fmin}\\
+	\fmax &= \frac{1}{1+(x/0.31)^{2.5}} \label{eq:fmax}
 \end{align}
 
-\begin{lstlisting}[language=Fortran, float, caption={Rutina de distribución de pérdida de momento angular.}, label={lst:dis_jdot}]
-subroutine distribute_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
-  type (star_info), pointer, intent(in) :: s
-  real(dp), intent(in) :: total_j_dot
-  type (star_zone_info), pointer, intent(in) :: sz_info
-  real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
-  integer :: k
-  real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
-    
-  !By default, no lost of angular moment
-  mb_jdot_list(:) = 0.0
-    
-  do k = sz_info% top_zone, sz_info% bot_zone, 1
-    !Here the jdot distribution strategy is defined
-    !Simple rule of three distribution loss of angular momentum based on the 
-    !angular momentum of the zone vs total angular momentum 
-    !of the convective zone
-      
-    !IMPORTANT: Don't forget to divide by dm(k) in order
-    !to get an "specific" jdot
-    mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
-    (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
-  end do
-end subroutine distribute_j_dot
-\end{lstlisting}
+donde x = $\rossby$/$\rossbysun$, y $\rossbysun$ = 1.96. \par
+
+Por último, podemos calcular el factor de relleno de una estrella aplicando el ajuste realizado por \cite{Gallet2013} que reproduce más fielmente el factor de relleno del Sol $\fsun$ ([0.001, 0.01], ver \cite{Cranmer2011}),
+
+\begin{equation}
+	\fstar = \frac{0.55}{(1+(x/0.16)^{2.3})^{1.22}} \label{eq:fstart}
+\end{equation}
+
+Con este formalismo podemos calcular $\Bp$ como una función dependiente del tiempo, $\rho$, $\teff$, y $\Omega$.\par
+
+\section{Efectos de la pérdida de momento angular}
+Una vez que hemos caracterizado cómo obtenemos la intensidad del campo magnético, sea ésta constante o variable a lo largo de la evolución de la estrella, necesitamos modelar cómo se produce la pérdida de momento angular. En presencia de pérdida de masa, el material del viento estelar elimina el AM, lo que provoca un efecto de giro a la baja. Esto es muy importante, por ejemplo, en las estrellas masivas, que se sabe que rotan rápidamente y tienen fuertes vientos estelares. 
+
+En las siguientes secciones describimos dos enfoques semiempíricos para el cálculo de la AML como resultado del par aplicado por un viento estelar acoplado magnéticamente: el primero de ellos basado en el trabajo de \cite{Weber1967}, y el segundo en el de \cite{Gallet2013}. Llegado el momento, abordaremos la idoneidad de uno u otro en el contexto de las simulaciones realizadas.\par
+
+\subsection{Pérdida de momento angular según Ud-Doula \& Owocki (2002)}
+De acuerdo a \cite{Weber1967} la AML provocada por el viento estelar para estrellas de tipo solar puede ser aproximada mediante la ec. \ref{eq:j_dot1} si suponemos un flujo de salida esférico:
+
+\begin{equation}
+ \Dot{J} = \frac{2}{3} \mwind \; \Omega_* \; \ralfven^{2} \label{eq:j_dot1}
+\end{equation}
+
+donde $\mwind$ es la tasa de pérdida de masa, $\Omega_*$ la velocidad angular en la superficie de la estrella y $\ralfven$ el radio Alfven. Para valores grandes de $\ralfven$, la estrella sufre una desaceleración significativa. Su valor depende de los siguientes parámetros variables: B, $\teff$ y $\Omega$ \citep{Gallet2015}. Con respecto a $\mwind$, para calcular la pérdida de masa se utiliza la fórmula empírica desarrollada por Reimers \citep{Reimers1975} para estrellas en su fase AGB. Finalmente, la ec. \ref{eq:j_dot1} se puede reescribir según \cite{Ud-Doula2008} de modo que dependa de $\eta_*$ en lugar de $R_A$:
+
+\begin{equation}
+ \Dot{J} = \frac{2}{3} \mwind \; \Omega_* \; R^{2}_{*}\eta_* \label{eq:j_dot_mesa}
+\end{equation}
+
+\subsection{Pérdida de momento angular según Gallet \& Bouver (2013)}
+Un planteamiento similar, aunque alternativo, es el propuesto por \cite{Gallet2013} en el que la AML es definida en función del par aplicado ($\torquewind$) por un viento estelar acoplado magnéticamente:
+
+\begin{equation}
+	\torquewind \propto \Omega_* \; \mwind \; \ralfven^{2} \label{eq:mb_torque}
+\end{equation}
+
+donde $\mwind$ es la tasa de pérdida de masa, y $\ralfven$ el valor medio del radio de Alfvén. \par
+
+Las estrellas con masas iniciales similares, pero con diferentes ratios de pérdida de masa ($\mwind$), acabarán evolucionando de forma muy diferente. Las partículas ionizadas transportadas por el viento solar no sólo contribuyen a la pérdida de masa, sino también a la pérdida de energía cinética que se deposita en el medio interestelar. Dada una estrella con un viento esféricamente simétrico, $\mwind$ se caracteriza por la siguiente expresión:
+
+\begin{ceqn}
+	\begin{equation}
+		\mwind = 4\pi r^2\rho\nu \label{eq:mass_loss}
+	\end{equation}
+\end{ceqn}
+
+donde $r$ es el radio estelar, $\rho$ la densidad de masa, y $\nu$ la velocidad del viento estelar.
+
+Por otro lado, $\ralfven$ queda definido por:
+
+\begin{equation}
+	\ralfven = K_1\left[\frac{\Bp^{2}\;R_*^{2}}{\mwind\;\sqrt{K_2^2\vesc^2 + \Omega_*^2R_*^{2}}\ }\right]^{m}R_*  \label{eq:mb_ralfven}
+\end{equation}
+
+donde $\Bp$ es la intensidad del campo magnético en la superficie estelar, $\vesc$ es la velocidad de escape, $m = 0.1675$, $K_1 = 1.30$ y $K_2 = 0.0506$ \citep{Gallet2013}.
+
+\begin{align}
+	\vesc &= \sqrt{\frac{2\,G\,\mstar}{\rstar}} \label{eq:vesc2}
+\end{align}
+
+Por último, tenemos que la AML puede calcularse mediante la siguiente expresión:
+
+\begin{equation}
+	\Dot{J} = \Omega_* \; \mwind \; \ralfven^{2} \label{eq:j_dot}
+\end{equation}
+
+\section{Efectos de la longitud de mezcla} \label{sec:efectos_mlt}
+La MLT introducida por \citet{BohmVit58} ha sido comúnmente adoptada para modelar la convección estelar en códigos de evolución estelar. El parámetro libre más importante en esta teoría es la longitud de mezcla $l$ que se define como:
+
+\begin{equation}
+	l = \amlt H_p\label{eq:mixlength}
+\end{equation}
+
+donde $H_p$ es la altura de la escala de presión, y $\amlt$ un parámetro libre que se determina de antemano y se mantiene fijo durante las simulaciones de evolución estelar. \par
+
+La influencia de los parámetros libres, relativamente arbitrarios, asociados a la MLT condiciona significativamente la evolución de la abundancia de litio (ver sección \ref{sec:alt_mlt}). Por otra parte, no existen argumentos sólidos que sugieran que el parámetro de longitud de mezcla sea el mismo en todas las estrellas y en todas las fases evolutivas \cite{Pasetto2014}. El ajuste del overshooting y del parámetro libre $\amlt$ parece ser necesario para explicar las abundancias de litio en los OCs.\par
+
+De manera similar a la intensidad del campo magnético, un formalismo que nos permita evolucionar a lo largo del tiempo el valor de $\amlt$ en función de determinados parámetros de la estrella, es un planteamiento razonable a la hora de eliminar una restricción relativamente arbitraria impuesta en nuestros modelos.
+
+\subsection{MLT $\alpha$ variable según Sonoi et al. (2019)}
+En \cite{Sonoi2018} los autores introdujeron una forma de calibrar $\amlt$ para estrellas de tipo solar en la que su valor es directamente proporcional a la $\gsurf$, e inversamente proporcional a la $\teff$ (ver figura \ref{fig:grid_var_amlt}). Calibraron diferentes valores de $\amlt$ para varios modelos 3D simulados usando el código CO$^5$BOLD \citep{Freytag2011} y los transfirieron a modelos 1D desarrollados por \cite{Ludwig1998}. La parametrización que obtuvieron fue: 
+
+\begin{equation}
+	f(x,y) = a_0 + (a_1 + (a_3 + a_5x +a_6y)x + a_4y)x + a_2y\label{eq:alpha_ml}
+\end{equation}
+
+donde
+
+\begin{align}
+	x &= \frac{\teff-5777}{1000} \label{eq:eq:alpha_x}\\
+	y &= \gsurf-4.44 \label{eq:eq:alpha_y}
+\end{align}
+
+y $a_i$ son los coeficientes resultantes de la función de ajuste de la ec. \ref{eq:alpha_ml} a los valores $\alpha$ calibrados para el modelo de convección MLT \citep{Sonoi2018}: $a_0=1.790295$, $a_1=-0.14954$, $a_2=0.069574$, $a_3=-0.00829$, $a_4=0.013165$, $a_5=0.080333$, $a_6=-0.03306$. \par
+
+\begin{figure*}
+	\centering
+	\begin{subfigure}[h]{0.47\textwidth}
+		\includegraphics[clip,width=\textwidth]{img/tesis/amlt_cte_cgrav.png}
+	\end{subfigure}
+	\begin{subfigure}[h]{0.47\textwidth}
+		\includegraphics[clip,width=\textwidth]{img/tesis/amlt_cte_teff.png}
+	\end{subfigure}    
+	\caption{Dependencia del valor de $\amlt$ respecto de la $\teff$ y $\gsurf$. En la gráfica de la izquierda hemos mantenido fijo el valor de $\gsurf$ y en la de la derecha el valor de $\teff$. En el primer caso se observa cómo el valor de $\amlt$ disminuye a medida que aumenta el de la $\teff$, mientras que en el segundo ocurre justo lo contrario, $\amlt$ aumenta su valor a medida que se incrementa $\gsurf$.}
+	\label{fig:grid_var_amlt}
+\end{figure*}
 
 \endinput
 %--------------------------------------------------------------------

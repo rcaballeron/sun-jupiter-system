@@ -38,6 +38,7 @@ global sz_bot_omega_col   = 88;
 global core_top_radius_col= 90;
 global core_bot_radius_col= 91;
 global core_top_omega_col = 98;
+global core_bot_omega_col = 99;
 global alpha_mlt_col      = 100;
 global tau_c_col          = 103;
 global rossby_col         = 104;
@@ -901,7 +902,7 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
 
   %Axis scales
   set(gca, 'XScale', 'log');
-  set(gca, 'YScale', 'log');
+  %set(gca, 'YScale', 'log');
   grid on;
   set(gca,'xminorgrid','off');
 
@@ -939,7 +940,7 @@ function plot_omega(A, color, width, ytick, axis_limits)
 
   %Plot values
   plot(A(:,1), A(:,2) ./ sun_omega, color, 'linewidth', width);
-  %plot(A(:,1), A(:,5) ./ sun_omega, 'linewidth', width, 'linestyle', ':');
+  plot(A(:,1), A(:,4) ./ sun_omega, 'linewidth', width, 'linestyle', ':');
 
   %Axis scales
   set(gca, 'XScale', 'log');
@@ -1522,7 +1523,7 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, nolog, 
   %legend boxoff
   xlabel('star age (Ga)', 'fontsize', axis_font_size);
   if (nolog == 0)
-    ylabel('Size conv. zone (R_{cz}/R_{sun})', 'fontsize', axis_font_size);
+    ylabel('Size conv. zone (R_{cz}/R_{star})', 'fontsize', axis_font_size);
   else
     ylabel('Size star radius & conv. zone (R_{sun})', 'fontsize', axis_font_size);
   endif;
@@ -2154,6 +2155,7 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
         labels = {labels{:}, ['Surface-', strtrim(rotational_vels(j,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(rotational_vels(j,:))]};
+        labels = {labels{:}, ['Bottom CZ-', strtrim(rotational_vels(j,:))]};
         %labels = {labels{:}, ['Top core-', strtrim(rotational_vels(j,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
@@ -2161,6 +2163,7 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
         labels = {labels{:}, ['Surface-', strtrim(gauss_fields(i,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(gauss_fields(i,:))]};
+        labels = {labels{:}, ['Bottom CZ-', strtrim(gauss_fields(i,:))]};
         %labels = {labels{:}, ['Top core-', strtrim(gauss_fields(i,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
@@ -2170,6 +2173,7 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
   end
   %Plot ZAMS, only one of them
   sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
+  full_path
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
 
@@ -2192,6 +2196,7 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
 
   hold('off');
   plot_path = strcat(tables_parent_folder, '/', aidx);
+  plot_path
   save_figure(f, strcat(plot_path, '/', afilename, aidx));
 end
 
@@ -2929,7 +2934,7 @@ function plot_omega_0_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_0_0G;
 
-  age_vs_omega_plots(gauss_fields(idx_0_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', 'Omega - 0.0G & var. rotational velocity', 'omega_var_vel_0_0g_', num2str(idx));
+  age_vs_omega_plots(gauss_fields(idx_0_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Omega - 0.0G & var. rotational velocity', 'omega_var_vel_0_0g_', num2str(idx));
 end
 
 
@@ -2937,14 +2942,14 @@ function plot_omega_3_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_3_0G;
 
-  age_vs_omega_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', 'Omega - 3.0G & var. rotational velocity', 'omega_var_vel_3_0g', num2str(idx));
+  age_vs_omega_plots(gauss_fields(idx_3_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Omega - 3.0G & var. rotational velocity', 'omega_var_vel_3_0g', num2str(idx));
 end
 
 function plot_omega_4_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_omega_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northeastoutside', 'Omega - 4.0G & var. rotational velocity', 'omega_var_vel_4_0g', num2str(idx));
+  age_vs_omega_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 10, [1.0e5,1.0e10], 'northwest', 'Omega - 4.0G & var. rotational velocity', 'omega_var_vel_4_0g', num2str(idx));
 end
 
 function plot_omega_XG_var_vel(rot_vels, idx)
@@ -3608,7 +3613,10 @@ function paper2()
   plot_vel_rot_XG_var_vel(rot_vels7,3);
   #plot_vel_rot_XG_var_vel(rot_vels8,4);
 
-  #plot_omega_XG_var_vel(rot_vels8,3);
+  plot_omega_0_0G_var_vel(rot_vels,0);
+  plot_omega_XG_var_vel(rot_vels5,1);
+  plot_omega_XG_var_vel(rot_vels7,3);
+
 
   plot_omega_vs_mag_field_XG(rot_vels5, false, 1);
   #plot_omega_vs_mag_field_XG(rot_vels6, false, 2);
@@ -3971,7 +3979,7 @@ function main()
   %plot_radius_4_0G(rot_vels,4);
   %plot_radius_nolog_4_0G(rot_vels,4);
   %plot_radius_nolog_4_0G_z1(rot_vels,4);
-  %plot_cz_size_XG_var_vel(rot_vels7,3);
+  plot_cz_size_XG_var_vel(rot_vels7,3);
   %plot_cz_size_XG_var_vel_z1(rot_vels7,3);
   %plot_cz_size_nolog_XG_var_vel(rot_vels7,3);
   %plot_cz_size_nolog_XG_var_vel_z1(rot_vels7,3);
@@ -3986,9 +3994,16 @@ function main()
   %plot_age_vs_mb_activation_XG(rot_vels7,3);
   %plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
-  plot_omega_0_0G_var_vel(rot_vels,0);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_1425crit],:),3);
+  %plot_omega_XG_var_vel(rotational_vels([idx_1425crit],:), 3);
+  %plot_XG_var_vel(rotational_vels([idx_1425crit],:),3);
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1425crit],:),3);
+  %plot_omega_0_0G_var_vel(rot_vels,0);
+  %plot_omega_4_0G_var_vel(rot_vels,4);
   %plot_omega_XG_var_vel(rot_vels5,1);
   %plot_omega_XG_var_vel(rot_vels7,3);
+  %plot_m_dot_0G_var_vel(rot_vels,0);
+
 end
 
 

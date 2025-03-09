@@ -1,0 +1,95 @@
+% !TeX root = ../libro.tex
+% !TeX encoding = utf8
+
+\chapter{Conclusiones finales}\label{ch:noveno-capitulo}
+
+\section{Introducción}
+Llegado este punto, nos parece razonable y adecuado resumir cuáles han sido las líneas maestras de nuestra investigación, qué conclusiones principales hemos obtenido en nuestro estudio y finalmente, apuntar diferentes opciones de hacia dónde orientar nuestros siguientes pasos. El objetivo primordial de esta tesis ha estado enfocado en entender los mecanismos que regulan el ciclo de vida del litio en estrellas análogas a nuestro Sol, con especial interés bajo la influencia de campos magnéticos. Para ello, nuestros primeros pasos estuvieron orientados al estudio de esos mecanismos, la simulación de los mismos en MESA y la comparación de los resultados obtenidos con los de trabajos anteriores realizados por otros investigadores. Esto nos permitió fijar y establecer una línea base, de referencia, que evolucionaría y sería extendida con nuestras contribuciones. Éstas estuvieron orientadas a modelar los efectos que un campo magnético tendría en la evolución de estrellas de tipo solar, en cómo el efecto de frenado magnético asociado impactaba en el perfil rotacional de la estrella y especialmente en la evolución temporal de la abundancia de litio.
+
+En la primera fase de la investigación, estudiamos y simulamos campos magnéticos cuya intensidad se mantuvo fija a lo largo de las simulaciones. A raíz de las conclusiones derivadas tras el análisis de los resultados obtenidos, nuestro trabajo fue extendido para considerar escenarios más realistas en los que la intensidad del campo magnético varía, evoluciona en función de otros parámetros estelares. De manera similar abordamos el parámetro libre $\amlt$ asociado a MLT, el cual es prefijado en la mayoría de los formalismos y no varían su valor a lo largo de las simulaciones. Eliminando esta restricción y haciéndolo evolucionar temporalmente conseguimos introducir de forma más realista el efecto que este parámetro tiene sobre la destrucción del litio.
+
+En lo referente a la confrontación y evaluación de los resultados obtenidos, recurrimos a las medidas recolectadas por la misión Gaia y GES sobre estrellas pertenecientes a OCs. Estos datos nos permitieron confrontar las observaciones con los resultados predichos por nuestros modelos, ofreciéndonos la oportunidad de validar los planteamientos teóricos que han sido expuestos en la presente tesis. Finalmente, nos queda aún enfrentar los resultados obtenidos por ambos formalismos de campo magnético: intensidad fija vs. intensidad variable. 
+
+
+\section{Comparativa MB intensidad fija vs variable}
+En los capítulos \ref{ch:tercer-capitulo} y \ref{ch:quinto-capitulo} introducimos el formalismo para la simulación de un campo magnético de intensidad fija conjuntamente con un parámetro libre $\amlt$ de valor constante, y posteriormente se presentaron y discutieron los resultados obtenidos durante las simulaciones. De forma similar, los capítulos \ref{ch:sexto-capitulo} y \ref{ch:septimo-capitulo} estuvieron dedicados a campos magnéticos de intensidad variable y $\amlt$ variable. Por tanto, una comparación entre los resultados obtenidos por ambos enfoques nos permite poner en perspectiva las diferencias y similitudes existentes. En la tabla \ref{tab:caballero2023_2020} se resumen las principales diferencias entre ambos formalismos.\par 
+
+\begin{table}
+	\centering
+	\begin{threeparttable}
+		\begin{tabular}{lll} 
+			\hline
+			Parámetro & Intensidad Variable & Intensidad fija\\
+			\hline
+			Convección & MLT variable $\alpha_{\textrm{MLT}}$ & MLT prefijado $\alpha_{\textrm{MLT}}=1.82$\\
+			Overshooting & desactivado & $f_{\textrm{ov,core}}=0.0160$,\\ & & $f_{\textrm{ov,sh}}=0.0174$\\
+			Formalismo Frenado & \cite{Gallet2013} & \cite{Ud-Doula2008} \\ Magnético & & \\
+			Intensidad Campo & B(G) variable & B(G) prefijado [3.0G-5.0G]\\ Magnético & & \\
+			\hline
+		\end{tabular}
+	\end{threeparttable}
+	\caption{Comparación entre campos magnéticos de intensidad fija vs. variable.} \label{tab:caballero2023_2020}
+\end{table}
+
+La figura \ref{fig:li_var_vel_4_0g4} muestra la evolución de la abundancia de litio para $\omegaini$ para el intervalo [0.0084, 0.0336] en presencia de un campo magnético con una intensidad de 4G. Si centramos nuestra atención en la simulación con $\omegaini$ = 0.0336, la simulación reproduce A(Li) = 1.024 dex, valor que está en línea tanto con el del Sol (1.1 $\pm$ 0.1 dex) como con los valores obtenidos en la figura \ref{fig:li_var_vel_var_g_3} (1.133 dex) para $\omegaini$ = [0.14,0.1425]. Aunque en este último caso los modelos se inicializaron con valores de $\omegaini$ más altos que en el primero, lo que resulta en valores de $B$ mayores en hasta 3 órdenes de magnitud ($\approx$ 1kG frente a 4G) la simulación en ambos formalismos acaba produciendo valores muy similares tanto para la velocidad rotacional como para la A(Li). Esto se explica en parte porque una mayor intensidad de campo magnético implica un efecto MB más intenso (véanse las figuras \ref{fig:rot_vel_4g} y \ref{fig:rot_vel_var_vel_var_g3}). En el primer caso, el efecto de desaceleración es más acusado que en el segundo, por lo que deja de destruir litio antes.\par
+
+Sin embargo, este efecto no es suficiente para contrarrestar eficazmente la destrucción de litio. El otro elemento decisivo que entra en juego es el valor de $\amlt$. Como se ejemplifica en el capítulo \ref{ch:sexto-capitulo} su valor tiene un impacto directamente proporcional en la destrucción de litio, donde un valor más bajo resultó en una menor destrucción, particularmente durante la PMS. En la figura \ref{fig:alpha_mlt_var_vel_g3} mostramos la evolución temporal del valor $\amlt$ y puede observarse que hasta la última fase de la PMS, el valor $\amlt$ es sustancialmente inferior a 1.82, el valor preestablecido e invariante utilizado en el formalismo de campo magnético con intensidad fija, lo que se traduce en una menor destrucción de litio y permite al modelo alcanzar la ZAMS con una reserva de este elemento $\approx$ 29\% dex mayor. Esta mayor reserva de litio compensa la mayor destrucción inducida por los modelos inicializados con una $\omegaini$ mayor velocidad angular.\par
+
+Del mismo modo, procedemos a mostrar la evolución de la velocidad de rotación superficial en la figura \ref{fig:rot_vel_4g} y seleccionamos la simulación con $\omegaini$ = 0.0336. De nuevo, los valores similares se explican por la mayor eficiencia del MB en el nuevo modelo. Aunque las simulaciones alcanzan la ZAMS con valores de velocidad de rotación de hasta un 200\% mayor para los modelos inicializados con $\omegaini$ más altos, el campo magnético más intenso produce una desaceleración más pronunciada para el mismo intervalo de tiempo. Este hecho es especialmente notable en el periodo de tiempo comprendido entre la ZAMS y $\approx$ 1 Ga. La velocidad de rotación obtenida en el ecuador de 4.82 $\kms$ es un valor bastante cercano a 4.72 $\kms$, es decir, el valor simulado para $\omegaini$ = 0.0336 (ver figura \ref{fig:rot_vel_var_vel_var_g3}).\par
+
+A la vista de los valores obtenidos, podemos concluir que ambos formalismos son congruentes con los resultados de los trabajos en los que se basan pero también entre ellos. Entre ambos, el formalismo basado en intensidad variable tiene la ventaja de no tener que recurrir al uso de valores prefijados para $B$ y $\amlt$, y sin recurrir a activar el overshooting. En definitiva, esto supone una mejora significativa y apoya nuestra línea de investigación encaminada a evitar valores prefijados haciéndolos evolucionar dinámicamente en función de ciertos parámetros solares clave.\par
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/li_var_vel_4_0g4.pdf}
+	\caption{La evolución de la abundancia superficial del litio, en función del tiempo para varios modelos de $1 \msun$. Los modelos incluyen un campo magnético con una intensidad de 4G. La línea negra continua representa el modelo de referencia según \cite{Choi2016}. El resto de líneas son modelos que incluyen rotación inicial con $\omegaini$ entre 0.0084 y 0.0336, respectivamente. La estrella morada son las abundancias superficiales de litio para el Sol actual \cite{Asplund2009}. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:li_var_vel_4_0g4}
+\end{figure}
+
+
+\section{Comparativa con Gossage et al. (2021)}
+Debido a la existencia de similitudes entre nuestra línea de investigación sobre el formalismo de MB con intensidad variable y el trabajo de \cite{Gossage2021}, procedemos a realizar una comparación entre ambos. Entre ellas encontramos el hecho de que ambos trabajos se centran en el frenado magnético, haciendo uso de MESA para las simulaciones. Entre las principales diferencias se encuentra que nuestros modelos incorporan valores variables para $B$ y $\amlt$. Finalmente, en ambos se comparan los resultados de las simulaciones con valores de referencia obtenidos a partir de mediciones realizadas para estrellas similares al Sol localizados en diferentes OCs.\par
+
+En \cite{Gossage2021} los autores también abordan el problema de la AML desde un punto de partida similar al nuestro, pero con algunas variaciones notables. En la tabla \ref{tab:gassage_vs_navarro} comparamos las similitudes y diferencias entre ambas líneas de investigación. Entre las primeras tenemos que los modelos consideran la rotación no sólo en el MS sino también en el PMS, con la distinción de que en el trabajo de Gossage tienen en cuenta el efecto de bloqueo con el disco protoestelar. Este aspecto no es tan relevante en nuestras simulaciones, ya que nos hemos centrado en los perfiles de A(Li). Por otra parte el trabajo de Gossage se centra principalmente en modelar los perfiles de rotación de las estrellas, los cuales se ven significativamente afectados por el mecanismo de bloqueo con el disco protoestelar. Del mismo modo, también se consideran los efectos del MB en la pérdida de momento angular. En nuestro caso para estrellas con 1 $\msun$ (análogas solares) y en el suyo con 0.1 $\msun \le$\, $\mstar \le$\, 1.3 \,$\msun$. Ambos modelos coinciden en utilizar MLT pero en nuestro caso el valor $\amlt$ no está prefijado sino que varía a lo largo de la simulación.\par
+
+A su vez estas dos líneas de investigación se complementan ya que se basan en formalismos diferentes. Por un lado, nuestro trabajo se basa en la propuesta de \cite{Gallet2013} cuyos parámetros más relevantes son $\rossby$ y la presencia de un campo magnético de intensidad variable (B), mientras que Gossage presenta dos formalismos: \cite{Matt2015} y \cite{Garraffo2018}. El primero se caracteriza principalmente por $\rossby$ y la $\mstar$, mientras que el segundo por $\rossby$ y un parámetro que da cuenta de la complejidad de los campos magnéticos, siendo igual a 1 para un campo dipolar y mayor para multipolos de orden superior. En cuanto a las observaciones de OCs, aquí cubrimos un rango más amplio de edades [0.001, 6.761] Ga. Por último, ambos trabajos simulan sus respectivos modelos en MESA, pero utilizan versiones diferentes.\par
+
+\cite{Gossage2021} consiguen reproducir con mayor precisión el perfil de rotación del Sol a su edad actual \cite[ver][panel (a) de las figuras 2, 4 \& 6]{Gossage2021} aunque, como describen los autores del trabajo, calibraron sus modelos para que así ocurriera, incluyendo un parámetro adicional libre de difusión ($v_0$). En nuestro trabajo, el modelo no incluye este tipo de parametrización adicional y sigue siendo capaz de reproducir una velocidad de rotación ecuatorial de 4.72 $\kms$, un valor no especialmente alejado del valor nominal establecido de 2.0 $\kms$. En cuanto a A(Li), su modelo no reproduce el valor para estrellas análogas al Sol, incluyendo al propio Sol \cite[ver][panel (d) de las figuras 2 \& 4, y (b) de la figura 6]{Gossage2021}. Recalibrando algunos de los parámetros de su modelo y/o incorporando mecanismos adicionales que contribuyan a la destrucción del litio, los autores esperan obtener valores en línea con los datos observacionales. En nuestro caso (véase la sección \ref{sec_conclusions_ii}), pudimos reproducir A(Li) con mayor precisión.
+
+
+\begin{table}
+	\centering
+	\begin{threeparttable}
+		\begin{tabular}{lll} 
+			\hline
+			Parámetro & Este trabajo & \cite{Gossage2021}\\
+			\hline
+			
+			Rotación & En PMS \& MS & En PMS \& MS\\
+			Masa solar & $\mstar$=1$\msun$ & 0.1$\msun$$\le$$\mstar$$\le$1.3$\msun$ \\
+			Convección & MLT variable $\alpha_{\textrm{MLT}}$ & MLT prefijada $\alpha_{\textrm{MLT}}$\\
+			Formalismo Frenado & \cite{Gallet2013} & \cite{Matt2015}, \\ Magnético & & \cite{Garraffo2018}\\
+			Intensidad Campo & B(G) variable & B(G) prefijada\\ Magnético & & \\
+			Bloqueo de Disco & No activado & Activado\\
+			Número de OC's & 64 & 11 \\
+			Source of data & GDR3.0 GES DR5.0 & Several works \\
+			Versión MESA & r10398 & r11701\\
+			\hline
+		\end{tabular}
+	\end{threeparttable}
+	\caption{Comparación con \cite{Gossage2021}.}\label{tab:gassage_vs_navarro}    
+\end{table}
+
+\section{Conclusiones y líneas de investigación futuras} \label{sec_conclusions}
+En nuestra investigación hemos dado un paso adelante en la modelización del frenado magnético y el agotamiento del litio para estrellas de tipo solar introduciendo un campo magnético de intensidad variable $B$ y $\amlt$ adaptativo. Partiendo del hecho de que a medida que una estrella evoluciona, su velocidad de rotación cambia debido a variaciones en su radio y momento angular, al igual que lo hace también su $\teff$ y $\gsurf$. Otras magnitudes estelares que están influenciadas de manera directa o indirecta por estos, también tendrían que quedar afectadas. Entre ellas se encuentran la intensidad del campo magnético estelar, por lo que considerar un valor de $B$ constante a lo largo de toda la evolución estelar era una prescripción poco realista. Por otro lado, las zonas convectivas internas también aumentan o disminuyen durante la evolución estelar, incluso aparecen o desaparecen. En este caso, un parámetro de eficiencia convectiva constante $\amlt$ no reflejaría el poder de mezcla real de estas zonas. Todas estas consideraciones afectarían a la A(Li) calculada al modelizar el Sol y las estrellas de tipo solar.\par
+
+Hemos demostrado, a través de los diferentes modelos estelares simulados, que los efectos inducidos por la combinación de ambos mecanismos de rotación y frenado magnético ofrecen una forma plausible de reconciliar los datos observacionales con los modelos teóricos. Proponemos que este resultado podría alcanzarse mediante una ley de interdependencia entre $\Omega$ y $B$. Adicionalmente, hemos contrastado los resultados de los modelos con las medidas obtenidas por las misiones Gaia y GES para estrellas de características similares a nuestro Sol, centrándonos en sus abundancias de litio.\par
+
+La inclusión de valores variables para $B$ y $\amlt$ reduce el número de parámetros libres en la modelización. Consideramos que esto permite centrarse en otros puntos débiles de la teoría estelar, como la geometría u otros posibles mecanismos para producir campos magnéticos estelares. Nuestros resultados muestran el potencial de un desarrollo de una teoría de la evolución estelar en la que se reduce el uso de parámetros libres.\par
+
+Finalmente, teniendo en cuenta que las estrellas que giran más rápido agotan más litio, se necesitan mecanismos adicionales, como el efecto de bloqueo causado a consecuencia de la interacción con el disco protoestelar, para explicar las observaciones. La consideración de este nuevo proceso en nuestra modelación aportaría un mecanismo adicional de frenado, con lo que acabaríamos teniendo dos, actuando a diferentes edades estelares. Sus efectos combinados acabarían estableciendo un mecanismo autorregulador que influiría en la evolución del litio y en la intensidad del campo magnético, provocando que se destruyera una menor cantidad de litio y que la intensidad del campo magnético fuera menor, pudiendo así llegar a obtenerse valores en el orden de los que presenta el Sol. Aunque esta línea de investigación, a priori, parece ser prometedora, hay que hacer constar que el bloqueo con el disco protoestelar sigue siendo un proceso inferido observacionalmente, el cual también depende de parámetros libres. Por lo tanto, aún queda por desarrollar una formulación físicamente realista que dependa únicamente de las propiedades iniciales estelares.\par
+
+\endinput
+%--------------------------------------------------------------------
+% FIN DEL CAPÍTULO. 
+%--------------------------------------------------------------------

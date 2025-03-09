@@ -1,0 +1,185 @@
+% !TeX root = ../libro.tex
+% !TeX encoding = utf8
+
+
+\chapter{Resultados de frenado magnético de intensidad variable}\label{ch:septimo-capitulo}
+De forma similar al capítulo \ref{ch:tercer-capitulo}, en el presente introducimos los resultados de las simulaciones realizadas en base a los planteamientos teóricos expuestos en el capítulo anterior. Primeramente introduciremos la configuración aplicada a los modelos que hemos hecho evolucionar desde la PMS hasta la ZAMS, haciendo especial énfasis en aquellos parámetros diferentes respecto a las anteriores simulaciones. Continuaremos con el análisis de las salidas producidas por las simulaciones con apoyo de diferentes gráficas. Seguidamente daremos explicación detallada sobre los efectos que el MB de intensidad y un $\amlt$ variables ejercen sobre diferentes parámetros estelares, tales como $\teff$, $\gsurf$, $\lstar$, $\Omega$ y por supuesto, la A(Li). Posteriormente, los resultados obtenidos serán enfrentados con los de nuestras simulaciones previas y con los publicados en otras investigaciones. Finalizaremos este capítulo recopilando las conclusiones más importantes derivadas de nuestra investigación y señalando posibles líneas adicionales de trabajo encaminadas a ampliar nuestra comprensión de la generación e influencia de los campos magnéticos en el devenir de estrellas similares a nuestro Sol.\par
+
+
+\section{Configuración de los modelos} \label{marco_teorico_ii}
+La configuración de referencia para los nuevos modelos es la introducida en el capítulo \ref{ch:quinto-capitulo} en la que ya se introdujo la presencia de campos magnéticos. En esta nueva aproximación (ver resumen en la tabla \ref{tab:phy_mesa_ii}) la intensidad del campo magnético se hace variar según el modelo evoluciona temporalmente.\par 
+
+Otro aspecto diferenciador con respecto a la parametrización anteriormente empleada es la utilización del parámetro $\amlt$ variable y la desactivación del overshooting, un aspecto que nos permite estudiar de manera aislada el impacto temporal de este parámetro en el proceso de destrucción del litio y, por tanto, en su abundancia.\par
+
+En lo que se refiere a la simulación de los modelos, ésta no difiere en lo esencial de la ya comentada en el capítulo \ref{ch:quinto-capitulo}. Es decir, una vez configurado los parámetros iniciales de nuestro modelo mediante el fichero \textit{inlist}, se hará evolucionar. En cada paso de la simulación se calculará el valor de $\amlt$ (novedad respecto a los modelos anteriores) y comprobaremos si se dan las circunstancias adecuadas para la activación de la rutina de frenado magnético. En el caso de que así sea, se procede a calcular la intensidad del campo magnético (el otro aspecto novedoso de este modelo) y la pérdida de momento angular inducida por el mismo. Finalmente, ésta se distribuirá entre las capas que componen la capa convectiva exterior de la estrella.\par
+
+\section{Modelos de evolución estelar}
+Como venimos exponiendo, con la consideración de campos magnéticos de intensidad variable ($B$) dependientes de los parámetros estelares $\Omega$ y $\teff$ llevamos nuestra línea de trabajo un paso más allá. La parametrización base utilizada es básicamente la misma que hemos introducido al abordar los campos magnéticos de intensidad fija.\par 
+
+En lo que se refiere al tratamiento de la mezcla convectiva, la innovación fundamental radica en la introducción de un parámetro $\amlt$ variable dependiente de $\teff$ y $\gsurf$. En cuanto a la parametrización relacionada con el overshooting, desactivamos deliberadamente esta característica en el nuevo modelo a efectos de aislar el impacto de una variable $\amlt$ en A(Li) de los efectos asociados con al overshooting convectivo. En particular, la mezcla convectiva con sobreimpulso se aborda habitualmente mediante extensiones ad-hoc de la MLT, introduciendo otro parámetro libre adicional. La tabla \ref{tab:phy_mesa_ii} enumera las similitudes y diferencias en el capítulo \ref{ch:sexto-capitulo}.\par
+
+\begin{table}
+	\begin{threeparttable}
+		\centering
+		\begin{tabular}{ll} 
+			\hline
+			Parámetro & Prescripciones y valores adoptados\\
+			\hline
+			Abundancia Solar & $X_{\odot}=0.7154, Y_{\odot}=0.2703, Z_{\odot}=0.0142$\\
+			Ecuación de estado & OPAL+SCVH+MacDonald+HELM+PC\\
+			Opacidad & OPAL Tipo I para log T $\geq$ 4 \\ & Ferguson para logT $<$ 4\\
+			Tasas de Reacción & JINA REACLIB\\
+			Condiciones de Contorno & ATLAS12; $\tau$=100 tablas + fotoesfera\\
+			Difusión & Rastreo de \isotope[1]{H}, \isotope[2]{He}, \isotope[7]{Li}, \isotope[7]{Be}\\
+			Esquema de Rotación & Rotación diferencial en PMS \& MS\\ & Incluye SH\tnote{1}  , ES\tnote{2}  , GSF\tnote{3}  , SSI\tnote{4}  , DSI\tnote{5}\\
+			Termohalina & $\alpha_{\textrm{th}}=666$\\
+			\textbf{Convección} & $\alpha_{\textrm{MLT}}$ variable dependiente de $\teff$\\ & \& $\gsurf$ + Ledoux\\
+			Semiconvección & $\alpha_{\textrm{sc}}=0.1$\\
+			\textbf{Sobreimpulso} & $f_{\textrm{ov,core}}=0.0$, \& $f_{\textrm{ov,sh}}=0.0$\\
+			\textbf{Campo Magnético} & B(G) variable, dependiente de $\rho$, $\teff$ \&  $\Omega$\\
+			Pérdida de Masa & $\Dot{M}_{\textrm{max}} = 10^{-3} \: \msun \: yr^{-1}$\\
+			Périda de Momento Angular & $\Dot{J} = \Omega_* \; \mwind \; \ralfven^2$\\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}\footnotesize
+			\item (1) Solberg-Hoiland, (2) Eddington–Sweet
+			\item (3) Goldreich–Schubert–Fricke, (4) Secular Shear Instability
+			\item (5) Dynamical Shear Instability
+		\end{tablenotes}
+	\end{threeparttable}
+	\caption{Resumen de la física adoptada en MESA. Resaltados en negrita los parámetros con diferente configuración respecto de la tabla \ref{tab:phy_mesa}.}
+	\label{tab:phy_mesa_ii}
+	
+\end{table}
+
+
+Los modelos continúan incluyendo rotación desde la PMS, masa y metalicidad inicial solar, con $\omegaini = \oomegac$ que variando entre 0.12 y 0.1425.\par
+
+\subsection{Evolución de la intensidad del campo magnético}
+Una vez que hemos caracterizado cómo evoluciona la intensidad del campo magnético, necesitamos modelar cómo se produce la pérdida de momento angular. A medida que la estrella se contrae durante la fase de PMS hacia el comienzo de la ZAMS, su velocidad angular aumenta, lo que conduce a un aumento gradual del campo magnético medio. En nuestro análisis observamos intensidades máximas de hasta 1.0 kG, como se muestra en la figura \ref{fig:mag_field_limits_var_vel_g3}. A continuación, entra en una fase de saturación (aunque con una tendencia descendente) hasta $\approx$ 1.0 Ga, y finalmente disminuye bruscamente como resultado de la menor velocidad angular de la estrella. En el formalismo anterior utilizamos un modelo aplicable a campos magnéticos de intensidad no variable y de baja intensidad que oscilan entre unos pocos Gauss (1.0 G $\leq$\, B $\leq$\, 10.0 G). Las intensidades significativamente mayores requeridas en el presente formalismo hacen inadecuado el modelo empleado anteriormente.\par
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/mag_field_limits_var_vel_g3.pdf}
+	\caption{La evolución de la intensidad del campo magnético y sus límites superior e inferior, en función del tiempo y $\omegaini$ para varios modelos de $1 \, \msun$. El modelo incluye rotación PMS con $\omegaini$ = 0.1425. Las líneas continuas representan la intensidad del campo magnético, mientras que las líneas discontinuas representan la evolución angular de la estrella. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:mag_field_limits_var_vel_g3}
+\end{figure}
+
+\subsection{Evolución del litio con MB de intensidad variable}
+Como hemos documentado, el efecto del MB en la evolución temporal de A(Li) viene dado por su capacidad para eliminar AM de la estrella, y por tanto influir en su velocidad de rotación, haciendo que la estrella rote más lentamente y destruya menos litio.\par
+
+En la figura \ref{fig:li_var_vel_var_g_3} se muestra la evolución temporal de la abundancia superficial de litio para varios modelos de 1 $\msun$. Estos modelos se inicializaron con diferentes velocidades de rotación y tuvieron en cuenta los efectos del MB causado por un campo magnético variable. Si lo comparamos con la figura \ref{fig:li_var_vel_0g} en la que se despreciaron los efectos del MB, observamos cómo también en esta nueva aproximación se alteraron los perfiles de abundancia de litio a lo largo de la PMS y la MS. Durante la PMS podemos describir el efecto como modesto, algo esperado y en línea con el hecho de que la AML causada por el MB (ver ec.~\ref{eq:j_dot}) depende directamente de la evolución de $\Omega$ y $\Dot{M}$. Como se apuntó en la sección \ref{sec:mb_intensidad_fija}, la tasa de pérdida de masa total es modesta e incluso mucho menor en esta fase. Durante la aproximación a la ZAMS, la $\Omega$ alcanza su máximo. Esto, según nuestro modelo, desempeña un papel crucial tanto en la $\Dot{M}$ como en la $B$. Cuanto mayor sea $\Omega$, mayor será $\Dot{M}$ (ver figura \ref{fig:mdot_var_vel_g3}).\par 
+
+Los efectos combinados de los aumentos en $\teff$, $\Omega$ y $\Dot{M}$ hacen que la $B$ alcance su máximo en la fase de aproximación de la ZAMS (ver figura \ref{fig:mag_field_var_vel_g3}) disminuyendo ligeramente una vez se adentra en la MS, para luego hacerlo de forma acusada en torno a los los 1.0 10$^9$ años de edad. Su comportamiento refleja el de la evolución de $\Omega$, consecuencia, a su vez, de los efectos inducidos por el MB. La consecuencia principal es una ralentización de la destrucción del litio una vez que los modelos se encuentran en la MS. Los resultados de nuestras simulaciones para esos modelos inicializados respectivamente con $\omegaini$ = 0.14 y 0.1425 reproducen A(Li) en línea con la abundancia de litio de la superficie del Sol (1.1 $\pm$ 0.1 dex), arrojando un valor de 1.133 dex, lo que representa una desviación de aproximadamente el 3\% del valor nominal (ver figura \ref{fig:li_var_vel_var_g_3}).\par
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/li_var_vel_var_g_3.pdf}
+	\caption{Se muestra la evolución de la abundancia relativa en superficie del \isotope[7]{Li} en comparación con el \isotope[1]{H} para varios modelos de 1 $\msun$. Éstos incluyen un campo magnético de intensidad variable, tasas de rotación iniciales que oscilan entre 0.12 y 0.1425 $\omegaini$, y MB. La estrella púrpura representa la abundancia actual de Li en la superficie del Sol \cite{Asplund2009}. Los otros puntos de color representan las abundancias superficiales de \isotope[7]{Li} para estrellas con parámetros dentro de los intervalos de selección especificados, correspondientes a la curva de evolución del mismo color. La línea vertical discontinua indica la ZAMS.}
+	\label{fig:li_var_vel_var_g_3}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/mdot_var_vel_g3.pdf}
+	\caption{Evolución de la pérdida de masa $\Dot{M}$ en función del tiempo para varios modelos de 1 $\msun$. Los modelos incluyen intensidad de campo magnético variable y rotación inicial con $\omegaini$ entre 0.12 y 0.1425. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:mdot_var_vel_g3}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/mag_field_var_vel_g3.pdf}
+	\caption{La evolución de la intensidad del campo magnético en función del tiempo y $\omegaini$ para varios modelos de 1 $\msun$. Los modelos incluyen una rotación inicial con $\omegaini$ entre 0.12 y 0.1425. Las líneas continuas representan la intensidad del campo magnético, mientras que las líneas de puntos representan la evolución angular de la estrella. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:mag_field_var_vel_g3}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/rot_vel_var_vel_var_g3.pdf}
+	\caption{La evolución de la velocidad de rotación de la superficie, en función del tiempo para varios modelos de 1 $\msun$. Los modelos incluyen un campo magnético de intensidad variable, rotación inicial con $\omegaini$ entre 0.12 y 0.1425, respectivamente y MB. La estrella púrpura es la velocidad angular superficial para el Sol actual \cite{Gill2012}. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:rot_vel_var_vel_var_g3}
+\end{figure}
+
+
+En la figura \ref{fig:rot_vel_var_vel_var_g3} se representan los perfiles de rotación para varios modelos de 1 $\msun$ con una rotación inicial $\omegaini$ entre 0.12 y 0.1425. En ella se puede observar cómo la velocidad angular aumenta de valor a lo largo del PMS, debido a la contracción que la estrella sufre, disminuyendo así su radio. Durante esta etapa de su evolución la estrella tiene una estructura casi convectiva, como puede observarse en las figuras \ref{fig:cz_var_vel_var_g3} y \ref{fig:cz_var_vel_nolog_var_g3}. A medida que se acerca a una edad de $\approx$ 10$^6$ años, la zona convectiva de la estrella comienza a reducir su tamaño y el núcleo de la estrella alcanza las condiciones de temperatura, presión y densidad necesarias para desarrollar un núcleo radiativo. A su vez, la diferencia en las velocidades angulares de los distintos modelos se hace más evidente, siendo ésta mayor en aquellos que fueron inicializados con una velocidad angular inicial más alta. Este hecho implica que la pérdida de masa también es mayor en aquellas estrellas que rotan más rápido. Como hemos descrito anteriormente, una mayor pérdida de masa implica también una mayor pérdida de momento angular. También observamos que los modelos con menor velocidad angular generalmente terminan exhibiendo valores más altos para la abundancia de litio en la superficie (ver figuras~ \ref{fig:li_var_vel_var_g_3}, \ref{fig:grid_li_var_vel} \& \ref{fig:grid_li_var_g}).\par
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/cz_var_vel_var_g3.pdf}
+	\caption{Evolución del tamaño de la zona convectiva en función del tiempo para varios modelos de 1 $\msun$. El tamaño se expresa en términos del $\rstar$. Los modelos incluyen un campo magnético de intensidad variable, rotación inicial con $\omegaini$ entre 0.12 y 0.1425. La línea vertical discontinua hace referencia a la ZAMS \textit{TODO:} Corregir leyenda eje Y con $\rstar$.}
+	\label{fig:cz_var_vel_var_g3}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/cz_var_vel_nolog_var_g3.pdf}
+	\caption{Vista complementaria a la figura \ref{fig:cz_var_vel_var_g3}. Se muestra esta vez la evolución del tamaño de la zona convectiva no en función del $\rstar$ sino en unidades de $\rsun$. Las líneas continuas hacen referencia al radio total de la estrella y las discontinuas al tamaño de la zona convectiva.}
+	\label{fig:cz_var_vel_nolog_var_g3}
+\end{figure}
+
+Para los modelos en los que obtenemos valores de A(Li) en sintonía con los del Sol ($\omegaini$ = 0.14 y 0.1425), tenemos en cambio medidas para el $\Omega$ y $B$ que no lo están. La velocidad de rotación de la superficie del Sol es de 2 $\kms$ con un error mínimo de 3 $\ms$, y la intensidad media del campo magnético es de 1G. Para la simulación con $\omegaini$ = 0.1425, obtenemos una velocidad de rotación en el ecuador de 4.72 $\kms$. Aunque se trata de una medida del mismo orden de magnitud, representa una desviación del 235\%. Para la intensidad media del campo magnético tenemos 36.9 G, muy lejos del valor de referencia.\par
+
+De acuerdo con los modelos establecidos de evolución estelar, en una estrella de tipo solar la CZ ocupa prácticamente la totalidad de la estrella durante gran parte de la PMS y ésta va disminuyendo su tamaño gradualmente, en una primera fase, y luego se hace más pronunciado en torno a los 4.0 10$^8$ años de edad. Como se describe en la sección \ref{sec:mb_routine}, la rutina de MB se activa cuando la estrella desarrolla un núcleo radiativo y una zona convectiva sobre éste (ver figura \ref{fig:mb_act_var_vel_g3}), y distribuye la pérdida de momento angular calculada según la ec. \ref{eq:k_jdot} entre las distintas capas que componían la CZ. En la figura \ref{fig:cz_var_vel_var_g3} podemos observar la evolución de la CZ más externa normalizada con respecto al radio de la estrella para varios modelos de 1 $\msun$. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/mb_act_var_vel_g3.pdf}
+	\caption{La activación de la rutina de frenado magnético en función de la presencia de un núcleo radiativo. Las líneas continuas señalan la activación (on) y desactivación (off) de la rutina de frenado magnético. Las líneas horizontales discontinuas informan sobre la naturaleza del núcleo de la estrella: radiativo (rad) o convectivo (conv). Por decisión de implementación, una vez activada la rutina, permanece activada incluso si la naturaleza del núcleo de la estrella cambia a convectiva. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:mb_act_var_vel_g3}
+\end{figure}
+
+Es la presencia del MB la que impide que la estrella siga aumentando su velocidad angular. Como puede verse en la figura \ref{fig:rot_vel_var_vel_var_g3}, la estrella, tras alcanzar su velocidad angular máxima al pasar por la ZAMS, comienza a desacelerar debido al frenado magnético. De este modo, la destrucción de litio se ve atenuada a causa de una menor velocidad de rotación. Los modelos comienzan a desacelerarse gradualmente una vez superada la ZAMS y durante el periodo inicial de su estancia en la MS. El proceso de desaceleración continúa progresivamente hasta que, en torno a la edad actual del Sol, se obtienen valores de velocidad angular muy similares a los de éste. A su vez, la desaceleración conduce a un menor efecto de las fuerzas centrífugas, lo que permite una contracción del radio de la estrella y, por tanto, un menor tamaño del CZ. Además, una menor velocidad angular tiene un efecto sobre la intensidad del campo magnético, como puede verse en la Figura \ref{fig:mag_field_var_vel_g3}. El acoplamiento entre $\Omega$, $B$ y el radio de la estrella es evidente y coherente.\par
+
+De manera similar a como ocurría con $\teff$ y $L$ ante la presencia de campos magnéticos de intensidad fija y su impacto en el diagrama HR, tenemos una situación idéntica para los de intensidad variable. En la figura \ref{fig:hr_var_vel_var_g_z13} podemos observar este efecto. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/hr_var_vel_var_g_z13.pdf}
+	\caption{Trazas evolutivas para varios modelos inicializados con 1$\msun$. Muestra en detalle los efectos combinados del oscurecimiento gravitatorio y el frenado magnético. Los modelos incluyen un campo magnético de intensidad variable, rotación inicial con $\omegaini$ entre 0.12 y 0.1425.}
+	\label{fig:hr_var_vel_var_g_z13}
+\end{figure}
+
+
+\subsection{Evolución del litio con MB de intensidad y $\amlt$ variables}
+Los efectos de la rotación y el frenado magnético también pueden observarse en la evolución del parámetro $\amlt$. La inclusión de la rotación implica la aparición de fuerzas centrífugas que afectan tanto a la estructura de la estrella como a la composición química de los distintos estratos que la componen. La rotación diferencial entre los límites del núcleo radiativo y las capas convectivas provoca efectos de mezcla en la denominada tacoclina. Los efectos de esta mezcla y de sus efectos hidrostáticos se rigen por la MLT, en la que el $\amlt$ desempeña un papel fundamental. Como ya se ha comentado en la sección \ref{sec:alt_mlt}, la MLT adolece de la arbitrariedad del valor de $\amlt$.\par 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/alpha_mlt_var_vel_g3.pdf}
+	\caption{La evolución de $\amlt$, en función del tiempo y $\omegaini$ para varios modelos de $1 \msun$. Los modelos incluyen una rotación inicial con $\omegaini$ entre 0.12 y 0.1425. La línea vertical discontinua hace referencia a la ZAMS. La estrella púrpura y el rombo son los $\amlt$ dados por \cite{Sonoi2018} y \cite{Samadi2005}, respectivamente.}
+	\label{fig:alpha_mlt_var_vel_g3}
+\end{figure}
+
+En la sección \ref{sec:efectos_rotacion} mencionábamos que en aquellas estrellas que giran a gran velocidad, la rotación afectaba a la presión y temperatura de la estrella. Este hecho también repercute en la evolución de $\amlt$ ya que en nuestros modelos su valor depende proporcionalmente de $\teff$ y $\gsurf$. Ambos parámetros son comparativamente menores en las estrellas que giran más rápido que en las que lo hacen más despacio. Como consecuencia, $\amlt$ arroja un valor menor en su evolución temporal en aquellas fases en las que la estrella rota más rápido, siendo este efecto más acentuado en la aproximación ZAMS. La figura \ref{fig:alpha_mlt_var_vel_g3} muestra cómo evoluciona el parámetro $\amlt$ con el tiempo.\par
+
+En lo que se refiere al comportamiento de la $\teff$ y $\gsurf$ a lo largo de la evolución de los modelos puede observarse en la figura \ref{fig:teff_logg_var_vel_g_z13} que para aquellos con una mayor velocidad de rotación, tenemos que para ambos parámetros su valores son comparativamente menores que los obtenidos en modelos con una rotación más lenta; un aspecto en consonancia con el oscurecimiento de la gravedad. Cabe destacar que en la fase de aproximación ZAMS observamos para el modelo de rotación más rápida (amarillo) que su$\gsurf$ es mayor que la del resto de modelos más lentos. Esto puede explicarse observando la figura \ref{fig:lograd_var_vel_g_z13}, en la que se muestra la evolución del radio estelar para los distintos modelos, en función del tiempo y $\omegaini$. Alrededor del intervalo de 2.5 10$^{7}$ y 3.5 10$^{7}$ Ga (delimitado por las líneas cian) y después de la ZAMS, desde alrededor de 5.4 10$^{7}$ a 11.2 10$^{7}$ Ga (delimitado por las líneas magenta) el radio estelar del modelo más rápido es menor que el del resto, produciendo una $\gsurf$ mayor, y esto a su vez significa una menor $\Dot{M}$ (ver figura \ref{fig:mdot_var_vel_g3}). Recordemos que el radio estelar tiene una influencia inversamente cuadrática en el valor de $\gsurf$. Esta presunta “anomalía” desaparece en cuanto el radio estelar vuelve a ser mayor para el modelo más rápido.\par
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/teff_logg_var_vel_g_z13.pdf}
+	\caption{La evolución de $\teff$ y $\gsurf$, en función del tiempo y $\omegaini$ para varios modelos de 1 $\msun$. Los modelos incluyen una rotación inicial con $\omegaini$ entre 0.12 y 0.1425. Los intervalos de edad [2.5, 3.5] 10$^{7}$ Ga y [5.4, 11.2] 10$^{7}$ Ga, delimitados por las líneas cian y magenta respectivamente, destacan periodos en los que el modelo más rápido con $\omegaini$=0,1425 expone una gravedad superficial superior a la del resto de los más lentos. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:teff_logg_var_vel_g_z13}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{img/paper2/lograd_var_vel_g_z13.pdf}
+	\caption{La evolución del radio estelar, en función del tiempo y $\omegaini$ para varios modelos de 1 $\msun$ y sus. Los modelos incluyen rotación inicial con $\omegaini$ entre 0.12 y 0.1425. La línea vertical discontinua hace referencia a la ZAMS.}
+	\label{fig:lograd_var_vel_g_z13}
+\end{figure}
+
+
+\section{Conclusiones - Parte II} \label{sec_conclusions_ii}
+Hemos introducido un valor variable para $B$ dependiente de otros parámetros fundamentales estelares usando la prescripción de \citet{Gallet2013}. También hemos adoptado un parámetro $\amlt$ adaptativo siguiendo la parametrización de \citet{Sonoi2018}. Luego hemos comparado nuestras predicciones de A(Li) y velocidades rotacionales con el Sol actual y 64 OCs, que representan edades anteriores y futuras de nuestra estrella.\par
+
+Nuestros modelos sugieren un límite inferior de abundancia de litio de 1.133 dex para estrellas similares al Sol, dentro de las medidas de incertidumbre del Sol (1.1 $\pm$ 0.1 dex). Predicen una velocidad de rotación ecuatorial ligeramente superior (4.72 $\kms$) a la del Sol (2.0 $\kms$), lo que permite una mayor combustión de litio. A pesar de desarrollar fuertes campos magnéticos y un frenado magnético intensivo, nuestros modelos no logran reproducir la intensidad media del campo magnético ($\sim 40$ G frente al valor medio del Sol de 1 G).\par
+
+Hemos estudiado en detalle la evolución de la zona convectiva así como la eficiencia convectiva, $\amlt$. Como era de esperar a partir de la parametrización 3D, $\amlt$ terminó en el valor solar del Sol actual aunque varió entre 1.67 y 1.86 durante la evolución. Esto afectó al agotamiento del litio en todos aquellos modelos inicializados con diferentes velocidades angulares pero no conseguimos reproducir las abundancias en todos los OCs con nuestros modelos. Existen diferentes factores responsables que influyen en que esto sea así, como los diferentes escenarios de formación en los cúmulos (interacciones binarias, transferencia de masa, captura de planetas fallidos, etc.) y las composiciones químicas iniciales de las nubes parentales de las que surgieron los OCs.\par
+
+\endinput
+%--------------------------------------------------------------------
+% FIN DEL CAPÍTULO. 
+%--------------------------------------------------------------------
+

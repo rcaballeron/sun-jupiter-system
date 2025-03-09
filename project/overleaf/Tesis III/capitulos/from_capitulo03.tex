@@ -1,0 +1,96 @@
+
+\section{Introducción}
+Suponer que el parámetro de longitud de mezcla ($\amlt$) y/o la intensidad del campo magnético ($B$) permanecen constantes a lo largo de la evolución estelar es una simplificación necesaria en algunos escenarios y que hemos puesto a prueba durante la primera parte de nuestra investigación, pero no se corresponde con la realidad. Por un lado,  la MLT utiliza la escala de longitud de mezcla, que es proporcional a la altura de la escala de presión local y a $\amlt$. En la mayoría de los formalismos $\amlt$ se considera un parámetro fijo libre y debe determinarse comparando los modelos estelares con alguna referencia, en la mayoría de los casos con nuestro Sol. Pero como hemos visto en la sección \ref{sec:alt_mlt}, este parámetro tiene una influencia directa en cómo se destruye el litio a lo largo de la evolución de la estrella. Parece razonable, que como ocurre con otros parámetros estelares directamente observables como la velocidad de rotación, temperatura efectiva o gravedad superficial, cuyos valores sufren variaciones, el valor $\amlt$ también evolucione a lo largo del tiempo.\par
+
+Por otro lado, un planteamiento similar es aplicable al valor de $B$. Investigaciones como las de \citet{Ud-Doula2008, Cranmer2011, Gallet2015, Amard2016} se centran en modelar los efectos del MB. Todo estos modelos fijan una intensidad del campo magnético. Este enfoque ha demostrado no ser suficiente para explicar los datos observacionales. Atendiendo a este contexto, extendemos nuestra línea de investigación en la dirección de explorar cómo contribuyen los modelos estelares evolutivos, en los que tanto $B$ como $\amlt$ varían con el tiempo en función de ciertos parámetros estelares, al MB y a la evolución del litio en el Sol y estrellas similares.\par
+
+
+\section{Efectos del frenado magnético - Parte II}
+
+
+
+
+
+\section{Extendiendo MESA - Parte II}
+Una vez tenemos definidos los diferentes formalismos que nos permiten calcular los efectos que producirían la presencia de un campo magnético de intensidad fija sobre el momento angular de una estrella similar al Sol, procedemos a codificar los mismos en rutinas compatibles con el simulador MESA. Comenzaremos con la introducción de la rutina que calcula la cantidad total de pérdida de momento angular para la estrella, y luego procederemos con la rutina que realiza la distribución de esa pérdida entre las diferentes celdas que conforman la zona convectiva exterior de la estrella. Ambas rutinas son invocadas como parte del \textit{hook} introducido en la sección \ref{sec:mb_routine}. \par
+
+\subsection{Pérdida de masa en MESA}
+MESA ofrece una variedad de maneras de establecer la tasa de pérdida de cambio de masa se puede especificar en el archivo de entrada \cite{Paxton2010}, a la vez que nos permite implementar esquemas arbitrarios de acreción o pérdida de masa a través del desarrollo de nuevos módulos. Éstos dan soporte a diferentes mecanismos y son relevantes para determinados tipos de estrellas y la fase evolutiva en las que se encuentran. He aquí algunos aspectos relevantes:
+\begin{itemize}
+    \item Prescripciones de pérdida de masa: MESA incluye varias prescripciones empíricas y teóricas de pérdida de masa \cite{Vink2023}. Por ejemplo, puede utilizar las tasas de pérdida de masa para estrellas calientes, que dependen del factor de Eddington y de la relación luminosidad-masa \cite{Gautham2022}.
+    \item Vientos impulsados por radiación: Para estrellas masivas, MESA utiliza modelos de vientos impulsados por radiación, que se basan en la transferencia de momento desde la radiación al viento estelar.
+    \item Otras rutinas de viento: MESA permite a los usuarios implementar rutinas de pérdida de masa personalizadas a través de la rutina $other\_wind\_routine$. Esta flexibilidad es útil para probar nuevas teorías de pérdida de masa o calibrar modelos contra observaciones.
+\end{itemize}
+
+En cuanto a los efectos de la velocidad angular sobre la pérdida de masa, MESA recurre al formalismo de Langer \cite{Langer1998, Paxton2013}. En este formalismo intervienen las velocidades angulares superficial y crítica de la estrella, su masa y su radio, y la luminosidad de Eddington. La pérdida de masa se satura a medida que la velocidad angular se aproxima a la velocidad crítica. Cuando esto ocurre, MESA selecciona el valor mínimo entre el obtenido según el formalismo de Langer y la escala de tiempo térmica. Esta última está relacionada con la pérdida de masa porque determina la rapidez con la que una estrella puede irradiar su energía. Una escala de tiempo térmica más corta significa que la estrella pierde energía más rápidamente, lo que puede influir en la velocidad a la que pierde masa a través de los vientos estelares u otros procesos.\par
+
+Adicionalmente, para las fases evolutivas en las que los vientos estelares representan el principal mecanismo por el que se produce la pérdida de masa, MESA utiliza por defecto la prescripción de pérdida de masa de Reimers \cite{Reimers1975}. El formalismo de Reimers relaciona la tasa de pérdida de masa con la luminosidad, el radio y la masa de la estrella. Ésta no es la única opción que ofrece MESA para las fases estelares evolucionadas, pudiendo así configurarse con diferentes formalismos de pérdida de masa dependiendo de la fase de la estrella, por ejemplo para las fases AGB y RGB,  así como para el mecanismo que la causa. \par
+
+Habiendo expuesto la relación directa entre la AML y la pérdida de masa causada por el viento estelar, pasamos a analizar cómo MESA da soporte a este mecanismo. Nuestro interés se centra en las estrellas de tipo solar, para las que MESA utiliza la prescripción de pérdida de masa de Langer. La pérdida de masa se obtiene directamente del valor calculado por el código, concretamente de la variable $s\% mstar\_dot$. De forma similar para la velocidad angular, tomada de $s\% omega(1)$. Estos dos valores se utilizan en la ec. \ref{eq:j_dot1}. junto con el radio de Alfven.
+
+\subsection{Rutina de frenado magnético de intensidad constante} \label{sec:mb_cte_b}
+Ante la presencia de un campo magnético de intensidad constante B, procedemos a calcular qué cantidad de AM es capaz de eliminar de la estrella. Para ello, a cada paso de la simulación se obtiene un $\Dot{J}$ global que viene a representar el par de torsión que ejerce el viento estelar atrapado dentro del campo magnético. Una vez obtenido este valor, posteriormente se distribuirá entre las diferentes celdas del modelo que representan a la estrella simulada.\par
+
+En el listado \ref{lst:jdot_cantiello} podemos observar el código de la rutina. Es importante destacar que MESA utiliza la sistema cgs (centímetros, gramos, segundos) por lo que hay que asegurarse que los parámetros y variables utilizadas en los cálculos están en las unidades correctas.\par
+
+\begin{lstlisting}[language=Fortran, float, caption={Rutina de par de torsión para un campo magnético de intensidad fija.}, label={lst:jdot_cantiello}]
+real function calculate_jdot_rate_cantiello(s, b_star) result(new_j_dot)
+  use const_def
+  type (star_info), pointer, intent(in) :: s
+  real(dp), intent(in) :: b_star
+    
+  real(dp) :: r_st, m_st, i_st, alfven_r
+  real(dp) :: omega_surf, m_dot, eta_surf, v_inf, v_esc
+    
+  !Star data
+  r_st = s% r(1)
+  m_st = s% m(1)
+  omega_surf = s% omega(1)
+    
+  ! escape and infinite velocities
+  ! 100000 transform from km/s to cm/s
+  v_esc = (618 * ((Rsun/r_st)*(m_st/Msun))**0.5) * 100000
+  v_inf = 1.92 * v_esc
+    
+  m_dot = s% mstar_dot !This in g/s
+    
+  eta_surf = ((r_st * b_star)**2)/(abs(m_dot) * v_inf)
+    
+  !Formula 2.3 Cantiello's MESA assigment
+  new_j_dot = two_thirds * m_dot * omega_surf * (r_st**2) * eta_surf
+end function
+\end{lstlisting}
+
+
+\subsection{Rutina de distribución de pérdida de momento angular - I} \label{sec:dist_aml1}
+En lo que a MESA atañe, el simulador asigna un valor $\Omega$ para cada celda $k$ ($\Omega_k$) que es ajustado para que el AM resultante se conserve tras calcular la nueva masa de la celda $k$ ($m_k$) y su distancia al centro de la estrella ($r_k$). A continuación, le asigna un valor de AM a cada celda $k$ ($J_k$). En este punto, nuestra rutina de MB se activa, modificando $J_k$. Para ello, se proporciona una contribución adicional ($\Dot{J}_{k}$) de signo negativo porque estamos ante una pérdida. Ésta es el resultado del par externo ejercido por el campo magnético una vez que se ha distribuido entre las diferentes capas que componen la CZ según dicta la ec. \ref{eq:k_jdot}:\par
+
+\begin{align}
+	\Dot{J}_{k} &= \Dot{J}_*\;\frac{m^{}_{k} r^2_{k}}{m^{}_* r_*^2} \label{eq:k_jdot}
+\end{align}
+
+\begin{lstlisting}[language=Fortran, float, caption={Rutina de distribución de pérdida de momento angular.}, label={lst:dis_jdot}]
+subroutine distribute_j_dot(s, total_j_dot, sz_info, mb_jdot_list)
+  type (star_info), pointer, intent(in) :: s
+  real(dp), intent(in) :: total_j_dot
+  type (star_zone_info), pointer, intent(in) :: sz_info
+  real(dp), dimension(:), pointer, intent(out) :: mb_jdot_list
+  integer :: k
+  real(dp) :: sum_jdot, dm_jdot, dm_bar_jdot, factor
+    
+  !By default, no lost of angular moment
+  mb_jdot_list(:) = 0.0
+    
+  do k = sz_info% top_zone, sz_info% bot_zone, 1
+    !Here the jdot distribution strategy is defined
+    !Simple rule of three distribution loss of angular momentum based on the 
+    !angular momentum of the zone vs total angular momentum 
+    !of the convective zone
+      
+    !IMPORTANT: Don't forget to divide by dm(k) in order
+    !to get an "specific" jdot
+    mb_jdot_list(k) = ((s% dm(k) * s% r(k)**2 * total_j_dot) / &
+    (sz_info% d_mass * sz_info% d_radius**2)) / s% dm(k)
+  end do
+end subroutine distribute_j_dot
+\end{lstlisting}
