@@ -234,8 +234,9 @@ global sun_vel_rot = 2.0; %km/s
 global sun_T_eff = 5772; %K
 global sun_L = 3.828e26; %W
 global sun_omega = 2.903e-6 %rad/s
-global sun_log_g = 4.4374
-global sun_radius = 6.957e8
+global sun_log_g = 4.4374;
+global sun_radius = 6.957e8;
+global sun_cz = 0.3; %rsun
 
 %Pleiades constants
 %global pleiades_age = 1.0e8; %years
@@ -695,11 +696,11 @@ function [root_subfolder] = plot_cluster(A, color, marker, width, ytick, axis_li
   global clusters_age_col;
   global clusters_log_g_col;
   global clusters_e_log_g_col;
-  global clusters_fe_h_col
+  global clusters_fe_h_col;
   global gigaYear;
-  delta_log_g = 0.05 %dex
-  delta_teff = 50 %K
-  delta_fe_h = 0.05 %dex
+  delta_log_g = 0.05; %dex
+  delta_teff = 50; %K
+  delta_fe_h = 0.05; %dex
 
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_li_col, clusters_age_col, clusters_err_up_age_col, clusters_err_down_age_col]);
   %fmt = get_parsing_fmt([clusters_teff_col, clusters_log_g_col, clusters_e_log_g_col, clusters_li_col, clusters_age_col]);
@@ -816,7 +817,7 @@ function result = calculate_A_Li7(A)
 
   A_Li7 = zeros(length(A), 1);
 
-  A_Li7(:,1) = fA_Li7(A(:,4),A(:,5));
+  A_Li7(:,1) = fA_Li7(A(:,7),A(:,8));
 
   result = A_Li7;
 end
@@ -848,7 +849,7 @@ function plot_A_Li7(A, B, color, width, ytick, axis_limits)
   set (gca, "xticklabel", xlabels) ;
 
   yticks = get (gca, "ytick");
-  ylabels = arrayfun (@(x) sprintf ("%2.1f", x), yticks, "uniformoutput", false);
+  ylabels = arrayfun (@(x) sprintf ("%2.2f", x), yticks, "uniformoutput", false);
   set (gca, "yticklabel", ylabels);
 
   set(gca, 'fontsize', tick_font_size);
@@ -1355,6 +1356,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   global surface_h1_col;
   global surface_li_col;
   global log_Teff_col;
+  global log_L_col;
   global log_g_col;
   global header_lines;
   global sun_age;
@@ -1367,6 +1369,24 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   global axis_font_size;
   global legend_font_size;
   global line_width;
+  global sun_T_eff;
+  global log_R_col;
+  global gigaYear;
+  global surf_avg_v_rot_col;
+  global bf_star_col;
+
+  global sun_gauss_field;
+  global sun_age; %years
+  global sun_A_Li7;
+  global sun_A_eLi7;
+  global sun_vel_rot; %km/s
+  global sun_T_eff; %K
+  global sun_L; %W
+  global sun_omega; %rad/s
+  global sun_log_g;
+  global sun_radius; %m
+  delta_teff = 80 %K
+
 
 
   hold('on');
@@ -1380,13 +1400,83 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       sub_folder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:));
       full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
 
-      fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_g_col, surface_h1_col, surface_li_col]);
+      fmt = get_parsing_fmt([star_age_col, log_Teff_col, log_L_col, log_R_col, log_g_col, surf_avg_v_rot_col, surface_h1_col, surface_li_col, bf_star_col]);
 
-      A = read_matrix_from_file(full_path, fmt, header_lines, 5);
+      A = read_matrix_from_file(full_path, fmt, header_lines, 9);
 
       B = calculate_A_Li7(A);
 
       plot_A_Li7(A, B, colors(i*j,:), line_width, ytick, axis_limits);
+
+
+      %First filter out all records with age youger than 5Ga and older than 6Ga
+      Z = A;
+      C1 = A(:,1) < 3*gigaYear;
+      C2 = A(:,1) > 6*gigaYear;
+      C = C1 | C2;
+      Z(C,:) = [];
+
+      %-------------------------------------------------------
+      %- Block which compares agains Sun reference values
+      %-------------------------------------------------------
+      % The Teff is the value is as reference for selecting the
+      % rows to be considered
+      % Filter out starts with Teff below and above the limits
+      teff_low_limit = log10(sun_T_eff) %The delta for the low limit is more strict
+      teff_top_limit = log10(sun_T_eff + delta_teff)
+      power(10, teff_low_limit)
+      power(10, teff_top_limit)
+      E1 = Z(:,2) < teff_low_limit;
+      E2 = Z(:,2) > teff_top_limit;
+      % Mark rows which fulfill either B1 or B2 and remove them
+      % This creates a logical array E by performing an element-wise logical OR
+      % between two logical arrays E1 and E2.
+      % Each element of E will be true if the corresponding element in either E1 or E2 is true.
+      E = E1 | E2;
+      % This deletes rows from matrix Z where the corresponding element in E is true.
+      % Z(E,:) selects all rows in Z for which E is true.
+      % The assignment =[] removes those rows entirely from Z.
+      Z(E,:) = [];
+      G = calculate_A_Li7(Z);
+
+      % Extract the values for the interval limits
+      age_low = Z(1, 1)
+      age_high = Z(end, 1)
+      Teff_low = power(10, Z(1, 2))
+      Teff_high = power(10, Z(end, 2))
+      L_low = power(10, Z(1, 3))
+      L_high = power(10, Z(end, 3))
+      r_low = power(10, Z(1, 4))
+      r_high = power(10, Z(end, 4))
+      g_low = Z(1, 5)
+      g_high = Z(end, 5)
+      vel_low = Z(1, 6)
+      vel_high = Z(end, 6)
+      b_low = Z(1, 9)
+      b_high = Z(end, 9)
+      ALi_low = G(1,1)
+      ALi_high = G(end,1)
+
+      % Calculate deltas with referenced to the Sun nominal values
+      d_age_low = ((sun_age - age_low)*100) / sun_age
+      d_age_high = ((age_high - sun_age)*100) / sun_age
+      d_Teff_low = ((sun_T_eff - Teff_low)*100) / sun_T_eff
+      d_Teff_high = ((Teff_high - sun_T_eff)*100) / sun_T_eff
+      d_L_low = (1 - L_low)*100
+      d_L_high = (L_high - 1)*100
+      d_r_low = (1 - r_low)*100
+      d_r_high = (r_high - 1)*100
+      d_g_low = ((sun_log_g - g_low)*100) / sun_log_g
+      d_g_high = ((g_high - sun_log_g)*100) / sun_log_g
+      d_vel_low = ((sun_vel_rot - vel_low)*100) / sun_vel_rot
+      d_vel_high = ((vel_high - sun_vel_rot)*100) / sun_vel_rot
+      d_b_low = ((sun_gauss_field - b_low)*100) / sun_gauss_field
+      d_b_high = ((b_high - sun_gauss_field)*100) / sun_gauss_field
+      d_ALi_low = ((sun_A_Li7 - ALi_low)*100) / sun_A_Li7
+      d_ALi_high = ((ALi_high - sun_A_Li7)*100) / sun_A_Li7
+      %-------------------------------------------------------
+
+
 
       % Plot ZAMS reference
       %zams = calculate_ZAMS(full_path);
@@ -1465,6 +1555,7 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, nolog, 
   global axis_font_size;
   global legend_font_size;
   global line_width;
+  global sun_cz;
 
   hold('on');
   labels = {};
@@ -1516,6 +1607,9 @@ function age_vs_cz_size_plots(gauss_fields, rotational_vels, is_var_vel, nolog, 
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
   line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+
+  % Plot sun reference
+  plot(sun_age, sun_cz, '*', 'markersize', 15, 'color', [0.5,0.1,0.8]);
 
 
   l = legend(labels, "location", leg_loc);
@@ -2329,11 +2423,13 @@ function omegs_vs_mag_field(gauss_fields, rotational_vels, show_limits, ytick, a
   sub_folder = strcat(gauss_fields(1,:), '_', rotational_vels(1,:));
   full_path = strcat(data_parent_folder, '/', sub_folder, '/', filename);
   zams = calculate_ZAMS(full_path);
-  line("xdata",[zams,zams], "ydata",[axis_limits(3),axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  %Not sure why is axis_limits(3) is 0, the line isn't drawn. The workaround is to sum a small amount
+  line("xdata",[zams,zams], "ydata",[axis_limits(3) + 0.001,axis_limits(4)], "linewidth", 3, "linestyle", "--", "color", "k");
+  %line("xdata",[zams,zams], "ydata",[0.01,3000], "linewidth", 3, "linestyle", "--", "color", "k");
 
   % Plot sun reference
-  %plot(sun_age, sun_vel_rot, '*', 'markersize', 15, 'linewidth', 2, 'color', [0.5,0.1,0.8]);
-  %plot(sun_age, sun_gauss_field, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  plot(sun_age, sun_vel_rot, 's', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
+  plot(sun_age, sun_gauss_field, '*', 'markersize', 10, 'color', [0.5,0.1,0.8], 'markerfacecolor', [0.5,0.1,0.8]);
 
   l = legend(labels, "location", leg_loc);
 
@@ -2457,7 +2553,7 @@ end
 function save_figure(f, title)
   %print(f,'-dpdflatexstandalone','-color',[title,'.pdf']);
   print(f,'-deps','-color',[title,'.eps']);
-  close;
+  %close;
   %print(f,'-dpng','-color',[title,'.png']);
   %$ for i in *.eps; do ps2pdf $i $(basename -s .eps $i).pdf ; done
 end
@@ -2965,7 +3061,7 @@ function plot_hr_XG_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_X_G;
 
-  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', '', 'hr_var_vel_var_g', num2str(idx));
+  hr_plots(gauss_fields(idx_X_G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 1.75], 'northwest', '', 'hr_var_vel_var_g', num2str(idx));
 end
 
 function plot_hr_XG_var_vel_z1(rot_vels, limits, idx)
@@ -3046,7 +3142,7 @@ function plot_hr_0336vc_var_g_z1(mag_fields, idx)
   global rotational_vels;
   global idx_0336crit;
 
-  hr_plots(mag_fields, rotational_vels(idx_0336crit,:), false, [0.005,0.1], [3.745, 3.775, -0.3, 0.45], 'southwest', 'HR - vcrit=0.0336 & var. magnetic field', 'hr_vc_0336_var_g_z1', num2str(idx));
+  hr_plots(mag_fields, rotational_vels(idx_0336crit,:), false, [0.005,0.1], [3.745, 3.775, -0.3, 0.45], 'southwest', '', 'hr_vc_0336_var_g_z1', num2str(idx));
 end
 
 
@@ -3084,7 +3180,7 @@ function plot_cz_size_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_0_0G;
 
-  age_vs_cz_size_plots(gauss_fields(idx_0_0G,:), rot_vels, true, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_var_vel_0g_', num2str(idx));
+  age_vs_cz_size_plots(gauss_fields(idx_0_0G,:), rot_vels, true, 0, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_var_vel_0g_', num2str(idx));
 end
 
 function plot_cz_size_2_5G_var_vel(rot_vels, idx)
@@ -3114,7 +3210,7 @@ function plot_cz_size_4_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_cz_size_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_var_vel_4_0g', num2str(idx));
+  age_vs_cz_size_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_var_vel_4_0g', num2str(idx));
 end
 
 function plot_cz_size_nolog_4_0G_var_vel(rot_vels, idx)
@@ -3178,7 +3274,15 @@ function plot_cz_size_0336vc_var_g(mag_fields, idx)
   global rotational_vels;
   global idx_0336crit;
 
-  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0, 0.1, [1.0e2, 1.0e10, 0.0, 1.05], 'southwest', '', 'cz_vc_0036_var_g', num2str(idx));
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0, 0.1, [1.0e5, 1.0e10, 0.0, 1.05], 'northeast', '', 'cz_vc_0036_var_g', num2str(idx));
+end
+
+
+function plot_cz_size_nolog_0336vc_var_g(mag_fields, idx)
+  global rotational_vels;
+  global idx_0336crit;
+
+  age_vs_cz_size_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 1, 0.5, [1.0e5, 1.0e10, 0.0, 6.0], 'northeast', '', 'cz_vc_0036_nolog_var_g', num2str(idx));
 end
 
 
@@ -3221,6 +3325,20 @@ function plot_m_dot_028vc_var_g_z1(mag_fields, idx)
   age_vs_m_dot_plots(mag_fields, rotational_vels(idx_028crit,:), false, 0.05, [3.0e8, 1.0e10, -13.6, -13.3], 'northwest', '', 'mdot_vc_028_var_g_z1', num2str(idx));
 end
 
+function plot_m_dot_0336vc_var_g(mag_fields, idx)
+  global rotational_vels;
+  global idx_0336crit;
+
+  age_vs_m_dot_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0.5, [1.0e5, 1.0e10, -14.0, -11.0], 'northeast', '', 'mdot_vc_0336_var_g', num2str(idx));
+end
+
+function plot_m_dot_0336vc_var_g_z1(mag_fields, idx)
+  global rotational_vels;
+  global idx_0336crit;
+
+  age_vs_m_dot_plots(mag_fields, rotational_vels(idx_0336crit,:), false, 0.05, [3.0e8, 1.0e10, -13.6, -13.3], 'northwest', '', 'mdot_vc_0336_var_g_z1', num2str(idx));
+end
+
 function plot_m_dot_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_0_0G;
@@ -3239,7 +3357,7 @@ function plot_m_dot_XG_var_vel(rot_vels,idx)
   global gauss_fields;
   global idx_X_G;
 
-  age_vs_m_dot_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5, 1.0e10, -14.0, -10.0], 'northwest', '', 'mdot_var_vel_g', num2str(idx));
+  age_vs_m_dot_plots(gauss_fields(idx_X_G,:), rot_vels, true, 0.5, [1.0e5, 1.0e10, -14.0, -11.0], 'northeast', '', 'mdot_var_vel_g', num2str(idx));
 end
 
 function plot_m_dot_XG_var_vel_z1(rot_vels,idx)
@@ -3399,7 +3517,8 @@ function plot_omega_vs_mag_field_XG(rot_vels, show_limits, idx)
   global idx_X_G;
 
   %omegs_vs_mag_field_plots(gauss_fields(idx_X_G,:), rot_vels, true, 10, [0.5, 50, 1, 1000], 'northwest', 'Magnetic field intensity  & var. rotational velocity', 'mag_field_var_vel_g');
-  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 9.0e9, 1, 3000], 'southwest', '', 'mag_field_var_vel_g', num2str(idx));
+  %omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 9.0e9, 1, 3000], 'southwest', '', 'mag_field_var_vel_g', num2str(idx));
+  omegs_vs_mag_field(gauss_fields(idx_X_G,:), rot_vels, show_limits, 10, [1.0e5, 1.0e10, 0, 3000], 'southwest', '', 'mag_field_var_vel_g', num2str(idx));
 end
 
 function plot_age_vs_teff_XG(rot_vels, idx)
@@ -3783,7 +3902,7 @@ function main()
 
 
   %plot_0G_var_vel(rot_vels);
-  %plot_0G_var_vel_z1(rot_vels);
+  %plot_0G_var_vel_z1(rot_vels,0);
   %plot_2_5G_var_vel(rot_vels);
   %plot_3_0G_var_vel(rot_vels);
   %plot_3_0G_var_vel(rot_vels3);
@@ -3800,6 +3919,7 @@ function main()
   %plot_4_5G_var_vel(rot_vels);
   %plot_5_0G_var_vel(rot_vels);
   %plot_5_5G_var_vel(rot_vels);
+  %plot_0G_var_vel(rot_vels,0);
 
   %Works only with paper3d folder
   %plot_XG_var_vel(rot_vels5);
@@ -3932,6 +4052,7 @@ function main()
   %plot_hr_XG_var_vel(rot_vels6);
   %plot_hr_XG_var_vel(rot_vels8);
   %plot_hr_XG_var_vel(rotational_vels([idx_135crit],:),1);
+  %plot_hr_0336vc_var_g_z1(mag_fields, 0336);
 
   %plot_omega_vs_mag_field_XG(rot_vels6, false);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), false);
@@ -3961,6 +4082,9 @@ function main()
   %plot_cz_size_0G_var_vel(rot_vels,0);
   %plot_cz_size_028vc_var_g(mag_fields, 028);
   %plot_m_dot_028vc_var_g(mag_fields, 028);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_m_dot_0336vc_var_g(mag_fields, 336);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_m_dot_0336vc_var_g_z1(mag_fields, 336);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_m_dot_XG_var_vel(rot_vels7,3);
   %plot_m_dot_028vc_var_g_z1(mag_fields, 028);
   %plot_age_vs_mb_activation_028vc(mag_fields2, 028);
   %plot_3_0G_0314vc(rot_vels3, 3);
@@ -3979,16 +4103,17 @@ function main()
   %plot_radius_4_0G(rot_vels,4);
   %plot_radius_nolog_4_0G(rot_vels,4);
   %plot_radius_nolog_4_0G_z1(rot_vels,4);
-  plot_cz_size_XG_var_vel(rot_vels7,3);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_XG_var_vel(rot_vels7,3);
   %plot_cz_size_XG_var_vel_z1(rot_vels7,3);
-  %plot_cz_size_nolog_XG_var_vel(rot_vels7,3);
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_nolog_XG_var_vel(rot_vels7,3);
   %plot_cz_size_nolog_XG_var_vel_z1(rot_vels7,3);
-  %plot_cz_size_nolog_4_0G_var_vel(rot_vels,4);
-  %plot_cz_size_4_0G_var_vel(rot_vels,4);
-  %plot_cz_size_0336vc_var_g(mag_fields, 336);
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_nolog_4_0G_var_vel(rot_vels,4);
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_4_0G_var_vel(rot_vels,4);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_0336vc_var_g(mag_fields, 336);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%plot_cz_size_nolog_0336vc_var_g(mag_fields, 336);
   %plot_cz_size_028vc_var_g_z1(mag_fields, 28);
   %plot_cz_size_0336vc_var_g_z1(mag_fields, 336);
-  %plot_hr_XG_var_vel(rot_vels7,3);
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_hr_XG_var_vel(rot_vels7,3);
   %plot_hr_XG_var_vel_z1(rot_vels7,[3.68, 3.72, -0.45, -0.10],3);
   %plot_age_vs_alpha_mlt_XG(rot_vels7,3);
   %plot_age_vs_mb_activation_XG(rot_vels7,3);
@@ -4003,6 +4128,14 @@ function main()
   %plot_omega_XG_var_vel(rot_vels5,1);
   %plot_omega_XG_var_vel(rot_vels7,3);
   %plot_m_dot_0G_var_vel(rot_vels,0);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_0G_var_vel(rot_vels,0);
+  %%%%%%%%%%%%%%%%%%%%%%%%%plot_4_0G_var_vel(rot_vels,4);
+  plot_XG_var_vel(rot_vels7,3);
+  %plot_vel_rot_XG_var_vel_z1(rot_vels9,3);
+  %plot_vel_rot_XG_var_vel(rot_vels9,3);
+  %plot_cz_size_XG_var_vel(rot_vels7,3);
+  %plot_cz_size_0G_var_vel(rot_vels,0);
 
 end
 
