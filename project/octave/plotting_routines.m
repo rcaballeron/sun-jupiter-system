@@ -156,7 +156,9 @@ global rotational_vels = ['0crit';'0084crit'; '014crit'; '0196crit'; '028crit';
   '115crit';'10crit';'0975crit';'095crit';'0925crit';'125crit';
   '135crit';'1175crit';'12crit';'1225crit';'1275crit';
   '13crit';'1325crit';'1375crit';'14crit';'1425crit';
-  '145crit';'1475crit';'15crit';'1525crit';'155crit'];
+  '145crit';'1475crit';'15crit';'1525crit';'155crit';
+  '001crit';'002crit';'003crit';'004crit';'005crit';
+  '09crit';'106crit'];
 %dl -> disk locking
 global dl_rotational_vels = ['0crit_dl';'0084crit_dl'; '014crit_dl'; '0196crit_dl';
   '028crit_dl'; '0336crit_dl';'029crit_dl';'030crit_dl';'031crit_dl';
@@ -218,6 +220,13 @@ global idx_1475crit  = 36;
 global idx_15crit  = 37;
 global idx_1525crit  = 38;
 global idx_155crit  = 39;
+global idx_001crit  = 40;
+global idx_002crit  = 41;
+global idx_003crit  = 42;
+global idx_004crit  = 43;
+global idx_005crit  = 44;
+global idx_09crit  = 45;
+global idx_106crit  = 46;
 
 
 %The following with mlt=var and disk locking
@@ -899,7 +908,7 @@ function plot_vel_rot(A, color, width, ytick, axis_limits)
   plot(A(:,1), A(:,2), color, 'linewidth', width);
   %Don't show sup limit of CZ
   %plot(A(:,1), A(:,3), color, 'linewidth', width, 'linestyle', '--');
-  plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', ':');
+  %plot(A(:,1), A(:,4), color, 'linewidth', width, 'linestyle', ':');
 
   %Axis scales
   set(gca, 'XScale', 'log');
@@ -1385,6 +1394,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
   global sun_omega; %rad/s
   global sun_log_g;
   global sun_radius; %m
+  global tables_parent_folder;
   delta_teff = 80 %K
 
 
@@ -1409,7 +1419,7 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       plot_A_Li7(A, B, colors(i*j,:), line_width, ytick, axis_limits);
 
 
-      %First filter out all records with age youger than 5Ga and older than 6Ga
+      %First filter out all records with age younger than 3Ga and older than 6Ga
       Z = A;
       C1 = A(:,1) < 3*gigaYear;
       C2 = A(:,1) > 6*gigaYear;
@@ -1419,61 +1429,86 @@ function age_vs_li_plots(gauss_fields, rotational_vels, is_var_vel, ytick, axis_
       %-------------------------------------------------------
       %- Block which compares agains Sun reference values
       %-------------------------------------------------------
+      % NOTE: in simulations with low spatial resoluction or temporal (or both)
+      % none of the record satisfies the selection criteria, ending up in an empty
+      % set. This leads to an error when is invoked G = calculate_A_Li7(Z) (below)
       % The Teff is the value is as reference for selecting the
       % rows to be considered
       % Filter out starts with Teff below and above the limits
-      teff_low_limit = log10(sun_T_eff) %The delta for the low limit is more strict
-      teff_top_limit = log10(sun_T_eff + delta_teff)
-      power(10, teff_low_limit)
-      power(10, teff_top_limit)
-      E1 = Z(:,2) < teff_low_limit;
-      E2 = Z(:,2) > teff_top_limit;
+      %teff_low_limit = log10(sun_T_eff) %The delta for the low limit is more strict
+      %teff_top_limit = log10(sun_T_eff + delta_teff)
+      %power(10, teff_low_limit)
+      %power(10, teff_top_limit)
+      %E1 = Z(:,2) < teff_low_limit;
+      %E2 = Z(:,2) > teff_top_limit;
+
       % Mark rows which fulfill either B1 or B2 and remove them
       % This creates a logical array E by performing an element-wise logical OR
       % between two logical arrays E1 and E2.
       % Each element of E will be true if the corresponding element in either E1 or E2 is true.
-      E = E1 | E2;
+      %E = E1 | E2;
+
       % This deletes rows from matrix Z where the corresponding element in E is true.
       % Z(E,:) selects all rows in Z for which E is true.
       % The assignment =[] removes those rows entirely from Z.
-      Z(E,:) = [];
-      G = calculate_A_Li7(Z);
+      %Z(E,:) = [];
+      %G = calculate_A_Li7(Z);
 
       % Extract the values for the interval limits
-      age_low = Z(1, 1)
-      age_high = Z(end, 1)
-      Teff_low = power(10, Z(1, 2))
-      Teff_high = power(10, Z(end, 2))
-      L_low = power(10, Z(1, 3))
-      L_high = power(10, Z(end, 3))
-      r_low = power(10, Z(1, 4))
-      r_high = power(10, Z(end, 4))
-      g_low = Z(1, 5)
-      g_high = Z(end, 5)
-      vel_low = Z(1, 6)
-      vel_high = Z(end, 6)
-      b_low = Z(1, 9)
-      b_high = Z(end, 9)
-      ALi_low = G(1,1)
-      ALi_high = G(end,1)
+      %age_low = Z(1, 1);
+      %age_high = Z(end, 1);
+      %Teff_low = power(10, Z(1, 2));
+      %Teff_high = power(10, Z(end, 2));
+      %L_low = power(10, Z(1, 3));
+      %L_high = power(10, Z(end, 3));
+      %r_low = power(10, Z(1, 4));
+      %r_high = power(10, Z(end, 4));
+      %g_low = Z(1, 5);
+      %g_high = Z(end, 5);
+      %vel_low = Z(1, 6);
+      %vel_high = Z(end, 6);
+      %b_low = Z(1, 9);
+      %b_high = Z(end, 9);
+      %ALi_low = G(1,1);
+      %ALi_high = G(end,1);
 
       % Calculate deltas with referenced to the Sun nominal values
-      d_age_low = ((sun_age - age_low)*100) / sun_age
-      d_age_high = ((age_high - sun_age)*100) / sun_age
-      d_Teff_low = ((sun_T_eff - Teff_low)*100) / sun_T_eff
-      d_Teff_high = ((Teff_high - sun_T_eff)*100) / sun_T_eff
-      d_L_low = (1 - L_low)*100
-      d_L_high = (L_high - 1)*100
-      d_r_low = (1 - r_low)*100
-      d_r_high = (r_high - 1)*100
-      d_g_low = ((sun_log_g - g_low)*100) / sun_log_g
-      d_g_high = ((g_high - sun_log_g)*100) / sun_log_g
-      d_vel_low = ((sun_vel_rot - vel_low)*100) / sun_vel_rot
-      d_vel_high = ((vel_high - sun_vel_rot)*100) / sun_vel_rot
-      d_b_low = ((sun_gauss_field - b_low)*100) / sun_gauss_field
-      d_b_high = ((b_high - sun_gauss_field)*100) / sun_gauss_field
-      d_ALi_low = ((sun_A_Li7 - ALi_low)*100) / sun_A_Li7
-      d_ALi_high = ((ALi_high - sun_A_Li7)*100) / sun_A_Li7
+      %d_age_low = ((sun_age - age_low)*100) / sun_age;
+      %d_age_high = ((age_high - sun_age)*100) / sun_age;
+      %d_Teff_low = ((sun_T_eff - Teff_low)*100) / sun_T_eff;
+      %d_Teff_high = ((Teff_high - sun_T_eff)*100) / sun_T_eff;
+      %d_L_low = (1 - L_low)*100;
+      %d_L_high = (L_high - 1)*100;
+      %d_r_low = (1 - r_low)*100;
+      %d_r_high = (r_high - 1)*100;
+      %d_g_low = ((sun_log_g - g_low)*100) / sun_log_g;
+      %d_g_high = ((g_high - sun_log_g)*100) / sun_log_g;
+      %d_vel_low = ((sun_vel_rot - vel_low)*100) / sun_vel_rot;
+      %d_vel_high = ((vel_high - sun_vel_rot)*100) / sun_vel_rot;
+      %d_b_low = ((sun_gauss_field - b_low)*100) / sun_gauss_field;
+      %d_b_high = ((b_high - sun_gauss_field)*100) / sun_gauss_field;
+      %d_ALi_low = ((sun_A_Li7 - ALi_low)*100) / sun_A_Li7;
+      %d_ALi_high = ((ALi_high - sun_A_Li7)*100) / sun_A_Li7;
+
+      %Create subfolder for each picture and inside it for each data file
+      %subfolder = strcat(gauss_fields(i,:), '_', rotational_vels(j,:))
+      %sun_tables_folder = strcat(tables_parent_folder, "/", aidx, "/", subfolder)
+      %mkdir(sun_tables_folder);
+      %sun_filename = strcat(sun_tables_folder, "/sun_ref.txt");
+      %sun_fid = fopen (sun_filename, "w");
+      %sun_filter_setup = strcat("Sun: $\\teff$=", num2str(sun_T_eff), ", Age=", num2str(sun_age/1000000000),
+      %  ", $\\lsun$=1.0, $\\rsun$=1.0, $\\gsurf$=", num2str(sun_log_g),
+      %  ", $\\vrot$=", num2str(sun_vel_rot), ", B=", num2str(sun_gauss_field),
+      %  ", ALi=", num2str(sun_A_Li7),"\n",
+      %  "Free params: $\\omegaini$=", rotational_vels(j,:), ", B=", gauss_fields(i,:), "\n",
+      %  rotational_vels(j,:),"& ", num2str(Teff_low), "& ", num2str(age_low/1000000000), "& ", num2str(L_low),"& ", num2str(r_low),"& ", num2str(g_low),"& ", num2str(vel_low),"& ", num2str(b_low),"& ", num2str(ALi_low),"\\\\", "\n",
+      %  "& ", num2str(Teff_high),"& ", num2str(age_high/1000000000),"& ", num2str(L_high),"& ", num2str(r_high),"& ", num2str(g_high),"& ", num2str(vel_high),"& ", num2str(b_high),"& ", num2str(ALi_high),"\\\\", "\n",
+      %  "& ", num2str(d_Teff_low),"& ", num2str(d_age_low),"& ",num2str(d_L_low),"& ", num2str(d_r_low),"& ", num2str(d_g_low),"& ",num2str(d_vel_low),"& ",num2str(d_b_low), "& ",num2str(d_ALi_low),"\\\\","\n",
+      %  "& ", num2str(d_Teff_high),"& ",num2str(d_age_high),"& ",num2str(d_L_high),"& ",num2str(d_r_high),"& ",num2str(d_g_high),"& ",num2str(d_vel_high),"& ",num2str(d_b_high),"& ",num2str(d_ALi_high),"\\\\", "\n"
+      %  );
+
+      %fputs (sun_fid, sun_filter_setup);
+      %fclose (sun_fid);
       %-------------------------------------------------------
 
 
@@ -2143,14 +2178,14 @@ function age_vs_vel_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_li
         labels = {labels{:}, ['Surface-', strtrim(rotational_vels(j,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(rotational_vels(j,:))]};
-        labels = {labels{:}, ['Bottom CZ-', strtrim(rotational_vels(j,:))]};
+        %labels = {labels{:}, ['Bottom CZ-', strtrim(rotational_vels(j,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(rotational_vels(j,:))]};
       else
         labels = {labels{:}, ['Surface-', strtrim(gauss_fields(i,:))]};
         %Dont show lim sup CZ
         %labels = {labels{:}, ['Top CZ-', strtrim(gauss_fields(i,:))]};
-        labels = {labels{:}, ['Bottom CZ-', strtrim(gauss_fields(i,:))]};
+        %labels = {labels{:}, ['Bottom CZ-', strtrim(gauss_fields(i,:))]};
         %Dont show individual ZAMS
         %labels = {labels{:}, ['ZAMS-', strtrim(gauss_fields(i,:))]};
       endif
@@ -2223,15 +2258,20 @@ function age_vs_omega_plots(gauss_fields, rotational_vels, is_var_vel, ytick, x_
 
       %Calculate maximum for y axis
       %Get vel max value, divide it by ytick, plus 1, multiply by ytick
-      ymax = (idivide(max(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") + 1) * ytick;
+      %ymax = (idivide(max(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") + 1) * ytick;
+      ymax = (idivide(max(A(ix_ini:ix_end,5)), int16(ytick), "fix") + 1) * ytick;
+      ymax
 
       %ymax = ymax / sun_omega;
-      %ymax = 400.0;
+      ymax = 400.0;
 
       %Get vel max value, divide it by ytick, minus 1, multiply by ytick
-      ymin = (idivide(min(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") - 1) * ytick;
+      %ymin = (idivide(min(A(ix_ini:ix_end,5))/sun_omega, int16(ytick), "fix") - 1) * ytick;
+      ymin = (idivide(min(A(ix_ini:ix_end,5)), int16(ytick), "fix") - 1) * ytick;
+      ymin
+
       %ymin = ymin / sun_omega;
-      %ymin = 0.5;
+      ymin = 0.5;
 
 
       plot_omega(A, colors(i*j,:), line_width, ytick, [int64(x_limits(1)), int64(x_limits(2)), ymin, ymax]);
@@ -2553,7 +2593,7 @@ end
 function save_figure(f, title)
   %print(f,'-dpdflatexstandalone','-color',[title,'.pdf']);
   print(f,'-deps','-color',[title,'.eps']);
-  %close;
+  close;
   %print(f,'-dpng','-color',[title,'.png']);
   %$ for i in *.eps; do ps2pdf $i $(basename -s .eps $i).pdf ; done
 end
@@ -2785,7 +2825,7 @@ function plot_4_0G_var_vel(rot_vels,idx)
   global gauss_fields;
   global idx_4_0G;
 
-  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0,3.5], 'southwest', '', 'li_var_vel_4_0g', num2str(idx));
+  age_vs_li_plots(gauss_fields(idx_4_0G,:), rot_vels, true, 0.5, [1.0e5,1.0e10,0.8,3.5], 'southwest', '', 'li_var_vel_4_0g', num2str(idx));
 end
 
 function plot_4_0G_var_vel_st(rot_vels,idx)
@@ -3076,21 +3116,30 @@ function plot_hr_0G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_0_0G;
 
-  hr_plots(gauss_fields(idx_0_0G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', '', 'hr_var_vel_0_0g_', num2str(idx));
+  %hr_plots(gauss_fields(idx_0_0G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', '', 'hr_var_vel_0_0g_', num2str(idx));
+  hr_plots(gauss_fields(idx_0_0G,:), rot_vels, true, [0.05,0.5], [3.55, 3.85, -0.5, 1.75], 'northeast', '', 'hr_var_vel_0_0g', num2str(idx));
 end
 
 function plot_hr_0G_var_vel_z1(rot_vels, idx)
   global gauss_fields;
   global idx_0_0G;
 
-  hr_plots(gauss_fields(idx_0_0G,:), rot_vels, true, [0.005,0.1], [3.75, 3.775, -0.3, 0.45], 'southwest', '', 'hr_var_vel_0_0g_z1', num2str(idx));
+  hr_plots(gauss_fields(idx_0_0G,:), rot_vels, true, [0.005,0.1], [3.75, 3.775, -0.3, 0.45], 'northeast', '', 'hr_var_vel_0_0g_z1', num2str(idx));
 end
+
+function plot_hr_2_0G_var_vel(rot_vels, idx)
+  global gauss_fields;
+  global idx_2_0G;
+
+  hr_plots(gauss_fields(idx_2_0G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', '', 'hr_var_vel_2_0g', num2str(idx));
+end
+
 
 function plot_hr_2_5G_var_vel(rot_vels, idx)
   global gauss_fields;
   global idx_2_5G;
 
-  hr_plots(gauss_fields(idx_2_5G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'southwest', 'HR - 2.5G & var. rotational velocity', 'hr_var_vel_2_5g', num2str(idx));
+  hr_plots(gauss_fields(idx_2_5G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'northwest', '', 'hr_var_vel_2_5g', num2str(idx));
 end
 
 
@@ -3121,6 +3170,14 @@ function plot_hr_4_5G_var_vel2(rot_vels, idx)
   global idx_4_5G;
 
   hr_plots(gauss_fields(idx_4_5G,:), rot_vels, true, [0.05,0.5], [3.58, 3.8, -0.5, 2.2], 'southwest', 'HR - 4.5G & var. rotational velocity', 'hr_var_vel_5_0g', num2str(idx));
+end
+
+
+function plot_hr_4_0G_var_vel(rot_vels, idx)
+  global gauss_fields;
+  global idx_4_0G;
+
+  hr_plots(gauss_fields(idx_4_0G,:), rot_vels, true, [0.05,0.5], [3.55, 3.85, -0.5, 1.75], 'northeast', '', 'hr_var_vel_4_0g', num2str(idx));
 end
 
 
@@ -3491,6 +3548,14 @@ function plot_age_vs_mb_activation_028vc(mag_fields, idx)
 end
 
 
+function plot_age_vs_alpha_mlt_0_0G(rot_vels, idx)
+  global gauss_fields;
+  global idx_0_0G
+
+  age_vs_alpha_mlt(gauss_fields(idx_0_0G,:), rot_vels, true, 0.02, [1.0e2, 1.0e10, 1.65, 1.9], 'northwest', '', 'alpha_mlt_var_vel_0_0g', num2str(idx));
+end
+
+
 function plot_age_vs_alpha_mlt_3_0G(rot_vels, idx)
   global gauss_fields;
   global idx_3_0G;
@@ -3857,7 +3922,13 @@ function main()
   global idx_15crit;
   global idx_1525crit;
   global idx_155crit;
-
+  global idx_001crit;
+  global idx_002crit;
+  global idx_003crit;
+  global idx_004crit;
+  global idx_005crit;
+  global idx_09crit;
+  global idx_106crit;
 
 
   mag_fields = gauss_fields([idx_0_0G;idx_3_0G;idx_3_5G;idx_4_0G;idx_4_5G;idx_5_0G],:);
@@ -3879,6 +3950,7 @@ function main()
   rot_vels9 = rotational_vels([idx_145crit;idx_1475crit;idx_15crit;idx_1525crit;idx_155crit],:);
   rot_vels10 = rotational_vels([idx_125crit;idx_13crit;idx_14crit;idx_1475crit;idx_155crit],:);
   rot_vels11 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
+  rot_vels12 = rotational_vels([idx_001crit;idx_002crit;idx_003crit;idx_004crit;idx_005crit;],:);
 
   %paper2
   p2_rot_vels7 = rotational_vels([idx_12crit;idx_125crit;idx_13crit;idx_14crit;idx_1425crit;],:);
@@ -3930,8 +4002,12 @@ function main()
   %plot_XG_var_vel(rot_vels10);
   %plot_XG_var_vel(rotational_vels([idx_135crit],:));
   %plot_XG_var_vel(rotational_vels([idx_1075crit],:));
-  %plot_XG_var_vel(rotational_vels([idx_125crit],:), 1);
+  %plot_XG_var_vel(rotational_vels([idx_13crit,idx_14crit,idx_1425crit],:), 1);
+  %plot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  %plot_XG_var_vel(rotational_vels([idx_11crit],:),3);
+
   %plot_XG_var_vel(rotational_vels([idx_1475crit],:));
+
 
   %plot_age_vs_alpha_mlt_3_0G(dl_rotational_vels([idx_9_090256e_6_dl],:));
   %plot_age_vs_alpha_mlt_3_0G(rotational_vels([idx_0336crit_alpha],:));
@@ -3939,7 +4015,8 @@ function main()
   %plot_age_vs_alpha_mlt_XG(rot_vels6);
   %plot_age_vs_alpha_mlt_XG(rot_vels7);
   %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1025crit],:));
-  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_1475crit],:),1);
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_13crit,idx_14crit,idx_1425crit],:),1);
+  %plot_age_vs_alpha_mlt_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
   %plot_age_vs_teff_XG_z1(rot_vels11,1);
 
   %plot_kipperhahn_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
@@ -3984,6 +4061,7 @@ function main()
 
 
   %plot_vel_rot_0G_var_vel(rot_vels2);
+  %plot_vel_rot_0G_var_vel(rotational_vels([idx_0crit],:),0);
   %plot_vel_rot_2_5G_var_vel(rot_vels2);
   %plot_vel_rot_3_0G_var_vel(rot_vels2);
   %plot_vel_rot_3_5G_var_vel(rot_vels2);
@@ -4001,7 +4079,9 @@ function main()
   %plot_vel_rot_XG_var_vel(rot_vels9);
   %plot_vel_rot_XG_var_vel(rot_vels10);
   %plot_vel_rot_XG_var_vel(rotational_vels([idx_135crit],:),1);
-  %plot_vel_rot_XG_var_vel(rotational_vels([idx_1475crit],:),3);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_13crit,idx_14crit,idx_1425crit],:),3);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_09crit,idx_10crit,idx_105crit,idx_11crit,idx_13crit,],:),3);
+  %plot_vel_rot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
 
   %Var control 0.00001
   %plot_vel_rot_4G_var_vel_vc5_md5();
@@ -4022,7 +4102,8 @@ function main()
   %plot_cz_size_028vc_var_g_z1_special(mag_fields);
   %plot_cz_size_028vc_var_g_z1_special();set(gca,'YTick',0:ytick:1.0);
   %plot_cz_size_0G_var_vel_z1();
-  %plot_cz_size_XG_var_vel(rotational_vels([idx_105crit],:));
+  %plot_cz_size_XG_var_vel(rotational_vels([idx_1425crit],:),1);
+  %plot_cz_size_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
   %plot_cz_size_XG_var_vel_z1(rotational_vels([idx_105crit],:));
   %plot_cz_size_XG_var_vel_z1(rot_vels6);
 
@@ -4032,7 +4113,8 @@ function main()
   %plot_m_dot_028vc_var_g_z1();
   %plot_m_dot_0G_var_vel();
   %plot_m_dot_3G_var_vel(rot_vels4);
-  %plot_m_dot_XG_var_vel(rotational_vels([idx_125crit],:),1)
+  %plot_m_dot_XG_var_vel(rotational_vels([idx_1425crit],:),1)
+  %plot_m_dot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
   %plot_reimers_m_dot_0G_var_vel();
   %plot_m_l_r_0G_var_vel();
   %plot_m_l_r_0G_var_vel_z1();
@@ -4042,25 +4124,32 @@ function main()
   %plot_hr_3G_var_vel(rot_vels4);
   %plot_hr_3G_var_vel(rotational_vels([idx_0336crit],:));
   %plot_hr_3G_var_vel(dl_rotational_vels([idx_0336crit],:));
-  %plot_hr_3_5G_var_vel();
+  %"& ",();
   %plot_hr_5_0G_var_vel();
   %plot_hr_0336vc_var_g();
   %plot_hr_0336vc_var_g_z1(mag_fields);
   %plot_hr_0G_var_vel();
   %plot_hr_0G_var_vel_z1();
   %plot_hr_3_5G_var_vel_z_1();
-  %plot_hr_XG_var_vel(rot_vels6);
+  %plot_hr_XG_var_vel(rot_vels7,3);
   %plot_hr_XG_var_vel(rot_vels8);
-  %plot_hr_XG_var_vel(rotational_vels([idx_135crit],:),1);
+  %plot_hr_XG_var_vel(rotational_vels([idx_13crit,idx_14crit,idx_1425crit],:),1);
+  %plot_hr_XG_var_vel(rotational_vels([idx_09crit,idx_10crit,idx_105crit,idx_11crit,idx_13crit,],:),1);
+  %plot_hr_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+
   %plot_hr_0336vc_var_g_z1(mag_fields, 0336);
 
   %plot_omega_vs_mag_field_XG(rot_vels6, false);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), false);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_0975crit],:), true);
-  %plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), false, 3);
   %plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   %plot_0G_var_vel(rot_vels,0);
   %plot_hr_0G_var_vel(rot_vels,0);
+  %plot_hr_0G_var_vel(rotational_vels([idx_0crit],:),0);
+  %plot_0G_var_vel(rotational_vels([idx_0crit],:),0);
+  %plot_hr_2_5G_var_vel(rot_vels,0);
+  %plot_hr_2_0G_var_vel(rot_vels,0);
   %plot_vel_rot_0G_var_vel(rot_vels,0);
   %plot_hr_0G_var_vel_z1(rot_vels,0);
   %plot_age_vs_teff_XG(rot_vels11,3);
@@ -4098,6 +4187,7 @@ function main()
   %plot_vel_rot_XG_var_vel(rot_vels5,1);
   %plot_vel_rot_XG_var_vel(rot_vels7,3);
   %plot_radius_vs_mag_field_XG(rot_vels7,3);
+  %plot_radius_vs_mag_field_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
   %plot_radius_nolog_vs_mag_field_XG(rot_vels7,3);
   %plot_radius_nolog_vs_mag_field_XG_z1(rot_vels7,3);
   %plot_radius_4_0G(rot_vels,4);
@@ -4119,6 +4209,7 @@ function main()
   %plot_age_vs_mb_activation_XG(rot_vels7,3);
   %plot_omega_vs_mag_field_XG(rot_vels7, false, 3);
   %plot_omega_vs_mag_field_XG(rotational_vels([idx_1425crit],:), true, 3);
+  %plot_omega_vs_mag_field_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:), false, 3);
   %plot_vel_rot_XG_var_vel(rotational_vels([idx_1425crit],:),3);
   %plot_omega_XG_var_vel(rotational_vels([idx_1425crit],:), 3);
   %plot_XG_var_vel(rotational_vels([idx_1425crit],:),3);
@@ -4130,13 +4221,47 @@ function main()
   %plot_m_dot_0G_var_vel(rot_vels,0);
 
   %%%%%%%%%%%%%%%%%%%%%%%%%plot_0G_var_vel(rot_vels,0);
-  %%%%%%%%%%%%%%%%%%%%%%%%%plot_4_0G_var_vel(rot_vels,4);
-  plot_XG_var_vel(rot_vels7,3);
+  %plot_3_5G_var_vel(rot_vels,35);
+  %plot_4_0G_var_vel(rot_vels,4);
+  %plot_4_5G_var_vel(rot_vels,45);
+  %plot_XG_var_vel(rot_vels5,3);
+  %plot_5_0G_var_vel(rot_vels,5);
   %plot_vel_rot_XG_var_vel_z1(rot_vels9,3);
-  %plot_vel_rot_XG_var_vel(rot_vels9,3);
+  %plot_vel_rot_XG_var_vel(rot_vels7,3);
   %plot_cz_size_XG_var_vel(rot_vels7,3);
   %plot_cz_size_0G_var_vel(rot_vels,0);
+  %plot_hr_4_0G_var_vel(rot_vels, 4)
+  %plot_hr_0G_var_vel(rot_vels, 0)
+  %plot_vel_rot_4G_var_vel(rot_vels,4);
+  %plot_vel_rot_0G_var_vel(rot_vels,0);
+  %plot_vel_rot_4G_var_vel_z1(rot_vels,4);
+  %plot_radius_vs_mag_field_XG(rot_vels7,3);
 
+
+  %plot_omega_0_0G_var_vel(rot_vels,0);
+  %plot_omega_XG_var_vel(rot_vels5,1);
+  %plot_omega_XG_var_vel(rot_vels7,3);
+
+  %% para la defensa
+  %plot_omega_XG_var_vel(rot_vels12,3);
+  %plot_hr_XG_var_vel(rot_vels12,3);
+  %plot_vel_rot_XG_var_vel(rot_vels12,3);
+  %plot_XG_var_vel(rot_vels12,3);
+  %plot_XG_var_vel(rot_vels7,3);
+
+  %% Modelo de referencia sin rotación
+  plot_hr_0G_var_vel(rotational_vels([idx_0crit],:),0);
+  plot_0G_var_vel(rotational_vels([idx_0crit],:),0);
+  plot_cz_size_0G_var_vel(rotational_vels([idx_0crit],:),0);
+  % No se activa plot_age_vs_alpha_mlt_0_0G(rotational_vels([idx_0crit],:),0);
+  plot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_age_vs_alpha_mlt_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_vel_rot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_cz_size_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_m_dot_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_hr_XG_var_vel(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_radius_vs_mag_field_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:),3);
+  plot_omega_vs_mag_field_XG(rotational_vels([idx_10crit,idx_11crit,idx_12crit,idx_125crit,idx_13crit],:), false, 3);
 end
 
 
